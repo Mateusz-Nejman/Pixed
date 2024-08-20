@@ -1,0 +1,133 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\Icons\common\arrow-down.png" />
+    <None Remove="Resources\Icons\common\arrow-left.png" />
+    <None Remove="Resources\Icons\common\arrow-right.png" />
+    <None Remove="Resources\Icons\common\arrow-up.png" />
+    <None Remove="Resources\Icons\common\common-backup-white.png" />
+    <None Remove="Resources\Icons\common\common-keyboard-gold.png" />
+    <None Remove="Resources\Icons\common\common-swapcolors-arrow-grey.png" />
+    <None Remove="Resources\Icons\common\common-warning-red.png" />
+    <None Remove="Resources\Icons\common\cross.png" />
+    <None Remove="Resources\Icons\common\download2.png" />
+    <None Remove="Resources\Icons\common\pencil.png" />
+    <None Remove="Resources\Icons\common\plus.png" />
+    <None Remove="Resources\Icons\frame\frame-dragndrop-white.png" />
+    <None Remove="Resources\Icons\frame\frame-duplicate-white.png" />
+    <None Remove="Resources\Icons\frame\frame-plus-white.png" />
+    <None Remove="Resources\Icons\frame\frame-recyclebin-white.png" />
+    <None Remove="Resources\Icons\settings\settings-file-white.png" />
+    <None Remove="Resources\Icons\settings\settings-gear-white.png" />
+    <None Remove="Resources\Icons\settings\settings-resize-white.png" />
+    <None Remove="Resources\Icons\tools\tool-circle.png" />
+    <None Remove="Resources\Icons\tools\tool-colorpicker.png" />
+    <None Remove="Resources\Icons\tools\tool-colorswap.png" />
+    <None Remove="Resources\Icons\tools\tool-dithering.png" />
+    <None Remove="Resources\Icons\tools\tool-eraser.png" />
+    <None Remove="Resources\Icons\tools\tool-lasso-select.png" />
+    <None Remove="Resources\Icons\tools\tool-lighten.png" />
+    <None Remove="Resources\Icons\tools\tool-move.png" />
+    <None Remove="Resources\Icons\tools\tool-noise-fill.png" />
+    <None Remove="Resources\Icons\tools\tool-noise.png" />
+    <None Remove="Resources\Icons\tools\tool-outliner.png" />
+    <None Remove="Resources\Icons\tools\tool-paint-bucket.png" />
+    <None Remove="Resources\Icons\tools\tool-pen.png" />
+    <None Remove="Resources\Icons\tools\tool-rectangle-select.png" />
+    <None Remove="Resources\Icons\tools\tool-rectangle.png" />
+    <None Remove="Resources\Icons\tools\tool-shape-select.png" />
+    <None Remove="Resources\Icons\tools\tool-stroke.png" />
+    <None Remove="Resources\Icons\tools\tool-vertical-mirror-pen.png" />
+    <None Remove="Resources\Icons\touch-buttons\touch-copy.png" />
+    <None Remove="Resources\Icons\touch-buttons\touch-cut.png" />
+    <None Remove="Resources\Icons\touch-buttons\touch-delete.png" />
+    <None Remove="Resources\Icons\touch-buttons\touch-paste.png" />
+    <None Remove="Resources\Icons\touch-buttons\touch-redo.png" />
+    <None Remove="Resources\Icons\touch-buttons\touch-undo.png" />
+    <None Remove="Resources\Icons\touch-buttons\touch-zoom-in.png" />
+    <None Remove="Resources\Icons\touch-buttons\touch-zoom-out.png" />
+    <None Remove="Resources\Icons\transform\tool-center.png" />
+    <None Remove="Resources\Icons\transform\tool-clone.png" />
+    <None Remove="Resources\Icons\transform\tool-crop.png" />
+    <None Remove="Resources\Icons\transform\tool-flip.png" />
+    <None Remove="Resources\Icons\transform\tool-rotate.png" />
+    <None Remove="Resources\transparentBackground.png" />
+    <None Remove="transparentBackground.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Icons\common\arrow-left.png" />
+    <Resource Include="Resources\Icons\common\arrow-right.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="8.0.8" />
+    <PackageReference Include="System.Reactive" Version="6.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Icons\common\arrow-down.png" />
+    <Resource Include="Resources\Icons\common\arrow-up.png" />
+    <Resource Include="Resources\Icons\common\common-backup-white.png" />
+    <Resource Include="Resources\Icons\common\common-keyboard-gold.png" />
+    <Resource Include="Resources\Icons\common\common-swapcolors-arrow-grey.png" />
+    <Resource Include="Resources\Icons\common\common-warning-red.png" />
+    <Resource Include="Resources\Icons\common\cross.png" />
+    <Resource Include="Resources\Icons\common\download2.png" />
+    <Resource Include="Resources\Icons\common\pencil.png" />
+    <Resource Include="Resources\Icons\common\plus.png" />
+    <Resource Include="Resources\Icons\frame\frame-dragndrop-white.png" />
+    <Resource Include="Resources\Icons\frame\frame-duplicate-white.png" />
+    <Resource Include="Resources\Icons\frame\frame-plus-white.png" />
+    <Resource Include="Resources\Icons\frame\frame-recyclebin-white.png" />
+    <Resource Include="Resources\Icons\settings\settings-file-white.png" />
+    <Resource Include="Resources\Icons\settings\settings-gear-white.png" />
+    <Resource Include="Resources\Icons\settings\settings-resize-white.png" />
+    <Resource Include="Resources\Icons\tools\tool-circle.png" />
+    <Resource Include="Resources\Icons\tools\tool-colorpicker.png" />
+    <Resource Include="Resources\Icons\tools\tool-colorswap.png" />
+    <Resource Include="Resources\Icons\tools\tool-dithering.png" />
+    <Resource Include="Resources\Icons\tools\tool-eraser.png" />
+    <Resource Include="Resources\Icons\tools\tool-lasso-select.png" />
+    <Resource Include="Resources\Icons\tools\tool-lighten.png" />
+    <Resource Include="Resources\Icons\tools\tool-move.png" />
+    <Resource Include="Resources\Icons\tools\tool-noise-fill.png" />
+    <Resource Include="Resources\Icons\tools\tool-noise.png" />
+    <Resource Include="Resources\Icons\tools\tool-outliner.png" />
+    <Resource Include="Resources\Icons\tools\tool-paint-bucket.png" />
+    <Resource Include="Resources\Icons\tools\tool-pen.png" />
+    <Resource Include="Resources\Icons\tools\tool-rectangle-select.png" />
+    <Resource Include="Resources\Icons\tools\tool-rectangle.png" />
+    <Resource Include="Resources\Icons\tools\tool-shape-select.png" />
+    <Resource Include="Resources\Icons\tools\tool-stroke.png" />
+    <Resource Include="Resources\Icons\tools\tool-vertical-mirror-pen.png" />
+    <Resource Include="Resources\Icons\touch-buttons\touch-copy.png" />
+    <Resource Include="Resources\Icons\touch-buttons\touch-cut.png" />
+    <Resource Include="Resources\Icons\touch-buttons\touch-delete.png" />
+    <Resource Include="Resources\Icons\touch-buttons\touch-paste.png" />
+    <Resource Include="Resources\Icons\touch-buttons\touch-redo.png" />
+    <Resource Include="Resources\Icons\touch-buttons\touch-undo.png" />
+    <Resource Include="Resources\Icons\touch-buttons\touch-zoom-in.png" />
+    <Resource Include="Resources\Icons\touch-buttons\touch-zoom-out.png" />
+    <Resource Include="Resources\Icons\transform\tool-center.png" />
+    <Resource Include="Resources\Icons\transform\tool-clone.png" />
+    <Resource Include="Resources\Icons\transform\tool-crop.png" />
+    <Resource Include="Resources\Icons\transform\tool-flip.png" />
+    <Resource Include="Resources\Icons\transform\tool-rotate.png" />
+    <Resource Include="Resources\transparentBackground.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+    <Folder Include="Rendering\" />
+  </ItemGroup>
+
+</Project>
