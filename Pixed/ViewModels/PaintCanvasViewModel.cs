@@ -18,7 +18,7 @@ namespace Pixed.ViewModels
         private Image? _overlayImage;
         private Bitmap _overlayBitmap;
         private bool _leftPressed;
-        private readonly bool _rightPressed;
+        private bool _rightPressed;
         private readonly IDisposable _refreshDisposable;
         private Frame _frame;
         private Grid _grid;
@@ -31,6 +31,7 @@ namespace Pixed.ViewModels
         public ActionCommand<Point> MiddleMouseDown { get; set; }
         public ActionCommand<Point> MiddleMouseUp { get; set; }
         public ActionCommand<int> MouseWheel { get; set; }
+        public ActionCommand MouseLeave { get; set; }
         public double Zoom { get; set; } = 1.0;
         public Frame CurrentFrame
         {
@@ -57,8 +58,11 @@ namespace Pixed.ViewModels
             Subjects.RefreshCanvas.OnNext(true);
             LeftMouseDown = new ActionCommand<Point>(LeftMouseDownAction);
             LeftMouseUp = new ActionCommand<Point>(LeftMouseUpAction);
+            RightMouseDown = new ActionCommand<Point>(RightMouseDownAction);
+            RightMouseUp = new ActionCommand<Point>(RightMouseUpAction);
             MouseMove = new ActionCommand<Point>(MouseMoveAction);
             MouseWheel = new ActionCommand<int>(MouseWheelAction);
+            MouseLeave = new ActionCommand(MouseLeaveAction);
         }
         public void RecalculateFactor(Point windowSize)
         {
@@ -87,11 +91,24 @@ namespace Pixed.ViewModels
             _leftPressed = false;
         }
 
+        private void RightMouseDownAction(Point point)
+        {
+            int imageX = (int)(point.X / _imageFactor);
+            int imageY = (int)(point.Y / _imageFactor);
+            _rightPressed = true;
+            Global.ToolSelected?.ApplyTool(imageX, imageY, _frame, ref _overlayBitmap);
+        }
+
+        private void RightMouseUpAction(Point point)
+        {
+            _rightPressed = false;
+        }
+
         private void MouseMoveAction(Point point)
         {
             int imageX = (int)(point.X / _imageFactor);
             int imageY = (int)(point.Y / _imageFactor);
-            if (_leftPressed)
+            if (_leftPressed || _rightPressed)
             {
                 Global.ToolSelected?.MoveTool(imageX, imageY, _frame, ref _overlayBitmap);
                 Subjects.RefreshCanvas.OnNext(true);
@@ -112,6 +129,12 @@ namespace Pixed.ViewModels
             _imageFactor = Math.Max(0.1, _imageFactor + step);
             _grid.Width = _frame.Width * _imageFactor;
             _grid.Height = _frame.Height * _imageFactor;
+        }
+
+        private void MouseLeaveAction()
+        {
+            _rightPressed = false;
+            _leftPressed = false;
         }
     }
 }

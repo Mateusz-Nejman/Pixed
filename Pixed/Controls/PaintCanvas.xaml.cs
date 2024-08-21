@@ -37,17 +37,15 @@ namespace Pixed.Controls
             Frame frame = (Frame)sender;
             var pos = e.GetPosition(frame);
 
-            if (e.LeftButton == MouseButtonState.Pressed)
+            if (e.ChangedButton == MouseButton.Left && e.ButtonState == MouseButtonState.Pressed)
             {
                 _viewModel.LeftMouseDown?.Execute(pos);
             }
-
-            if (e.RightButton == MouseButtonState.Pressed)
+            else if (e.ChangedButton == MouseButton.Right && e.ButtonState == MouseButtonState.Pressed)
             {
                 _viewModel.RightMouseDown?.Execute(pos);
             }
-
-            if (e.MiddleButton == MouseButtonState.Pressed)
+            else if (e.ChangedButton == MouseButton.Middle && e.ButtonState == MouseButtonState.Pressed)
             {
                 _viewModel.MiddleMouseDown?.Execute(pos);
             }
@@ -66,17 +64,15 @@ namespace Pixed.Controls
             Frame frame = (Frame)sender;
             var pos = e.GetPosition(frame);
 
-            if (e.LeftButton == MouseButtonState.Released)
+            if(e.ChangedButton == MouseButton.Left && e.ButtonState == MouseButtonState.Released)
             {
                 _viewModel.LeftMouseUp?.Execute(pos);
             }
-
-            if (e.RightButton == MouseButtonState.Released)
+            else if (e.ChangedButton == MouseButton.Right && e.ButtonState == MouseButtonState.Released)
             {
                 _viewModel.RightMouseUp?.Execute(pos);
             }
-
-            if (e.MiddleButton == MouseButtonState.Released)
+            else if (e.ChangedButton == MouseButton.Middle && e.ButtonState == MouseButtonState.Released)
             {
                 _viewModel.MiddleMouseUp?.Execute(pos);
             }
@@ -86,6 +82,11 @@ namespace Pixed.Controls
         {
             _viewModel?.MouseWheel?.Execute(e.Delta);
             e.Handled = true;
+        }
+
+        private void Frame_MouseLeave(object sender, MouseEventArgs e)
+        {
+            _viewModel.MouseLeave?.Execute();
         }
     }
 }

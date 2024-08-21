@@ -65,6 +65,11 @@ namespace Pixed
 
         public void Execute(object? parameter)
         {
+            Execute();
+        }
+
+        public void Execute()
+        {
             action?.Invoke();
         }
         #endregion

@@ -30,7 +30,8 @@
            MouseDown="Frame_MouseDown"
            MouseMove="Frame_MouseMove"
            MouseUp="Frame_MouseUp"
-           MouseWheel="Frame_MouseWheel"/>
+           MouseWheel="Frame_MouseWheel"
+           MouseLeave="Frame_MouseLeave"/>
         </Grid>
     </ScrollViewer>
 </UserControl>

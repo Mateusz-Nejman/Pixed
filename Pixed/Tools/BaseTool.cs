@@ -41,7 +41,11 @@ namespace Pixed.Tools
             }
 
             int pixel = frame.GetPixel(x, y);
-            overlay.SetPixel(x, y, GetHighlightColor(pixel));
+
+            if (x >= 0 && y >= 0 && x < overlay.Width && y < overlay.Height)
+            {
+                overlay.SetPixel(x, y, GetHighlightColor(pixel));
+            }
         }
 
         private System.Drawing.Color GetHighlightColor(int pixel)
