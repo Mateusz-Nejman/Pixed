@@ -2,10 +2,6 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Color = System.Drawing.Color;
 
@@ -56,7 +52,7 @@ namespace Pixed.Models
             _width = width;
             _height = height;
             _pixels = new int[width * height];
-            
+
             Array.Fill(_pixels, Constants.TRANSPARENT_COLOR.ToArgb());
         }
 
@@ -74,7 +70,7 @@ namespace Pixed.Models
 
         public void SetPixel(int x, int y, int color)
         {
-            if(x < 0 || y < 0 || x >= _width || y >= _height)
+            if (x < 0 || y < 0 || x >= _width || y >= _height)
             {
                 return;
             }
@@ -85,7 +81,7 @@ namespace Pixed.Models
 
         public Bitmap Render()
         {
-            if(!_needRerender)
+            if (!_needRerender)
             {
                 return _renderedBitmap;
             }
@@ -93,11 +89,11 @@ namespace Pixed.Models
             int[] pixels = new int[_width * _height];
             _pixels.CopyTo(pixels, 0);
 
-            for(int i = 0; i < pixels.Length; i++)
+            for (int i = 0; i < pixels.Length; i++)
             {
                 Color color = Color.FromArgb(pixels[i]);
 
-                if(color.A * _opacity > 0)
+                if (color.A * _opacity > 0)
                 {
                     int newColor = Color.FromArgb((int)(255 * _opacity), color).ToArgb();
                     pixels[i] = newColor;

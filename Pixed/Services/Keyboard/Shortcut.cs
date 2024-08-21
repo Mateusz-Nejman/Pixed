@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 
 namespace Pixed.Services.Keyboard
 {
     internal class Shortcut
     {
-        private string _id;
-        private string _description;
-        private Key _key;
-        private bool _shift;
-        private bool _control;
-        private bool _alt;
+        private readonly string _id;
+        private readonly string _description;
+        private readonly Key _key;
+        private readonly bool _shift;
+        private readonly bool _control;
+        private readonly bool _alt;
 
         public Shortcut(string id, string description, Key key, bool shift, bool control, bool alt)
         {
@@ -30,17 +25,17 @@ namespace Pixed.Services.Keyboard
         {
             string prefix = "";
 
-            if(_control)
+            if (_control)
             {
                 prefix += "Ctrl+";
             }
 
-            if(_alt)
+            if (_alt)
             {
                 prefix += "Alt+";
             }
 
-            if(_shift)
+            if (_shift)
             {
                 prefix += "Shift+";
             }

@@ -1,14 +1,6 @@
-﻿using Pixed.Models;
-using Pixed.Utils;
-using System;
-using System.Collections.Generic;
+﻿using Pixed.Utils;
 using System.Drawing;
-using System.IO;
-using System.Numerics;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Imaging;
-using static System.Net.Mime.MediaTypeNames;
 using Frame = Pixed.Models.Frame;
 using Image = System.Windows.Controls.Image;
 using Point = System.Windows.Point;
@@ -17,14 +9,14 @@ namespace Pixed.ViewModels
 {
     internal class PaintCanvasViewModel : PropertyChangedBase
     {
-        private double _gridWidth = 128;
-        private double _gridHeight = 128;
+        private readonly double _gridWidth = 128;
+        private readonly double _gridHeight = 128;
         private Point _imageOffset;
         private double _imageFactor;
         private Image? _image;
         private bool _leftPressed;
-        private bool _rightPressed;
-        private IDisposable _refreshDisposable;
+        private readonly bool _rightPressed;
+        private readonly IDisposable _refreshDisposable;
         private Frame _frame;
         private Grid _grid;
         private ScrollViewer _scrollViewer;
@@ -53,7 +45,7 @@ namespace Pixed.ViewModels
         {
             _refreshDisposable = Subjects.RefreshCanvas.Subscribe(_ =>
             {
-                if(_image != null)
+                if (_image != null)
                 {
                     _image.Source = _frame.Render().ToBitmapImage();
                 }
@@ -93,7 +85,7 @@ namespace Pixed.ViewModels
 
         private void MouseMoveAction(Point point)
         {
-            if(_leftPressed)
+            if (_leftPressed)
             {
                 int imageX = (int)(point.X / _imageFactor);
                 int imageY = (int)(point.Y / _imageFactor);

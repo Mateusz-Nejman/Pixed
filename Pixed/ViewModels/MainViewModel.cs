@@ -1,18 +1,13 @@
 ﻿using Pixed.Models;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Pixed.ViewModels
 {
     internal class MainViewModel : PropertyChangedBase
     {
-        private ObservableCollection<Frame> _frames;
-        private int _selectedFrame = 0;
+        private readonly ObservableCollection<Frame> _frames;
+        private readonly int _selectedFrame = 0;
         private PaintCanvasViewModel? _paintCanvas;
         private int _selectedLayer = 0;
 

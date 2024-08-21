@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Pixed.Services.Keyboard
+﻿namespace Pixed.Services.Keyboard
 {
     internal class ShortcutService
     {
@@ -28,9 +22,9 @@ namespace Pixed.Services.Keyboard
             _shortcuts = [];
             _shortcutSubject = Subjects.KeyState.Subscribe(state =>
             {
-                foreach(var shortcut in _shortcuts)
+                foreach (var shortcut in _shortcuts)
                 {
-                    if(shortcut.State.Equals(state))
+                    if (shortcut.State.Equals(state))
                     {
                         shortcut.Action?.Invoke();
                     }

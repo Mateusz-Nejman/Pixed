@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Pixed.Utils;
 using System.Collections.ObjectModel;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pixed.Models
 {
     internal class Frame : PropertyChangedBase
     {
         private readonly ObservableCollection<Layer> _layers;
-        private int _width;
-        private int _height;
+        private readonly int _width;
+        private readonly int _height;
         private int _selectedLayer = 0;
 
         public int Width => _width;
@@ -52,7 +48,21 @@ namespace Pixed.Models
 
         public Bitmap Render()
         {
-            return _layers[_selectedLayer].Render();
+            Bitmap render = new(Width, Height);
+            Graphics g = Graphics.FromImage(render);
+            for (int a = 0; a < _layers.Count; a++)
+            {
+                if (a == SelectedLayer)
+                {
+                    continue;
+                }
+
+                g.DrawImage(_layers[a].Render().OpacityImage(0.5f), 0, 0);
+            }
+
+            g.DrawImage(_layers[_selectedLayer].Render(), 0, 0);
+
+            return render;
         }
     }
 }
