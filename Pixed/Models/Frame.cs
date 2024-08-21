@@ -89,10 +89,11 @@ namespace Pixed.Models
             }
 
             int oldIndex = _selectedLayer;
-            int newIndex = toTop ? 0 : oldIndex--;
-            Layer layer = Layers[_selectedLayer];
+            int newIndex = toTop ? 0 : oldIndex - 1;
+            Layer layer = Layers[oldIndex];
             _layers.RemoveAt(oldIndex);
             _layers.Insert(newIndex, layer);
+            SelectedLayer = newIndex;
             OnPropertyChanged(nameof(Layers));
         }
 
@@ -116,9 +117,25 @@ namespace Pixed.Models
             {
                 _layers.Insert(oldIndex + 2, layer);
                 _layers.RemoveAt(oldIndex);
-                SelectedLayer = oldIndex;
+                SelectedLayer = oldIndex + 1;
             }
             OnPropertyChanged(nameof(Layers));
+        }
+
+        public void MergeLayerBelow()
+        {
+            if(SelectedLayer >= Layers.Count - 1)
+            {
+                return;
+            }
+
+            int index = SelectedLayer;
+            Layer layer = _layers[index];
+            Layer layer2 = _layers[index + 1];
+            layer.MergeLayers(layer2);
+            Layers.RemoveAt(index + 1);
+            Layers[index].RefreshRenderSource();
+            SelectedLayer = index;
         }
     }
 }

@@ -88,7 +88,7 @@
                                 </Button.ToolTip>
                                 <Image Source="./Resources/icons/common/plus.png" Width="10" Height="10"/>
                             </Button>
-                            <Button Style="{StaticResource layersButton}" Grid.Column="1" Command="{Binding MoveLayerUp}">
+                            <Button Style="{StaticResource layersButton}" Grid.Column="1" Command="{Binding MoveLayerUpCommand}" IsEnabled="{Binding CanLayerMoveUp}">
                                 <Button.ToolTip>
                                     <ToolTip Background="Black" BorderThickness="0">
                                         <controls:TooltipWithButton Title="Move layer up" ButtonText="Shift" ButtonTextHelper="Move to the top"/>
@@ -96,7 +96,7 @@
                                 </Button.ToolTip>
                                 <Image Source="./Resources/icons/common/arrow-up.png" Width="10" Height="10"/>
                             </Button>
-                            <Button Style="{StaticResource layersButton}" Grid.Column="2" Command="{Binding MoveLayerDown}">
+                            <Button Style="{StaticResource layersButton}" Grid.Column="2" Command="{Binding MoveLayerDownCommand}" IsEnabled="{Binding CanLayerMoveDown}">
                                 <Button.ToolTip>
                                     <ToolTip Background="Black" BorderThickness="0">
                                         <controls:TooltipWithButton Title="Move layer down" ButtonText="Shift" ButtonTextHelper="Move to the bottom"/>
@@ -104,7 +104,7 @@
                                 </Button.ToolTip>
                                 <Image Source="./Resources/icons/common/arrow-down.png" Width="10" Height="10"/>
                             </Button>
-                            <Button Style="{StaticResource layersButton}" Grid.Column="3">
+                            <Button Style="{StaticResource layersButton}" Grid.Column="3" Command="{Binding EditLayerNameCommand}">
                                 <Button.ToolTip>
                                     <ToolTip Background="Black" BorderThickness="0">
                                         <controls:SimpleTooltip Title="Edit layer name"/>
@@ -112,7 +112,7 @@
                                 </Button.ToolTip>
                                 <Image Source="./Resources/icons/common/pencil.png" Width="10" Height="10"/>
                             </Button>
-                            <Button Style="{StaticResource layersButton}" Grid.Column="4">
+                            <Button Style="{StaticResource layersButton}" Grid.Column="4" Command="{Binding MergeLayerCommand}" IsEnabled="{Binding CanLayerMerge}">
                                 <Button.ToolTip>
                                     <ToolTip Background="Black" BorderThickness="0">
                                         <controls:SimpleTooltip Title="Merge with layer below"/>
@@ -120,7 +120,7 @@
                                 </Button.ToolTip>
                                 <Image Source="./Resources/icons/common/download2.png" Width="10" Height="10"/>
                             </Button>
-                            <Button Style="{StaticResource layersButton}" Grid.Column="5">
+                            <Button Style="{StaticResource layersButton}" Grid.Column="5" Command="{Binding RemoveLayerCommand}" IsEnabled="{Binding CanLayerRemove}">
                                 <Button.ToolTip>
                                     <ToolTip Background="Black" BorderThickness="0">
                                         <controls:SimpleTooltip Title="Delete selected layer"/>

@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using Color = System.Drawing.Color;
 
@@ -86,6 +87,21 @@ namespace Pixed.Models
             _pixels[y * _width + x] = color;
             _needRerender = true;
             RefreshRenderSource();
+        }
+
+        public void MergeLayers(Layer layer2)
+        {
+            int transparent = Constants.TRANSPARENT_COLOR.ToArgb();
+
+            for(int a = 0; a < _pixels.Length; a++)
+            {
+                if (layer2._pixels[a] != transparent && _pixels[a] != layer2._pixels[a])
+                {
+                    _pixels[a] = layer2._pixels[a];
+                }
+            }
+
+            _needRerender = true;
         }
 
         public void RefreshRenderSource()
