@@ -1,6 +1,7 @@
 ﻿using Pixed.Utils;
 using System.Collections.ObjectModel;
 using System.Drawing;
+using System.Windows.Input;
 
 namespace Pixed.Models
 {
@@ -19,7 +20,7 @@ namespace Pixed.Models
             get => _selectedLayer;
             set
             {
-                _selectedLayer = value;
+                _selectedLayer = Math.Clamp(value, 0, Layers.Count - 1);
                 OnPropertyChanged();
                 Subjects.RefreshCanvas.OnNext(true);
             }
@@ -78,6 +79,46 @@ namespace Pixed.Models
         public bool PointInside(int x, int y)
         {
             return x >= 0 && y >= 0 && x < Width && y < Height;
+        }
+
+        public void MoveLayerUp(bool toTop)
+        {
+            if (_selectedLayer == 0)
+            {
+                return;
+            }
+
+            int oldIndex = _selectedLayer;
+            int newIndex = toTop ? 0 : oldIndex--;
+            Layer layer = Layers[_selectedLayer];
+            _layers.RemoveAt(oldIndex);
+            _layers.Insert(newIndex, layer);
+            OnPropertyChanged(nameof(Layers));
+        }
+
+        public void MoveLayerDown(bool toBottom)
+        {
+            if (_selectedLayer == Layers.Count - 1)
+            {
+                return;
+            }
+
+            int oldIndex = _selectedLayer;
+            Layer layer = _layers[oldIndex];
+
+            if(toBottom)
+            {
+                _layers.Add(layer);
+                _layers.RemoveAt(oldIndex);
+                SelectedLayer = _layers.Count - 1;
+            }
+            else
+            {
+                _layers.Insert(oldIndex + 2, layer);
+                _layers.RemoveAt(oldIndex);
+                SelectedLayer = oldIndex;
+            }
+            OnPropertyChanged(nameof(Layers));
         }
     }
 }

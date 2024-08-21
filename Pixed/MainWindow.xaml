@@ -88,7 +88,7 @@
                                 </Button.ToolTip>
                                 <Image Source="./Resources/icons/common/plus.png" Width="10" Height="10"/>
                             </Button>
-                            <Button Style="{StaticResource layersButton}" Grid.Column="1">
+                            <Button Style="{StaticResource layersButton}" Grid.Column="1" Command="{Binding MoveLayerUp}">
                                 <Button.ToolTip>
                                     <ToolTip Background="Black" BorderThickness="0">
                                         <controls:TooltipWithButton Title="Move layer up" ButtonText="Shift" ButtonTextHelper="Move to the top"/>
@@ -96,7 +96,7 @@
                                 </Button.ToolTip>
                                 <Image Source="./Resources/icons/common/arrow-up.png" Width="10" Height="10"/>
                             </Button>
-                            <Button Style="{StaticResource layersButton}" Grid.Column="2">
+                            <Button Style="{StaticResource layersButton}" Grid.Column="2" Command="{Binding MoveLayerDown}">
                                 <Button.ToolTip>
                                     <ToolTip Background="Black" BorderThickness="0">
                                         <controls:TooltipWithButton Title="Move layer down" ButtonText="Shift" ButtonTextHelper="Move to the bottom"/>

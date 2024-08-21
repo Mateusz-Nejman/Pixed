@@ -19,20 +19,25 @@ namespace Pixed.ViewModels
             get => _selectedLayer;
             set
             {
-                _selectedLayer = value;
-                Frames[_selectedFrame].SelectedLayer = value;
+                int val = Math.Clamp(value, 0, Layers.Count);
+                _selectedLayer = val;
+                Frames[_selectedFrame].SelectedLayer = val;
                 OnPropertyChanged();
             }
         }
 
         public ICommand AddLayerCommand { get; }
+        public ICommand MoveLayerUp { get; }
+        public ICommand MoveLayerDown { get; }
 
         public MainViewModel()
         {
             Global.Models.Add(new PixedModel());
             Frames.Add(new Frame(Global.UserSettings.UserWidth, Global.UserSettings.UserHeight));
             OnPropertyChanged(nameof(Layers));
-            AddLayerCommand = new ActionCommand(AddLayerCommandAction);
+            AddLayerCommand = new ActionCommand(AddLayerAction);
+            MoveLayerUp = new ActionCommand(MoveLayerUpAction);
+            MoveLayerDown = new ActionCommand(MoveLayerDownAction);
         }
 
         public void Initialize(PaintCanvasViewModel paintCanvas)
@@ -41,7 +46,7 @@ namespace Pixed.ViewModels
             _paintCanvas.CurrentFrame = Frames[_selectedFrame];
         }
 
-        private void AddLayerCommandAction()
+        private void AddLayerAction()
         {
             if (Keyboard.Modifiers == ModifierKeys.Shift)
             {
@@ -52,7 +57,30 @@ namespace Pixed.ViewModels
                 Frames[_selectedFrame].AddLayer(new Layer(Frames[_selectedFrame].Width, Frames[_selectedFrame].Height));
             }
 
+            OnPropertyChanged(nameof(Layers));
             SelectedLayer = Frames[_selectedFrame].Layers.Count - 1;
+        }
+
+        private void MoveLayerUpAction()
+        {
+            if(_selectedLayer == 0)
+            {
+                return;
+            }
+
+            Frames[_selectedFrame].MoveLayerUp(Keyboard.Modifiers == ModifierKeys.Shift);
+            OnPropertyChanged(nameof(Layers));
+        }
+
+        private void MoveLayerDownAction()
+        {
+            if (_selectedLayer == Layers.Count - 1)
+            {
+                return;
+            }
+
+            Frames[_selectedFrame].MoveLayerDown(Keyboard.Modifiers == ModifierKeys.Shift);
+            OnPropertyChanged(nameof(Layers));
         }
     }
 }
