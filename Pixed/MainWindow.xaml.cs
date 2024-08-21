@@ -34,11 +34,8 @@ namespace Pixed
         {
             RadioButton radio = (RadioButton)sender;
             string name = radio.Name;
-            
-            if(name == "tool_pen")
-            {
-                Global.ToolSelected = new ToolPen();
-            }
+
+            Global.ToolSelected = Global.Tool.GetTool(name);
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)

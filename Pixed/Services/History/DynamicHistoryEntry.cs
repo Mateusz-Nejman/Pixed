@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Pixed.Services.History
+﻿namespace Pixed.Services.History
 {
     internal class DynamicHistoryEntry
     {
@@ -23,6 +17,14 @@ namespace Pixed.Services.History
             NewColor = [];
             FrameId = string.Empty;
             LayerId = string.Empty;
+        }
+
+        public void Add(int x, int y, int oldColor, int endColor)
+        {
+            PixelX.Add(x);
+            PixelY.Add(y);
+            OldColor.Add(oldColor);
+            NewColor.Add(endColor);
         }
 
         public HistoryEntry ToEntry()

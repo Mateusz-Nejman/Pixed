@@ -50,6 +50,8 @@ namespace Pixed.Models
         }
 
         public string Id => _id;
+        public int Width => _width;
+        public int Height => _height;
         public Layer(int width, int height)
         {
             _id = Guid.NewGuid().ToString();
