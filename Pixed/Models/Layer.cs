@@ -15,8 +15,8 @@ namespace Pixed.Models
         private Bitmap _renderedBitmap = null;
         private bool _needRerender = true;
         private float _opacity = 1.0f;
-        private string _name;
-        private BitmapImage _renderSource;
+        private string _name = string.Empty;
+        private BitmapImage? _renderSource = null;
 
         public float Opacity
         {
@@ -77,6 +77,16 @@ namespace Pixed.Models
             _pixels[y * _width + x] = color;
             _needRerender = true;
             RenderSource = Render().ToBitmapImage();
+        }
+
+        public int GetPixel(int x, int y)
+        {
+            if (x < 0 || y < 0 || x >= _width || y >= _height)
+            {
+                return 0;
+            }
+
+            return _pixels[y * _width + x];
         }
 
         public Bitmap Render()

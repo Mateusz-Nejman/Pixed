@@ -19,9 +19,13 @@
                 <ImageBrush ImageSource="../Resources/transparentBackground.png" TileMode="Tile" Stretch="Uniform" AlignmentY="Top" Viewport="0,0,32,32" ViewportUnits="Absolute"/>
             </Grid.Background>
             <Image 
-    Name="image" 
-    SnapsToDevicePixels="True"
-    RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                Name="image" 
+                SnapsToDevicePixels="True"
+                RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+            <Image 
+                Name="overlay" 
+                SnapsToDevicePixels="True"
+                RenderOptions.BitmapScalingMode="NearestNeighbor"/>
             <Frame Background="Transparent"
            MouseDown="Frame_MouseDown"
            MouseMove="Frame_MouseMove"

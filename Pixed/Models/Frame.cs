@@ -39,6 +39,11 @@ namespace Pixed.Models
             OnPropertyChanged(nameof(Layers));
         }
 
+        public int GetPixel(int x, int y)
+        {
+            return _layers[SelectedLayer].GetPixel(x, y);
+        }
+
         public void AddLayer(Layer layer)
         {
             string name = "Layer " + _layers.Count;

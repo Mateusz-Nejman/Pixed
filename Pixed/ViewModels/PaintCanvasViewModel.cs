@@ -1,6 +1,7 @@
 ﻿using Pixed.Utils;
 using System.Drawing;
 using System.Windows.Controls;
+using static System.Net.Mime.MediaTypeNames;
 using Frame = Pixed.Models.Frame;
 using Image = System.Windows.Controls.Image;
 using Point = System.Windows.Point;
@@ -14,12 +15,13 @@ namespace Pixed.ViewModels
         private Point _imageOffset;
         private double _imageFactor;
         private Image? _image;
+        private Image? _overlayImage;
+        private Bitmap _overlayBitmap;
         private bool _leftPressed;
         private readonly bool _rightPressed;
         private readonly IDisposable _refreshDisposable;
         private Frame _frame;
         private Grid _grid;
-        private ScrollViewer _scrollViewer;
 
         public ActionCommand<Point> LeftMouseDown { get; set; }
         public ActionCommand<Point> LeftMouseUp { get; set; }
@@ -65,17 +67,19 @@ namespace Pixed.ViewModels
             _grid.Width = _frame.Width * factor;
             _grid.Height = _frame.Height * factor;
         }
-        public void Initialize(Image image, Grid grid, ScrollViewer scrollViewer)
+        public void Initialize(Image image, Grid grid, Image overlay)
         {
             _image = image;
             _grid = grid;
-            _scrollViewer = scrollViewer;
+            _overlayImage = overlay;
         }
 
         private void LeftMouseDownAction(Point point)
         {
+            int imageX = (int)(point.X / _imageFactor);
+            int imageY = (int)(point.Y / _imageFactor);
             _leftPressed = true;
-            MouseMoveAction(point);
+            Global.ToolSelected?.ApplyTool(imageX, imageY, _frame, ref _overlayBitmap);
         }
 
         private void LeftMouseUpAction(Point point)
@@ -85,12 +89,19 @@ namespace Pixed.ViewModels
 
         private void MouseMoveAction(Point point)
         {
+            int imageX = (int)(point.X / _imageFactor);
+            int imageY = (int)(point.Y / _imageFactor);
             if (_leftPressed)
             {
-                int imageX = (int)(point.X / _imageFactor);
-                int imageY = (int)(point.Y / _imageFactor);
-                _frame.SetPixel(imageX, imageY, Color.Black.ToArgb());
+                Global.ToolSelected?.MoveTool(imageX, imageY, _frame, ref _overlayBitmap);
                 Subjects.RefreshCanvas.OnNext(true);
+            }
+
+            Global.ToolSelected?.UpdateHighlightedPixel(imageX, imageY, _frame, ref _overlayBitmap);
+            
+            if(_overlayImage!= null)
+            {
+                _overlayImage.Source = _overlayBitmap.ToBitmapImage();
             }
         }
 

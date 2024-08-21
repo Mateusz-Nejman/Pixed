@@ -1,5 +1,6 @@
 ﻿using Pixed.Models;
 using Pixed.Services.Keyboard;
+using Pixed.Tools;
 
 namespace Pixed
 {
@@ -7,5 +8,6 @@ namespace Pixed
     {
         public static ShortcutService? ShortcutService { get; set; }
         public static Settings UserSettings { get; set; } = new Settings();
+        public static BaseTool ToolSelected { get; set; }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using Pixed.Controls;
 using Pixed.Services.Keyboard;
+using Pixed.Tools;
 using Pixed.ViewModels;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace Pixed
 {
@@ -24,6 +26,18 @@ namespace Pixed
         private void Initialize()
         {
             Global.ShortcutService = new ShortcutService();
+            tool_pen.IsChecked = true;
+        }
+
+        private void ToolRadio_Checked(object sender, RoutedEventArgs e)
+        {
+            RadioButton radio = (RadioButton)sender;
+            string name = radio.Name;
+            
+            if(name == "tool_pen")
+            {
+                Global.ToolSelected = new ToolPen();
+            }
         }
     }
 }

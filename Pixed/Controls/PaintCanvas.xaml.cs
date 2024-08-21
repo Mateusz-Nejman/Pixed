@@ -17,7 +17,7 @@ namespace Pixed.Controls
         {
             InitializeComponent();
             _viewModel = (PaintCanvasViewModel)DataContext;
-            _viewModel.Initialize(image, imageGrid, scrollView);
+            _viewModel.Initialize(image, imageGrid, overlay);
             SizeChanged += PaintCanvas_SizeChanged;
             Loaded += PaintCanvas_Loaded;
         }

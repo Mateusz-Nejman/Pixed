@@ -21,24 +21,24 @@
         </Grid.ColumnDefinitions>
         <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
             <StackPanel Margin="8">
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-pen.png"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-vertical-mirror-pen.png"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-paint-bucket.png"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-colorswap.png"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-eraser.png"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-stroke.png"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-rectangle.png"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-circle.png"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-move.png"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-shape-select.png"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-rectangle-select.png"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-lasso-select.png"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-lighten.png"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-dithering.png"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-colorpicker.png"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-noise.png"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-noise-fill.png"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-outliner.png"/>
+                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-pen.png" Name="tool_pen" Checked="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-vertical-mirror-pen.png" Name="tool_mirror_pen" Checked="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-paint-bucket.png" Name="tool_paint_bucket" Checked="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-colorswap.png" Name="tool_colorswap" Checked="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-eraser.png" Name="tool_eraser" Checked="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-stroke.png" Name="tool_stroke" Checked="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-rectangle.png" Name="tool_rectangle" Checked="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-circle.png" Name="tool_circle" Checked="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-move.png" Name="tool_move" Checked="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-shape-select.png" Name="tool_shape_select" Checked="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-rectangle-select.png" Name="tool_rectangle_select" Checked="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-lasso-select.png" Name="tool_lasso_select" Checked="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-lighten.png" Name="tool_lighten" Checked="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-dithering.png" Name="tool_dithering" Checked="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-colorpicker.png" Name="tool_colorpicker" Checked="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-noise.png" Name="tool_noise" Checked="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-noise-fill.png" Name="tool_noise_fill" Checked="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-outliner.png" Name="tool_outliner" Checked="ToolRadio_Checked"/>
             </StackPanel>
         </ScrollViewer>
         <Grid x:Name="mainSection" Grid.Column="1">
