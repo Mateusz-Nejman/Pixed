@@ -129,7 +129,9 @@
                                 <Image Source="./Resources/icons/common/cross.png" Width="10" Height="10"/>
                             </Button>
                         </Grid>
-                        <ListBox ItemsSource="{Binding Layers}" SelectedIndex="{Binding SelectedLayer, Mode=TwoWay}" Background="#222">
+                        <ListBox ItemsSource="{Binding Layers}" 
+                                 SelectedIndex="{Binding SelectedLayer, Mode=TwoWay}" 
+                                 Background="#222">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <controls:LayerListControl/>

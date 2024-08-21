@@ -49,7 +49,7 @@ namespace Pixed.ViewModels
         private void AddLayerCommandAction()
         {
             _frames[_selectedFrame].AddLayer(new Layer(_frames[_selectedFrame].Width, _frames[_selectedFrame].Height));
-            _frames[_selectedFrame].SelectedLayer = _frames[_selectedFrame].Layers.Count - 1;
+            SelectedLayer = _frames[_selectedFrame].Layers.Count - 1;
         }
     }
 }
