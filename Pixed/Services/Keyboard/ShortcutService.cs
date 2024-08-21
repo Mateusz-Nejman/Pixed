@@ -1,4 +1,6 @@
-﻿namespace Pixed.Services.Keyboard
+﻿using System.Windows.Input;
+
+namespace Pixed.Services.Keyboard
 {
     internal class ShortcutService
     {
@@ -30,6 +32,9 @@
                     }
                 }
             });
+
+            Add(new KeyState(Key.Z, false, true, false), () => Global.Models[0].Undo());
+            Add(new KeyState(Key.Y, false, true, false), () => Global.Models[0].Redo());
         }
 
         public void Add(KeyState shortcut, Action action)

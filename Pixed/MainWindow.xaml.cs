@@ -4,6 +4,7 @@ using Pixed.Tools;
 using Pixed.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Pixed
 {
@@ -38,6 +39,15 @@ namespace Pixed
             {
                 Global.ToolSelected = new ToolPen();
             }
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            Subjects.KeyState.OnNext(new KeyState(
+                e.Key,
+                Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift),
+                Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl),
+                Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt)));
         }
     }
 }

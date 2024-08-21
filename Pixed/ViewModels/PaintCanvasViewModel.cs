@@ -82,26 +82,56 @@ namespace Pixed.ViewModels
         {
             int imageX = (int)(point.X / _imageFactor);
             int imageY = (int)(point.Y / _imageFactor);
+            
+            if(!_frame.PointInside(imageX, imageY))
+            {
+                return;
+            }
+
             _leftPressed = true;
             Global.ToolSelected?.ApplyTool(imageX, imageY, _frame, ref _overlayBitmap);
         }
 
         private void LeftMouseUpAction(Point point)
         {
+            int imageX = (int)(point.X / _imageFactor);
+            int imageY = (int)(point.Y / _imageFactor);
+
+            if (!_frame.PointInside(imageX, imageY))
+            {
+                return;
+            }
+
             _leftPressed = false;
+            Global.ToolSelected?.ReleaseTool(imageX, imageY, _frame, ref _overlayBitmap);
         }
 
         private void RightMouseDownAction(Point point)
         {
             int imageX = (int)(point.X / _imageFactor);
             int imageY = (int)(point.Y / _imageFactor);
+
+            if (!_frame.PointInside(imageX, imageY))
+            {
+                return;
+            }
+
             _rightPressed = true;
             Global.ToolSelected?.ApplyTool(imageX, imageY, _frame, ref _overlayBitmap);
         }
 
         private void RightMouseUpAction(Point point)
         {
+            int imageX = (int)(point.X / _imageFactor);
+            int imageY = (int)(point.Y / _imageFactor);
+
+            if (!_frame.PointInside(imageX, imageY))
+            {
+                return;
+            }
+
             _rightPressed = false;
+            Global.ToolSelected?.ReleaseTool(imageX, imageY, _frame, ref _overlayBitmap);
         }
 
         private void MouseMoveAction(Point point)
@@ -133,6 +163,10 @@ namespace Pixed.ViewModels
 
         private void MouseLeaveAction()
         {
+            if(_rightPressed || _leftPressed)
+            {
+                Global.ToolSelected?.ReleaseTool(0, 0, _frame, ref _overlayBitmap);
+            }
             _rightPressed = false;
             _leftPressed = false;
         }
