@@ -40,7 +40,6 @@ namespace Pixed.Models
         public void SetPixel(int x, int y, int color)
         {
             _layers[SelectedLayer].SetPixel(x, y, color);
-            OnPropertyChanged(nameof(Layers));
         }
 
         public int GetPixel(int x, int y)
@@ -52,7 +51,9 @@ namespace Pixed.Models
         {
             string name = "Layer " + _layers.Count;
             layer.Name = name;
+            layer.RefreshRenderSource();
             _layers.Add(layer);
+            OnPropertyChanged(nameof(Layers));
         }
 
         public Bitmap Render()

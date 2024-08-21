@@ -43,7 +43,15 @@ namespace Pixed.ViewModels
 
         private void AddLayerCommandAction()
         {
-            Frames[_selectedFrame].AddLayer(new Layer(Frames[_selectedFrame].Width, Frames[_selectedFrame].Height));
+            if (Keyboard.Modifiers == ModifierKeys.Shift)
+            {
+                Frames[_selectedFrame].AddLayer(Layers[_selectedFrame].Clone());
+            }
+            else
+            {
+                Frames[_selectedFrame].AddLayer(new Layer(Frames[_selectedFrame].Width, Frames[_selectedFrame].Height));
+            }
+
             SelectedLayer = Frames[_selectedFrame].Layers.Count - 1;
         }
     }

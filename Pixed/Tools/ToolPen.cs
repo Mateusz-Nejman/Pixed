@@ -21,6 +21,7 @@ namespace Pixed.Tools
             _historyEntry.OldColor.Add(frame.GetPixel(x, y));
             _historyEntry.NewColor.Add(GetToolColor().ToArgb());
             frame.SetPixel(x, y, GetToolColor().ToArgb());
+            Subjects.RefreshCanvas.OnNext(true);
         }
 
         public override void MoveTool(int x, int y, Frame frame, ref Bitmap overlay)

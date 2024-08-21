@@ -72,7 +72,9 @@ namespace Pixed.Models
 
         public Layer Clone()
         {
-            return new Layer(_width, _height, _pixels);
+            int[] pixels = new int[_pixels.Length];
+            _pixels.CopyTo(pixels, 0);
+            return new Layer(_width, _height, pixels);
         }
 
         public void SetPixel(int x, int y, int color)
@@ -83,6 +85,11 @@ namespace Pixed.Models
             }
             _pixels[y * _width + x] = color;
             _needRerender = true;
+            RefreshRenderSource();
+        }
+
+        public void RefreshRenderSource()
+        {
             RenderSource = Render().ToBitmapImage();
         }
 
