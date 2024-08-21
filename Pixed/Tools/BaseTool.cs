@@ -32,6 +32,11 @@ namespace Pixed.Tools
 
         }
 
+        public virtual void ReleaseTool(int x, int y, Frame frame, ref Bitmap overlay)
+        {
+
+        }
+
         public virtual void UpdateHighlightedPixel(int x, int y, Frame frame, ref Bitmap overlay)
         {
             if (highlightedX != x || highlightedY != y || overlay == null)

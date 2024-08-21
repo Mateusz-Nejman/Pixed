@@ -10,6 +10,7 @@ namespace Pixed.Models
         private readonly int _width;
         private readonly int _height;
         private int _selectedLayer = 0;
+        private string _id;
 
         public int Width => _width;
         public int Height => _height;
@@ -25,8 +26,11 @@ namespace Pixed.Models
         }
         public ObservableCollection<Layer> Layers => _layers;
 
+        public string Id => _id;
+
         public Frame(int width, int height)
         {
+            _id = Guid.NewGuid().ToString();
             _layers = [];
             _width = width;
             _height = height;
@@ -68,6 +72,11 @@ namespace Pixed.Models
             g.DrawImage(_layers[_selectedLayer].Render(), 0, 0);
 
             return render;
+        }
+
+        public bool PointInside(int x, int y)
+        {
+            return x >= 0 && y >= 0 && x < Width && y < Height;
         }
     }
 }

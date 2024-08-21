@@ -6,13 +6,13 @@ namespace Pixed.ViewModels
 {
     internal class MainViewModel : PropertyChangedBase
     {
-        private readonly ObservableCollection<Frame> _frames;
         private readonly int _selectedFrame = 0;
         private PaintCanvasViewModel? _paintCanvas;
         private int _selectedLayer = 0;
 
 
-        public ObservableCollection<Layer> Layers => _frames[_selectedFrame].Layers;
+        public ObservableCollection<Frame> Frames => Global.Models[0].Frames;
+        public ObservableCollection<Layer> Layers => Frames[_selectedFrame].Layers;
 
         public int SelectedLayer
         {
@@ -20,7 +20,7 @@ namespace Pixed.ViewModels
             set
             {
                 _selectedLayer = value;
-                _frames[_selectedFrame].SelectedLayer = value;
+                Frames[_selectedFrame].SelectedLayer = value;
                 OnPropertyChanged();
             }
         }
@@ -29,8 +29,8 @@ namespace Pixed.ViewModels
 
         public MainViewModel()
         {
-            _frames = [];
-            _frames.Add(new Frame(Global.UserSettings.UserWidth, Global.UserSettings.UserHeight));
+            Global.Models.Add(new PixedModel());
+            Frames.Add(new Frame(Global.UserSettings.UserWidth, Global.UserSettings.UserHeight));
             OnPropertyChanged(nameof(Layers));
             AddLayerCommand = new ActionCommand(AddLayerCommandAction);
         }
@@ -38,13 +38,13 @@ namespace Pixed.ViewModels
         public void Initialize(PaintCanvasViewModel paintCanvas)
         {
             _paintCanvas = paintCanvas;
-            _paintCanvas.CurrentFrame = _frames[_selectedFrame];
+            _paintCanvas.CurrentFrame = Frames[_selectedFrame];
         }
 
         private void AddLayerCommandAction()
         {
-            _frames[_selectedFrame].AddLayer(new Layer(_frames[_selectedFrame].Width, _frames[_selectedFrame].Height));
-            SelectedLayer = _frames[_selectedFrame].Layers.Count - 1;
+            Frames[_selectedFrame].AddLayer(new Layer(Frames[_selectedFrame].Width, Frames[_selectedFrame].Height));
+            SelectedLayer = Frames[_selectedFrame].Layers.Count - 1;
         }
     }
 }

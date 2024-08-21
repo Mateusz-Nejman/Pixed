@@ -17,6 +17,7 @@ namespace Pixed.Models
         private float _opacity = 1.0f;
         private string _name = string.Empty;
         private BitmapImage? _renderSource = null;
+        private string _id;
 
         public float Opacity
         {
@@ -47,8 +48,11 @@ namespace Pixed.Models
                 OnPropertyChanged();
             }
         }
+
+        public string Id => _id;
         public Layer(int width, int height)
         {
+            _id = Guid.NewGuid().ToString();
             _width = width;
             _height = height;
             _pixels = new int[width * height];
@@ -58,6 +62,7 @@ namespace Pixed.Models
 
         private Layer(int width, int height, int[] pixels)
         {
+            _id = Guid.NewGuid().ToString();
             _width = width;
             _height = height;
             _pixels = pixels;

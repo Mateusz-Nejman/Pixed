@@ -1,4 +1,5 @@
 ﻿using Pixed.Models;
+using Pixed.Services.History;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -10,21 +11,28 @@ namespace Pixed.Tools
 {
     internal class ToolPen : BaseTool
     {
-        private int _previousX = -1;
-        private int _previousY = -1;
+        private DynamicHistoryEntry _historyEntry = new();
         public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay)
         {
-            _previousX = x;
-            _previousY = y;
+            _historyEntry.FrameId = frame.Id;
+            _historyEntry.LayerId = frame.Layers[frame.SelectedLayer].Id;
+            _historyEntry.PixelX.Add(x);
+            _historyEntry.PixelY.Add(y);
+            _historyEntry.OldColor.Add(frame.GetPixel(x, y));
+            _historyEntry.NewColor.Add(GetToolColor().ToArgb());
             frame.SetPixel(x, y, GetToolColor().ToArgb());
         }
 
         public override void MoveTool(int x, int y, Frame frame, ref Bitmap overlay)
         {
             this.ApplyTool(x, y, frame, ref overlay);
+        }
 
-            _previousX = x;
-            _previousY = y;
+        public override void ReleaseTool(int x, int y, Frame frame, ref Bitmap overlay)
+        {
+            base.ReleaseTool(x, y, frame, ref overlay);
+            Global.Models[0].AddHistory(_historyEntry.ToEntry());
+            _historyEntry = new DynamicHistoryEntry();
         }
     }
 }
