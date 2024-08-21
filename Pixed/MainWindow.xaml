@@ -19,7 +19,7 @@
             <ColumnDefinition Width="80"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <ScrollViewer HorizontalScrollBarVisibility="Hidden">
+        <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
             <StackPanel Margin="8">
                 <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-pen.png"/>
                 <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-vertical-mirror-pen.png"/>
@@ -81,25 +81,55 @@
                                 <RowDefinition Height="26"/>
                             </Grid.RowDefinitions>
                             <Button Style="{StaticResource layersButton}" Command="{Binding AddLayerCommand}">
+                                <Button.ToolTip>
+                                    <ToolTip Background="Black" BorderThickness="0">
+                                        <controls:TooltipWithButton Title="Add Layer" ButtonText="Shift" ButtonTextHelper="Clone current layer"/>
+                                    </ToolTip>
+                                </Button.ToolTip>
                                 <Image Source="./Resources/icons/common/plus.png" Width="10" Height="10"/>
                             </Button>
                             <Button Style="{StaticResource layersButton}" Grid.Column="1">
+                                <Button.ToolTip>
+                                    <ToolTip Background="Black" BorderThickness="0">
+                                        <controls:TooltipWithButton Title="Move layer up" ButtonText="Shift" ButtonTextHelper="Move to the top"/>
+                                    </ToolTip>
+                                </Button.ToolTip>
                                 <Image Source="./Resources/icons/common/arrow-up.png" Width="10" Height="10"/>
                             </Button>
                             <Button Style="{StaticResource layersButton}" Grid.Column="2">
+                                <Button.ToolTip>
+                                    <ToolTip Background="Black" BorderThickness="0">
+                                        <controls:TooltipWithButton Title="Move layer down" ButtonText="Shift" ButtonTextHelper="Move to the bottom"/>
+                                    </ToolTip>
+                                </Button.ToolTip>
                                 <Image Source="./Resources/icons/common/arrow-down.png" Width="10" Height="10"/>
                             </Button>
                             <Button Style="{StaticResource layersButton}" Grid.Column="3">
+                                <Button.ToolTip>
+                                    <ToolTip Background="Black" BorderThickness="0">
+                                        <controls:SimpleTooltip Title="Edit layer name"/>
+                                    </ToolTip>
+                                </Button.ToolTip>
                                 <Image Source="./Resources/icons/common/pencil.png" Width="10" Height="10"/>
                             </Button>
                             <Button Style="{StaticResource layersButton}" Grid.Column="4">
+                                <Button.ToolTip>
+                                    <ToolTip Background="Black" BorderThickness="0">
+                                        <controls:SimpleTooltip Title="Merge with layer below"/>
+                                    </ToolTip>
+                                </Button.ToolTip>
                                 <Image Source="./Resources/icons/common/download2.png" Width="10" Height="10"/>
                             </Button>
                             <Button Style="{StaticResource layersButton}" Grid.Column="5">
+                                <Button.ToolTip>
+                                    <ToolTip Background="Black" BorderThickness="0">
+                                        <controls:SimpleTooltip Title="Delete selected layer"/>
+                                    </ToolTip>
+                                </Button.ToolTip>
                                 <Image Source="./Resources/icons/common/cross.png" Width="10" Height="10"/>
                             </Button>
                         </Grid>
-                        <ListBox ItemsSource="{Binding Layers}" SelectedIndex="{Binding SelectedLayer}">
+                        <ListBox ItemsSource="{Binding Layers}" SelectedIndex="{Binding SelectedLayer, Mode=TwoWay}" Background="#222">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <controls:LayerListControl/>

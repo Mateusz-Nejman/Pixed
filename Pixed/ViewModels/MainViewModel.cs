@@ -25,6 +25,7 @@ namespace Pixed.ViewModels
             set
             {
                 _selectedLayer = value;
+                _frames[_selectedFrame].SelectedLayer = value;
                 OnPropertyChanged();
             }
         }
@@ -47,7 +48,8 @@ namespace Pixed.ViewModels
 
         private void AddLayerCommandAction()
         {
-            _frames[_selectedFrame].AddLayer(new Layer(64, 32));
+            _frames[_selectedFrame].AddLayer(new Layer(_frames[_selectedFrame].Width, _frames[_selectedFrame].Height));
+            _frames[_selectedFrame].SelectedLayer = _frames[_selectedFrame].Layers.Count - 1;
         }
     }
 }

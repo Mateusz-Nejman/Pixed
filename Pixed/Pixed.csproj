@@ -9,6 +9,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\**" />
+    <Compile Remove="Rendering\**" />
+    <EmbeddedResource Remove="Controllers\**" />
+    <EmbeddedResource Remove="Rendering\**" />
+    <None Remove="Controllers\**" />
+    <None Remove="Rendering\**" />
+    <Page Remove="Controllers\**" />
+    <Page Remove="Rendering\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Resources\Icons\common\arrow-down.png" />
     <None Remove="Resources\Icons\common\arrow-left.png" />
     <None Remove="Resources\Icons\common\arrow-right.png" />
@@ -123,11 +134,6 @@
     <Resource Include="Resources\Icons\transform\tool-flip.png" />
     <Resource Include="Resources\Icons\transform\tool-rotate.png" />
     <Resource Include="Resources\transparentBackground.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="Rendering\" />
   </ItemGroup>
 
 </Project>

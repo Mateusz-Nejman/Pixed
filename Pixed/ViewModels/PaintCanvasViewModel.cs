@@ -29,26 +29,6 @@ namespace Pixed.ViewModels
         private Grid _grid;
         private ScrollViewer _scrollViewer;
 
-        public double GridWidth
-        {
-            get => _gridWidth;
-            set
-            {
-                _gridWidth = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public double GridHeight
-        {
-            get => _gridHeight;
-            set
-            {
-                _gridHeight = value;
-                OnPropertyChanged();
-            }
-        }
-
         public ActionCommand<Point> LeftMouseDown { get; set; }
         public ActionCommand<Point> LeftMouseUp { get; set; }
         public ActionCommand<Point> MouseMove { get; set; }
@@ -117,7 +97,7 @@ namespace Pixed.ViewModels
             {
                 int imageX = (int)(point.X / _imageFactor);
                 int imageY = (int)(point.Y / _imageFactor);
-                _frame.SetPixel(0, imageX, imageY, Color.Black.ToArgb());
+                _frame.SetPixel(imageX, imageY, Color.Black.ToArgb());
                 Subjects.RefreshCanvas.OnNext(true);
             }
         }

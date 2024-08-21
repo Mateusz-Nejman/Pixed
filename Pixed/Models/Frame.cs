@@ -13,9 +13,20 @@ namespace Pixed.Models
         private readonly ObservableCollection<Layer> _layers;
         private int _width;
         private int _height;
+        private int _selectedLayer = 0;
 
         public int Width => _width;
         public int Height => _height;
+        public int SelectedLayer
+        {
+            get => _selectedLayer;
+            set
+            {
+                _selectedLayer = value;
+                OnPropertyChanged();
+                Subjects.RefreshCanvas.OnNext(true);
+            }
+        }
         public ObservableCollection<Layer> Layers => _layers;
 
         public Frame(int width, int height)
@@ -26,9 +37,9 @@ namespace Pixed.Models
             AddLayer(new Layer(width, height));
         }
 
-        public void SetPixel(int layer, int x, int y, int color)
+        public void SetPixel(int x, int y, int color)
         {
-            _layers[layer].SetPixel(x, y, color);
+            _layers[SelectedLayer].SetPixel(x, y, color);
             OnPropertyChanged(nameof(Layers));
         }
 
@@ -41,7 +52,7 @@ namespace Pixed.Models
 
         public Bitmap Render()
         {
-            return _layers[0].Render();
+            return _layers[_selectedLayer].Render();
         }
     }
 }
