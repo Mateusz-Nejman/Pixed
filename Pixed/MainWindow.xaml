@@ -189,10 +189,42 @@
                     <StackPanel>
                         <TextBlock Text="Transform" Height="32" Foreground="White" FontSize="15px" Padding="4" FontWeight="Bold"/>
                         <UniformGrid Rows="1" Columns="4" Width="184" Height="46">
-                            <Button Style="{StaticResource ToolButton}" Content="../Resources/Icons/transform/tool-flip.png" Grid.Column="0" Grid.Row="0"/>
-                            <Button Style="{StaticResource ToolButton}" Content="../Resources/Icons/transform/tool-rotate.png" Grid.Column="1" Grid.Row="0"/>
-                            <Button Style="{StaticResource ToolButton}" Content="../Resources/Icons/transform/tool-center.png" Grid.Column="2" Grid.Row="0"/>
-                            <Button Style="{StaticResource ToolButton}" Content="../Resources/Icons/transform/tool-crop.png" Grid.Column="3" Grid.Row="0"/>
+                            <Button Style="{StaticResource ToolButton}" Content="../Resources/Icons/transform/tool-flip.png" Grid.Column="0" Grid.Row="0">
+                                <Button.ToolTip>
+                                    <ToolTip Background="Black" BorderThickness="0">
+                                        <controls:TooltipWith3Buttons Title="Flip horizontaly" 
+                                                                      ButtonText1="Alt" ButtonTextHelper1="Flip vertically" 
+                                                                      ButtonText2="Ctrl" ButtonTextHelper2="Apply to all layers"
+                                                                      ButtonText3="Shift" ButtonTextHelper3="Apply to all frames"/>
+                                    </ToolTip>
+                                </Button.ToolTip>
+                            </Button>
+                            <Button Style="{StaticResource ToolButton}" Content="../Resources/Icons/transform/tool-rotate.png" Grid.Column="1" Grid.Row="0">
+                                <Button.ToolTip>
+                                    <ToolTip Background="Black" BorderThickness="0">
+                                        <controls:TooltipWith3Buttons Title="Merge with layer below"
+                                                                      ButtonText1="Alt" ButtonTextHelper1="Clockwise rotation"
+                                                                      ButtonText2="Ctrl"  ButtonTextHelper2="Apply to all layers"
+                                                                      ButtonText3="Shift" ButtonTextHelper3="Apply to all frames"/>
+                                    </ToolTip>
+                                </Button.ToolTip>
+                            </Button>
+                            <Button Style="{StaticResource ToolButton}" Content="../Resources/Icons/transform/tool-center.png" Grid.Column="2" Grid.Row="0">
+                                <Button.ToolTip>
+                                    <ToolTip Background="Black" BorderThickness="0">
+                                        <controls:TooltipWith2Buttons Title="Merge with layer below"
+                                                                      ButtonText1="Ctrl" ButtonTextHelper1="Apply to all layers"
+                                                                      ButtonText2="Shift" ButtonTextHelper2="Apply to all frames"/>
+                                    </ToolTip>
+                                </Button.ToolTip>
+                            </Button>
+                            <Button Style="{StaticResource ToolButton}" Content="../Resources/Icons/transform/tool-crop.png" Grid.Column="3" Grid.Row="0">
+                                <Button.ToolTip>
+                                    <ToolTip Background="Black" BorderThickness="0">
+                                        <controls:SimpleTooltip Title="Crop to fit the content or the selection. Applies to all frames and layers!"/>
+                                    </ToolTip>
+                                </Button.ToolTip>
+                            </Button>
                         </UniformGrid>
                     </StackPanel>
                 </Border>
