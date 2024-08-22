@@ -1,13 +1,15 @@
-﻿using Pixed.Models;
+﻿using GongSolutions.Wpf.DragDrop;
+using Pixed.Models;
 using Pixed.Windows;
 using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Pixed.ViewModels
 {
-    internal class MainViewModel : PropertyChangedBase
+    internal class MainViewModel : PropertyChangedBase, IDropTarget
     {
-        private readonly int _selectedFrame = 0;
+        private int _selectedFrame = 0;
         private PaintCanvasViewModel? _paintCanvas;
         private int _selectedLayer = 0;
 
@@ -60,6 +62,20 @@ namespace Pixed.ViewModels
         public ObservableCollection<Frame> Frames => Global.Models[0].Frames;
         public ObservableCollection<Layer> Layers => Frames[_selectedFrame].Layers;
 
+        public int SelectedFrame
+        {
+            get => _selectedFrame;
+            set
+            {
+                _selectedFrame = Math.Clamp(value, 0, Frames.Count);
+                _paintCanvas.CurrentFrame = Frames[_selectedFrame];
+                SelectedLayer = 0;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Layers));
+                Subjects.RefreshCanvas.OnNext(true);
+            }
+        }
+
         public int SelectedLayer
         {
             get => _selectedLayer;
@@ -87,6 +103,8 @@ namespace Pixed.ViewModels
         {
             Global.Models.Add(new PixedModel());
             Frames.Add(new Frame(Global.UserSettings.UserWidth, Global.UserSettings.UserHeight));
+            Frames.Add(new Frame(Global.UserSettings.UserWidth, Global.UserSettings.UserHeight));
+            Frames.Add(new Frame(Global.UserSettings.UserWidth, Global.UserSettings.UserHeight));
             OnPropertyChanged(nameof(Layers));
             AddLayerCommand = new ActionCommand(AddLayerAction);
             MoveLayerUpCommand = new ActionCommand(MoveLayerUpAction);
@@ -100,6 +118,41 @@ namespace Pixed.ViewModels
         {
             _paintCanvas = paintCanvas;
             _paintCanvas.CurrentFrame = Frames[_selectedFrame];
+        }
+
+        public void DragOver(IDropInfo dropInfo)
+        {
+            if (dropInfo.Data is Frame sourceItem && dropInfo.TargetItem is Frame targetItem)
+            {
+                dropInfo.DropTargetAdorner = DropTargetAdorners.Highlight;
+                dropInfo.Effects = DragDropEffects.Copy;
+            }
+        }
+
+        public void Drop(IDropInfo dropInfo)
+        {
+            if (dropInfo.Data is Frame sourceItem)
+            {
+                int oldIndex = Frames.IndexOf(sourceItem);
+                int newIndex = dropInfo.UnfilteredInsertIndex;
+
+                if (oldIndex == newIndex && dropInfo.TargetItem is Frame targetItem)
+                {
+                    newIndex = Frames.IndexOf(targetItem);
+                }
+                Frames.Insert(newIndex, sourceItem);
+
+                if (oldIndex > newIndex)
+                {
+                    oldIndex++;
+                }
+                else
+                {
+                    newIndex--;
+                }
+                Frames.RemoveAt(oldIndex);
+                SelectedFrame = newIndex;
+            }
         }
 
         private void AddLayerAction()

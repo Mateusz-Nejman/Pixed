@@ -50,7 +50,8 @@ namespace Pixed.ViewModels
             {
                 if (_image != null)
                 {
-                    _image.Source = _frame.Render().ToBitmapImage();
+                    _image.Source = _frame.RenderTransparent().ToBitmapImage();
+                    _frame.RefreshRenderSource();
                 }
             });
 

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pixed" 
         xmlns:controls="clr-namespace:Pixed.Controls" 
+        xmlns:dd="urn:gong-wpf-dragdrop"
         xmlns:viewmodels="clr-namespace:Pixed.ViewModels"
         mc:Ignorable="d"
         Title="Pixed" Height="450" Width="800" Background="#1D1D1D" KeyDown="Window_KeyDown">
@@ -51,8 +52,19 @@
                 <!-- Open/close button-->
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            <StackPanel x:Name="framesPanel">
-
+            <StackPanel x:Name="framesPanel" Width="124">
+                <ListBox ItemsSource="{Binding Frames}" SelectedIndex="{Binding SelectedFrame, Mode=TwoWay}"
+                                       dd:DragDrop.DropTargetAdornerBrush="Coral"
+                                         dd:DragDrop.IsDragSource="True"
+                                         dd:DragDrop.IsDropTarget="True"
+                                         dd:DragDrop.UseDefaultEffectDataTemplate="True"
+                                         dd:DragDrop.DropHandler="{Binding}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <controls:FrameListControl/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
             </StackPanel>
 
             <Grid Name="centerPanel" Grid.Column="2">

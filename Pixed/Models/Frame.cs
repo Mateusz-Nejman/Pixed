@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 
 namespace Pixed.Models
 {
@@ -12,6 +13,7 @@ namespace Pixed.Models
         private readonly int _height;
         private int _selectedLayer = 0;
         private string _id;
+        private BitmapImage _renderSource;
 
         public int Width => _width;
         public int Height => _height;
@@ -23,6 +25,16 @@ namespace Pixed.Models
                 _selectedLayer = Math.Clamp(value, 0, Layers.Count - 1);
                 OnPropertyChanged();
                 Subjects.RefreshCanvas.OnNext(true);
+            }
+        }
+
+        public BitmapImage RenderSource
+        {
+            get => _renderSource;
+            set
+            {
+                _renderSource = value;
+                OnPropertyChanged();
             }
         }
         public ObservableCollection<Layer> Layers => _layers;
@@ -57,7 +69,12 @@ namespace Pixed.Models
             OnPropertyChanged(nameof(Layers));
         }
 
-        public Bitmap Render()
+        public void RefreshRenderSource()
+        {
+            RenderSource = Render().ToBitmapImage();
+        }
+
+        public Bitmap RenderTransparent()
         {
             Bitmap render = new(Width, Height);
             Graphics g = Graphics.FromImage(render);
@@ -72,6 +89,18 @@ namespace Pixed.Models
             }
 
             g.DrawImage(_layers[_selectedLayer].Render(), 0, 0);
+
+            return render;
+        }
+
+        public Bitmap Render()
+        {
+            Bitmap render = new(Width, Height);
+            Graphics g = Graphics.FromImage(render);
+            for (int a = 0; a < _layers.Count; a++)
+            {
+                g.DrawImage(_layers[a].Render(), 0, 0);
+            }
 
             return render;
         }
