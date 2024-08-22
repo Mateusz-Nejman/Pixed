@@ -50,6 +50,19 @@ namespace Pixed.Models
             AddLayer(new Layer(width, height));
         }
 
+        public Frame Clone()
+        {
+            Frame frame = new Frame(Width, Height);
+            frame._layers.Clear();
+
+            foreach(Layer layer in _layers)
+            {
+                frame._layers.Add(layer.Clone());
+            }
+
+            return frame;
+        }
+
         public void SetPixel(int x, int y, int color)
         {
             _layers[SelectedLayer].SetPixel(x, y, color);

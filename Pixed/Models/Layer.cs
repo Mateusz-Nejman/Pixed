@@ -75,7 +75,11 @@ namespace Pixed.Models
         {
             int[] pixels = new int[_pixels.Length];
             _pixels.CopyTo(pixels, 0);
-            return new Layer(_width, _height, pixels);
+            Layer layer = new Layer(_width, _height, pixels);
+            layer.Name = Name;
+            layer.RenderSource = RenderSource.CloneCurrentValue();
+            layer._needRerender = true;
+            return layer;
         }
 
         public void SetPixel(int x, int y, int color)
