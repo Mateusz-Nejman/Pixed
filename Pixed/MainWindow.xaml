@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pixed" 
         xmlns:controls="clr-namespace:Pixed.Controls" 
+        xmlns:dd="urn:gong-wpf-dragdrop"
         xmlns:viewmodels="clr-namespace:Pixed.ViewModels"
         mc:Ignorable="d"
         Title="Pixed" Height="450" Width="800" Background="#1D1D1D" KeyDown="Window_KeyDown">
@@ -43,7 +44,7 @@
         </ScrollViewer>
         <Grid x:Name="mainSection" Grid.Column="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="124"/>
                 <ColumnDefinition Width="auto"/>
                 <!-- Open/close button-->
                 <ColumnDefinition Width="*"/>
@@ -51,8 +52,51 @@
                 <!-- Open/close button-->
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            <StackPanel x:Name="framesPanel">
-
+            <StackPanel x:Name="framesPanel" Width="124">
+                <Grid Margin="6, 0, 6, 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="32"/>
+                    </Grid.RowDefinitions>
+                    <Button Style="{StaticResource FramesButton}"  Command="{Binding DuplicateFrameCommand}">
+                        <Button.ToolTip>
+                            <ToolTip Background="Black" BorderThickness="0">
+                                <controls:SimpleTooltip Title="Duplicate this frame"/>
+                            </ToolTip>
+                        </Button.ToolTip>
+                        <Image Source="./Resources/icons/frame/frame-duplicate-white.png" Width="32" Height="32"/>
+                    </Button>
+                    <Button Style="{StaticResource FramesButton}" Grid.Column="1" Command="{Binding RemoveFrameCommand}" Visibility="{Binding RemoveFrameVisibility}">
+                        <Button.ToolTip>
+                            <ToolTip Background="Black" BorderThickness="0">
+                                <controls:SimpleTooltip Title="Delete this frame"/>
+                            </ToolTip>
+                        </Button.ToolTip>
+                        <Image Source="./Resources/icons/frame/frame-recyclebin-white.png" Width="32" Height="32"/>
+                    </Button>
+                </Grid>
+                <ListBox ItemsSource="{Binding Frames}" SelectedIndex="{Binding SelectedFrame, Mode=TwoWay}" Width="110"
+                         Background="#1D1D1D"
+                                       dd:DragDrop.DropTargetAdornerBrush="#039BE5"
+                                         dd:DragDrop.IsDragSource="True"
+                                         dd:DragDrop.IsDropTarget="True"
+                                         dd:DragDrop.UseDefaultEffectDataTemplate="True"
+                                         dd:DragDrop.DropHandler="{Binding}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <controls:FrameListControl/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <Button Style="{StaticResource CreateFrameButton}" Margin="3" Command="{Binding NewFrameCommand}">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Image Margin="3" Width="26" Height="26" Source="../Resources/Icons/frame/frame-plus-white.png"/>
+                        <TextBlock Text="New frame" FontSize="13" Foreground="White" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
             </StackPanel>
 
             <Grid Name="centerPanel" Grid.Column="2">
@@ -80,7 +124,7 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="26"/>
                             </Grid.RowDefinitions>
-                            <Button Style="{StaticResource layersButton}" Command="{Binding AddLayerCommand}">
+                            <Button Style="{StaticResource LayersButton}" Command="{Binding AddLayerCommand}">
                                 <Button.ToolTip>
                                     <ToolTip Background="Black" BorderThickness="0">
                                         <controls:TooltipWithButton Title="Add Layer" ButtonText="Shift" ButtonTextHelper="Clone current layer"/>
@@ -88,7 +132,7 @@
                                 </Button.ToolTip>
                                 <Image Source="./Resources/icons/common/plus.png" Width="10" Height="10"/>
                             </Button>
-                            <Button Style="{StaticResource layersButton}" Grid.Column="1" Command="{Binding MoveLayerUpCommand}" IsEnabled="{Binding CanLayerMoveUp}">
+                            <Button Style="{StaticResource LayersButton}" Grid.Column="1" Command="{Binding MoveLayerUpCommand}" IsEnabled="{Binding CanLayerMoveUp}">
                                 <Button.ToolTip>
                                     <ToolTip Background="Black" BorderThickness="0">
                                         <controls:TooltipWithButton Title="Move layer up" ButtonText="Shift" ButtonTextHelper="Move to the top"/>
@@ -96,7 +140,7 @@
                                 </Button.ToolTip>
                                 <Image Source="./Resources/icons/common/arrow-up.png" Width="10" Height="10"/>
                             </Button>
-                            <Button Style="{StaticResource layersButton}" Grid.Column="2" Command="{Binding MoveLayerDownCommand}" IsEnabled="{Binding CanLayerMoveDown}">
+                            <Button Style="{StaticResource LayersButton}" Grid.Column="2" Command="{Binding MoveLayerDownCommand}" IsEnabled="{Binding CanLayerMoveDown}">
                                 <Button.ToolTip>
                                     <ToolTip Background="Black" BorderThickness="0">
                                         <controls:TooltipWithButton Title="Move layer down" ButtonText="Shift" ButtonTextHelper="Move to the bottom"/>
@@ -104,7 +148,7 @@
                                 </Button.ToolTip>
                                 <Image Source="./Resources/icons/common/arrow-down.png" Width="10" Height="10"/>
                             </Button>
-                            <Button Style="{StaticResource layersButton}" Grid.Column="3" Command="{Binding EditLayerNameCommand}">
+                            <Button Style="{StaticResource LayersButton}" Grid.Column="3" Command="{Binding EditLayerNameCommand}">
                                 <Button.ToolTip>
                                     <ToolTip Background="Black" BorderThickness="0">
                                         <controls:SimpleTooltip Title="Edit layer name"/>
@@ -112,7 +156,7 @@
                                 </Button.ToolTip>
                                 <Image Source="./Resources/icons/common/pencil.png" Width="10" Height="10"/>
                             </Button>
-                            <Button Style="{StaticResource layersButton}" Grid.Column="4" Command="{Binding MergeLayerCommand}" IsEnabled="{Binding CanLayerMerge}">
+                            <Button Style="{StaticResource LayersButton}" Grid.Column="4" Command="{Binding MergeLayerCommand}" IsEnabled="{Binding CanLayerMerge}">
                                 <Button.ToolTip>
                                     <ToolTip Background="Black" BorderThickness="0">
                                         <controls:SimpleTooltip Title="Merge with layer below"/>
@@ -120,7 +164,7 @@
                                 </Button.ToolTip>
                                 <Image Source="./Resources/icons/common/download2.png" Width="10" Height="10"/>
                             </Button>
-                            <Button Style="{StaticResource layersButton}" Grid.Column="5" Command="{Binding RemoveLayerCommand}" IsEnabled="{Binding CanLayerRemove}">
+                            <Button Style="{StaticResource LayersButton}" Grid.Column="5" Command="{Binding RemoveLayerCommand}" IsEnabled="{Binding CanLayerRemove}">
                                 <Button.ToolTip>
                                     <ToolTip Background="Black" BorderThickness="0">
                                         <controls:SimpleTooltip Title="Delete selected layer"/>
