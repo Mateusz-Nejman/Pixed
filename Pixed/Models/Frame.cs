@@ -1,6 +1,7 @@
 ﻿using Pixed.Utils;
 using System.Collections.ObjectModel;
 using System.Drawing;
+using System.Windows.Input;
 
 namespace Pixed.Models
 {
@@ -19,7 +20,7 @@ namespace Pixed.Models
             get => _selectedLayer;
             set
             {
-                _selectedLayer = value;
+                _selectedLayer = Math.Clamp(value, 0, Layers.Count - 1);
                 OnPropertyChanged();
                 Subjects.RefreshCanvas.OnNext(true);
             }
@@ -40,7 +41,6 @@ namespace Pixed.Models
         public void SetPixel(int x, int y, int color)
         {
             _layers[SelectedLayer].SetPixel(x, y, color);
-            OnPropertyChanged(nameof(Layers));
         }
 
         public int GetPixel(int x, int y)
@@ -52,7 +52,9 @@ namespace Pixed.Models
         {
             string name = "Layer " + _layers.Count;
             layer.Name = name;
+            layer.RefreshRenderSource();
             _layers.Add(layer);
+            OnPropertyChanged(nameof(Layers));
         }
 
         public Bitmap Render()
@@ -77,6 +79,63 @@ namespace Pixed.Models
         public bool PointInside(int x, int y)
         {
             return x >= 0 && y >= 0 && x < Width && y < Height;
+        }
+
+        public void MoveLayerUp(bool toTop)
+        {
+            if (_selectedLayer == 0)
+            {
+                return;
+            }
+
+            int oldIndex = _selectedLayer;
+            int newIndex = toTop ? 0 : oldIndex - 1;
+            Layer layer = Layers[oldIndex];
+            _layers.RemoveAt(oldIndex);
+            _layers.Insert(newIndex, layer);
+            SelectedLayer = newIndex;
+            OnPropertyChanged(nameof(Layers));
+        }
+
+        public void MoveLayerDown(bool toBottom)
+        {
+            if (_selectedLayer == Layers.Count - 1)
+            {
+                return;
+            }
+
+            int oldIndex = _selectedLayer;
+            Layer layer = _layers[oldIndex];
+
+            if(toBottom)
+            {
+                _layers.Add(layer);
+                _layers.RemoveAt(oldIndex);
+                SelectedLayer = _layers.Count - 1;
+            }
+            else
+            {
+                _layers.Insert(oldIndex + 2, layer);
+                _layers.RemoveAt(oldIndex);
+                SelectedLayer = oldIndex + 1;
+            }
+            OnPropertyChanged(nameof(Layers));
+        }
+
+        public void MergeLayerBelow()
+        {
+            if(SelectedLayer >= Layers.Count - 1)
+            {
+                return;
+            }
+
+            int index = SelectedLayer;
+            Layer layer = _layers[index];
+            Layer layer2 = _layers[index + 1];
+            layer.MergeLayers(layer2);
+            Layers.RemoveAt(index + 1);
+            Layers[index].RefreshRenderSource();
+            SelectedLayer = index;
         }
     }
 }
