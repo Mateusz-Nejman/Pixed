@@ -59,6 +59,24 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+    <Style x:Key="ToolButton" TargetType="Button">
+        <Setter Property="Width" Value="46"/>
+        <Setter Property="Height" Value="46"/>
+        <Setter Property="BorderThickness" Value="3"/>
+        <Setter Property="Background" Value="#3a3a3a"/>
+        <Setter Property="BorderBrush" Value="#3a3a3a"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border BorderThickness="{TemplateBinding BorderThickness}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            Background="{TemplateBinding Background}">
+                        <Image Source="{Binding Path=Content, RelativeSource={RelativeSource TemplatedParent}}"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
     <Style x:Key="ToolRadio" TargetType="RadioButton">
         <Style.Triggers>
             <Trigger Property="IsChecked" Value="True">
@@ -69,8 +87,8 @@
         <Setter Property="Width" Value="46"/>
         <Setter Property="Height" Value="46"/>
         <Setter Property="BorderThickness" Value="3"/>
-        <Setter Property="Background" Value="#444"/>
-        <Setter Property="BorderBrush" Value="#444"/>
+        <Setter Property="Background" Value="#3a3a3a"/>
+        <Setter Property="BorderBrush" Value="#3a3a3a"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="RadioButton">

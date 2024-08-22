@@ -188,6 +188,12 @@
                 <Border BorderThickness="2" BorderBrush="#888" Margin="8">
                     <StackPanel>
                         <TextBlock Text="Transform" Height="32" Foreground="White" FontSize="15px" Padding="4" FontWeight="Bold"/>
+                        <UniformGrid Rows="1" Columns="4" Width="184" Height="46">
+                            <Button Style="{StaticResource ToolButton}" Content="../Resources/Icons/transform/tool-flip.png" Grid.Column="0" Grid.Row="0"/>
+                            <Button Style="{StaticResource ToolButton}" Content="../Resources/Icons/transform/tool-rotate.png" Grid.Column="1" Grid.Row="0"/>
+                            <Button Style="{StaticResource ToolButton}" Content="../Resources/Icons/transform/tool-center.png" Grid.Column="2" Grid.Row="0"/>
+                            <Button Style="{StaticResource ToolButton}" Content="../Resources/Icons/transform/tool-crop.png" Grid.Column="3" Grid.Row="0"/>
+                        </UniformGrid>
                     </StackPanel>
                 </Border>
 
