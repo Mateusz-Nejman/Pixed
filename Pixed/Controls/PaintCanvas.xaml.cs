@@ -64,7 +64,7 @@ namespace Pixed.Controls
             Frame frame = (Frame)sender;
             var pos = e.GetPosition(frame);
 
-            if(e.ChangedButton == MouseButton.Left && e.ButtonState == MouseButtonState.Released)
+            if (e.ChangedButton == MouseButton.Left && e.ButtonState == MouseButtonState.Released)
             {
                 _viewModel.LeftMouseUp?.Execute(pos);
             }

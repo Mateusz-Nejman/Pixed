@@ -48,7 +48,7 @@ namespace Pixed.Utils
 
             h = MathF.Round(h * 60f);
 
-            if(h < 0)
+            if (h < 0)
             {
                 h += 360f;
             }

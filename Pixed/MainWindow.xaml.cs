@@ -27,7 +27,22 @@ namespace Pixed
         private void Initialize()
         {
             Global.ShortcutService = new ShortcutService();
-            tool_pen.IsChecked = true;
+            Global.SelectionManager = new Selection.SelectionManager(ov =>
+            {
+                _paintCanvas.ViewModel.Overlay = ov;
+            });
+            Global.ToolSelector = new ToolSelector(SelectTool);
+            Global.ToolSelector.SelectTool("tool_pen");
+        }
+
+        private void SelectTool(string name)
+        {
+            var obj = FindName(name);
+
+            if (obj is RadioButton radioButton)
+            {
+                radioButton.IsChecked = true;
+            }
         }
 
         private void ToolRadio_Checked(object sender, RoutedEventArgs e)
@@ -35,7 +50,8 @@ namespace Pixed
             RadioButton radio = (RadioButton)sender;
             string name = radio.Name;
 
-            Global.ToolSelected = Global.Tool.GetTool(name);
+            Global.ToolSelected = Global.ToolSelector.GetTool(name);
+            _paintCanvas.ViewModel.ResetOverlay();
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
