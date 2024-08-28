@@ -212,7 +212,7 @@
                             <Button Style="{StaticResource ToolButton}" Content="../Resources/Icons/transform/tool-center.png" Grid.Column="2" Grid.Row="0">
                                 <Button.ToolTip>
                                     <ToolTip Background="Black" BorderThickness="0">
-                                        <controls:TooltipWith2Buttons Title="Merge with layer below"
+                                        <controls:TooltipWith2Buttons Title="Align image to the center"
                                                                       ButtonText1="Ctrl" ButtonTextHelper1="Apply to all layers"
                                                                       ButtonText2="Shift" ButtonTextHelper2="Apply to all frames"/>
                                     </ToolTip>
