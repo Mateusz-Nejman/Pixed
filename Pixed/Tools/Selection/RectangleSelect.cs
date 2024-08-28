@@ -1,5 +1,6 @@
 ﻿using Pixed.Models;
 using Pixed.Selection;
+using Pixed.Utils;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -17,7 +18,7 @@ namespace Pixed.Tools.Selection
         }
         public override void OnDragSelect(int x, int y, Frame frame, ref Bitmap overlay)
         {
-            overlay = new Bitmap(frame.Width, frame.Height);
+            overlay.Clear();
             _selection = new RectangularSelection(_startX, _startY, x, y);
             Subjects.SelectionCreated.OnNext(_selection);
             DrawSelectionOnOverlay(ref overlay);

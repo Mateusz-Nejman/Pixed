@@ -20,6 +20,8 @@ namespace Pixed.Tools
             _tools.Add("tool_eraser", new ToolEraser());
             _tools.Add("tool_paint_bucket", new ToolBucket());
             _tools.Add("tool_rectangle_select", new RectangleSelect());
+            _tools.Add("tool_shape_select", new ShapeSelect());
+            _tools.Add("tool_lasso_select", new LassoSelect());
         }
 
         public void SelectTool(string name)
