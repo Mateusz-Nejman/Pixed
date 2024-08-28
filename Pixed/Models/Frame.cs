@@ -1,7 +1,6 @@
 ﻿using Pixed.Utils;
 using System.Collections.ObjectModel;
 using System.Drawing;
-using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
 namespace Pixed.Models
@@ -55,7 +54,7 @@ namespace Pixed.Models
             Frame frame = new Frame(Width, Height);
             frame._layers.Clear();
 
-            foreach(Layer layer in _layers)
+            foreach (Layer layer in _layers)
             {
                 frame._layers.Add(layer.Clone());
             }
@@ -149,7 +148,7 @@ namespace Pixed.Models
             int oldIndex = _selectedLayer;
             Layer layer = _layers[oldIndex];
 
-            if(toBottom)
+            if (toBottom)
             {
                 _layers.Add(layer);
                 _layers.RemoveAt(oldIndex);
@@ -166,7 +165,7 @@ namespace Pixed.Models
 
         public void MergeLayerBelow()
         {
-            if(SelectedLayer >= Layers.Count - 1)
+            if (SelectedLayer >= Layers.Count - 1)
             {
                 return;
             }

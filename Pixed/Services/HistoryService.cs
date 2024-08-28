@@ -1,10 +1,4 @@
-﻿using Pixed.Models;
-using Pixed.Services.History;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Pixed.Services.History;
 
 namespace Pixed.Services
 {
@@ -26,7 +20,7 @@ namespace Pixed.Services
 
         public void Undo()
         {
-           
+
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Pixed.Models
 
         public void Undo()
         {
-            if(_history.Count == 0 || _historyIndex < 0)
+            if (_history.Count == 0 || _historyIndex < 0)
             {
                 return;
             }
@@ -33,7 +33,7 @@ namespace Pixed.Models
             HistoryEntry currentEntry = _history[_historyIndex];
             Frame? frame = Frames.FirstOrDefault(f => f.Id == currentEntry.FrameId, null);
 
-            if(frame == null)
+            if (frame == null)
             {
                 _history.RemoveAt(_historyIndex);
                 _historyIndex--;
@@ -51,14 +51,14 @@ namespace Pixed.Models
                 return;
             }
 
-            for(int a = 0; a < currentEntry.PixelX.Length; a++)
+            for (int a = 0; a < currentEntry.PixelX.Length; a++)
             {
                 int pixelX = currentEntry.PixelX[a];
                 int pixelY = currentEntry.PixelY[a];
                 int oldcolor = currentEntry.OldColor[a];
                 int newColor = currentEntry.NewColor[a];
 
-                if(layer.GetPixel(pixelX, pixelY) == newColor)
+                if (layer.GetPixel(pixelX, pixelY) == newColor)
                 {
                     layer.SetPixel(pixelX, pixelY, oldcolor);
                 }
@@ -75,7 +75,7 @@ namespace Pixed.Models
                 return;
             }
 
-            if(_historyIndex < 0)
+            if (_historyIndex < 0)
             {
                 _historyIndex = 0;
             }
