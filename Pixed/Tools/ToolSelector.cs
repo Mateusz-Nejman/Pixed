@@ -1,9 +1,4 @@
 ﻿using Pixed.Tools.Selection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pixed.Tools
 {
@@ -33,7 +28,7 @@ namespace Pixed.Tools
         }
         public BaseTool? GetTool(string name)
         {
-            if(_tools.ContainsKey(name))
+            if (_tools.ContainsKey(name))
             {
                 return _tools[name];
             }

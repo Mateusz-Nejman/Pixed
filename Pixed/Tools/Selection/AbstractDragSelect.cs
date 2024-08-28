@@ -1,10 +1,5 @@
 ﻿using Pixed.Models;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pixed.Tools.Selection
 {
@@ -12,13 +7,13 @@ namespace Pixed.Tools.Selection
     {
         public override void OnSelect(int x, int y, Frame frame, ref Bitmap overlay)
         {
-            if(!_hasSelection && (x != _startX || y != _startY))
+            if (!_hasSelection && (x != _startX || y != _startY))
             {
                 _hasSelection = true;
                 OnDragSelectStart(x, y, frame, ref overlay);
             }
 
-            if(_hasSelection)
+            if (_hasSelection)
             {
                 OnDragSelect(x, y, frame, ref overlay);
             }
@@ -26,7 +21,7 @@ namespace Pixed.Tools.Selection
 
         public override void OnSelectEnd(int x, int y, Frame frame, ref Bitmap overlay)
         {
-            if(_hasSelection)
+            if (_hasSelection)
             {
                 OnDragSelectEnd(x, y, frame, ref overlay);
             }
@@ -34,7 +29,7 @@ namespace Pixed.Tools.Selection
 
         public override void OnSelectStart(int x, int y, Frame frame, ref Bitmap overlay)
         {
-            if(_hasSelection)
+            if (_hasSelection)
             {
                 _hasSelection = false;
                 //CommitSelection(ref overlay);

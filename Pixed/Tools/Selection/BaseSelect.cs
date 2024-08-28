@@ -1,8 +1,6 @@
-﻿using Pixed.Models;
-using Pixed.Selection;
+﻿using Pixed.Selection;
 using Pixed.Utils;
 using System.Drawing;
-using System.Windows.Controls;
 using System.Windows.Input;
 using Frame = Pixed.Models.Frame;
 
@@ -51,7 +49,7 @@ namespace Pixed.Tools.Selection
             _lastX = x;
             _lastY = y;
 
-            if(!IsInSelection(x, y))
+            if (!IsInSelection(x, y))
             {
                 _mode = SelectionMode.Select;
                 OnSelectStart(x, y, frame, ref overlay);
@@ -60,7 +58,7 @@ namespace Pixed.Tools.Selection
             {
                 _mode = SelectionMode.MoveSelection;
 
-                if(Keyboard.Modifiers == ModifierKeys.Shift)
+                if (Keyboard.Modifiers == ModifierKeys.Shift)
                 {
                     _isMovingContent = true;
                     Subjects.ClipboardCut.OnNext(_selection);
@@ -73,11 +71,11 @@ namespace Pixed.Tools.Selection
 
         public override void MoveTool(int x, int y, Frame frame, ref Bitmap overlay)
         {
-            if(_mode == SelectionMode.Select)
+            if (_mode == SelectionMode.Select)
             {
                 OnSelect(x, y, frame, ref overlay);
             }
-            else if(_mode  == SelectionMode.MoveSelection)
+            else if (_mode == SelectionMode.MoveSelection)
             {
                 OnSelectionMove(x, y, frame, ref overlay);
             }
@@ -85,11 +83,11 @@ namespace Pixed.Tools.Selection
 
         public override void ReleaseTool(int x, int y, Frame frame, ref Bitmap overlay)
         {
-            if(_mode == SelectionMode.Select)
+            if (_mode == SelectionMode.Select)
             {
                 OnSelectEnd(x, y, frame, ref overlay);
             }
-            else if(_mode == SelectionMode.MoveSelection)
+            else if (_mode == SelectionMode.MoveSelection)
             {
                 OnSelectionMoveEnd(x, y, frame, ref overlay);
             }
@@ -97,7 +95,7 @@ namespace Pixed.Tools.Selection
 
         public override void UpdateHighlightedPixel(int x, int y, Frame frame, ref Bitmap overlay)
         {
-            if(!_hasSelection)
+            if (!_hasSelection)
             {
                 base.UpdateHighlightedPixel(x, y, frame, ref overlay);
             }
@@ -140,7 +138,7 @@ namespace Pixed.Tools.Selection
             {
                 var pixel = pixels[i];
 
-                if(!bitmap.ContainsPixel(pixel.X, pixel.Y))
+                if (!bitmap.ContainsPixel(pixel.X, pixel.Y))
                 {
                     continue;
                 }

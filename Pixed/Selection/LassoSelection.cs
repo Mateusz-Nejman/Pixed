@@ -1,11 +1,6 @@
 ﻿using Pixed.Models;
 using Pixed.Utils;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pixed.Selection
 {
@@ -17,7 +12,7 @@ namespace Pixed.Selection
 
         private int[,] _pixels;
 
-        public LassoSelection(List<Point> pixels, Frame frame):base()
+        public LassoSelection(List<Point> pixels, Frame frame) : base()
         {
             _pixels = new int[frame.Width, frame.Height];
 
@@ -38,7 +33,7 @@ namespace Pixed.Selection
             {
                 for (int y = 0; y < frame.Height; y++)
                 {
-                    if(IsInSelection(new Point(x, y), frame))
+                    if (IsInSelection(new Point(x, y), frame))
                     {
                         pixels.Add(new Pixel(x, y, frame.GetPixel(x, y)));
                     }
@@ -52,7 +47,7 @@ namespace Pixed.Selection
         {
             bool visited = GetPixel(point) == VISITED;
 
-            if(!visited)
+            if (!visited)
             {
                 VisitPixel(point, frame);
             }
@@ -67,12 +62,12 @@ namespace Pixed.Selection
             {
                 var alreadyVisited = GetPixel(point);
 
-                if(alreadyVisited == VISITED)
+                if (alreadyVisited == VISITED)
                 {
                     return false;
                 }
 
-                if(!frame.PointInside(point.X, point.Y))
+                if (!frame.PointInside(point.X, point.Y))
                 {
                     frameBorderReached = true;
                     return false;

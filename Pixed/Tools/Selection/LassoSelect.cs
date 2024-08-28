@@ -1,12 +1,7 @@
 ﻿using Pixed.Models;
 using Pixed.Selection;
 using Pixed.Utils;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pixed.Tools.Selection
 {
@@ -32,7 +27,7 @@ namespace Pixed.Tools.Selection
             AddPixel(x, y, frame);
             List<Pixel> pixels = new List<Pixel>();
 
-            foreach(var point in GetLassoPixels())
+            foreach (var point in GetLassoPixels())
             {
                 pixels.Add(new Pixel(point.X, point.Y, frame.GetPixel(point.X, point.Y)));
             }

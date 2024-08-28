@@ -191,7 +191,7 @@ namespace Pixed.ViewModels
 
         private void MoveLayerUpAction()
         {
-            if(_selectedLayer == 0)
+            if (_selectedLayer == 0)
             {
                 return;
             }
@@ -217,7 +217,7 @@ namespace Pixed.ViewModels
 
             LayerEditNameWindow window = new(layerName);
 
-            if(window.ShowDialog() == true)
+            if (window.ShowDialog() == true)
             {
                 Layers[_selectedLayer].Name = window.NewName;
             }
@@ -231,7 +231,7 @@ namespace Pixed.ViewModels
 
         private void RemoveLayerAction()
         {
-            if(Layers.Count == 1)
+            if (Layers.Count == 1)
             {
                 return;
             }
@@ -250,7 +250,7 @@ namespace Pixed.ViewModels
 
         private void RemoveFrameAction()
         {
-            if(Frames.Count == 1)
+            if (Frames.Count == 1)
             {
                 return;
             }

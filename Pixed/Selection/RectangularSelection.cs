@@ -11,16 +11,16 @@
         {
             SetOrderedRectangleCoordinates(x1, y1, x2, y2);
 
-            for(int x = _x1; x <= _x2; x++)
+            for (int x = _x1; x <= _x2; x++)
             {
-                for(int y = _y1; y <= _y2; y++)
+                for (int y = _y1; y <= _y2; y++)
                 {
                     Pixels.Add(new Models.Pixel(x, y));
                 }
             }
         }
 
-        private void SetOrderedRectangleCoordinates(int x1, int y1,int x2,int y2)
+        private void SetOrderedRectangleCoordinates(int x1, int y1, int x2, int y2)
         {
             _x1 = Math.Min(x1, x2);
             _y1 = Math.Min(y1, y2);

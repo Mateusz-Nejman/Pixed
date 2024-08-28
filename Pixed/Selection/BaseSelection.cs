@@ -20,7 +20,7 @@ namespace Pixed.Selection
 
         public void Move(int xDiff, int yDiff)
         {
-            for(int i = 0;  i < Pixels.Count; i++)
+            for (int i = 0; i < Pixels.Count; i++)
             {
                 var pixel = Pixels[i];
                 pixel.X += xDiff;
@@ -53,7 +53,7 @@ namespace Pixed.Selection
 
             Bitmap bitmap = new((maxX - minX) + 1, (maxY - minY) + 1);
 
-            foreach(var pixel in Pixels)
+            foreach (var pixel in Pixels)
             {
                 bitmap.SetPixel(pixel.X - minX, pixel.Y - minY, Color.FromArgb(pixel.Color));
             }

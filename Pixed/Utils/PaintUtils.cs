@@ -27,7 +27,7 @@ namespace Pixed.Utils
         {
             int targetColor = layer.GetPixel(x, y);
 
-            if(targetColor == replacementColor)
+            if (targetColor == replacementColor)
             {
                 return new DynamicHistoryEntry();
             }
@@ -35,7 +35,7 @@ namespace Pixed.Utils
             DynamicHistoryEntry paintedPixels = VisitConnectedPixelsHistory(layer, x, y, pixel =>
             {
                 var sourceColor = layer.GetPixel(pixel.X, pixel.Y);
-                if(sourceColor == targetColor)
+                if (sourceColor == targetColor)
                 {
                     layer.SetPixel(pixel.X, pixel.Y, replacementColor);
                     return true;
@@ -63,13 +63,13 @@ namespace Pixed.Utils
 
             int loopCount = 0;
             int cellCount = layer.Width * layer.Height;
-            while(queue.Count > 0)
+            while (queue.Count > 0)
             {
                 loopCount++;
 
                 var current = queue.Dequeue();
 
-                for(int i = 0; i < 4; i++)
+                for (int i = 0; i < 4; i++)
                 {
                     int nextX = current.X + dx[i];
                     int nextY = current.Y + dy[i];
@@ -91,7 +91,7 @@ namespace Pixed.Utils
                     }
                 }
 
-                if(loopCount > 10 * cellCount)
+                if (loopCount > 10 * cellCount)
                 {
                     break;
                 }

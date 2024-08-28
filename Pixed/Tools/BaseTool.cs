@@ -2,8 +2,6 @@
 using Pixed.Utils;
 using System.Drawing;
 using System.Windows.Input;
-using System.Windows.Media;
-using Color = System.Windows.Media.Color;
 
 namespace Pixed.Tools
 {
@@ -60,7 +58,7 @@ namespace Pixed.Tools
         {
             var hsl = ColorUtils.ToHsl(pixel);
 
-            if(hsl.L > 0.5f)
+            if (hsl.L > 0.5f)
             {
                 return System.Drawing.Color.FromArgb(50, System.Drawing.Color.Black);
             }

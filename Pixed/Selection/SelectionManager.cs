@@ -3,7 +3,6 @@ using Pixed.Services.History;
 using Pixed.Tools.Selection;
 using Pixed.Utils;
 using System.Drawing;
-using System.Windows;
 using System.Windows.Input;
 using Point = System.Drawing.Point;
 
@@ -33,7 +32,7 @@ namespace Pixed.Selection
 
         private void Clear()
         {
-            if(_currentSelection != null)
+            if (_currentSelection != null)
             {
                 _currentSelection.Reset();
                 _currentSelection = null;
@@ -48,7 +47,7 @@ namespace Pixed.Selection
 
         private void OnSelectionCreated(BaseSelection selection)
         {
-            if(selection != null)
+            if (selection != null)
             {
                 _currentSelection = selection;
             }
@@ -69,7 +68,7 @@ namespace Pixed.Selection
 
         private void Erase(BaseSelection _)
         {
-            if(_currentSelection == null || !IsSelectToolActive())
+            if (_currentSelection == null || !IsSelectToolActive())
             {
                 return;
             }
@@ -98,12 +97,12 @@ namespace Pixed.Selection
 
         private void Copy(BaseSelection _)
         {
-            if(!IsSelectToolActive())
+            if (!IsSelectToolActive())
             {
                 return;
             }
 
-            if(_currentSelection != null && Global.CurrentFrame != null)
+            if (_currentSelection != null && Global.CurrentFrame != null)
             {
                 _currentSelection.FillSelectionFromFrame(Global.CurrentFrame);
                 Bitmap selectionBitmap = _currentSelection.ToBitmap();
@@ -113,7 +112,7 @@ namespace Pixed.Selection
 
         private void Cut(BaseSelection _)
         {
-            if(!IsSelectToolActive())
+            if (!IsSelectToolActive())
             {
                 return;
             }
@@ -125,14 +124,14 @@ namespace Pixed.Selection
         {
             Bitmap? source = BitmapUtils.CreateFromClipboard();
 
-            if(source == null)
+            if (source == null)
             {
                 return;
             }
 
             Point startPosition = new Point(0);
 
-            if(_currentSelection != null)
+            if (_currentSelection != null)
             {
                 int selectionX = _currentSelection.Pixels.Min(p => p.X);
                 int selectionY = _currentSelection.Pixels.Min(p => p.Y);
@@ -151,7 +150,7 @@ namespace Pixed.Selection
             {
                 for (int y = 0; y < source.Height; y++)
                 {
-                    if(frame.PointInside(startPosition.X + x, startPosition.Y + y))
+                    if (frame.PointInside(startPosition.X + x, startPosition.Y + y))
                     {
                         var color = source.GetPixel(x, y);
                         var oldColor = frame.GetPixel(startPosition.X + x, startPosition.Y + y);

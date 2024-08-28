@@ -1,7 +1,6 @@
 ﻿using Pixed.Utils;
 using System.Drawing;
 using System.Windows.Controls;
-using static System.Net.Mime.MediaTypeNames;
 using Frame = Pixed.Models.Frame;
 using Image = System.Windows.Controls.Image;
 using Point = System.Windows.Point;
@@ -100,8 +99,8 @@ namespace Pixed.ViewModels
         {
             int imageX = (int)(point.X / _imageFactor);
             int imageY = (int)(point.Y / _imageFactor);
-            
-            if(!_frame.PointInside(imageX, imageY))
+
+            if (!_frame.PointInside(imageX, imageY))
             {
                 return;
             }
@@ -184,7 +183,7 @@ namespace Pixed.ViewModels
 
         private void MouseLeaveAction()
         {
-            if(_rightPressed || _leftPressed)
+            if (_rightPressed || _leftPressed)
             {
                 Global.ToolSelected?.ReleaseTool(0, 0, _frame, ref _overlayBitmap);
             }

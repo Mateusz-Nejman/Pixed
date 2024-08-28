@@ -1,5 +1,4 @@
-﻿using Pixed.Models;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -76,17 +75,17 @@ namespace Pixed.Utils
 
         public static Bitmap? CreateFromClipboard()
         {
-            if(Clipboard.ContainsData("PNG"))
+            if (Clipboard.ContainsData("PNG"))
             {
                 var obj = Clipboard.GetData("PNG");
 
-                if(obj is MemoryStream memoryStream)
+                if (obj is MemoryStream memoryStream)
                 {
                     return (Bitmap?)Bitmap.FromStream(memoryStream);
                 }
             }
 
-            if(Clipboard.ContainsImage())
+            if (Clipboard.ContainsImage())
             {
                 return BitmapFromSource(Clipboard.GetImage());
             }
