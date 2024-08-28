@@ -33,8 +33,8 @@ namespace Pixed.Services.Keyboard
                 }
             });
 
-            Add(new KeyState(Key.Z, false, true, false), () => Global.Models[0].Undo());
-            Add(new KeyState(Key.Y, false, true, false), () => Global.Models[0].Redo());
+            Add(new KeyState(Key.Z, false, true, false), () => Global.CurrentModel.Undo());
+            Add(new KeyState(Key.Y, false, true, false), () => Global.CurrentModel.Redo());
         }
 
         public void Add(KeyState shortcut, Action action)

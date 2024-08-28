@@ -70,7 +70,7 @@ namespace Pixed.ViewModels
         }
 
 
-        public ObservableCollection<Frame> Frames => Global.Models[0].Frames;
+        public ObservableCollection<Frame> Frames => Global.CurrentModel.Frames;
         public ObservableCollection<Layer> Layers => Frames[_selectedFrame].Layers;
 
         public int SelectedFrame
@@ -79,6 +79,7 @@ namespace Pixed.ViewModels
             set
             {
                 _selectedFrame = Math.Clamp(value, 0, Frames.Count);
+                Global.CurrentFrameIndex = _selectedFrame;
                 _paintCanvas.CurrentFrame = Frames[_selectedFrame];
                 SelectedLayer = 0;
                 OnPropertyChanged();
@@ -100,6 +101,7 @@ namespace Pixed.ViewModels
                 CanLayerMoveDown = _selectedLayer < Layers.Count - 1;
                 CanLayerMerge = CanLayerMoveDown;
                 CanLayerRemove = Layers.Count > 1;
+                Global.CurrentLayerIndex = val;
             }
         }
 

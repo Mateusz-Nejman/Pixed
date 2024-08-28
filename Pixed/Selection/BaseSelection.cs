@@ -1,11 +1,5 @@
 ﻿using Pixed.Models;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pixed.Selection
 {
@@ -46,9 +40,25 @@ namespace Pixed.Selection
                     continue;
                 }
 
-                var color = frame.GetPixel(Pixels[i].X, Pixels[i].Y);
-                pixel.Color = Color.FromArgb(128, Color.FromArgb(color)).ToArgb();
+                pixel.Color = frame.GetPixel(Pixels[i].X, Pixels[i].Y);
             }
+        }
+
+        public Bitmap ToBitmap()
+        {
+            var minX = Pixels.Min(p => p.X);
+            var minY = Pixels.Min(p => p.Y);
+            var maxX = Pixels.Max(p => p.X);
+            var maxY = Pixels.Max(p => p.Y);
+
+            Bitmap bitmap = new((maxX - minX) + 1, (maxY - minY) + 1);
+
+            foreach(var pixel in Pixels)
+            {
+                bitmap.SetPixel(pixel.X - minX, pixel.Y - minY, Color.FromArgb(pixel.Color));
+            }
+
+            return bitmap;
         }
     }
 }

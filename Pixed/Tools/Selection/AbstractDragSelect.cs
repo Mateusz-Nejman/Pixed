@@ -12,12 +12,13 @@ namespace Pixed.Tools.Selection
     {
         public override void OnSelect(int x, int y, Frame frame, ref Bitmap overlay)
         {
-            if(!HasSelection && (x != _startX || y != _startY))
+            if(!_hasSelection && (x != _startX || y != _startY))
             {
+                _hasSelection = true;
                 OnDragSelectStart(x, y, frame, ref overlay);
             }
 
-            if(HasSelection)
+            if(_hasSelection)
             {
                 OnDragSelect(x, y, frame, ref overlay);
             }
@@ -25,7 +26,7 @@ namespace Pixed.Tools.Selection
 
         public override void OnSelectEnd(int x, int y, Frame frame, ref Bitmap overlay)
         {
-            if(HasSelection)
+            if(_hasSelection)
             {
                 OnDragSelectEnd(x, y, frame, ref overlay);
             }
@@ -33,12 +34,14 @@ namespace Pixed.Tools.Selection
 
         public override void OnSelectStart(int x, int y, Frame frame, ref Bitmap overlay)
         {
-            if(HasSelection)
+            if(_hasSelection)
             {
-                //TODO commit selection
+                _hasSelection = false;
+                //CommitSelection(ref overlay);
             }
             else
             {
+                _hasSelection = true;
                 OnDragSelectStart(x, y, frame, ref overlay);
                 overlay.SetPixel(x, y, Color.FromArgb(128, 130, 163, 170));
             }
