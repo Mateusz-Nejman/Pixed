@@ -189,7 +189,7 @@
                     <StackPanel>
                         <TextBlock Text="Transform" Height="32" Foreground="White" FontSize="15px" Padding="4" FontWeight="Bold"/>
                         <UniformGrid Rows="1" Columns="4" Width="184" Height="46">
-                            <Button Style="{StaticResource ToolButton}" Content="../Resources/Icons/transform/tool-flip.png" Grid.Column="0" Grid.Row="0">
+                            <Button Style="{StaticResource ToolButton}" Content="../Resources/Icons/transform/tool-flip.png" Grid.Column="0" Grid.Row="0" Command="{Binding ToolFlipCommand}">
                                 <Button.ToolTip>
                                     <ToolTip Background="Black" BorderThickness="0">
                                         <controls:TooltipWith3Buttons Title="Flip horizontaly" 

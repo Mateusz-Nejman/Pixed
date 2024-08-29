@@ -37,11 +37,8 @@ namespace Pixed.Tools
 
         public virtual void UpdateHighlightedPixel(int x, int y, Frame frame, ref Bitmap overlay)
         {
-            overlay ??= new Bitmap(frame.Width, frame.Height);
-
-            if (highlightedX != x || highlightedY != y)
+            if (highlightedX != x || highlightedY != y || overlay == null)
             {
-                //overlay.Clear();
                 overlay?.Dispose();
                 overlay = new Bitmap(frame.Width, frame.Height);
             }

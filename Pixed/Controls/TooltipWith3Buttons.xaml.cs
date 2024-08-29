@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Pixed.Controls
 {
@@ -62,11 +50,11 @@ namespace Pixed.Controls
             set { SetValue(ButtonTextHelper3Property, value); }
         }
 
-        public static readonly DependencyProperty TitleProperty = DependencyProperty.Register("Title", typeof(string), typeof(TooltipWith3Buttons), new PropertyMetadata("Title"));
-        public static readonly DependencyProperty ButtonText1Property = DependencyProperty.Register("ButtonText1", typeof(string), typeof(TooltipWith3Buttons), new PropertyMetadata("ButtonText1"));
-        public static readonly DependencyProperty ButtonTextHelper1Property = DependencyProperty.Register("ButtonTextHelper1", typeof(string), typeof(TooltipWith3Buttons), new PropertyMetadata("ButtonTextHelper1"));
-        public static readonly DependencyProperty ButtonText2Property = DependencyProperty.Register("ButtonText2", typeof(string), typeof(TooltipWith3Buttons), new PropertyMetadata("ButtonText2"));
-        public static readonly DependencyProperty ButtonTextHelper2Property = DependencyProperty.Register("ButtonTextHelper2", typeof(string), typeof(TooltipWith3Buttons), new PropertyMetadata("ButtonTextHelper2"));
+        public static readonly DependencyProperty TitleProperty = DependencyProperty.Register("Title", typeof(string), typeof(TooltipWith2Buttons), new PropertyMetadata("Title"));
+        public static readonly DependencyProperty ButtonText1Property = DependencyProperty.Register("ButtonText1", typeof(string), typeof(TooltipWith2Buttons), new PropertyMetadata("ButtonText1"));
+        public static readonly DependencyProperty ButtonTextHelper1Property = DependencyProperty.Register("ButtonTextHelper1", typeof(string), typeof(TooltipWith2Buttons), new PropertyMetadata("ButtonTextHelper1"));
+        public static readonly DependencyProperty ButtonText2Property = DependencyProperty.Register("ButtonText2", typeof(string), typeof(TooltipWith2Buttons), new PropertyMetadata("ButtonText2"));
+        public static readonly DependencyProperty ButtonTextHelper2Property = DependencyProperty.Register("ButtonTextHelper2", typeof(string), typeof(TooltipWith2Buttons), new PropertyMetadata("ButtonTextHelper2"));
         public static readonly DependencyProperty ButtonText3Property = DependencyProperty.Register("ButtonText3", typeof(string), typeof(TooltipWith3Buttons), new PropertyMetadata("ButtonText3"));
         public static readonly DependencyProperty ButtonTextHelper3Property = DependencyProperty.Register("ButtonTextHelper3", typeof(string), typeof(TooltipWith3Buttons), new PropertyMetadata("ButtonTextHelper3"));
         public TooltipWith3Buttons()
