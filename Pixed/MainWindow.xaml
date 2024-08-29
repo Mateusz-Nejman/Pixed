@@ -199,7 +199,7 @@
                                     </ToolTip>
                                 </Button.ToolTip>
                             </Button>
-                            <Button Style="{StaticResource ToolButton}" Content="../Resources/Icons/transform/tool-rotate.png" Grid.Column="1" Grid.Row="0">
+                            <Button Style="{StaticResource ToolButton}" Command="{Binding ToolRotateCommand}" Content="../Resources/Icons/transform/tool-rotate.png" Grid.Column="1" Grid.Row="0">
                                 <Button.ToolTip>
                                     <ToolTip Background="Black" BorderThickness="0">
                                         <controls:TooltipWith3Buttons Title="Merge with layer below"

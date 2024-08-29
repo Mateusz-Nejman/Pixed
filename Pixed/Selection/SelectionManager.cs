@@ -150,7 +150,7 @@ namespace Pixed.Selection
             {
                 for (int y = 0; y < source.Height; y++)
                 {
-                    if (frame.PointInside(startPosition.X + x, startPosition.Y + y))
+                    if (frame.ContainsPixel(startPosition.X + x, startPosition.Y + y))
                     {
                         var color = source.GetPixel(x, y);
                         var oldColor = frame.GetPixel(startPosition.X + x, startPosition.Y + y);

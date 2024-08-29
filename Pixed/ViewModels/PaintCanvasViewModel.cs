@@ -100,7 +100,7 @@ namespace Pixed.ViewModels
             int imageX = (int)(point.X / _imageFactor);
             int imageY = (int)(point.Y / _imageFactor);
 
-            if (!_frame.PointInside(imageX, imageY))
+            if (!_frame.ContainsPixel(imageX, imageY))
             {
                 return;
             }
@@ -115,7 +115,7 @@ namespace Pixed.ViewModels
             int imageX = (int)(point.X / _imageFactor);
             int imageY = (int)(point.Y / _imageFactor);
 
-            if (!_frame.PointInside(imageX, imageY))
+            if (!_frame.ContainsPixel(imageX, imageY))
             {
                 return;
             }
@@ -130,7 +130,7 @@ namespace Pixed.ViewModels
             int imageX = (int)(point.X / _imageFactor);
             int imageY = (int)(point.Y / _imageFactor);
 
-            if (!_frame.PointInside(imageX, imageY))
+            if (!_frame.ContainsPixel(imageX, imageY))
             {
                 return;
             }
@@ -145,7 +145,7 @@ namespace Pixed.ViewModels
             int imageX = (int)(point.X / _imageFactor);
             int imageY = (int)(point.Y / _imageFactor);
 
-            if (!_frame.PointInside(imageX, imageY))
+            if (!_frame.ContainsPixel(imageX, imageY))
             {
                 return;
             }

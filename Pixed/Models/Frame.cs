@@ -117,9 +117,9 @@ namespace Pixed.Models
             return render;
         }
 
-        public bool PointInside(int x, int y)
+        public bool ContainsPixel(int x, int y)
         {
-            return x >= 0 && y >= 0 && x < Width && y < Height;
+            return _layers[_selectedLayer].ContainsPixel(x, y);
         }
 
         public void MoveLayerUp(bool toTop)

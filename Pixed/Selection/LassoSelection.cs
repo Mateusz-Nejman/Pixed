@@ -67,7 +67,7 @@ namespace Pixed.Selection
                     return false;
                 }
 
-                if (!frame.PointInside(point.X, point.Y))
+                if (!frame.ContainsPixel(point.X, point.Y))
                 {
                     frameBorderReached = true;
                     return false;

@@ -35,7 +35,7 @@ namespace Pixed.Selection
             {
                 var pixel = Pixels[i];
 
-                if (!frame.PointInside(pixel.X, pixel.Y))
+                if (!frame.ContainsPixel(pixel.X, pixel.Y))
                 {
                     continue;
                 }
