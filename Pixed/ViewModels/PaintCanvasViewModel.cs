@@ -43,6 +43,17 @@ namespace Pixed.ViewModels
             }
         }
 
+        public Bitmap Overlay
+        {
+            get => _overlayBitmap;
+            set
+            {
+                _overlayBitmap = value;
+                OnPropertyChanged();
+                RefreshOverlay();
+            }
+        }
+
         public PaintCanvasViewModel()
         {
             _refreshDisposable = Subjects.RefreshCanvas.Subscribe(_ =>
@@ -78,6 +89,12 @@ namespace Pixed.ViewModels
             _overlayImage = overlay;
         }
 
+        public void ResetOverlay()
+        {
+            Overlay?.Clear();
+            RefreshOverlay();
+        }
+
         private void LeftMouseDownAction(Point point)
         {
             int imageX = (int)(point.X / _imageFactor);
@@ -90,6 +107,7 @@ namespace Pixed.ViewModels
 
             _leftPressed = true;
             Global.ToolSelected?.ApplyTool(imageX, imageY, _frame, ref _overlayBitmap);
+            RefreshOverlay();
         }
 
         private void LeftMouseUpAction(Point point)
@@ -104,6 +122,7 @@ namespace Pixed.ViewModels
 
             _leftPressed = false;
             Global.ToolSelected?.ReleaseTool(imageX, imageY, _frame, ref _overlayBitmap);
+            RefreshOverlay();
         }
 
         private void RightMouseDownAction(Point point)
@@ -118,6 +137,7 @@ namespace Pixed.ViewModels
 
             _rightPressed = true;
             Global.ToolSelected?.ApplyTool(imageX, imageY, _frame, ref _overlayBitmap);
+            RefreshOverlay();
         }
 
         private void RightMouseUpAction(Point point)
@@ -132,6 +152,7 @@ namespace Pixed.ViewModels
 
             _rightPressed = false;
             Global.ToolSelected?.ReleaseTool(imageX, imageY, _frame, ref _overlayBitmap);
+            RefreshOverlay();
         }
 
         private void MouseMoveAction(Point point)
@@ -141,14 +162,13 @@ namespace Pixed.ViewModels
             if (_leftPressed || _rightPressed)
             {
                 Global.ToolSelected?.MoveTool(imageX, imageY, _frame, ref _overlayBitmap);
+                RefreshOverlay();
                 Subjects.RefreshCanvas.OnNext(true);
             }
-
-            Global.ToolSelected?.UpdateHighlightedPixel(imageX, imageY, _frame, ref _overlayBitmap);
-
-            if (_overlayImage != null)
+            else
             {
-                _overlayImage.Source = _overlayBitmap.ToBitmapImage();
+                Global.ToolSelected?.UpdateHighlightedPixel(imageX, imageY, _frame, ref _overlayBitmap);
+                RefreshOverlay();
             }
         }
 
@@ -169,6 +189,14 @@ namespace Pixed.ViewModels
             }
             _rightPressed = false;
             _leftPressed = false;
+        }
+
+        private void RefreshOverlay()
+        {
+            if (_overlayImage != null && _overlayBitmap != null)
+            {
+                _overlayImage.Source = _overlayBitmap.ToBitmapImage();
+            }
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using GongSolutions.Wpf.DragDrop;
 using Pixed.Models;
-using Pixed.Tools.Transform;
 using Pixed.Windows;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -112,12 +111,9 @@ namespace Pixed.ViewModels
         public ICommand EditLayerNameCommand { get; }
         public ICommand MergeLayerCommand { get; }
         public ICommand RemoveLayerCommand { get; }
-
         public ICommand NewFrameCommand { get; }
         public ICommand RemoveFrameCommand { get; }
         public ICommand DuplicateFrameCommand { get; }
-
-        public ICommand ToolFlipCommand { get; }
 
         public MainViewModel()
         {
@@ -135,7 +131,6 @@ namespace Pixed.ViewModels
             NewFrameCommand = new ActionCommand(NewFrameAction);
             RemoveFrameCommand = new ActionCommand(RemoveFrameAction);
             DuplicateFrameCommand = new ActionCommand(DuplicateFrameAction);
-            ToolFlipCommand = new ActionCommand(ToolFlipAction);
         }
 
         public void Initialize(PaintCanvasViewModel paintCanvas)
@@ -271,12 +266,6 @@ namespace Pixed.ViewModels
             Frames.Add(Frames[SelectedFrame].Clone());
             SelectedFrame = Frames.Count - 1;
             RemoveFrameVisibility = Frames.Count == 1 ? Visibility.Hidden : Visibility.Visible;
-        }
-
-        private void ToolFlipAction()
-        {
-            AbstractTransformTool flip = new Flip();
-            flip.ApplyTransformation();
         }
     }
 }

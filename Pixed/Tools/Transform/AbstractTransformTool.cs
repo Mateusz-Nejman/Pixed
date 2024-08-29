@@ -1,5 +1,10 @@
 ﻿using Pixed.Models;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Pixed.Tools.Transform
@@ -20,7 +25,7 @@ namespace Pixed.Tools.Transform
 
             foreach (Frame frame in frames)
             {
-                ObservableCollection<Layer> layers = allLayers ? frame.Layers : [frame.Layers[0]];
+                ObservableCollection<Layer> layers = allLayers ? frame.Layers : [Global.CurrentLayer];
 
                 foreach (Layer layer in layers)
                 {

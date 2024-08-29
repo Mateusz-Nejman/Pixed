@@ -1,4 +1,5 @@
 ﻿using Pixed.Selection;
+using Pixed.Utils;
 using System.Drawing;
 using System.Windows.Input;
 using Frame = Pixed.Models.Frame;
