@@ -81,7 +81,7 @@ namespace Pixed.Tools.Transform
                     }
                     else
                     {
-                        layer.SetPixel(x, y, Constants.TRANSPARENT_COLOR.ToArgb());
+                        layer.SetPixel(x, y, UniColor.Transparent);
                     }
                 }
             }
@@ -119,7 +119,7 @@ namespace Pixed.Tools.Transform
                     }
                     else
                     {
-                        layer.SetPixel(x, y, Constants.TRANSPARENT_COLOR.ToArgb());
+                        layer.SetPixel(x, y, UniColor.Transparent);
                     }
                 }
             }
@@ -132,7 +132,7 @@ namespace Pixed.Tools.Transform
             int maxx = 0;
             int maxy = 0;
 
-            int transparent = Constants.TRANSPARENT_COLOR.ToArgb();
+            int transparent = UniColor.Transparent;
 
             for (int x = 0; x < layer.Width; x++)
             {
