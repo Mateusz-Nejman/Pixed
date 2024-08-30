@@ -119,6 +119,7 @@ namespace Pixed.ViewModels
 
         public ICommand ToolFlipCommand { get; }
         public ICommand ToolRotateCommand { get; }
+        public ICommand ToolCenterCommand { get; }
 
         public MainViewModel()
         {
@@ -138,6 +139,7 @@ namespace Pixed.ViewModels
             DuplicateFrameCommand = new ActionCommand(DuplicateFrameAction);
             ToolFlipCommand = new ActionCommand(ToolFlipAction);
             ToolRotateCommand = new ActionCommand(ToolRotateAction);
+            ToolCenterCommand = new ActionCommand(ToolCenterAction);
         }
 
         public void Initialize(PaintCanvasViewModel paintCanvas)
@@ -285,6 +287,12 @@ namespace Pixed.ViewModels
         {
             AbstractTransformTool rotate = new Rotate();
             rotate.ApplyTransformation();
+        }
+
+        private void ToolCenterAction()
+        {
+            AbstractTransformTool center = new Center();
+            center.ApplyTransformation();
         }
     }
 }

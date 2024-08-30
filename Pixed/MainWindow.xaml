@@ -209,7 +209,7 @@
                                     </ToolTip>
                                 </Button.ToolTip>
                             </Button>
-                            <Button Style="{StaticResource ToolButton}" Content="../Resources/Icons/transform/tool-center.png" Grid.Column="2" Grid.Row="0">
+                            <Button Style="{StaticResource ToolButton}" Command="{Binding ToolCenterCommand}" Content="../Resources/Icons/transform/tool-center.png" Grid.Column="2" Grid.Row="0">
                                 <Button.ToolTip>
                                     <ToolTip Background="Black" BorderThickness="0">
                                         <controls:TooltipWith2Buttons Title="Align image to the center"
