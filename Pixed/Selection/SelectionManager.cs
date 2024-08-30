@@ -85,7 +85,7 @@ namespace Pixed.Selection
             {
                 var p = pixels[a];
                 int oldColor = frame.GetPixel(p.X, p.Y);
-                int newColor = Color.Transparent.ToArgb();
+                int newColor = UniColor.Transparent;
 
                 entry.Add(p.X, p.Y, oldColor, newColor);
                 frame.SetPixel(p.X, p.Y, newColor);

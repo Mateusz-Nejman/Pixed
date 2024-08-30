@@ -38,7 +38,7 @@ namespace Pixed.Tools.Selection
             {
                 _hasSelection = true;
                 OnDragSelectStart(x, y, frame, ref overlay);
-                overlay.SetPixel(x, y, Color.FromArgb(128, 130, 163, 170));
+                overlay.SetPixel(x, y, UniColor.WithAlpha(128, UniColor.CornflowerBlue));
             }
         }
 

@@ -39,7 +39,7 @@ namespace Pixed.Utils
         public static void Clear(this Bitmap src)
         {
             int[] pixels = new int[src.Width * src.Height];
-            Array.Fill(pixels, Constants.TRANSPARENT_COLOR.ToArgb());
+            Array.Fill(pixels, UniColor.Transparent);
             BitmapData bitmapData = src.LockBits(new Rectangle(0, 0, src.Width, src.Height), ImageLockMode.WriteOnly, src.PixelFormat);
             Marshal.Copy(pixels, 0, bitmapData.Scan0, pixels.Length);
             src.UnlockBits(bitmapData);
