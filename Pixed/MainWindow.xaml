@@ -202,7 +202,7 @@
                             <Button Style="{StaticResource ToolButton}" Command="{Binding ToolRotateCommand}" Content="../Resources/Icons/transform/tool-rotate.png" Grid.Column="1" Grid.Row="0">
                                 <Button.ToolTip>
                                     <ToolTip Background="Black" BorderThickness="0">
-                                        <controls:TooltipWith3Buttons Title="Merge with layer below"
+                                        <controls:TooltipWith3Buttons Title="Counter-clockwise rotation"
                                                                       ButtonText1="Alt" ButtonTextHelper1="Clockwise rotation"
                                                                       ButtonText2="Ctrl"  ButtonTextHelper2="Apply to all layers"
                                                                       ButtonText3="Shift" ButtonTextHelper3="Apply to all frames"/>
