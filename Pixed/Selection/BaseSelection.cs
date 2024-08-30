@@ -55,7 +55,7 @@ namespace Pixed.Selection
 
             foreach (var pixel in Pixels)
             {
-                bitmap.SetPixel(pixel.X - minX, pixel.Y - minY, Color.FromArgb(pixel.Color));
+                bitmap.SetPixel(pixel.X - minX, pixel.Y - minY, (UniColor)pixel.Color);
             }
 
             return bitmap;

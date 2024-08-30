@@ -14,8 +14,8 @@ namespace Pixed.Tools
             _historyEntry.PixelX.Add(x);
             _historyEntry.PixelY.Add(y);
             _historyEntry.OldColor.Add(frame.GetPixel(x, y));
-            _historyEntry.NewColor.Add(GetToolColor().ToArgb());
-            frame.SetPixel(x, y, GetToolColor().ToArgb());
+            _historyEntry.NewColor.Add(GetToolColor());
+            frame.SetPixel(x, y, GetToolColor());
             Subjects.RefreshCanvas.OnNext(true);
         }
 

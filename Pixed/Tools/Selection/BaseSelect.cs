@@ -143,8 +143,8 @@ namespace Pixed.Tools.Selection
                     continue;
                 }
 
-                var hasColor = Constants.TRANSPARENT_COLOR.ToArgb() != pixel.Color;
-                var color = hasColor ? Color.FromArgb(128, Color.FromArgb(pixel.Color)) : Color.FromArgb(128, Color.CornflowerBlue);
+                var hasColor = UniColor.Transparent != pixel.Color;
+                var color = UniColor.WithAlpha(128, hasColor ? pixel.Color : UniColor.CornflowerBlue.ToInt());
 
                 bitmap.SetPixel(pixel.X, pixel.Y, color);
             }

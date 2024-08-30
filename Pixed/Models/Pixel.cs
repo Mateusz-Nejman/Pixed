@@ -10,7 +10,7 @@
         {
             X = x;
             Y = y;
-            Color = Constants.TRANSPARENT_COLOR.ToArgb();
+            Color = UniColor.Transparent;
         }
 
         public Pixel(int x, int y, int color) : this(x, y)

@@ -10,14 +10,14 @@ namespace Pixed.Tools
         protected int highlightedX = 0;
         protected int highlightedY = 0;
 
-        public virtual System.Drawing.Color GetToolColor()
+        public virtual UniColor GetToolColor()
         {
             if (Mouse.RightButton == MouseButtonState.Pressed)
             {
-                return System.Drawing.Color.CornflowerBlue; //TODO colorpicker
+                return UniColor.CornflowerBlue; //TODO colorpicker
             }
 
-            return System.Drawing.Color.Black;
+            return UniColor.Black;
         }
 
         public virtual void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay)
@@ -54,16 +54,16 @@ namespace Pixed.Tools
             }
         }
 
-        private System.Drawing.Color GetHighlightColor(int pixel)
+        private UniColor GetHighlightColor(int pixel)
         {
-            var hsl = ColorUtils.ToHsl(pixel);
+            UniColor.Hsl hsl = ((UniColor)pixel).ToHsl();
 
             if (hsl.L > 0.5f)
             {
-                return System.Drawing.Color.FromArgb(50, System.Drawing.Color.Black);
+                return UniColor.WithAlpha(50, UniColor.Black);
             }
 
-            return System.Drawing.Color.FromArgb(50, System.Drawing.Color.White);
+            return UniColor.WithAlpha(50, UniColor.White);
         }
     }
 }
