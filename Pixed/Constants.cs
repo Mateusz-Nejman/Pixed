@@ -22,17 +22,16 @@ namespace Pixed
 
         public const int RIGHT_COLUMN_PADDING_LEFT = 10;
 
-        public static readonly Color DEFAULT_PEN_COLOR = Color.Black;
-        public static readonly Color TRANSPARENT_COLOR = Color.Transparent;
-        public static readonly Color SEAMLESS_MODE_OVERLAY_COLOR = Color.FromArgb(0, 255, 255, 255);
+        public static readonly UniColor DEFAULT_PEN_COLOR = UniColor.Black;
+        public static readonly UniColor SEAMLESS_MODE_OVERLAY_COLOR = new UniColor(0, 255, 255, 255);
 
         public const string CURRENT_COLORS_PALETTE_ID = "current-colors";
-        public static readonly Color SELECTION_TRANSPARENT_COLOR = Color.FromArgb(153, 160, 215, 240);
+        public static readonly UniColor SELECTION_TRANSPARENT_COLOR = new UniColor(153, 160, 215, 240);
 
-        public static readonly Color TOOL_HIGHLIGHT_COLOR_LIGHT = Color.FromArgb(51, 255, 255, 255);
-        public static readonly Color TOOL_HIGHLIGHT_COLOR_DARK = Color.FromArgb(51, 0, 0, 0);
+        public static readonly UniColor TOOL_HIGHLIGHT_COLOR_LIGHT = new UniColor(51, 255, 255, 255);
+        public static readonly UniColor TOOL_HIGHLIGHT_COLOR_DARK = new UniColor(51, 0, 0, 0);
 
-        public static readonly Color ZOOMED_OUT_BACKGROUND_COLOR = Color.FromArgb(160, 160, 160);
+        public static readonly UniColor ZOOMED_OUT_BACKGROUND_COLOR = new UniColor(160, 160, 160);
 
 
 

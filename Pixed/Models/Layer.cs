@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Windows.Media.Imaging;
-using Color = System.Drawing.Color;
 
 namespace Pixed.Models
 {
@@ -59,7 +58,7 @@ namespace Pixed.Models
             _height = height;
             _pixels = new int[width * height];
 
-            Array.Fill(_pixels, Constants.TRANSPARENT_COLOR.ToArgb());
+            Array.Fill(_pixels, UniColor.Transparent);
         }
 
         private Layer(int width, int height, int[] pixels)
@@ -94,7 +93,7 @@ namespace Pixed.Models
 
         public void MergeLayers(Layer layer2)
         {
-            int transparent = Constants.TRANSPARENT_COLOR.ToArgb();
+            int transparent = UniColor.Transparent;
 
             for (int a = 0; a < _pixels.Length; a++)
             {
@@ -134,11 +133,11 @@ namespace Pixed.Models
 
             for (int i = 0; i < pixels.Length; i++)
             {
-                Color color = Color.FromArgb(pixels[i]);
+                UniColor color = pixels[i];
 
                 if (color.A * _opacity > 0)
                 {
-                    int newColor = Color.FromArgb((int)(255 * _opacity), color).ToArgb();
+                    int newColor = UniColor.WithAlpha((byte)(255 * _opacity), color);
                     pixels[i] = newColor;
                 }
             }

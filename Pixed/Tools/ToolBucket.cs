@@ -8,7 +8,7 @@ namespace Pixed.Tools
     {
         public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay)
         {
-            var color = GetToolColor().ToArgb();
+            int color = GetToolColor();
 
             var history = PaintUtils.PaintSimiliarConnected(frame.Layers[frame.SelectedLayer], x, y, color);
             history.FrameId = frame.Id;
