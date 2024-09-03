@@ -13,6 +13,9 @@ namespace Pixed.Selection
         private BaseSelection? _currentSelection;
         private readonly Action<Bitmap> _setOverlayAction;
 
+        public bool HasSelection => _currentSelection != null;
+        public BaseSelection? Selection => _currentSelection;
+
         public SelectionManager(Action<Bitmap> overlayAction)
         {
             _setOverlayAction = overlayAction;

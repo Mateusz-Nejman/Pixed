@@ -218,7 +218,7 @@
                                     </ToolTip>
                                 </Button.ToolTip>
                             </Button>
-                            <Button Style="{StaticResource ToolButton}" Content="../Resources/Icons/transform/tool-crop.png" Grid.Column="3" Grid.Row="0">
+                            <Button Style="{StaticResource ToolButton}" Command="{Binding ToolCropCommand}" Content="../Resources/Icons/transform/tool-crop.png" Grid.Column="3" Grid.Row="0">
                                 <Button.ToolTip>
                                     <ToolTip Background="Black" BorderThickness="0">
                                         <controls:SimpleTooltip Title="Crop to fit the content or the selection. Applies to all frames and layers!"/>

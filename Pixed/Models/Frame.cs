@@ -49,6 +49,19 @@ namespace Pixed.Models
             AddLayer(new Layer(width, height));
         }
 
+        public static Frame FromLayers(ObservableCollection<Layer> layers)
+        {
+            Frame frame = new Frame(layers[0].Width, layers[0].Height);
+            frame.Layers.Clear();
+
+            foreach(var layer in layers)
+            {
+                frame.AddLayer(layer);
+            }
+
+            return frame;
+        }
+
         public Frame Clone()
         {
             Frame frame = new Frame(Width, Height);

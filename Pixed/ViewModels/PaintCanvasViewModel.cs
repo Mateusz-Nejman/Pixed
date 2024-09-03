@@ -21,6 +21,7 @@ namespace Pixed.ViewModels
         private readonly IDisposable _refreshDisposable;
         private Frame _frame;
         private Grid _grid;
+        private Point _lastWindowSize;
 
         public ActionCommand<Point> LeftMouseDown { get; set; }
         public ActionCommand<Point> LeftMouseUp { get; set; }
@@ -74,6 +75,12 @@ namespace Pixed.ViewModels
             MouseMove = new ActionCommand<Point>(MouseMoveAction);
             MouseWheel = new ActionCommand<int>(MouseWheelAction);
             MouseLeave = new ActionCommand(MouseLeaveAction);
+
+            Subjects.FrameChanged.Subscribe(f =>
+            {
+                CurrentFrame = Global.CurrentModel.Frames[f];
+                RecalculateFactor(_lastWindowSize);
+            });
         }
         public void RecalculateFactor(Point windowSize)
         {
@@ -81,6 +88,7 @@ namespace Pixed.ViewModels
             _imageFactor = factor;
             _grid.Width = _frame.Width * factor;
             _grid.Height = _frame.Height * factor;
+            _lastWindowSize = windowSize;
         }
         public void Initialize(Image image, Grid grid, Image overlay)
         {

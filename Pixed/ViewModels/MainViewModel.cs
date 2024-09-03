@@ -120,6 +120,7 @@ namespace Pixed.ViewModels
         public ICommand ToolFlipCommand { get; }
         public ICommand ToolRotateCommand { get; }
         public ICommand ToolCenterCommand { get; }
+        public ICommand ToolCropCommand { get; }
 
         public MainViewModel()
         {
@@ -140,6 +141,13 @@ namespace Pixed.ViewModels
             ToolFlipCommand = new ActionCommand(ToolFlipAction);
             ToolRotateCommand = new ActionCommand(ToolRotateAction);
             ToolCenterCommand = new ActionCommand(ToolCenterAction);
+            ToolCropCommand = new ActionCommand(ToolCropAction);
+
+            Subjects.FrameChanged.Subscribe(f =>
+            {
+                OnPropertyChanged(nameof(Frames));
+                OnPropertyChanged(nameof(Layers));
+            });
         }
 
         public void Initialize(PaintCanvasViewModel paintCanvas)
@@ -293,6 +301,12 @@ namespace Pixed.ViewModels
         {
             AbstractTransformTool center = new Center();
             center.ApplyTransformation();
+        }
+
+        private void ToolCropAction()
+        {
+            AbstractTransformTool crop = new Crop();
+            crop.ApplyTransformation();
         }
     }
 }
