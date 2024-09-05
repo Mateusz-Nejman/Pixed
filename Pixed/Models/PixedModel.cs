@@ -10,11 +10,25 @@ namespace Pixed.Models
         private int _historyIndex = -1;
 
         public ObservableCollection<Frame> Frames => _frames;
+        public int Width => Frames[0].Width;
+        public int Height => Frames[0].Height;
 
         public PixedModel()
         {
             _frames = [];
             _history = [];
+        }
+
+        public static PixedModel FromFrames(ObservableCollection<Frame> frames)
+        {
+            PixedModel model = new PixedModel();
+            
+            foreach(var frame in frames)
+            {
+                model.Frames.Add(frame);
+            }
+
+            return model;
         }
 
         public void AddHistory(HistoryEntry entry)

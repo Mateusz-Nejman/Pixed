@@ -1,5 +1,6 @@
 ﻿using GongSolutions.Wpf.DragDrop;
 using Pixed.Models;
+using Pixed.Tools.Transform;
 using Pixed.Windows;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -111,9 +112,15 @@ namespace Pixed.ViewModels
         public ICommand EditLayerNameCommand { get; }
         public ICommand MergeLayerCommand { get; }
         public ICommand RemoveLayerCommand { get; }
+
         public ICommand NewFrameCommand { get; }
         public ICommand RemoveFrameCommand { get; }
         public ICommand DuplicateFrameCommand { get; }
+
+        public ICommand ToolFlipCommand { get; }
+        public ICommand ToolRotateCommand { get; }
+        public ICommand ToolCenterCommand { get; }
+        public ICommand ToolCropCommand { get; }
 
         public MainViewModel()
         {
@@ -131,6 +138,16 @@ namespace Pixed.ViewModels
             NewFrameCommand = new ActionCommand(NewFrameAction);
             RemoveFrameCommand = new ActionCommand(RemoveFrameAction);
             DuplicateFrameCommand = new ActionCommand(DuplicateFrameAction);
+            ToolFlipCommand = new ActionCommand(ToolFlipAction);
+            ToolRotateCommand = new ActionCommand(ToolRotateAction);
+            ToolCenterCommand = new ActionCommand(ToolCenterAction);
+            ToolCropCommand = new ActionCommand(ToolCropAction);
+
+            Subjects.FrameChanged.Subscribe(f =>
+            {
+                OnPropertyChanged(nameof(Frames));
+                OnPropertyChanged(nameof(Layers));
+            });
         }
 
         public void Initialize(PaintCanvasViewModel paintCanvas)
@@ -266,6 +283,30 @@ namespace Pixed.ViewModels
             Frames.Add(Frames[SelectedFrame].Clone());
             SelectedFrame = Frames.Count - 1;
             RemoveFrameVisibility = Frames.Count == 1 ? Visibility.Hidden : Visibility.Visible;
+        }
+
+        private void ToolFlipAction()
+        {
+            AbstractTransformTool flip = new Flip();
+            flip.ApplyTransformation();
+        }
+
+        private void ToolRotateAction()
+        {
+            AbstractTransformTool rotate = new Rotate();
+            rotate.ApplyTransformation();
+        }
+
+        private void ToolCenterAction()
+        {
+            AbstractTransformTool center = new Center();
+            center.ApplyTransformation();
+        }
+
+        private void ToolCropAction()
+        {
+            AbstractTransformTool crop = new Crop();
+            crop.ApplyTransformation();
         }
     }
 }
