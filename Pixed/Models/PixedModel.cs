@@ -22,8 +22,8 @@ namespace Pixed.Models
         public static PixedModel FromFrames(ObservableCollection<Frame> frames)
         {
             PixedModel model = new PixedModel();
-            
-            foreach(var frame in frames)
+
+            foreach (var frame in frames)
             {
                 model.Frames.Add(frame);
             }

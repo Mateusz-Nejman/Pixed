@@ -1,5 +1,4 @@
 ﻿using Pixed.Models;
-using Pixed.Utils;
 using System.Drawing;
 using System.Windows.Input;
 

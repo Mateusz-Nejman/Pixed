@@ -54,7 +54,7 @@ namespace Pixed.Models
             Frame frame = new Frame(layers[0].Width, layers[0].Height);
             frame.Layers.Clear();
 
-            foreach(var layer in layers)
+            foreach (var layer in layers)
             {
                 frame.AddLayer(layer);
             }

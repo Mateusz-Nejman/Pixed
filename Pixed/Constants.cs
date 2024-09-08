@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-
-namespace Pixed
+﻿namespace Pixed
 {
     internal static class Constants
     {

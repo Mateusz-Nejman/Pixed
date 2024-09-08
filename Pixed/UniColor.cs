@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Pixed
+﻿namespace Pixed
 {
     internal struct UniColor : IEquatable<UniColor>
     {
@@ -115,7 +109,7 @@ namespace Pixed
 
         public static implicit operator UniColor(int value)
         {
-            byte[] bgra = BitConverter.GetBytes (value);
+            byte[] bgra = BitConverter.GetBytes(value);
             return new UniColor(bgra[3], bgra[2], bgra[1], bgra[0]);
         }
 

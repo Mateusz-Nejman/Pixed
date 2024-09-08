@@ -52,9 +52,9 @@ namespace Pixed.Tools.Transform
             double deltaX = Math.Ceiling((max - w) / 2.0);
             double deltaY = Math.Ceiling((max - h) / 2.0);
 
-            for(int x = 0; x < layer.Width;x++)
+            for (int x = 0; x < layer.Width; x++)
             {
-                for(int y =  0; y < layer.Height;y++)
+                for (int y = 0; y < layer.Height; y++)
                 {
                     double newX = x + deltaX;
                     double newY = y + deltaY;
@@ -62,12 +62,12 @@ namespace Pixed.Tools.Transform
                     double tempX = newX;
                     double tempY = newY;
 
-                    if(direction == Direction.Clockwise)
+                    if (direction == Direction.Clockwise)
                     {
                         newX = tempY;
                         newY = max - 1.0 - tempX;
                     }
-                    else if(direction == Direction.CounterClockwise)
+                    else if (direction == Direction.CounterClockwise)
                     {
                         newY = tempX;
                         newX = max - 1.0 - tempY;
@@ -76,7 +76,7 @@ namespace Pixed.Tools.Transform
                     newX = newX - deltaX;
                     newY = newY - deltaY;
 
-                    if(clone.ContainsPixel((int)newX, (int)newY))
+                    if (clone.ContainsPixel((int)newX, (int)newY))
                     {
                         layer.SetPixel(x, y, clone.GetPixel((int)newX, (int)newY));
                     }
@@ -167,7 +167,7 @@ namespace Pixed.Tools.Transform
 
             int transparent = UniColor.Transparent;
 
-            foreach(var pixel in selection.Pixels)
+            foreach (var pixel in selection.Pixels)
             {
                 if (pixel.Color != transparent)
                 {
