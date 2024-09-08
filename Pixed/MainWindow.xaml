@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Pixed" 
         xmlns:controls="clr-namespace:Pixed.Controls" 
         xmlns:dd="urn:gong-wpf-dragdrop"
-        xmlns:viewmodels="clr-namespace:Pixed.ViewModels"
+        xmlns:viewmodels="clr-namespace:Pixed.ViewModels" xmlns:colorpicker="clr-namespace:ColorPicker;assembly=ColorPicker"
         mc:Ignorable="d"
         Title="Pixed" Height="450" Width="800" Background="#1D1D1D" KeyDown="Window_KeyDown">
     <Window.DataContext>
@@ -108,7 +108,13 @@
                 <controls:PaintCanvas Grid.Row="1" x:Name="paintCanvas"/>
             </Grid>
 
-            <StackPanel Name="rightPanel" Grid.Column="4" Width="210" HorizontalAlignment="Stretch">
+            <StackPanel Name="rightPanel" Grid.Column="4" Width="226" HorizontalAlignment="Stretch">
+                <Border BorderThickness="2" BorderBrush="#888" Margin="8">
+                    <StackPanel>
+                        <colorpicker:StandardColorPicker Width="186" Style="{DynamicResource DefaultColorPickerStyle}" SelectedColor="{Binding PrimaryColor,Mode=TwoWay}" SecondaryColor="{Binding SecondaryColor, Mode=TwoWay}"/>
+                    </StackPanel>
+                </Border>
+                
                 <Border BorderThickness="2" BorderBrush="#888" Margin="8">
                     <StackPanel>
                         <TextBlock Text="Layers" Height="32" Foreground="White" FontSize="15px" Padding="4" FontWeight="Bold"/>

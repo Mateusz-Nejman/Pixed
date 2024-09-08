@@ -19,6 +19,30 @@ namespace Pixed.ViewModels
         private bool _canLayerMerge = false;
         private bool _canLayerRemove = false;
         private Visibility _removeFrameVisibility = Visibility.Hidden;
+        private UniColor _primaryColor = UniColor.Black;
+        private UniColor _secondaryColor = UniColor.White;
+
+        public System.Windows.Media.Color PrimaryColor
+        {
+            get => _primaryColor;
+            set
+            {
+                _primaryColor = value;
+                OnPropertyChanged();
+                Subjects.PrimaryColorChanged.OnNext(value);
+            }
+        }
+
+        public System.Windows.Media.Color SecondaryColor
+        {
+            get => _secondaryColor;
+            set
+            {
+                _secondaryColor = value;
+                OnPropertyChanged();
+                Subjects.SecondaryColorChanged.OnNext(value);
+            }
+        }
 
         public bool CanLayerMoveUp
         {
@@ -148,6 +172,12 @@ namespace Pixed.ViewModels
                 OnPropertyChanged(nameof(Frames));
                 OnPropertyChanged(nameof(Layers));
             });
+
+            Subjects.PrimaryColorChanged.Subscribe(c => Global.PrimaryColor = c);
+            Subjects.SecondaryColorChanged.Subscribe(c => Global.SecondaryColor = c);
+
+            PrimaryColor = UniColor.Black;
+            SecondaryColor = UniColor.White;
         }
 
         public void Initialize(PaintCanvasViewModel paintCanvas)

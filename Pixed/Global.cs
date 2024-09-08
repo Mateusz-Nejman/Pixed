@@ -19,5 +19,7 @@ namespace Pixed
         public static Frame CurrentFrame => CurrentModel.Frames[CurrentFrameIndex];
         public static Layer CurrentLayer => CurrentFrame.Layers[CurrentLayerIndex];
         public static ToolSelector ToolSelector { get; set; }
+        public static UniColor PrimaryColor { get; set; }
+        public static UniColor SecondaryColor { get; set; }
     }
 }

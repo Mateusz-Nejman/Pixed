@@ -14,10 +14,10 @@ namespace Pixed.Tools
         {
             if (Mouse.RightButton == MouseButtonState.Pressed)
             {
-                return UniColor.CornflowerBlue; //TODO colorpicker
+                return Global.SecondaryColor;
             }
 
-            return UniColor.Black;
+            return Global.PrimaryColor;
         }
 
         public virtual void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay)
