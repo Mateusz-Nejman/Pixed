@@ -1,7 +1,7 @@
 ﻿using Pixed.Models;
 using Pixed.Selection;
-using Pixed.Services;
 using Pixed.Services.Keyboard;
+using Pixed.Services.Palette;
 using Pixed.Tools;
 
 namespace Pixed

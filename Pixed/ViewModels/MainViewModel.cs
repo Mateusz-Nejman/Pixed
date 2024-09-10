@@ -1,4 +1,5 @@
 ﻿using GongSolutions.Wpf.DragDrop;
+using Microsoft.Win32;
 using Pixed.Models;
 using Pixed.Tools.Transform;
 using Pixed.Windows;
@@ -146,7 +147,7 @@ namespace Pixed.ViewModels
         public ICommand ToolCenterCommand { get; }
         public ICommand ToolCropCommand { get; }
 
-        public Palette SelectedPalette { get; private set; }
+        public PaletteModel SelectedPalette { get; private set; }
         public ObservableCollection<UniColor> SelectedPaletteColors
         {
             get
@@ -218,6 +219,8 @@ namespace Pixed.ViewModels
 
             PaletteAddPrimaryCommand = new ActionCommand(PaletteAddPrimaryAction);
             PaletteAddCurrentCommand = new ActionCommand(PaletteAddCurrentAction);
+            PaletteOpenCommand = new ActionCommand(PaletteOpenAction);
+            PaletteSaveCommand = new ActionCommand(PaletteSaveAction);
             PaletteClearCommand = new ActionCommand(PaletteClearAction);
         }
 
@@ -402,6 +405,27 @@ namespace Pixed.ViewModels
         {
             Global.PaletteService.ClearPalette();
             OnPropertyChanged(nameof(SelectedPaletteColors));
+        }
+        
+        private void PaletteOpenAction()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl|All Supported (.json;.gpl)|*.json;*.gpl";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                Global.PaletteService.Load(openFileDialog.FileName);
+            }
+        }
+
+        private void PaletteSaveAction()
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.FileName = Global.PaletteService.SelectedPalette.Name;
+            saveFileDialog.Filter = "Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl|All Supported (.json;.gpl)|*.json;*.gpl";
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                Global.PaletteService.Save(saveFileDialog.FileName);
+            }
         }
     }
 }

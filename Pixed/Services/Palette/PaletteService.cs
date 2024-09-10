@@ -1,20 +1,22 @@
 ﻿using Pixed.Models;
+using Pixed.Services.Palette.Readers;
+using Pixed.Services.Palette.Writers;
 using System.IO;
 
-namespace Pixed.Services
+namespace Pixed.Services.Palette
 {
     internal class PaletteService
     {
-        public List<Palette> Palettes { get; }
-        public Palette CurrentColorsPalette => Palettes[0];
-        public Palette SelectedPalette => Palettes[PaletteIndex];
+        public List<PaletteModel> Palettes { get; }
+        public PaletteModel CurrentColorsPalette => Palettes[0];
+        public PaletteModel SelectedPalette => Palettes[PaletteIndex];
         public int PaletteIndex => 1;
 
         public PaletteService()
         {
             Palettes = [];
-            Palettes.Add(new Palette("default") { Name = "Current colors" });
-            Palettes.Add(new Palette("palette") { Name = "Palette" });
+            Palettes.Add(new PaletteModel("default") { Name = "Current colors" });
+            Palettes.Add(new PaletteModel("palette") { Name = "Palette" });
         }
 
         public void SetCurrentColors()
@@ -22,7 +24,7 @@ namespace Pixed.Services
             Palettes[0].Colors = Global.CurrentModel.GetAllColors();
         }
 
-        public void AddColorsFromPalette(Palette palette)
+        public void AddColorsFromPalette(PaletteModel palette)
         {
             SelectedPalette.Colors.AddRange(palette.Colors.Where(c => !SelectedPalette.Colors.Contains(c)));
             SelectedPalette.Colors.Sort();
@@ -42,13 +44,51 @@ namespace Pixed.Services
             SelectedPalette.Colors.Clear();
         }
 
-        public void Add(Palette palette)
+        public void Add(PaletteModel palette)
         {
             if (Palettes.FirstOrDefault(p => p.Id == palette.Id, null) == null)
             {
                 Palettes.Add(palette);
                 Subjects.PaletteAdded.OnNext(palette);
             }
+        }
+
+        public void Load(string filename)
+        {
+            FileInfo fileInfo = new FileInfo(filename);
+
+            AbstractPaletteReader reader;
+
+            if (fileInfo.Extension == ".json")
+            {
+                reader = new BasePaletteReader(filename);
+            }
+            else
+            {
+                reader = new GplPaletteReader(filename);
+            }
+
+            Palettes[1] = reader.Read();
+            Subjects.PaletteSelected.OnNext(Palettes[1]);
+            Subjects.PaletteAdded.OnNext(Palettes[1]);
+        }
+
+        public void Save(string filename)
+        {
+            FileInfo fileInfo = new FileInfo(filename);
+
+            AbstractPaletteWriter writer;
+
+            if (fileInfo.Extension == ".json")
+            {
+                writer = new BasePaletteWriter();
+            }
+            else
+            {
+                writer = new GplPaletteWriter();
+            }
+
+            writer.Write(Palettes[1], filename);
         }
 
         public void LoadAll()
@@ -64,7 +104,7 @@ namespace Pixed.Services
             {
                 try
                 {
-                    Palette palette = Palette.FromJson(File.ReadAllText(file));
+                    PaletteModel palette = PaletteModel.FromJson(File.ReadAllText(file));
                     Palettes.Add(palette);
                 }
                 catch (Exception e)
@@ -74,7 +114,7 @@ namespace Pixed.Services
             }
         }
 
-        public static void Save(Palette palette)
+        public static void Save(PaletteModel palette)
         {
             if (!Directory.Exists("Palettes"))
             {

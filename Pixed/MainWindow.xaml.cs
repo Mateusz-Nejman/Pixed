@@ -1,6 +1,7 @@
 ﻿using Pixed.Controls;
 using Pixed.Services;
 using Pixed.Services.Keyboard;
+using Pixed.Services.Palette;
 using Pixed.Tools;
 using Pixed.ViewModels;
 using System.Windows;

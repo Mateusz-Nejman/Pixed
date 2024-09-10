@@ -38,6 +38,8 @@
             G = green;
         }
 
+        public UniColor(int red, int green, int blue) : this((byte)red, (byte)green, (byte)blue) { }
+
         public Hsl ToHsl()
         {
             float r = R;
