@@ -151,7 +151,7 @@ namespace Pixed.ViewModels
         {
             get
             {
-                if(CurrentPalette == null)
+                if (CurrentPalette == null)
                 {
                     return null;
                 }

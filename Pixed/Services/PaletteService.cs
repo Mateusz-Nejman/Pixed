@@ -20,7 +20,7 @@ namespace Pixed.Services
 
         public void Add(Palette palette)
         {
-            if(Palettes.FirstOrDefault(p => p.Id == palette.Id, null) == null)
+            if (Palettes.FirstOrDefault(p => p.Id == palette.Id, null) == null)
             {
                 Palettes.Add(palette);
                 Subjects.PaletteAdded.OnNext(palette);
@@ -43,7 +43,7 @@ namespace Pixed.Services
                     Palette palette = Palette.FromJson(File.ReadAllText(file));
                     Palettes.Add(palette);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     //ignore
                 }
@@ -52,7 +52,7 @@ namespace Pixed.Services
 
         public static void Save(Palette palette)
         {
-            if(!Directory.Exists("Palettes"))
+            if (!Directory.Exists("Palettes"))
             {
                 Directory.CreateDirectory("Palettes");
             }

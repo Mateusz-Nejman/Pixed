@@ -1,18 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Pixed.Controls
 {
@@ -47,7 +36,7 @@ namespace Pixed.Controls
             int gridCount = (int)Math.Ceiling((double)Colors.Count / (double)Columns);
             int colorIndex = 0;
 
-            for(int g = 0; g < gridCount; g++)
+            for (int g = 0; g < gridCount; g++)
             {
                 Grid grid = new();
                 grid.Height = 30;
@@ -57,9 +46,9 @@ namespace Pixed.Controls
                     grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
                 }
 
-                for(int a = 0; a < Columns; a++)
+                for (int a = 0; a < Columns; a++)
                 {
-                    if(colorIndex >= Colors.Count)
+                    if (colorIndex >= Colors.Count)
                     {
                         break;
                     }
@@ -83,8 +72,8 @@ namespace Pixed.Controls
 
         private static void OnColorsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if(e.NewValue == null)
-            { 
+            if (e.NewValue == null)
+            {
                 return;
             }
             var grid = (ColorGrid)d;

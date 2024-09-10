@@ -20,7 +20,7 @@ namespace Pixed.Models
 
         public UniColor[] ToColors()
         {
-            return Colors.Select(i =>(UniColor)i).ToArray();
+            return Colors.Select(i => (UniColor)i).ToArray();
         }
 
         public static Palette FromJson(string json)
