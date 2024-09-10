@@ -108,146 +108,148 @@
                 <controls:PaintCanvas Grid.Row="1" x:Name="paintCanvas"/>
             </Grid>
 
-            <StackPanel Name="rightPanel" Grid.Column="4" Width="226" HorizontalAlignment="Stretch">
-                <Border BorderThickness="2" BorderBrush="#888" Margin="8">
-                    <StackPanel>
-                        <colorpicker:StandardColorPicker Width="186" Style="{DynamicResource DefaultColorPickerStyle}" SelectedColor="{Binding PrimaryColor,Mode=TwoWay}" SecondaryColor="{Binding SecondaryColor, Mode=TwoWay}"/>
-                    </StackPanel>
-                </Border>
-                
-                <Border BorderThickness="2" BorderBrush="#888" Margin="8">
-                    <StackPanel>
-                        <TextBlock Text="Layers" Height="32" Foreground="White" FontSize="15px" Padding="4" FontWeight="Bold"/>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="26"/>
-                            </Grid.RowDefinitions>
-                            <Button Style="{StaticResource LayersButton}" Command="{Binding AddLayerCommand}">
-                                <Button.ToolTip>
-                                    <ToolTip Background="Black" BorderThickness="0">
-                                        <controls:TooltipWithButton Title="Add Layer" ButtonText="Shift" ButtonTextHelper="Clone current layer"/>
-                                    </ToolTip>
-                                </Button.ToolTip>
-                                <Image Source="./Resources/icons/common/plus.png" Width="10" Height="10"/>
-                            </Button>
-                            <Button Style="{StaticResource LayersButton}" Grid.Column="1" Command="{Binding MoveLayerUpCommand}" IsEnabled="{Binding CanLayerMoveUp}">
-                                <Button.ToolTip>
-                                    <ToolTip Background="Black" BorderThickness="0">
-                                        <controls:TooltipWithButton Title="Move layer up" ButtonText="Shift" ButtonTextHelper="Move to the top"/>
-                                    </ToolTip>
-                                </Button.ToolTip>
-                                <Image Source="./Resources/icons/common/arrow-up.png" Width="10" Height="10"/>
-                            </Button>
-                            <Button Style="{StaticResource LayersButton}" Grid.Column="2" Command="{Binding MoveLayerDownCommand}" IsEnabled="{Binding CanLayerMoveDown}">
-                                <Button.ToolTip>
-                                    <ToolTip Background="Black" BorderThickness="0">
-                                        <controls:TooltipWithButton Title="Move layer down" ButtonText="Shift" ButtonTextHelper="Move to the bottom"/>
-                                    </ToolTip>
-                                </Button.ToolTip>
-                                <Image Source="./Resources/icons/common/arrow-down.png" Width="10" Height="10"/>
-                            </Button>
-                            <Button Style="{StaticResource LayersButton}" Grid.Column="3" Command="{Binding EditLayerNameCommand}">
-                                <Button.ToolTip>
-                                    <ToolTip Background="Black" BorderThickness="0">
-                                        <controls:SimpleTooltip Title="Edit layer name"/>
-                                    </ToolTip>
-                                </Button.ToolTip>
-                                <Image Source="./Resources/icons/common/pencil.png" Width="10" Height="10"/>
-                            </Button>
-                            <Button Style="{StaticResource LayersButton}" Grid.Column="4" Command="{Binding MergeLayerCommand}" IsEnabled="{Binding CanLayerMerge}">
-                                <Button.ToolTip>
-                                    <ToolTip Background="Black" BorderThickness="0">
-                                        <controls:SimpleTooltip Title="Merge with layer below"/>
-                                    </ToolTip>
-                                </Button.ToolTip>
-                                <Image Source="./Resources/icons/common/download2.png" Width="10" Height="10"/>
-                            </Button>
-                            <Button Style="{StaticResource LayersButton}" Grid.Column="5" Command="{Binding RemoveLayerCommand}" IsEnabled="{Binding CanLayerRemove}">
-                                <Button.ToolTip>
-                                    <ToolTip Background="Black" BorderThickness="0">
-                                        <controls:SimpleTooltip Title="Delete selected layer"/>
-                                    </ToolTip>
-                                </Button.ToolTip>
-                                <Image Source="./Resources/icons/common/cross.png" Width="10" Height="10"/>
-                            </Button>
-                        </Grid>
-                        <ListBox ItemsSource="{Binding Layers}" 
-                                 SelectedIndex="{Binding SelectedLayer, Mode=TwoWay}" 
-                                 Background="#222">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <controls:LayerListControl/>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-                    </StackPanel>
-                </Border>
+            <ScrollViewer Grid.Column="4" Width="242" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
+                <StackPanel Name="rightPanel" Grid.Column="4" Width="226" HorizontalAlignment="Stretch">
+                    <Border BorderThickness="2" BorderBrush="#888" Margin="8">
+                        <StackPanel>
+                            <colorpicker:StandardColorPicker Width="186" Style="{DynamicResource DefaultColorPickerStyle}" SelectedColor="{Binding PrimaryColor,Mode=TwoWay}" SecondaryColor="{Binding SecondaryColor, Mode=TwoWay}"/>
+                        </StackPanel>
+                    </Border>
 
-                <Border BorderThickness="2" BorderBrush="#888" Margin="8">
-                    <StackPanel>
-                        <TextBlock Text="Transform" Height="32" Foreground="White" FontSize="15px" Padding="4" FontWeight="Bold"/>
-                        <UniformGrid Rows="1" Columns="4" Width="184" Height="46">
-                            <Button Style="{StaticResource ToolButton}" Command="{Binding ToolFlipCommand}" Content="../Resources/Icons/transform/tool-flip.png" Grid.Column="0" Grid.Row="0">
-                                <Button.ToolTip>
-                                    <ToolTip Background="Black" BorderThickness="0">
-                                        <controls:TooltipWith3Buttons Title="Flip horizontaly" 
-                                                                      ButtonText1="Alt" ButtonTextHelper1="Flip vertically" 
-                                                                      ButtonText2="Ctrl" ButtonTextHelper2="Apply to all layers"
-                                                                      ButtonText3="Shift" ButtonTextHelper3="Apply to all frames"/>
-                                    </ToolTip>
-                                </Button.ToolTip>
-                            </Button>
-                            <Button Style="{StaticResource ToolButton}" Command="{Binding ToolRotateCommand}" Content="../Resources/Icons/transform/tool-rotate.png" Grid.Column="1" Grid.Row="0">
-                                <Button.ToolTip>
-                                    <ToolTip Background="Black" BorderThickness="0">
-                                        <controls:TooltipWith3Buttons Title="Counter-clockwise rotation"
-                                                                      ButtonText1="Alt" ButtonTextHelper1="Clockwise rotation"
-                                                                      ButtonText2="Ctrl"  ButtonTextHelper2="Apply to all layers"
-                                                                      ButtonText3="Shift" ButtonTextHelper3="Apply to all frames"/>
-                                    </ToolTip>
-                                </Button.ToolTip>
-                            </Button>
-                            <Button Style="{StaticResource ToolButton}" Command="{Binding ToolCenterCommand}" Content="../Resources/Icons/transform/tool-center.png" Grid.Column="2" Grid.Row="0">
-                                <Button.ToolTip>
-                                    <ToolTip Background="Black" BorderThickness="0">
-                                        <controls:TooltipWith2Buttons Title="Align image to the center"
-                                                                      ButtonText1="Ctrl" ButtonTextHelper1="Apply to all layers"
-                                                                      ButtonText2="Shift" ButtonTextHelper2="Apply to all frames"/>
-                                    </ToolTip>
-                                </Button.ToolTip>
-                            </Button>
-                            <Button Style="{StaticResource ToolButton}" Command="{Binding ToolCropCommand}" Content="../Resources/Icons/transform/tool-crop.png" Grid.Column="3" Grid.Row="0">
-                                <Button.ToolTip>
-                                    <ToolTip Background="Black" BorderThickness="0">
-                                        <controls:SimpleTooltip Title="Crop to fit the content or the selection. Applies to all frames and layers!"/>
-                                    </ToolTip>
-                                </Button.ToolTip>
-                            </Button>
-                        </UniformGrid>
-                    </StackPanel>
-                </Border>
+                    <Border BorderThickness="2" BorderBrush="#888" Margin="8">
+                        <StackPanel>
+                            <TextBlock Text="Layers" Height="32" Foreground="White" FontSize="15px" Padding="4" FontWeight="Bold"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="26"/>
+                                </Grid.RowDefinitions>
+                                <Button Style="{StaticResource LayersButton}" Command="{Binding AddLayerCommand}">
+                                    <Button.ToolTip>
+                                        <ToolTip Background="Black" BorderThickness="0">
+                                            <controls:TooltipWithButton Title="Add Layer" ButtonText="Shift" ButtonTextHelper="Clone current layer"/>
+                                        </ToolTip>
+                                    </Button.ToolTip>
+                                    <Image Source="./Resources/icons/common/plus.png" Width="10" Height="10"/>
+                                </Button>
+                                <Button Style="{StaticResource LayersButton}" Grid.Column="1" Command="{Binding MoveLayerUpCommand}" IsEnabled="{Binding CanLayerMoveUp}">
+                                    <Button.ToolTip>
+                                        <ToolTip Background="Black" BorderThickness="0">
+                                            <controls:TooltipWithButton Title="Move layer up" ButtonText="Shift" ButtonTextHelper="Move to the top"/>
+                                        </ToolTip>
+                                    </Button.ToolTip>
+                                    <Image Source="./Resources/icons/common/arrow-up.png" Width="10" Height="10"/>
+                                </Button>
+                                <Button Style="{StaticResource LayersButton}" Grid.Column="2" Command="{Binding MoveLayerDownCommand}" IsEnabled="{Binding CanLayerMoveDown}">
+                                    <Button.ToolTip>
+                                        <ToolTip Background="Black" BorderThickness="0">
+                                            <controls:TooltipWithButton Title="Move layer down" ButtonText="Shift" ButtonTextHelper="Move to the bottom"/>
+                                        </ToolTip>
+                                    </Button.ToolTip>
+                                    <Image Source="./Resources/icons/common/arrow-down.png" Width="10" Height="10"/>
+                                </Button>
+                                <Button Style="{StaticResource LayersButton}" Grid.Column="3" Command="{Binding EditLayerNameCommand}">
+                                    <Button.ToolTip>
+                                        <ToolTip Background="Black" BorderThickness="0">
+                                            <controls:SimpleTooltip Title="Edit layer name"/>
+                                        </ToolTip>
+                                    </Button.ToolTip>
+                                    <Image Source="./Resources/icons/common/pencil.png" Width="10" Height="10"/>
+                                </Button>
+                                <Button Style="{StaticResource LayersButton}" Grid.Column="4" Command="{Binding MergeLayerCommand}" IsEnabled="{Binding CanLayerMerge}">
+                                    <Button.ToolTip>
+                                        <ToolTip Background="Black" BorderThickness="0">
+                                            <controls:SimpleTooltip Title="Merge with layer below"/>
+                                        </ToolTip>
+                                    </Button.ToolTip>
+                                    <Image Source="./Resources/icons/common/download2.png" Width="10" Height="10"/>
+                                </Button>
+                                <Button Style="{StaticResource LayersButton}" Grid.Column="5" Command="{Binding RemoveLayerCommand}" IsEnabled="{Binding CanLayerRemove}">
+                                    <Button.ToolTip>
+                                        <ToolTip Background="Black" BorderThickness="0">
+                                            <controls:SimpleTooltip Title="Delete selected layer"/>
+                                        </ToolTip>
+                                    </Button.ToolTip>
+                                    <Image Source="./Resources/icons/common/cross.png" Width="10" Height="10"/>
+                                </Button>
+                            </Grid>
+                            <ListBox ItemsSource="{Binding Layers}" 
+                     SelectedIndex="{Binding SelectedLayer, Mode=TwoWay}" 
+                     Background="#222">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <controls:LayerListControl/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </StackPanel>
+                    </Border>
 
-                <Border BorderThickness="2" BorderBrush="#888" Margin="8">
-                    <StackPanel>
-                        <TextBlock Text="Palettes" Height="32" Foreground="White" FontSize="15px" Padding="4" FontWeight="Bold"/>
-                        <controls:ColorGrid Columns="5" Colors="{Binding CurrentColors}"/>
-                    </StackPanel>
-                </Border>
+                    <Border BorderThickness="2" BorderBrush="#888" Margin="8">
+                        <StackPanel>
+                            <TextBlock Text="Transform" Height="32" Foreground="White" FontSize="15px" Padding="4" FontWeight="Bold"/>
+                            <UniformGrid Rows="1" Columns="4" Width="184" Height="46">
+                                <Button Style="{StaticResource ToolButton}" Command="{Binding ToolFlipCommand}" Content="../Resources/Icons/transform/tool-flip.png" Grid.Column="0" Grid.Row="0">
+                                    <Button.ToolTip>
+                                        <ToolTip Background="Black" BorderThickness="0">
+                                            <controls:TooltipWith3Buttons Title="Flip horizontaly" 
+                                                          ButtonText1="Alt" ButtonTextHelper1="Flip vertically" 
+                                                          ButtonText2="Ctrl" ButtonTextHelper2="Apply to all layers"
+                                                          ButtonText3="Shift" ButtonTextHelper3="Apply to all frames"/>
+                                        </ToolTip>
+                                    </Button.ToolTip>
+                                </Button>
+                                <Button Style="{StaticResource ToolButton}" Command="{Binding ToolRotateCommand}" Content="../Resources/Icons/transform/tool-rotate.png" Grid.Column="1" Grid.Row="0">
+                                    <Button.ToolTip>
+                                        <ToolTip Background="Black" BorderThickness="0">
+                                            <controls:TooltipWith3Buttons Title="Counter-clockwise rotation"
+                                                          ButtonText1="Alt" ButtonTextHelper1="Clockwise rotation"
+                                                          ButtonText2="Ctrl"  ButtonTextHelper2="Apply to all layers"
+                                                          ButtonText3="Shift" ButtonTextHelper3="Apply to all frames"/>
+                                        </ToolTip>
+                                    </Button.ToolTip>
+                                </Button>
+                                <Button Style="{StaticResource ToolButton}" Command="{Binding ToolCenterCommand}" Content="../Resources/Icons/transform/tool-center.png" Grid.Column="2" Grid.Row="0">
+                                    <Button.ToolTip>
+                                        <ToolTip Background="Black" BorderThickness="0">
+                                            <controls:TooltipWith2Buttons Title="Align image to the center"
+                                                          ButtonText1="Ctrl" ButtonTextHelper1="Apply to all layers"
+                                                          ButtonText2="Shift" ButtonTextHelper2="Apply to all frames"/>
+                                        </ToolTip>
+                                    </Button.ToolTip>
+                                </Button>
+                                <Button Style="{StaticResource ToolButton}" Command="{Binding ToolCropCommand}" Content="../Resources/Icons/transform/tool-crop.png" Grid.Column="3" Grid.Row="0">
+                                    <Button.ToolTip>
+                                        <ToolTip Background="Black" BorderThickness="0">
+                                            <controls:SimpleTooltip Title="Crop to fit the content or the selection. Applies to all frames and layers!"/>
+                                        </ToolTip>
+                                    </Button.ToolTip>
+                                </Button>
+                            </UniformGrid>
+                        </StackPanel>
+                    </Border>
 
-                <Border BorderThickness="2" BorderBrush="#888" Margin="8">
-                    <StackPanel>
-                        <TextBlock Text="Touch buttons" Height="32" Foreground="White" FontSize="15px" Padding="4" FontWeight="Bold"/>
-                    </StackPanel>
-                </Border>
-            </StackPanel>
+                    <Border BorderThickness="2" BorderBrush="#888" Margin="8">
+                        <StackPanel>
+                            <TextBlock Text="Palettes" Height="32" Foreground="White" FontSize="15px" Padding="4" FontWeight="Bold"/>
+                            <controls:ColorGrid Columns="5" Colors="{Binding CurrentColors}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border BorderThickness="2" BorderBrush="#888" Margin="8">
+                        <StackPanel>
+                            <TextBlock Text="Touch buttons" Height="32" Foreground="White" FontSize="15px" Padding="4" FontWeight="Bold"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
         </Grid>
     </Grid>
 </Window>
