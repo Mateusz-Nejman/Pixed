@@ -8,6 +8,7 @@ namespace Pixed
 {
     internal static class Global
     {
+        public static string DataFolder { get; set; }
         public static ShortcutService? ShortcutService { get; set; }
         public static PaletteService? PaletteService { get; set; }
         public static SelectionManager? SelectionManager { get; set; }

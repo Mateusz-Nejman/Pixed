@@ -57,6 +57,9 @@ namespace Pixed.Services.Palette
         {
             FileInfo fileInfo = new FileInfo(filename);
 
+            string paletteFileName = Path.Combine(Global.DataFolder, "Palettes", fileInfo.Name);
+            File.Copy(filename, paletteFileName, true);
+
             AbstractPaletteReader reader;
 
             if (fileInfo.Extension == ".json")
@@ -93,12 +96,7 @@ namespace Pixed.Services.Palette
 
         public void LoadAll()
         {
-            if (!Directory.Exists("Palettes"))
-            {
-                return;
-            }
-
-            var files = Directory.GetFiles("Palettes");
+            var files = Directory.GetFiles(Path.Combine(Global.DataFolder, "Palettes"));
 
             foreach (var file in files)
             {

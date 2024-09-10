@@ -266,6 +266,7 @@
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="26"/>
@@ -286,7 +287,15 @@
                                                 </Button.ToolTip>
                                                 <Image Source="./Resources/icons/merge_palettes.png" Width="10" Height="10"/>
                                             </Button>
-                                            <Button Style="{StaticResource LayersButton}" Grid.Column="2" Command="{Binding PaletteOpenCommand}">
+                                            <Button Style="{StaticResource LayersButton}" Grid.Column="2" Command="{Binding PaletteListCommand}">
+                                                <Button.ToolTip>
+                                                    <ToolTip Background="Black" BorderThickness="0">
+                                                        <controls:SimpleTooltip Title="Palettes list"/>
+                                                    </ToolTip>
+                                                </Button.ToolTip>
+                                                <Image Source="./Resources/icons/database.png" Width="10" Height="10"/>
+                                            </Button>
+                                            <Button Style="{StaticResource LayersButton}" Grid.Column="3" Command="{Binding PaletteOpenCommand}">
                                                 <Button.ToolTip>
                                                     <ToolTip Background="Black" BorderThickness="0">
                                                         <controls:SimpleTooltip Title="Load palete"/>
@@ -294,7 +303,7 @@
                                                 </Button.ToolTip>
                                                 <Image Source="./Resources/Icons/folder-open.png" Width="10" Height="10"/>
                                             </Button>
-                                            <Button Style="{StaticResource LayersButton}" Grid.Column="3" Command="{Binding PaletteSaveCommand}">
+                                            <Button Style="{StaticResource LayersButton}" Grid.Column="4" Command="{Binding PaletteSaveCommand}">
                                                 <Button.ToolTip>
                                                     <ToolTip Background="Black" BorderThickness="0">
                                                         <controls:SimpleTooltip Title="Save palette"/>
@@ -302,7 +311,7 @@
                                                 </Button.ToolTip>
                                                 <Image Source="./Resources/Icons/floppy-disk.png" Width="10" Height="10"/>
                                             </Button>
-                                            <Button Style="{StaticResource LayersButton}" Grid.Column="4" Command="{Binding PaletteClearCommand}">
+                                            <Button Style="{StaticResource LayersButton}" Grid.Column="5" Command="{Binding PaletteClearCommand}">
                                                 <Button.ToolTip>
                                                     <ToolTip Background="Black" BorderThickness="0">
                                                         <controls:SimpleTooltip Title="Clear palette"/>

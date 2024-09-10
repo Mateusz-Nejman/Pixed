@@ -174,6 +174,7 @@ namespace Pixed.ViewModels
 
         public ICommand PaletteAddPrimaryCommand { get; }
         public ICommand PaletteAddCurrentCommand { get; }
+        public ICommand PaletteListCommand { get; }
         public ICommand PaletteOpenCommand { get; }
         public ICommand PaletteSaveCommand { get; }
         public ICommand PaletteClearCommand { get; }
@@ -222,6 +223,7 @@ namespace Pixed.ViewModels
             PaletteOpenCommand = new ActionCommand(PaletteOpenAction);
             PaletteSaveCommand = new ActionCommand(PaletteSaveAction);
             PaletteClearCommand = new ActionCommand(PaletteClearAction);
+            PaletteListCommand = new ActionCommand(PaletteListAction);
         }
 
         public void Initialize(PaintCanvasViewModel paintCanvas)
@@ -425,6 +427,15 @@ namespace Pixed.ViewModels
             if (saveFileDialog.ShowDialog() == true)
             {
                 Global.PaletteService.Save(saveFileDialog.FileName);
+            }
+        }
+
+        private void PaletteListAction()
+        {
+            PaletteWindow window = new PaletteWindow();
+            if(window.ShowDialog() == true)
+            {
+                //TODO select palette
             }
         }
     }

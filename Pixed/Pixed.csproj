@@ -32,6 +32,7 @@
     <None Remove="Resources\Icons\common\download2.png" />
     <None Remove="Resources\Icons\common\pencil.png" />
     <None Remove="Resources\Icons\common\plus.png" />
+    <None Remove="Resources\Icons\database.png" />
     <None Remove="Resources\Icons\floppy-disk.png" />
     <None Remove="Resources\Icons\folder-open.png" />
     <None Remove="Resources\Icons\frame\frame-dragndrop-white.png" />
@@ -101,6 +102,7 @@
     <Resource Include="Resources\Icons\common\download2.png" />
     <Resource Include="Resources\Icons\common\pencil.png" />
     <Resource Include="Resources\Icons\common\plus.png" />
+    <Resource Include="Resources\Icons\database.png" />
     <Resource Include="Resources\Icons\floppy-disk.png" />
     <Resource Include="Resources\Icons\folder-open.png" />
     <Resource Include="Resources\Icons\frame\frame-dragndrop-white.png" />
