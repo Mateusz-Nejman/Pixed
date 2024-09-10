@@ -1,4 +1,5 @@
 ﻿using Pixed.Controls;
+using Pixed.Services;
 using Pixed.Services.Keyboard;
 using Pixed.Tools;
 using Pixed.ViewModels;
@@ -20,13 +21,14 @@ namespace Pixed
             InitializeComponent();
             _paintCanvas = paintCanvas;
             _viewModel = (MainViewModel)DataContext;
-            _viewModel.Initialize(_paintCanvas.ViewModel);
             Initialize();
+            _viewModel.Initialize(_paintCanvas.ViewModel);
         }
 
         private void Initialize()
         {
             Global.ShortcutService = new ShortcutService();
+            Global.PaletteService = new PaletteService();
             Global.SelectionManager = new Selection.SelectionManager(ov =>
             {
                 _paintCanvas.ViewModel.Overlay = ov;

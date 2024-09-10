@@ -146,6 +146,20 @@ namespace Pixed.ViewModels
         public ICommand ToolCenterCommand { get; }
         public ICommand ToolCropCommand { get; }
 
+        public Palette CurrentPalette { get; private set; }
+        public ObservableCollection<UniColor> CurrentColors
+        {
+            get
+            {
+                if(CurrentPalette == null)
+                {
+                    return null;
+                }
+
+                return new ObservableCollection<UniColor>(CurrentPalette.Colors.Select(s => (UniColor)s));
+            }
+        }
+
         public MainViewModel()
         {
             Global.Models.Add(new PixedModel());
@@ -175,15 +189,29 @@ namespace Pixed.ViewModels
 
             Subjects.PrimaryColorChanged.Subscribe(c => Global.PrimaryColor = c);
             Subjects.SecondaryColorChanged.Subscribe(c => Global.SecondaryColor = c);
+            Subjects.PrimaryColorChange.Subscribe(c => PrimaryColor = c);
 
             PrimaryColor = UniColor.Black;
             SecondaryColor = UniColor.White;
+
+            Subjects.PaletteSelected.Subscribe(p =>
+            {
+                CurrentPalette = p;
+                OnPropertyChanged(nameof(CurrentColors));
+            });
         }
 
         public void Initialize(PaintCanvasViewModel paintCanvas)
         {
             _paintCanvas = paintCanvas;
             _paintCanvas.CurrentFrame = Frames[_selectedFrame];
+            Subjects.PaletteSelected.OnNext(Global.PaletteService.Palettes[0]);
+            Subjects.RefreshCanvas.Subscribe(_ =>
+            {
+                Global.PaletteService.SetCurrentColors();
+                CurrentPalette = Global.PaletteService.Palettes[0];
+                OnPropertyChanged(nameof(CurrentColors));
+            });
         }
 
         public void DragOver(IDropInfo dropInfo)

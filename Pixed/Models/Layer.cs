@@ -80,6 +80,11 @@ namespace Pixed.Models
             return layer;
         }
 
+        public int[] GetPixels()
+        {
+            return _pixels;
+        }
+
         public void SetPixel(int x, int y, int color)
         {
             if (x < 0 || y < 0 || x >= _width || y >= _height)

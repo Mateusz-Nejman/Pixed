@@ -8,7 +8,7 @@
         xmlns:dd="urn:gong-wpf-dragdrop"
         xmlns:viewmodels="clr-namespace:Pixed.ViewModels" xmlns:colorpicker="clr-namespace:ColorPicker;assembly=ColorPicker"
         mc:Ignorable="d"
-        Title="Pixed" Height="450" Width="800" Background="#1D1D1D" KeyDown="Window_KeyDown">
+        Title="Pixed" Height="600" Width="800" Background="#1D1D1D" KeyDown="Window_KeyDown">
     <Window.DataContext>
         <viewmodels:MainViewModel/>
     </Window.DataContext>
@@ -238,6 +238,7 @@
                 <Border BorderThickness="2" BorderBrush="#888" Margin="8">
                     <StackPanel>
                         <TextBlock Text="Palettes" Height="32" Foreground="White" FontSize="15px" Padding="4" FontWeight="Bold"/>
+                        <controls:ColorGrid Columns="5" Colors="{Binding CurrentColors}"/>
                     </StackPanel>
                 </Border>
 

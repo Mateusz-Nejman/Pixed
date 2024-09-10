@@ -1,4 +1,5 @@
-﻿using Pixed.Selection;
+﻿using Pixed.Models;
+using Pixed.Selection;
 using Pixed.Services.Keyboard;
 using System.Reactive.Subjects;
 
@@ -17,6 +18,9 @@ namespace Pixed
         public static Subject<BaseSelection> ClipboardCut { get; } = new Subject<BaseSelection>();
         public static Subject<BaseSelection> ClipboardPaste { get; } = new Subject<BaseSelection>();
         public static Subject<UniColor> PrimaryColorChanged { get; } = new Subject<UniColor>();
+        public static Subject<UniColor> PrimaryColorChange { get; } = new Subject<UniColor>();
         public static Subject<UniColor> SecondaryColorChanged { get; } = new Subject<UniColor>();
+        public static Subject<Palette> PaletteAdded { get; } = new Subject<Palette>();
+        public static Subject<Palette> PaletteSelected { get; } = new Subject<Palette>();
     }
 }
