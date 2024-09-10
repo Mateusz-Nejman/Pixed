@@ -6,16 +6,40 @@ namespace Pixed.Services
     internal class PaletteService
     {
         public List<Palette> Palettes { get; }
+        public Palette CurrentColorsPalette => Palettes[0];
+        public Palette SelectedPalette => Palettes[PaletteIndex];
+        public int PaletteIndex => 1;
 
         public PaletteService()
         {
             Palettes = [];
             Palettes.Add(new Palette("default") { Name = "Current colors" });
+            Palettes.Add(new Palette("palette") { Name = "Palette" });
         }
 
         public void SetCurrentColors()
         {
             Palettes[0].Colors = Global.CurrentModel.GetAllColors();
+        }
+
+        public void AddColorsFromPalette(Palette palette)
+        {
+            SelectedPalette.Colors.AddRange(palette.Colors.Where(c => !SelectedPalette.Colors.Contains(c)));
+            SelectedPalette.Colors.Sort();
+        }
+
+        public void AddPrimaryColor()
+        {
+            if(!SelectedPalette.Colors.Contains(Global.PrimaryColor))
+            {
+                SelectedPalette.Colors.Add(Global.PrimaryColor);
+                SelectedPalette.Colors.Sort();
+            }
+        }
+
+        public void ClearPalette()
+        {
+            SelectedPalette.Colors.Clear();
         }
 
         public void Add(Palette palette)

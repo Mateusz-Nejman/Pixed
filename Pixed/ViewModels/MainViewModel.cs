@@ -146,20 +146,36 @@ namespace Pixed.ViewModels
         public ICommand ToolCenterCommand { get; }
         public ICommand ToolCropCommand { get; }
 
-        public Palette CurrentPalette { get; private set; }
-        public ObservableCollection<UniColor> CurrentColors
+        public Palette SelectedPalette { get; private set; }
+        public ObservableCollection<UniColor> SelectedPaletteColors
         {
             get
             {
-                if (CurrentPalette == null)
+                if(SelectedPalette == null)
                 {
                     return null;
                 }
 
-                return new ObservableCollection<UniColor>(CurrentPalette.Colors.Select(s => (UniColor)s));
+                return new ObservableCollection<UniColor>(SelectedPalette.Colors.Select(s => (UniColor)s));
+            }
+        }
+        public ObservableCollection<UniColor> CurrentPaletteColors
+        {
+            get
+            {
+                if(Global.PaletteService == null)
+                {
+                    return null;
+                }
+                return new ObservableCollection<UniColor>(Global.PaletteService.CurrentColorsPalette.Colors.Select(s => (UniColor)s));
             }
         }
 
+        public ICommand PaletteAddPrimaryCommand { get; }
+        public ICommand PaletteAddCurrentCommand { get; }
+        public ICommand PaletteOpenCommand { get; }
+        public ICommand PaletteSaveCommand { get; }
+        public ICommand PaletteClearCommand { get; }
         public MainViewModel()
         {
             Global.Models.Add(new PixedModel());
@@ -196,21 +212,24 @@ namespace Pixed.ViewModels
 
             Subjects.PaletteSelected.Subscribe(p =>
             {
-                CurrentPalette = p;
-                OnPropertyChanged(nameof(CurrentColors));
+                SelectedPalette = p;
+                OnPropertyChanged(nameof(SelectedPaletteColors));
             });
+
+            PaletteAddPrimaryCommand = new ActionCommand(PaletteAddPrimaryAction);
+            PaletteAddCurrentCommand = new ActionCommand(PaletteAddCurrentAction);
+            PaletteClearCommand = new ActionCommand(PaletteClearAction);
         }
 
         public void Initialize(PaintCanvasViewModel paintCanvas)
         {
             _paintCanvas = paintCanvas;
             _paintCanvas.CurrentFrame = Frames[_selectedFrame];
-            Subjects.PaletteSelected.OnNext(Global.PaletteService.Palettes[0]);
+            Subjects.PaletteSelected.OnNext(Global.PaletteService.Palettes[1]);
             Subjects.RefreshCanvas.Subscribe(_ =>
             {
                 Global.PaletteService.SetCurrentColors();
-                CurrentPalette = Global.PaletteService.Palettes[0];
-                OnPropertyChanged(nameof(CurrentColors));
+                OnPropertyChanged(nameof(CurrentPaletteColors));
             });
         }
 
@@ -365,6 +384,24 @@ namespace Pixed.ViewModels
         {
             AbstractTransformTool crop = new Crop();
             crop.ApplyTransformation();
+        }
+
+        private void PaletteAddPrimaryAction()
+        {
+            Global.PaletteService.AddPrimaryColor();
+            OnPropertyChanged(nameof(SelectedPaletteColors));
+        }
+
+        private void PaletteAddCurrentAction()
+        {
+            Global.PaletteService.AddColorsFromPalette(Global.PaletteService.CurrentColorsPalette);
+            OnPropertyChanged(nameof(SelectedPaletteColors));
+        }
+
+        private void PaletteClearAction()
+        {
+            Global.PaletteService.ClearPalette();
+            OnPropertyChanged(nameof(SelectedPaletteColors));
         }
     }
 }

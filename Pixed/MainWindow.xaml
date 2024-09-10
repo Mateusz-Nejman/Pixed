@@ -6,12 +6,29 @@
         xmlns:local="clr-namespace:Pixed" 
         xmlns:controls="clr-namespace:Pixed.Controls" 
         xmlns:dd="urn:gong-wpf-dragdrop"
-        xmlns:viewmodels="clr-namespace:Pixed.ViewModels" xmlns:colorpicker="clr-namespace:ColorPicker;assembly=ColorPicker"
+        xmlns:viewmodels="clr-namespace:Pixed.ViewModels" 
+        xmlns:colorpicker="clr-namespace:ColorPicker;assembly=ColorPicker" 
+        xmlns:converters="clr-namespace:Pixed.Converters"
         mc:Ignorable="d"
         Title="Pixed" Height="600" Width="800" Background="#1D1D1D" KeyDown="Window_KeyDown">
     <Window.DataContext>
         <viewmodels:MainViewModel/>
     </Window.DataContext>
+    <Window.Resources>
+        <converters:TabSizeConverter x:Key="tabSizeConverter"/>
+        <Style TargetType="{x:Type TabItem}">
+            <Setter Property="Width">
+                <Setter.Value>
+                    <MultiBinding Converter="{StaticResource tabSizeConverter}">
+                        <Binding RelativeSource="{RelativeSource Mode=FindAncestor,
+            AncestorType={x:Type TabControl}}" />
+                        <Binding RelativeSource="{RelativeSource Mode=FindAncestor,
+            AncestorType={x:Type TabControl}}" Path="ActualWidth" />
+                    </MultiBinding>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -239,59 +256,68 @@
                     <Border BorderThickness="2" BorderBrush="#888" Margin="8">
                         <StackPanel>
                             <TextBlock Text="Palettes" Height="32" Foreground="White" FontSize="15px" Padding="4" FontWeight="Bold"/>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="26"/>
-                                </Grid.RowDefinitions>
-                                <Button Style="{StaticResource LayersButton}" Command="{Binding AddLayerCommand}">
-                                    <Button.ToolTip>
-                                        <ToolTip Background="Black" BorderThickness="0">
-                                            <controls:SimpleTooltip Title="Add Primary color to palette"/>
-                                        </ToolTip>
-                                    </Button.ToolTip>
-                                    <Image Source="./Resources/icons/common/plus.png" Width="10" Height="10"/>
-                                </Button>
-                                <Button Style="{StaticResource LayersButton}" Grid.Column="1" Command="{Binding MoveLayerUpCommand}">
-                                    <Button.ToolTip>
-                                        <ToolTip Background="Black" BorderThickness="0">
-                                            <controls:SimpleTooltip Title="Add current colors to palette"/>
-                                        </ToolTip>
-                                    </Button.ToolTip>
-                                    <Image Source="./Resources/icons/merge_palettes.png" Width="10" Height="10"/>
-                                </Button>
-                                <Button Style="{StaticResource LayersButton}" Grid.Column="2" Command="{Binding MoveLayerDownCommand}">
-                                    <Button.ToolTip>
-                                        <ToolTip Background="Black" BorderThickness="0">
-                                            <controls:SimpleTooltip Title="Load palete"/>
-                                        </ToolTip>
-                                    </Button.ToolTip>
-                                    <Image Source="./Resources/Icons/folder-open.png" Width="10" Height="10"/>
-                                </Button>
-                                <Button Style="{StaticResource LayersButton}" Grid.Column="3" Command="{Binding EditLayerNameCommand}">
-                                    <Button.ToolTip>
-                                        <ToolTip Background="Black" BorderThickness="0">
-                                            <controls:SimpleTooltip Title="Save palette"/>
-                                        </ToolTip>
-                                    </Button.ToolTip>
-                                    <Image Source="./Resources/Icons/floppy-disk.png" Width="10" Height="10"/>
-                                </Button>
-                                <Button Style="{StaticResource LayersButton}" Grid.Column="4" Command="{Binding MergeLayerCommand}">
-                                    <Button.ToolTip>
-                                        <ToolTip Background="Black" BorderThickness="0">
-                                            <controls:SimpleTooltip Title="Clear palette"/>
-                                        </ToolTip>
-                                    </Button.ToolTip>
-                                    <Image Source="./Resources/icons/common/cross.png" Width="10" Height="10"/>
-                                </Button>
-                            </Grid>
-                            <controls:ColorGrid Columns="5" Colors="{Binding CurrentColors}"/>
+                            <TabControl BorderThickness="0" Background="Transparent">
+                                <TabItem Header="Palette" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch">
+                                    <StackPanel>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="26"/>
+                                            </Grid.RowDefinitions>
+                                            <Button Style="{StaticResource LayersButton}" Command="{Binding PaletteAddPrimaryCommand}">
+                                                <Button.ToolTip>
+                                                    <ToolTip Background="Black" BorderThickness="0">
+                                                        <controls:SimpleTooltip Title="Add Primary color to palette"/>
+                                                    </ToolTip>
+                                                </Button.ToolTip>
+                                                <Image Source="./Resources/icons/common/plus.png" Width="10" Height="10"/>
+                                            </Button>
+                                            <Button Style="{StaticResource LayersButton}" Grid.Column="1" Command="{Binding PaletteAddCurrentCommand}">
+                                                <Button.ToolTip>
+                                                    <ToolTip Background="Black" BorderThickness="0">
+                                                        <controls:SimpleTooltip Title="Add current colors to palette"/>
+                                                    </ToolTip>
+                                                </Button.ToolTip>
+                                                <Image Source="./Resources/icons/merge_palettes.png" Width="10" Height="10"/>
+                                            </Button>
+                                            <Button Style="{StaticResource LayersButton}" Grid.Column="2" Command="{Binding PaletteOpenCommand}">
+                                                <Button.ToolTip>
+                                                    <ToolTip Background="Black" BorderThickness="0">
+                                                        <controls:SimpleTooltip Title="Load palete"/>
+                                                    </ToolTip>
+                                                </Button.ToolTip>
+                                                <Image Source="./Resources/Icons/folder-open.png" Width="10" Height="10"/>
+                                            </Button>
+                                            <Button Style="{StaticResource LayersButton}" Grid.Column="3" Command="{Binding PaletteSaveCommand}">
+                                                <Button.ToolTip>
+                                                    <ToolTip Background="Black" BorderThickness="0">
+                                                        <controls:SimpleTooltip Title="Save palette"/>
+                                                    </ToolTip>
+                                                </Button.ToolTip>
+                                                <Image Source="./Resources/Icons/floppy-disk.png" Width="10" Height="10"/>
+                                            </Button>
+                                            <Button Style="{StaticResource LayersButton}" Grid.Column="4" Command="{Binding PaletteClearCommand}">
+                                                <Button.ToolTip>
+                                                    <ToolTip Background="Black" BorderThickness="0">
+                                                        <controls:SimpleTooltip Title="Clear palette"/>
+                                                    </ToolTip>
+                                                </Button.ToolTip>
+                                                <Image Source="./Resources/icons/common/cross.png" Width="10" Height="10"/>
+                                            </Button>
+                                        </Grid>
+                                        <controls:ColorGrid Columns="5" Colors="{Binding SelectedPaletteColors}"/>
+                                    </StackPanel>
+                                </TabItem>
+                                <TabItem Header="Image" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch">
+                                    <controls:ColorGrid Columns="5" Colors="{Binding CurrentPaletteColors}"/>
+                                </TabItem>
+                            </TabControl>
                         </StackPanel>
                     </Border>
 
