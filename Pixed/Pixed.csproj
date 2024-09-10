@@ -32,10 +32,13 @@
     <None Remove="Resources\Icons\common\download2.png" />
     <None Remove="Resources\Icons\common\pencil.png" />
     <None Remove="Resources\Icons\common\plus.png" />
+    <None Remove="Resources\Icons\floppy-disk.png" />
+    <None Remove="Resources\Icons\folder-open.png" />
     <None Remove="Resources\Icons\frame\frame-dragndrop-white.png" />
     <None Remove="Resources\Icons\frame\frame-duplicate-white.png" />
     <None Remove="Resources\Icons\frame\frame-plus-white.png" />
     <None Remove="Resources\Icons\frame\frame-recyclebin-white.png" />
+    <None Remove="Resources\Icons\merge_palettes.png" />
     <None Remove="Resources\Icons\settings\settings-file-white.png" />
     <None Remove="Resources\Icons\settings\settings-gear-white.png" />
     <None Remove="Resources\Icons\settings\settings-resize-white.png" />
@@ -98,10 +101,13 @@
     <Resource Include="Resources\Icons\common\download2.png" />
     <Resource Include="Resources\Icons\common\pencil.png" />
     <Resource Include="Resources\Icons\common\plus.png" />
+    <Resource Include="Resources\Icons\floppy-disk.png" />
+    <Resource Include="Resources\Icons\folder-open.png" />
     <Resource Include="Resources\Icons\frame\frame-dragndrop-white.png" />
     <Resource Include="Resources\Icons\frame\frame-duplicate-white.png" />
     <Resource Include="Resources\Icons\frame\frame-plus-white.png" />
     <Resource Include="Resources\Icons\frame\frame-recyclebin-white.png" />
+    <Resource Include="Resources\Icons\merge_palettes.png" />
     <Resource Include="Resources\Icons\settings\settings-file-white.png" />
     <Resource Include="Resources\Icons\settings\settings-gear-white.png" />
     <Resource Include="Resources\Icons\settings\settings-resize-white.png" />

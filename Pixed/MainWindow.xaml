@@ -239,6 +239,58 @@
                     <Border BorderThickness="2" BorderBrush="#888" Margin="8">
                         <StackPanel>
                             <TextBlock Text="Palettes" Height="32" Foreground="White" FontSize="15px" Padding="4" FontWeight="Bold"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="26"/>
+                                </Grid.RowDefinitions>
+                                <Button Style="{StaticResource LayersButton}" Command="{Binding AddLayerCommand}">
+                                    <Button.ToolTip>
+                                        <ToolTip Background="Black" BorderThickness="0">
+                                            <controls:SimpleTooltip Title="Add Primary color to palette"/>
+                                        </ToolTip>
+                                    </Button.ToolTip>
+                                    <Image Source="./Resources/icons/common/plus.png" Width="10" Height="10"/>
+                                </Button>
+                                <Button Style="{StaticResource LayersButton}" Grid.Column="1" Command="{Binding MoveLayerUpCommand}">
+                                    <Button.ToolTip>
+                                        <ToolTip Background="Black" BorderThickness="0">
+                                            <controls:SimpleTooltip Title="Add current colors to palette"/>
+                                        </ToolTip>
+                                    </Button.ToolTip>
+                                    <Image Source="./Resources/icons/merge_palettes.png" Width="10" Height="10"/>
+                                </Button>
+                                <Button Style="{StaticResource LayersButton}" Grid.Column="2" Command="{Binding MoveLayerDownCommand}">
+                                    <Button.ToolTip>
+                                        <ToolTip Background="Black" BorderThickness="0">
+                                            <controls:SimpleTooltip Title="Load palete"/>
+                                        </ToolTip>
+                                    </Button.ToolTip>
+                                    <Image Source="./Resources/Icons/folder-open.png" Width="10" Height="10"/>
+                                </Button>
+                                <Button Style="{StaticResource LayersButton}" Grid.Column="3" Command="{Binding EditLayerNameCommand}">
+                                    <Button.ToolTip>
+                                        <ToolTip Background="Black" BorderThickness="0">
+                                            <controls:SimpleTooltip Title="Save palette"/>
+                                        </ToolTip>
+                                    </Button.ToolTip>
+                                    <Image Source="./Resources/Icons/floppy-disk.png" Width="10" Height="10"/>
+                                </Button>
+                                <Button Style="{StaticResource LayersButton}" Grid.Column="4" Command="{Binding MergeLayerCommand}">
+                                    <Button.ToolTip>
+                                        <ToolTip Background="Black" BorderThickness="0">
+                                            <controls:SimpleTooltip Title="Clear palette"/>
+                                        </ToolTip>
+                                    </Button.ToolTip>
+                                    <Image Source="./Resources/icons/common/cross.png" Width="10" Height="10"/>
+                                </Button>
+                            </Grid>
                             <controls:ColorGrid Columns="5" Colors="{Binding CurrentColors}"/>
                         </StackPanel>
                     </Border>
