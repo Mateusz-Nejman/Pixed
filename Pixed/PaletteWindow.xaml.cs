@@ -31,14 +31,17 @@ namespace Pixed
                 if(select)
                 {
                     Global.PaletteService.Select(model);
+                    DialogResult = true;
+                    Close();
                 }
                 else
                 {
                     Global.PaletteService.Remove(model);
                 }
-
-                DialogResult = true;
-                Close();
+            };
+            _viewModel.PaletteRenameAction = (model, newName) =>
+            {
+                Global.PaletteService.Rename(model, newName);
             };
         }
     }

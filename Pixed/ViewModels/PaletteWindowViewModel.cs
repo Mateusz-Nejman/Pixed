@@ -1,5 +1,6 @@
 ﻿using Pixed.Models;
 using Pixed.Utils;
+using Pixed.Windows;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Windows.Input;
@@ -18,6 +19,7 @@ namespace Pixed.ViewModels
             public PaletteModel Model { get; set; }
             public ICommand SelectCommand { get; set; }
             public ICommand RemoveCommand { get; set; }
+            public ICommand RenameCommand { get; set; }
         }
 
         private ObservableCollection<PaletteData> _palettes;
@@ -33,21 +35,28 @@ namespace Pixed.ViewModels
         }
 
         public Action<bool, PaletteModel> PaletteAction { get; set; }
+        public Action<PaletteModel, string> PaletteRenameAction { get; set; }
 
         public PaletteWindowViewModel()
         {
             _palettes = [];
+            Initialize();
+        }
 
-            for(int a = 2; a < Global.PaletteService.Palettes.Count; a++)
+        private void Initialize()
+        {
+            Palettes.Clear();
+
+            for (int a = 2; a < Global.PaletteService.Palettes.Count; a++)
             {
                 PaletteModel model = Global.PaletteService.Palettes[a];
 
-                if(model.Colors.Count == 0)
+                if (model.Colors.Count == 0)
                 {
                     continue;
                 }
 
-                _palettes.Add(new PaletteData
+                Palettes.Add(new PaletteData
                 {
                     Name = model.Name,
                     Path = model.Path,
@@ -55,6 +64,19 @@ namespace Pixed.ViewModels
                     BitmapImage = GeneratePaleteBitmap(model),
                     SelectCommand = new ActionCommand<PaletteModel>(m => PaletteAction?.Invoke(true, m)),
                     RemoveCommand = new ActionCommand<PaletteModel>(m => PaletteAction?.Invoke(false, m)),
+                    RenameCommand = new ActionCommand<PaletteModel>(m =>
+                    {
+                        Prompt window = new Prompt();
+                        window.Title = "Rename Palette";
+                        window.Text = "New name: ";
+                        window.DefaultValue = m.Name;
+
+                        if (window.ShowDialog() == true)
+                        {
+                            PaletteRenameAction?.Invoke(m, window.Value);
+                            Initialize();
+                        }
+                    })
                 });
             }
         }

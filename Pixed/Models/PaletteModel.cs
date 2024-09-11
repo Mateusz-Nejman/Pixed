@@ -4,6 +4,7 @@ namespace Pixed.Models
 {
     internal class PaletteModel
     {
+        [JsonIgnore]
         public string Id { get; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public List<int> Colors { get; set; } = [];
@@ -34,9 +35,11 @@ namespace Pixed.Models
             return Colors.Select(i => (UniColor)i).ToArray();
         }
 
-        public static PaletteModel FromJson(string json)
+        public static PaletteModel FromJson(string json, string id)
         {
-            return JsonConvert.DeserializeObject<PaletteModel>(json);
+            PaletteModel model = new PaletteModel(id);
+            JsonConvert.PopulateObject(json, model);
+            return model;
         }
 
         public string ToJson()

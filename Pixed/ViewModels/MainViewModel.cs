@@ -315,11 +315,14 @@ namespace Pixed.ViewModels
         {
             string layerName = Layers[_selectedLayer].Name;
 
-            LayerEditNameWindow window = new(layerName);
+            Prompt window = new();
+            window.Title = "Enter new layer name";
+            window.Text = "New layer name:";
+            window.DefaultValue = layerName;
 
             if (window.ShowDialog() == true)
             {
-                Layers[_selectedLayer].Name = window.NewName;
+                Layers[_selectedLayer].Name = window.Value;
             }
         }
 
@@ -414,6 +417,7 @@ namespace Pixed.ViewModels
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl|All Supported (.json;.gpl)|*.json;*.gpl";
+            openFileDialog.FilterIndex = 3;
             if (openFileDialog.ShowDialog() == true)
             {
                 Global.PaletteService.Load(openFileDialog.FileName);
@@ -430,6 +434,7 @@ namespace Pixed.ViewModels
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.FileName = Global.PaletteService.SelectedPalette.Name;
             saveFileDialog.Filter = "Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl|All Supported (.json;.gpl)|*.json;*.gpl";
+            saveFileDialog.FilterIndex = 3;
             if (saveFileDialog.ShowDialog() == true)
             {
                 Global.PaletteService.Save(saveFileDialog.FileName);

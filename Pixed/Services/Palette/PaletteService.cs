@@ -19,6 +19,13 @@ namespace Pixed.Services.Palette
             Palettes.Add(new PaletteModel("palette") { Name = "Palette" });
         }
 
+        public void Rename(PaletteModel model, string newName)
+        {
+            int index = Palettes.IndexOf(model);
+            Palettes[index].Name = newName;
+            Save(Palettes[index], true);
+        }
+
         public void Select(PaletteModel model)
         {
             int index = Palettes.IndexOf(model);
@@ -113,21 +120,10 @@ namespace Pixed.Services.Palette
 
         public void Save(string filename)
         {
-            FileInfo fileInfo = new FileInfo(filename);
-
-            AbstractPaletteWriter writer;
-
-            if (fileInfo.Extension == ".json")
-            {
-                writer = new BasePaletteWriter();
-            }
-            else
-            {
-                writer = new GplPaletteWriter();
-            }
-
-            writer.Write(Palettes[PaletteIndex], filename);
-            writer.Write(Palettes[PaletteIndex], Path.Combine(Global.DataFolder, "Palettes", fileInfo.Name));
+            var model = Palettes[PaletteIndex].ToCurrentPalette();
+            model.Path = filename;
+            Save(model, true);
+            Save(model, false);
         }
 
         public void LoadAll()
@@ -159,14 +155,29 @@ namespace Pixed.Services.Palette
             }
         }
 
-        public static void Save(PaletteModel palette)
+        private void Save(PaletteModel model, bool appData = false)
         {
-            if (!Directory.Exists("Palettes"))
+            FileInfo fileInfo = new FileInfo(model.Path);
+
+            AbstractPaletteWriter writer;
+
+            if (fileInfo.Extension == ".json")
             {
-                Directory.CreateDirectory("Palettes");
+                writer = new BasePaletteWriter();
+            }
+            else
+            {
+                writer = new GplPaletteWriter();
             }
 
-            File.WriteAllText("Palettes/" + palette.Id + ".json", palette.ToJson());
+            if(appData)
+            {
+                writer.Write(model, Path.Combine(Global.DataFolder, "Palettes", fileInfo.Name));
+            }
+            else
+            {
+                writer.Write(model, model.Path);
+            }
         }
     }
 }
