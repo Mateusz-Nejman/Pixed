@@ -61,7 +61,7 @@ namespace Pixed.ViewModels
             {
                 if (_image != null)
                 {
-                    _image.Source = _frame.RenderTransparent().ToBitmapImage();
+                    _image.Source = _frame.RenderTransparent().ToAvaloniaBitmap();
                     _frame.RefreshRenderSource();
                 }
             });
@@ -203,7 +203,7 @@ namespace Pixed.ViewModels
         {
             if (_overlayImage != null && _overlayBitmap != null)
             {
-                _overlayImage.Source = _overlayBitmap.ToBitmapImage();
+                _overlayImage.Source = _overlayBitmap.ToAvaloniaBitmap();
             }
         }
     }

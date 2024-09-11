@@ -1,8 +1,10 @@
-﻿using Pixed.Utils;
+﻿using Avalonia.Media.Imaging;
+using Pixed.Utils;
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
-using System.Windows.Media.Imaging;
+using Bitmap = Avalonia.Media.Imaging.Bitmap;
 
 namespace Pixed.Models
 {
@@ -11,11 +13,11 @@ namespace Pixed.Models
         private readonly int[] _pixels;
         private readonly int _width;
         private readonly int _height;
-        private Bitmap _renderedBitmap = null;
+        private System.Drawing.Bitmap _renderedBitmap = null;
         private bool _needRerender = true;
         private float _opacity = 1.0f;
         private string _name = string.Empty;
-        private BitmapImage? _renderSource = null;
+        private Bitmap? _renderSource = null;
         private string _id;
 
         public float Opacity
@@ -38,7 +40,7 @@ namespace Pixed.Models
             }
         }
 
-        public BitmapImage RenderSource
+        public Bitmap RenderSource
         {
             get => _renderSource;
             set
@@ -75,7 +77,7 @@ namespace Pixed.Models
             _pixels.CopyTo(pixels, 0);
             Layer layer = new Layer(_width, _height, pixels);
             layer.Name = Name;
-            layer.RenderSource = RenderSource.CloneCurrentValue();
+            layer.RenderSource = _renderedBitmap.ToAvaloniaBitmap();
             layer._needRerender = true;
             return layer;
         }
@@ -113,7 +115,7 @@ namespace Pixed.Models
 
         public void RefreshRenderSource()
         {
-            RenderSource = Render().ToBitmapImage();
+            RenderSource = Render().ToAvaloniaBitmap();
         }
 
         public int GetPixel(int x, int y)
@@ -126,7 +128,7 @@ namespace Pixed.Models
             return _pixels[y * _width + x];
         }
 
-        public Bitmap Render()
+        public System.Drawing.Bitmap Render()
         {
             if (!_needRerender)
             {
@@ -147,7 +149,7 @@ namespace Pixed.Models
                 }
             }
 
-            Bitmap bitmap = new(_width, _height);
+            System.Drawing.Bitmap bitmap = new(_width, _height);
             BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, _width, _height), ImageLockMode.WriteOnly, bitmap.PixelFormat);
             Marshal.Copy(pixels, 0, bitmapData.Scan0, pixels.Length);
             bitmap.UnlockBits(bitmapData);

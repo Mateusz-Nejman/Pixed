@@ -1,8 +1,9 @@
-﻿using Pixed.Utils;
+﻿using Avalonia.Media.Imaging;
+using Pixed.Utils;
+using System;
 using System.Collections.ObjectModel;
 using System.Drawing;
-using System.Windows.Media.Imaging;
-
+using Bitmap = Avalonia.Media.Imaging.Bitmap;
 namespace Pixed.Models
 {
     internal class Frame : PropertyChangedBase
@@ -12,7 +13,7 @@ namespace Pixed.Models
         private readonly int _height;
         private int _selectedLayer = 0;
         private string _id;
-        private BitmapImage _renderSource;
+        private Bitmap _renderSource;
 
         public int Width => _width;
         public int Height => _height;
@@ -27,7 +28,7 @@ namespace Pixed.Models
             }
         }
 
-        public BitmapImage RenderSource
+        public Bitmap RenderSource
         {
             get => _renderSource;
             set
@@ -96,12 +97,12 @@ namespace Pixed.Models
 
         public void RefreshRenderSource()
         {
-            RenderSource = Render().ToBitmapImage();
+            RenderSource = Render().ToAvaloniaBitmap();
         }
 
-        public Bitmap RenderTransparent()
+        public System.Drawing.Bitmap RenderTransparent()
         {
-            Bitmap render = new(Width, Height);
+            System.Drawing.Bitmap render = new(Width, Height);
             Graphics g = Graphics.FromImage(render);
             for (int a = 0; a < _layers.Count; a++)
             {
@@ -118,9 +119,9 @@ namespace Pixed.Models
             return render;
         }
 
-        public Bitmap Render()
+        public System.Drawing.Bitmap Render()
         {
-            Bitmap render = new(Width, Height);
+            System.Drawing.Bitmap render = new(Width, Height);
             Graphics g = Graphics.FromImage(render);
             for (int a = 0; a < _layers.Count; a++)
             {

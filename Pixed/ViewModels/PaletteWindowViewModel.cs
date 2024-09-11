@@ -104,7 +104,7 @@ namespace Pixed.ViewModels
                 }
             }
             graphics.Dispose();
-            return bitmap.ToBitmapImage();
+            return bitmap.ToAvaloniaBitmap();
         }
     }
 }

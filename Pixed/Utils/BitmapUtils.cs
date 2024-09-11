@@ -1,24 +1,23 @@
-﻿using System.Drawing;
+﻿
+
+using Avalonia.Input;
+using System;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Runtime.InteropServices;
-using System.Windows;
-using System.Windows.Media.Imaging;
 
 namespace Pixed.Utils
 {
     internal static class BitmapUtils
     {
-        public static BitmapImage ToBitmapImage(this Bitmap src)
+        public static Avalonia.Media.Imaging.Bitmap ToAvaloniaBitmap(this Bitmap src)
         {
-            MemoryStream ms = new();
-            ((System.Drawing.Bitmap)src).Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-            BitmapImage image = new();
-            image.BeginInit();
-            ms.Seek(0, SeekOrigin.Begin);
-            image.StreamSource = ms;
-            image.EndInit();
-            return image;
+            Bitmap oldBitmap = src;
+            var data = oldBitmap.LockBits(new Rectangle(0, 0, oldBitmap.Width, oldBitmap.Height), ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+            Avalonia.Media.Imaging.Bitmap bitmap = new Avalonia.Media.Imaging.Bitmap(Avalonia.Platform.PixelFormat.Bgra8888, Avalonia.Platform.AlphaFormat.Premul, data.Scan0, new Avalonia.PixelSize(data.Width, data.Height), new Avalonia.Vector(96, 96), data.Stride);
+            oldBitmap.UnlockBits(data);
+            oldBitmap.Dispose();
+            return bitmap;
         }
 
         public static Bitmap OpacityImage(this Bitmap src, float opacity)

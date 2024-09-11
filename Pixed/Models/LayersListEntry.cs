@@ -1,11 +1,11 @@
-﻿using System.Windows.Media.Imaging;
+﻿using Avalonia.Media.Imaging;
 
 namespace Pixed.Models
 {
     internal class LayersListEntry : PropertyChangedBase
     {
         private string _name;
-        private BitmapImage _thumbnail;
+        private Bitmap _thumbnail;
 
         public string Name
         {
@@ -17,7 +17,7 @@ namespace Pixed.Models
             }
         }
 
-        public BitmapImage Thumbnail
+        public Bitmap Thumbnail
         {
             get => _thumbnail;
             set
