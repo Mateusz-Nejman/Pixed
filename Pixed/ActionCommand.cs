@@ -5,7 +5,7 @@ namespace Pixed
     internal class ActionCommand<T> : ICommand
     {
         #region Fields
-        private readonly Action<T> action;
+        private readonly Action<T> _action;
         #endregion
         #region Events
         public event EventHandler? CanExecuteChanged;
@@ -13,7 +13,7 @@ namespace Pixed
         #region Constructors
         public ActionCommand(Action<T> action)
         {
-            this.action = action;
+            this._action = action;
             CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
 
@@ -31,12 +31,12 @@ namespace Pixed
                 return;
             }
 
-            action?.Invoke((T)parameter);
+            _action?.Invoke((T)parameter);
         }
 
         public void Execute(T parameter)
         {
-            action?.Invoke(parameter);
+            _action?.Invoke(parameter);
         }
         #endregion
     }
@@ -44,7 +44,7 @@ namespace Pixed
     internal class ActionCommand : ICommand
     {
         #region Fields
-        private readonly Action action;
+        private readonly Action _action;
         #endregion
         #region Events
         public event EventHandler? CanExecuteChanged;
@@ -52,7 +52,7 @@ namespace Pixed
         #region Constructors
         public ActionCommand(Action action)
         {
-            this.action = action;
+            this._action = action;
             CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
 
@@ -70,7 +70,43 @@ namespace Pixed
 
         public void Execute()
         {
-            action?.Invoke();
+            _action?.Invoke();
+        }
+        #endregion
+    }
+
+    internal class StaticActionCommand<T> : ICommand
+    {
+        #region Fields
+        private readonly Action<T> _action;
+        private readonly T _parameter;
+        #endregion
+        #region Events
+        public event EventHandler? CanExecuteChanged;
+        #endregion
+        #region Constructors
+        public StaticActionCommand(Action<T> action, T param)
+        {
+            this._action = action;
+            _parameter = param;
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        #endregion
+        #region Public Methods
+        public bool CanExecute(object? parameter)
+        {
+            return true;
+        }
+
+        public void Execute(object? parameter)
+        {
+            Execute();
+        }
+
+        public void Execute()
+        {
+            _action?.Invoke(_parameter);
         }
         #endregion
     }

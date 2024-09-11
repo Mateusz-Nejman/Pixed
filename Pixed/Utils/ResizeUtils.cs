@@ -1,12 +1,6 @@
-﻿using Microsoft.Win32.SafeHandles;
-using Pixed.Models;
-using System;
-using System.Collections.Generic;
+﻿using Pixed.Models;
 using System.Collections.ObjectModel;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pixed.Utils
 {
@@ -17,7 +11,7 @@ namespace Pixed.Utils
             TopLeft,
             Top,
             TopRight,
-            Left, 
+            Left,
             Center,
             Right,
             BottomLeft,
@@ -41,7 +35,7 @@ namespace Pixed.Utils
         {
             ObservableCollection<Layer> layers = [];
 
-            foreach(var layer in frame.Layers)
+            foreach (var layer in frame.Layers)
             {
                 layers.Add(ResizeLayer(layer, width, height, resuzeContent, origin));
             }
@@ -51,20 +45,20 @@ namespace Pixed.Utils
 
         public static Layer ResizeLayer(Layer layer, int width, int height, bool resizeContent, Origin origin)
         {
-            if(resizeContent)
+            if (resizeContent)
             {
                 return LayerUtils.Resize(layer, width, height);
             }
 
             Layer resizedLayer = new Layer(width, height);
 
-            for(int x = 0; x < layer.Width; x++)
+            for (int x = 0; x < layer.Width; x++)
             {
-                for(int y = 0; y < layer.Height; y++)
+                for (int y = 0; y < layer.Height; y++)
                 {
                     var translated = TranslateCoordinates(x, y, layer, resizedLayer, origin);
 
-                    if(resizedLayer.ContainsPixel(translated.X, translated.Y))
+                    if (resizedLayer.ContainsPixel(translated.X, translated.Y))
                     {
                         resizedLayer.SetPixel(translated.X, translated.Y, layer.GetPixel(x, y));
                     }
@@ -95,11 +89,11 @@ namespace Pixed.Utils
 
         private static int TranslateY(int y, int height, int resizedHeight, Origin origin)
         {
-            if(origin == Origin.TopRight || origin == Origin.Top || origin == Origin.TopLeft)
+            if (origin == Origin.TopRight || origin == Origin.Top || origin == Origin.TopLeft)
             {
                 return y;
             }
-            else if(origin == Origin.BottomRight || origin == Origin.Bottom || origin == Origin.BottomLeft)
+            else if (origin == Origin.BottomRight || origin == Origin.Bottom || origin == Origin.BottomLeft)
             {
                 return y - (height - resizedHeight);
             }

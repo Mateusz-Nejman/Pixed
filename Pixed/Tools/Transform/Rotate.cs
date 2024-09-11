@@ -8,7 +8,7 @@ namespace Pixed.Tools.Transform
         {
             TransformUtils.Direction direction = TransformUtils.Direction.Clockwise;
 
-            if(altKey)
+            if (altKey)
             {
                 direction = TransformUtils.Direction.CounterClockwise;
             }

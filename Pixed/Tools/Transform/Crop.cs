@@ -1,11 +1,6 @@
 ﻿using Pixed.Models;
 using Pixed.Utils;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pixed.Tools.Transform
 {
@@ -17,7 +12,7 @@ namespace Pixed.Tools.Transform
             var layers = Getlayers();
 
             int[] boundaries;
-            if(Global.SelectionManager.HasSelection)
+            if (Global.SelectionManager.HasSelection)
             {
                 boundaries = TransformUtils.GetBoundariesFromSelection(Global.SelectionManager.Selection);
             }
@@ -63,16 +58,16 @@ namespace Pixed.Tools.Transform
             int width = 1 + boundaries[2] - boundaries[0];
             int height = 1 + boundaries[3] - boundaries[1];
 
-            if(width == model.Width && height == model.Height)
+            if (width == model.Width && height == model.Height)
             {
                 return false;
             }
 
-            foreach(var layer in layers)
+            foreach (var layer in layers)
             {
                 TransformUtils.MoveLayerFixes(layer, -boundaries[0], -boundaries[1]);
             }
-            
+
             var newModel = ResizeUtils.ResizeModel(model, 1 + boundaries[2] - boundaries[0], 1 + boundaries[3] - boundaries[1], false, ResizeUtils.Origin.TopLeft);
             Subjects.SelectionDismissed.OnNext(null);
             Global.Models[Global.CurrentModelIndex] = newModel;

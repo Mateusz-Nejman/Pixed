@@ -1,8 +1,10 @@
 ﻿using GongSolutions.Wpf.DragDrop;
+using Microsoft.Win32;
 using Pixed.Models;
 using Pixed.Tools.Transform;
 using Pixed.Windows;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
 
@@ -19,6 +21,30 @@ namespace Pixed.ViewModels
         private bool _canLayerMerge = false;
         private bool _canLayerRemove = false;
         private Visibility _removeFrameVisibility = Visibility.Hidden;
+        private UniColor _primaryColor = UniColor.Black;
+        private UniColor _secondaryColor = UniColor.White;
+
+        public System.Windows.Media.Color PrimaryColor
+        {
+            get => _primaryColor;
+            set
+            {
+                _primaryColor = value;
+                OnPropertyChanged();
+                Subjects.PrimaryColorChanged.OnNext(value);
+            }
+        }
+
+        public System.Windows.Media.Color SecondaryColor
+        {
+            get => _secondaryColor;
+            set
+            {
+                _secondaryColor = value;
+                OnPropertyChanged();
+                Subjects.SecondaryColorChanged.OnNext(value);
+            }
+        }
 
         public bool CanLayerMoveUp
         {
@@ -122,6 +148,37 @@ namespace Pixed.ViewModels
         public ICommand ToolCenterCommand { get; }
         public ICommand ToolCropCommand { get; }
 
+        public PaletteModel SelectedPalette { get; private set; }
+        public ObservableCollection<UniColor> SelectedPaletteColors
+        {
+            get
+            {
+                if(SelectedPalette == null)
+                {
+                    return null;
+                }
+
+                return new ObservableCollection<UniColor>(SelectedPalette.Colors.Select(s => (UniColor)s));
+            }
+        }
+        public ObservableCollection<UniColor> CurrentPaletteColors
+        {
+            get
+            {
+                if(Global.PaletteService == null)
+                {
+                    return null;
+                }
+                return new ObservableCollection<UniColor>(Global.PaletteService.CurrentColorsPalette.Colors.Select(s => (UniColor)s));
+            }
+        }
+
+        public ICommand PaletteAddPrimaryCommand { get; }
+        public ICommand PaletteAddCurrentCommand { get; }
+        public ICommand PaletteListCommand { get; }
+        public ICommand PaletteOpenCommand { get; }
+        public ICommand PaletteSaveCommand { get; }
+        public ICommand PaletteClearCommand { get; }
         public MainViewModel()
         {
             Global.Models.Add(new PixedModel());
@@ -148,12 +205,38 @@ namespace Pixed.ViewModels
                 OnPropertyChanged(nameof(Frames));
                 OnPropertyChanged(nameof(Layers));
             });
+
+            Subjects.PrimaryColorChanged.Subscribe(c => Global.PrimaryColor = c);
+            Subjects.SecondaryColorChanged.Subscribe(c => Global.SecondaryColor = c);
+            Subjects.PrimaryColorChange.Subscribe(c => PrimaryColor = c);
+
+            PrimaryColor = UniColor.Black;
+            SecondaryColor = UniColor.White;
+
+            Subjects.PaletteSelected.Subscribe(p =>
+            {
+                SelectedPalette = p.ToCurrentPalette();
+                OnPropertyChanged(nameof(SelectedPaletteColors));
+            });
+
+            PaletteAddPrimaryCommand = new ActionCommand(PaletteAddPrimaryAction);
+            PaletteAddCurrentCommand = new ActionCommand(PaletteAddCurrentAction);
+            PaletteOpenCommand = new ActionCommand(PaletteOpenAction);
+            PaletteSaveCommand = new ActionCommand(PaletteSaveAction);
+            PaletteClearCommand = new ActionCommand(PaletteClearAction);
+            PaletteListCommand = new ActionCommand(PaletteListAction);
         }
 
         public void Initialize(PaintCanvasViewModel paintCanvas)
         {
             _paintCanvas = paintCanvas;
             _paintCanvas.CurrentFrame = Frames[_selectedFrame];
+            Subjects.PaletteSelected.OnNext(Global.PaletteService.Palettes[1]);
+            Subjects.RefreshCanvas.Subscribe(_ =>
+            {
+                Global.PaletteService.SetCurrentColors();
+                OnPropertyChanged(nameof(CurrentPaletteColors));
+            });
         }
 
         public void DragOver(IDropInfo dropInfo)
@@ -232,11 +315,14 @@ namespace Pixed.ViewModels
         {
             string layerName = Layers[_selectedLayer].Name;
 
-            LayerEditNameWindow window = new(layerName);
+            Prompt window = new();
+            window.Title = "Enter new layer name";
+            window.Text = "New layer name:";
+            window.DefaultValue = layerName;
 
             if (window.ShowDialog() == true)
             {
-                Layers[_selectedLayer].Name = window.NewName;
+                Layers[_selectedLayer].Name = window.Value;
             }
         }
 
@@ -307,6 +393,58 @@ namespace Pixed.ViewModels
         {
             AbstractTransformTool crop = new Crop();
             crop.ApplyTransformation();
+        }
+
+        private void PaletteAddPrimaryAction()
+        {
+            Global.PaletteService.AddPrimaryColor();
+            OnPropertyChanged(nameof(SelectedPaletteColors));
+        }
+
+        private void PaletteAddCurrentAction()
+        {
+            Global.PaletteService.AddColorsFromPalette(Global.PaletteService.CurrentColorsPalette);
+            OnPropertyChanged(nameof(SelectedPaletteColors));
+        }
+
+        private void PaletteClearAction()
+        {
+            Global.PaletteService.ClearPalette();
+            OnPropertyChanged(nameof(SelectedPaletteColors));
+        }
+        
+        private void PaletteOpenAction()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl|All Supported (.json;.gpl)|*.json;*.gpl";
+            openFileDialog.FilterIndex = 3;
+            if (openFileDialog.ShowDialog() == true)
+            {
+                Global.PaletteService.Load(openFileDialog.FileName);
+            }
+        }
+
+        private void PaletteSaveAction()
+        {
+            if(Global.PaletteService.SelectedPalette.Colors.Count == 0)
+            {
+                return;
+            }
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.FileName = Global.PaletteService.SelectedPalette.Name;
+            saveFileDialog.Filter = "Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl|All Supported (.json;.gpl)|*.json;*.gpl";
+            saveFileDialog.FilterIndex = 3;
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                Global.PaletteService.Save(saveFileDialog.FileName);
+            }
+        }
+
+        private void PaletteListAction()
+        {
+            PaletteWindow window = new PaletteWindow();
+            window.ShowDialog();
         }
     }
 }

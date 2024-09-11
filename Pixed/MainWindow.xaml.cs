@@ -1,7 +1,10 @@
 ﻿using Pixed.Controls;
+using Pixed.Services;
 using Pixed.Services.Keyboard;
+using Pixed.Services.Palette;
 using Pixed.Tools;
 using Pixed.ViewModels;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -20,13 +23,27 @@ namespace Pixed
             InitializeComponent();
             _paintCanvas = paintCanvas;
             _viewModel = (MainViewModel)DataContext;
-            _viewModel.Initialize(_paintCanvas.ViewModel);
             Initialize();
+            _viewModel.Initialize(_paintCanvas.ViewModel);
         }
 
         private void Initialize()
         {
+            Global.DataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Pixed");
+
+            if (!Directory.Exists(Global.DataFolder))
+            {
+                Directory.CreateDirectory(Global.DataFolder);
+            }
+
+            if(!Directory.Exists(Path.Combine(Global.DataFolder, "Palettes")))
+            {
+                Directory.CreateDirectory(Path.Combine(Global.DataFolder, "Palettes"));
+            }
+
             Global.ShortcutService = new ShortcutService();
+            Global.PaletteService = new PaletteService();
+            Global.PaletteService.LoadAll();
             Global.SelectionManager = new Selection.SelectionManager(ov =>
             {
                 _paintCanvas.ViewModel.Overlay = ov;

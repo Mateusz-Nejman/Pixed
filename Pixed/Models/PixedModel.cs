@@ -19,11 +19,16 @@ namespace Pixed.Models
             _history = [];
         }
 
+        public List<int> GetAllColors()
+        {
+            return _frames.SelectMany(f => f.Layers).Select(l => l.GetPixels()).SelectMany(p => p).Where(p => p != UniColor.Transparent).Distinct().Order().ToList();
+        }
+
         public static PixedModel FromFrames(ObservableCollection<Frame> frames)
         {
             PixedModel model = new PixedModel();
-            
-            foreach(var frame in frames)
+
+            foreach (var frame in frames)
             {
                 model.Frames.Add(frame);
             }
