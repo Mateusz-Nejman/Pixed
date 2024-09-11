@@ -1,6 +1,7 @@
-﻿using Pixed.Models;
+﻿using Avalonia.Input;
+using Pixed.Input;
+using Pixed.Models;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
 
 namespace Pixed.Tools.Transform
 {
@@ -8,10 +9,10 @@ namespace Pixed.Tools.Transform
     {
         public virtual void ApplyTransformation()
         {
-            bool allFrames = Keyboard.Modifiers == ModifierKeys.Shift;
-            bool allLayers = Keyboard.Modifiers == ModifierKeys.Control;
+            bool allFrames = Keyboard.Modifiers == KeyModifiers.Shift;
+            bool allLayers = Keyboard.Modifiers == KeyModifiers.Control;
 
-            ApplyTool(Keyboard.Modifiers == ModifierKeys.Alt, allFrames, allLayers);
+            ApplyTool(Keyboard.Modifiers == KeyModifiers.Alt, allFrames, allLayers);
         }
         public virtual void ApplyTool(bool altKey, bool allFrames, bool allLayers)
         {

@@ -1,4 +1,5 @@
 ﻿using Pixed.Services.History;
+using System.Collections.Generic;
 
 namespace Pixed.Services
 {

@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using Avalonia.Input;
+using System;
 
 namespace Pixed.Services.Keyboard
 {

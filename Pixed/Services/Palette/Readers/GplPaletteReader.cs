@@ -1,12 +1,6 @@
 ﻿using Pixed.Models;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace Pixed.Services.Palette.Readers
 {
@@ -47,7 +41,7 @@ namespace Pixed.Services.Palette.Readers
                 }
             }
 
-            if(model.Name == string.Empty)
+            if (model.Name == string.Empty)
             {
                 model.Name = info.Name;
             }

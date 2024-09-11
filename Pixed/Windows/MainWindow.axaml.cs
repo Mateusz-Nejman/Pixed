@@ -1,13 +1,14 @@
-﻿using Pixed.Controls;
-using Pixed.Services;
+﻿using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Interactivity;
+using Pixed.Controls;
+using Pixed.Input;
 using Pixed.Services.Keyboard;
 using Pixed.Services.Palette;
 using Pixed.Tools;
 using Pixed.ViewModels;
+using System;
 using System.IO;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace Pixed
 {
@@ -18,13 +19,38 @@ namespace Pixed
     {
         private readonly PaintCanvas _paintCanvas;
         private readonly MainViewModel _viewModel;
+
+        public static Window? Handle { get; private set; }
         public MainWindow()
         {
             InitializeComponent();
+            Handle = this;
             _paintCanvas = paintCanvas;
             _viewModel = (MainViewModel)DataContext;
             Initialize();
             _viewModel.Initialize(_paintCanvas.ViewModel);
+
+            AddHandler(PointerPressedEvent, MouseDownHandler, handledEventsToo: true);
+            AddHandler(PointerReleasedEvent, MouseUpHandler, handledEventsToo: true);
+            KeyDown += MainWindow_KeyDown;
+            KeyUp += MainWindow_KeyUp;
+        }
+
+        private void Tool_circle_IsCheckedChanged(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void MainWindow_KeyUp(object? sender, KeyEventArgs e)
+        {
+            Keyboard.Modifiers = e.KeyModifiers;
+            Keyboard.ProcessReleased(e.Key);
+        }
+
+        private void MainWindow_KeyDown(object? sender, KeyEventArgs e)
+        {
+            Keyboard.Modifiers = e.KeyModifiers;
+            Keyboard.ProcessPressed(e.Key);
         }
 
         private void Initialize()
@@ -36,7 +62,7 @@ namespace Pixed
                 Directory.CreateDirectory(Global.DataFolder);
             }
 
-            if(!Directory.Exists(Path.Combine(Global.DataFolder, "Palettes")))
+            if (!Directory.Exists(Path.Combine(Global.DataFolder, "Palettes")))
             {
                 Directory.CreateDirectory(Path.Combine(Global.DataFolder, "Palettes"));
             }
@@ -78,6 +104,25 @@ namespace Pixed
                 Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift),
                 Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl),
                 Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt)));
+        }
+
+        private void MouseUpHandler(object sender, PointerReleasedEventArgs e)
+        {
+            var point = e.GetCurrentPoint(sender as Control);
+            ProcessMouse(point);
+        }
+
+        private void MouseDownHandler(object sender, PointerPressedEventArgs e)
+        {
+            var point = e.GetCurrentPoint(sender as Control);
+            ProcessMouse(point);
+        }
+
+        private void ProcessMouse(PointerPoint point)
+        {
+            Mouse.LeftButton = point.Properties.IsLeftButtonPressed ? MouseButtonState.Pressed : MouseButtonState.Released;
+            Mouse.MiddleButton = point.Properties.IsMiddleButtonPressed ? MouseButtonState.Pressed : MouseButtonState.Released;
+            Mouse.RightButton = point.Properties.IsRightButtonPressed ? MouseButtonState.Pressed : MouseButtonState.Released;
         }
     }
 }

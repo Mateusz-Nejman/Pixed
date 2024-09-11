@@ -1,11 +1,11 @@
-﻿using GongSolutions.Wpf.DragDrop;
-using Microsoft.Win32;
+﻿using Avalonia.Input;
+using Pixed.Input;
 using Pixed.Models;
 using Pixed.Tools.Transform;
 using Pixed.Windows;
+using System;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Windows;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Pixed.ViewModels
@@ -153,7 +153,7 @@ namespace Pixed.ViewModels
         {
             get
             {
-                if(SelectedPalette == null)
+                if (SelectedPalette == null)
                 {
                     return null;
                 }
@@ -165,7 +165,7 @@ namespace Pixed.ViewModels
         {
             get
             {
-                if(Global.PaletteService == null)
+                if (Global.PaletteService == null)
                 {
                     return null;
                 }
@@ -276,7 +276,7 @@ namespace Pixed.ViewModels
 
         private void AddLayerAction()
         {
-            if (Keyboard.Modifiers == ModifierKeys.Shift)
+            if (Keyboard.Modifiers == KeyModifiers.Shift)
             {
                 Frames[_selectedFrame].AddLayer(Layers[_selectedFrame].Clone());
             }
@@ -296,7 +296,7 @@ namespace Pixed.ViewModels
                 return;
             }
 
-            Frames[_selectedFrame].MoveLayerUp(Keyboard.Modifiers == ModifierKeys.Shift);
+            Frames[_selectedFrame].MoveLayerUp(Keyboard.Modifiers == KeyModifiers.Shift);
             OnPropertyChanged(nameof(Layers));
         }
 
@@ -307,11 +307,11 @@ namespace Pixed.ViewModels
                 return;
             }
 
-            Frames[_selectedFrame].MoveLayerDown(Keyboard.Modifiers == ModifierKeys.Shift);
+            Frames[_selectedFrame].MoveLayerDown(Keyboard.Modifiers == KeyModifiers.Shift);
             OnPropertyChanged(nameof(Layers));
         }
 
-        private void EditLayerNameAction()
+        private async Task EditLayerNameAction()
         {
             string layerName = Layers[_selectedLayer].Name;
 
@@ -320,7 +320,7 @@ namespace Pixed.ViewModels
             window.Text = "New layer name:";
             window.DefaultValue = layerName;
 
-            if (window.ShowDialog() == true)
+            if (await window.ShowDialog<bool>(MainWindow.Handle) == true)
             {
                 Layers[_selectedLayer].Name = window.Value;
             }
@@ -412,7 +412,7 @@ namespace Pixed.ViewModels
             Global.PaletteService.ClearPalette();
             OnPropertyChanged(nameof(SelectedPaletteColors));
         }
-        
+
         private void PaletteOpenAction()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -426,7 +426,7 @@ namespace Pixed.ViewModels
 
         private void PaletteSaveAction()
         {
-            if(Global.PaletteService.SelectedPalette.Colors.Count == 0)
+            if (Global.PaletteService.SelectedPalette.Colors.Count == 0)
             {
                 return;
             }
@@ -444,7 +444,7 @@ namespace Pixed.ViewModels
         private void PaletteListAction()
         {
             PaletteWindow window = new PaletteWindow();
-            window.ShowDialog();
+            window.ShowDialog(MainWindow.Handle);
         }
     }
 }

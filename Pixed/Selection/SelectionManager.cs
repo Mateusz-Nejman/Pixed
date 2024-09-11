@@ -1,9 +1,11 @@
-﻿using Pixed.Models;
+﻿using Avalonia.Input;
+using Pixed.Models;
 using Pixed.Services.History;
 using Pixed.Tools.Selection;
 using Pixed.Utils;
+using System;
 using System.Drawing;
-using System.Windows.Input;
+using System.Linq;
 using Point = System.Drawing.Point;
 
 namespace Pixed.Selection

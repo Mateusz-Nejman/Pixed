@@ -1,4 +1,6 @@
 ﻿using Pixed.Tools.Selection;
+using System;
+using System.Collections.Generic;
 
 namespace Pixed.Tools
 {

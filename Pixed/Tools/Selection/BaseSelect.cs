@@ -1,7 +1,10 @@
-﻿using Pixed.Selection;
+﻿using Avalonia.Input;
+using Pixed.Input;
+using Pixed.Selection;
 using Pixed.Utils;
+using System;
 using System.Drawing;
-using System.Windows.Input;
+using System.Linq;
 using Frame = Pixed.Models.Frame;
 
 namespace Pixed.Tools.Selection
@@ -58,7 +61,7 @@ namespace Pixed.Tools.Selection
             {
                 _mode = SelectionMode.MoveSelection;
 
-                if (Keyboard.Modifiers == ModifierKeys.Shift)
+                if (Keyboard.Modifiers == KeyModifiers.Shift)
                 {
                     _isMovingContent = true;
                     Subjects.ClipboardCut.OnNext(_selection);

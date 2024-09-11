@@ -1,5 +1,4 @@
-﻿using Avalonia.Media.Imaging;
-using Pixed.Utils;
+﻿using Pixed.Utils;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;

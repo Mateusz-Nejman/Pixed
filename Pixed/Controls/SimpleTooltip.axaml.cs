@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using Avalonia;
+using Avalonia.Controls;
 
 namespace Pixed.Controls
 {
@@ -10,11 +10,11 @@ namespace Pixed.Controls
     {
         public string Title
         {
-            get { return (string)GetValue(TitleProperty); }
+            get { return GetValue(TitleProperty); }
             set { SetValue(TitleProperty, value); }
         }
 
-        public static readonly DependencyProperty TitleProperty = DependencyProperty.Register("Title", typeof(string), typeof(SimpleTooltip), new PropertyMetadata("Title"));
+        public static readonly StyledProperty<string> TitleProperty = AvaloniaProperty.Register<SimpleTooltip, string>("Title", "Title");
         public SimpleTooltip()
         {
             InitializeComponent();

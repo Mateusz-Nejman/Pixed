@@ -1,14 +1,15 @@
-﻿using System.Collections.ObjectModel;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
+﻿using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Media;
+using System;
+using System.Collections.ObjectModel;
 
 namespace Pixed.Controls
 {
     /// <summary>
     /// Interaction logic for ColorGrid.xaml
     /// </summary>
-    public partial class ColorGrid : UserControl
+    internal partial class ColorGrid : UserControl
     {
         public int Columns
         {
@@ -22,8 +23,8 @@ namespace Pixed.Controls
             set { SetValue(ColorsProperty, value); }
         }
 
-        public static readonly DependencyProperty ColumnsProperty = DependencyProperty.Register("Columns", typeof(int), typeof(ColorGrid), new PropertyMetadata(1));
-        public static readonly DependencyProperty ColorsProperty = DependencyProperty.Register("Colors", typeof(ObservableCollection<UniColor>), typeof(ColorGrid), new PropertyMetadata(new ObservableCollection<UniColor>(), OnColorsChanged));
+        public static readonly StyledProperty<int> ColumnsProperty = AvaloniaProperty.Register<ColorGrid, int>("Columns", 1);
+        public static readonly StyledProperty<ObservableCollection<UniColor>> ColorsProperty = AvaloniaProperty.Register<ColorGrid, ObservableCollection<UniColor>>("Colors", [], coerce: OnColorsChanged);
         public ColorGrid()
         {
             InitializeComponent();
@@ -70,14 +71,11 @@ namespace Pixed.Controls
             }
         }
 
-        private static void OnColorsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static ObservableCollection<UniColor> OnColorsChanged(AvaloniaObject o, ObservableCollection<UniColor> colors)
         {
-            if (e.NewValue == null)
-            {
-                return;
-            }
-            var grid = (ColorGrid)d;
+            var grid = (ColorGrid)o;
             grid.RefreshControls();
+            return colors;
         }
     }
 }

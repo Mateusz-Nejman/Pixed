@@ -1,5 +1,7 @@
 ﻿using Pixed.Models;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace Pixed.Selection
 {

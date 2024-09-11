@@ -1,17 +1,7 @@
-﻿using Pixed.Controls;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Interactivity;
+
 
 namespace Pixed.Windows
 {
@@ -22,20 +12,20 @@ namespace Pixed.Windows
     {
         public string Text
         {
-            get => (string)GetValue(TextProperty);
+            get => GetValue(TextProperty);
             set => SetValue(TextProperty, value);
         }
 
         public string DefaultValue
         {
-            get => (string)GetValue(DefaultValueProperty);
+            get => GetValue(DefaultValueProperty);
             set { SetValue(DefaultValueProperty, value); }
         }
 
         public string Value { get; private set; } = string.Empty;
 
-        public static readonly DependencyProperty TextProperty = DependencyProperty.Register("Text", typeof(string), typeof(Prompt), new PropertyMetadata(string.Empty));
-        public static readonly DependencyProperty DefaultValueProperty = DependencyProperty.Register("DefaultValue", typeof(string), typeof(Prompt), new PropertyMetadata(string.Empty));
+        public static readonly StyledProperty<string> TextProperty = AvaloniaProperty.Register<Prompt, string>("Text", string.Empty);
+        public static readonly StyledProperty<string> DefaultValueProperty = AvaloniaProperty.Register<Prompt, string>("DefaultValue", string.Empty);
         public Prompt()
         {
             InitializeComponent();
@@ -44,8 +34,7 @@ namespace Pixed.Windows
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Value = textBox.Text;
-            DialogResult = true;
-            Close();
+            Close(true);
         }
     }
 }

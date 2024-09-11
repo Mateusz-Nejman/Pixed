@@ -1,18 +1,7 @@
-﻿using Pixed.Models;
+﻿using Avalonia.Controls;
 using Pixed.ViewModels;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Pixed
 {
@@ -28,11 +17,10 @@ namespace Pixed
             _viewModel = (PaletteWindowViewModel)DataContext;
             _viewModel.PaletteAction = (select, model) =>
             {
-                if(select)
+                if (select)
                 {
                     Global.PaletteService.Select(model);
-                    DialogResult = true;
-                    Close();
+                    Close(true);
                 }
                 else
                 {

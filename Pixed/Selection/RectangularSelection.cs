@@ -1,4 +1,6 @@
-﻿namespace Pixed.Selection
+﻿using System;
+
+namespace Pixed.Selection
 {
     internal class RectangularSelection : BaseSelection
     {

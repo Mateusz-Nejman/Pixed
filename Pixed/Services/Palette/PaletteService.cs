@@ -1,7 +1,10 @@
 ﻿using Pixed.Models;
 using Pixed.Services.Palette.Readers;
 using Pixed.Services.Palette.Writers;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Pixed.Services.Palette
 {
@@ -38,7 +41,7 @@ namespace Pixed.Services.Palette
             int index = Palettes.IndexOf(model);
             Palettes.RemoveAt(index);
 
-            if(File.Exists(model.Path))
+            if (File.Exists(model.Path))
             {
                 File.Delete(model.Path);
             }
@@ -63,7 +66,7 @@ namespace Pixed.Services.Palette
 
         public void AddPrimaryColor()
         {
-            if(!SelectedPalette.Colors.Contains(Global.PrimaryColor))
+            if (!SelectedPalette.Colors.Contains(Global.PrimaryColor))
             {
                 SelectedPalette.Colors.Add(Global.PrimaryColor);
                 SelectedPalette.Colors.Sort();
@@ -106,7 +109,7 @@ namespace Pixed.Services.Palette
             PaletteModel model = reader.Read();
             Palettes[1] = model.ToCurrentPalette();
 
-            if(Palettes.FirstOrDefault(p => p.Id == model.Id, null) == null)
+            if (Palettes.FirstOrDefault(p => p.Id == model.Id, null) == null)
             {
                 Palettes.Add(model);
             }
@@ -137,7 +140,7 @@ namespace Pixed.Services.Palette
                     FileInfo fileInfo = new FileInfo(file);
 
                     AbstractPaletteReader reader;
-                    if(fileInfo.Extension == ".json")
+                    if (fileInfo.Extension == ".json")
                     {
                         reader = new BasePaletteReader(file);
                     }
@@ -170,7 +173,7 @@ namespace Pixed.Services.Palette
                 writer = new GplPaletteWriter();
             }
 
-            if(appData)
+            if (appData)
             {
                 writer.Write(model, Path.Combine(Global.DataFolder, "Palettes", fileInfo.Name));
             }

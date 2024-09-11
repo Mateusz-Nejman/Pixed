@@ -1,6 +1,6 @@
-﻿using Pixed.Models;
+﻿using Pixed.Input;
+using Pixed.Models;
 using System.Drawing;
-using System.Windows.Input;
 
 namespace Pixed.Tools
 {

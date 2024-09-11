@@ -1,4 +1,6 @@
-﻿namespace Pixed
+﻿using System;
+
+namespace Pixed
 {
     internal struct UniColor : IEquatable<UniColor>
     {
@@ -120,7 +122,7 @@
             return new UniColor(color.A, color.R, color.G, color.B);
         }
 
-        public static implicit operator UniColor(System.Windows.Media.Color color)
+        public static implicit operator UniColor(Avalonia.Media.Color color)
         {
             return new UniColor(color.A, color.R, color.G, color.B);
         }
@@ -136,9 +138,9 @@
             return System.Drawing.Color.FromArgb(color.A, color.R, color.G, color.B);
         }
 
-        public static implicit operator System.Windows.Media.Color(UniColor color)
+        public static implicit operator Avalonia.Media.Color(UniColor color)
         {
-            return System.Windows.Media.Color.FromArgb(color.A, color.R, color.G, color.B);
+            return Avalonia.Media.Color.FromArgb(color.A, color.R, color.G, color.B);
         }
     }
 }

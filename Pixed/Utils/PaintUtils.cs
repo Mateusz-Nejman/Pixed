@@ -1,5 +1,7 @@
 ﻿using Pixed.Models;
 using Pixed.Services.History;
+using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace Pixed.Utils

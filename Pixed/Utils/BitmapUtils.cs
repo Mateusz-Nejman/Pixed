@@ -1,10 +1,10 @@
-﻿
-
-using Avalonia.Input;
+﻿using Avalonia.Input;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace Pixed.Utils
 {
@@ -49,14 +49,14 @@ namespace Pixed.Utils
             return x >= 0 && y >= 0 && x < src.Width && y < src.Height;
         }
 
-        public static void CopyToClipboard(this Bitmap src)
+        public static async Task CopyToClipboard(this Bitmap src)
         {
-            IDataObject clipboardObject = new DataObject();
+            DataObject clipboardObject = new DataObject();
             MemoryStream memoryStream = new MemoryStream();
             src.Save(memoryStream, ImageFormat.Png);
-            clipboardObject.SetData("PNG", memoryStream, false);
-            Clipboard.Clear();
-            Clipboard.SetDataObject(clipboardObject);
+            clipboardObject.Set("PNG", memoryStream);
+            await Clipboard.ClearAsync();
+            await Clipboard.SetDataObjectAsync(clipboardObject);
         }
 
         public static Bitmap BitmapFromSource(BitmapSource source)
@@ -74,6 +74,8 @@ namespace Pixed.Utils
 
         public static Bitmap? CreateFromClipboard()
         {
+            //TODO
+            /*
             if (Clipboard.ContainsData("PNG"))
             {
                 var obj = Clipboard.GetData("PNG");
@@ -87,7 +89,7 @@ namespace Pixed.Utils
             if (Clipboard.ContainsImage())
             {
                 return BitmapFromSource(Clipboard.GetImage());
-            }
+            }*/
 
             return null;
         }

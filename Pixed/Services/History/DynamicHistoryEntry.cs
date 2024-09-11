@@ -1,4 +1,6 @@
-﻿namespace Pixed.Services.History
+﻿using System.Collections.Generic;
+
+namespace Pixed.Services.History
 {
     internal class DynamicHistoryEntry
     {

@@ -1,6 +1,5 @@
-﻿using Pixed.ViewModels;
-using System.Windows.Controls;
-using System.Windows.Input;
+﻿using Avalonia.Controls;
+using Pixed.ViewModels;
 
 namespace Pixed.Controls
 {

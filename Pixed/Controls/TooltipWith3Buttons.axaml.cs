@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using Avalonia;
+using Avalonia.Controls;
 
 namespace Pixed.Controls
 {
@@ -10,53 +10,53 @@ namespace Pixed.Controls
     {
         public string Title
         {
-            get { return (string)GetValue(TitleProperty); }
+            get { return GetValue(TitleProperty); }
             set { SetValue(TitleProperty, value); }
         }
 
         public string ButtonText1
         {
-            get { return (string)GetValue(ButtonText1Property); }
+            get { return GetValue(ButtonText1Property); }
             set { SetValue(ButtonText1Property, value); }
         }
 
         public string ButtonTextHelper1
         {
-            get { return (string)GetValue(ButtonTextHelper1Property); }
+            get { return GetValue(ButtonTextHelper1Property); }
             set { SetValue(ButtonTextHelper1Property, value); }
         }
 
         public string ButtonText2
         {
-            get { return (string)GetValue(ButtonText2Property); }
+            get { return GetValue(ButtonText2Property); }
             set { SetValue(ButtonText2Property, value); }
         }
 
         public string ButtonTextHelper2
         {
-            get { return (string)GetValue(ButtonTextHelper2Property); }
+            get { return GetValue(ButtonTextHelper2Property); }
             set { SetValue(ButtonTextHelper2Property, value); }
         }
 
         public string ButtonText3
         {
-            get { return (string)GetValue(ButtonText3Property); }
+            get { return GetValue(ButtonText3Property); }
             set { SetValue(ButtonText3Property, value); }
         }
 
         public string ButtonTextHelper3
         {
-            get { return (string)GetValue(ButtonTextHelper3Property); }
+            get { return GetValue(ButtonTextHelper3Property); }
             set { SetValue(ButtonTextHelper3Property, value); }
         }
 
-        public static readonly DependencyProperty TitleProperty = DependencyProperty.Register("Title", typeof(string), typeof(TooltipWith3Buttons), new PropertyMetadata("Title"));
-        public static readonly DependencyProperty ButtonText1Property = DependencyProperty.Register("ButtonText1", typeof(string), typeof(TooltipWith3Buttons), new PropertyMetadata("ButtonText1"));
-        public static readonly DependencyProperty ButtonTextHelper1Property = DependencyProperty.Register("ButtonTextHelper1", typeof(string), typeof(TooltipWith3Buttons), new PropertyMetadata("ButtonTextHelper1"));
-        public static readonly DependencyProperty ButtonText2Property = DependencyProperty.Register("ButtonText2", typeof(string), typeof(TooltipWith3Buttons), new PropertyMetadata("ButtonText2"));
-        public static readonly DependencyProperty ButtonTextHelper2Property = DependencyProperty.Register("ButtonTextHelper2", typeof(string), typeof(TooltipWith3Buttons), new PropertyMetadata("ButtonTextHelper2"));
-        public static readonly DependencyProperty ButtonText3Property = DependencyProperty.Register("ButtonText3", typeof(string), typeof(TooltipWith3Buttons), new PropertyMetadata("ButtonText3"));
-        public static readonly DependencyProperty ButtonTextHelper3Property = DependencyProperty.Register("ButtonTextHelper3", typeof(string), typeof(TooltipWith3Buttons), new PropertyMetadata("ButtonTextHelper3"));
+        public static readonly StyledProperty<string> TitleProperty = AvaloniaProperty.Register<TooltipWith3Buttons, string>("Title", "Title");
+        public static readonly StyledProperty<string> ButtonText1Property = AvaloniaProperty.Register<TooltipWith3Buttons, string>("ButtonText1", "ButtonText1");
+        public static readonly StyledProperty<string> ButtonTextHelper1Property = AvaloniaProperty.Register<TooltipWith3Buttons, string>("ButtonTextHelper1", "ButtonTextHelper1");
+        public static readonly StyledProperty<string> ButtonText2Property = AvaloniaProperty.Register<TooltipWith3Buttons, string>("ButtonText2", "ButtonText2");
+        public static readonly StyledProperty<string> ButtonTextHelper2Property = AvaloniaProperty.Register<TooltipWith3Buttons, string>("ButtonTextHelper2", "ButtonTextHelper2");
+        public static readonly StyledProperty<string> ButtonText3Property = AvaloniaProperty.Register<TooltipWith3Buttons, string>("ButtonText3", "ButtonText3");
+        public static readonly StyledProperty<string> ButtonTextHelper3Property = AvaloniaProperty.Register<TooltipWith3Buttons, string>("ButtonTextHelper3", "ButtonTextHelper3");
         public TooltipWith3Buttons()
         {
             InitializeComponent();

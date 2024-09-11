@@ -4,8 +4,6 @@ using Pixed.Windows;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace Pixed.ViewModels
 {
@@ -97,7 +95,7 @@ namespace Pixed.ViewModels
                 graphics.FillRectangle(new SolidBrush((UniColor)color), new Rectangle(rectX, rectY, 20, 20));
                 x++;
 
-                if(x == 10)
+                if (x == 10)
                 {
                     x = 0;
                     y++;

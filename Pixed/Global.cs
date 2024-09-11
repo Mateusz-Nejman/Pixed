@@ -3,6 +3,7 @@ using Pixed.Selection;
 using Pixed.Services.Keyboard;
 using Pixed.Services.Palette;
 using Pixed.Tools;
+using System.Collections.Generic;
 
 namespace Pixed
 {

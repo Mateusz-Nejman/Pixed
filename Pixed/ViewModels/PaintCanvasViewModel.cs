@@ -1,6 +1,5 @@
 ﻿using Pixed.Utils;
 using System.Drawing;
-using System.Windows.Controls;
 using Frame = Pixed.Models.Frame;
 using Image = System.Windows.Controls.Image;
 using Point = System.Windows.Point;
