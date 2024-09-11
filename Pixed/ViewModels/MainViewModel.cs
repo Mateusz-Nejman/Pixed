@@ -4,6 +4,7 @@ using Pixed.Models;
 using Pixed.Tools.Transform;
 using Pixed.Windows;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
 
@@ -214,7 +215,7 @@ namespace Pixed.ViewModels
 
             Subjects.PaletteSelected.Subscribe(p =>
             {
-                SelectedPalette = p;
+                SelectedPalette = p.ToCurrentPalette();
                 OnPropertyChanged(nameof(SelectedPaletteColors));
             });
 
@@ -421,6 +422,11 @@ namespace Pixed.ViewModels
 
         private void PaletteSaveAction()
         {
+            if(Global.PaletteService.SelectedPalette.Colors.Count == 0)
+            {
+                return;
+            }
+
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.FileName = Global.PaletteService.SelectedPalette.Name;
             saveFileDialog.Filter = "Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl|All Supported (.json;.gpl)|*.json;*.gpl";
@@ -433,10 +439,7 @@ namespace Pixed.ViewModels
         private void PaletteListAction()
         {
             PaletteWindow window = new PaletteWindow();
-            if(window.ShowDialog() == true)
-            {
-                //TODO select palette
-            }
+            window.ShowDialog();
         }
     }
 }

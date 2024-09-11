@@ -7,6 +7,8 @@ namespace Pixed.Models
         public string Id { get; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public List<int> Colors { get; set; } = [];
+        [JsonIgnore]
+        public string Path { get; set; }
 
         public PaletteModel(string id)
         {
@@ -16,6 +18,15 @@ namespace Pixed.Models
         public void Sort()
         {
             Colors.Sort();
+        }
+
+        public PaletteModel ToCurrentPalette()
+        {
+            return new PaletteModel("palette")
+            {
+                Colors = [.. Colors],
+                Name = Name,
+            };
         }
 
         public UniColor[] ToColors()

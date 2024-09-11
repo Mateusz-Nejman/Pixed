@@ -43,6 +43,7 @@ namespace Pixed
 
             Global.ShortcutService = new ShortcutService();
             Global.PaletteService = new PaletteService();
+            Global.PaletteService.LoadAll();
             Global.SelectionManager = new Selection.SelectionManager(ov =>
             {
                 _paintCanvas.ViewModel.Overlay = ov;

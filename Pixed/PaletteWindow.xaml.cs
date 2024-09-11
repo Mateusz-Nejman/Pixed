@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Pixed.Models;
+using Pixed.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +21,25 @@ namespace Pixed
     /// </summary>
     public partial class PaletteWindow : Window
     {
+        private PaletteWindowViewModel _viewModel;
         public PaletteWindow()
         {
             InitializeComponent();
+            _viewModel = (PaletteWindowViewModel)DataContext;
+            _viewModel.PaletteAction = (select, model) =>
+            {
+                if(select)
+                {
+                    Global.PaletteService.Select(model);
+                }
+                else
+                {
+                    Global.PaletteService.Remove(model);
+                }
+
+                DialogResult = true;
+                Close();
+            };
         }
     }
 }

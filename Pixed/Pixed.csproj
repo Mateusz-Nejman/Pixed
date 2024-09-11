@@ -20,6 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Icons\bin.png" />
+    <None Remove="Resources\Icons\checkmark.png" />
     <None Remove="Resources\Icons\common\arrow-down.png" />
     <None Remove="Resources\Icons\common\arrow-left.png" />
     <None Remove="Resources\Icons\common\arrow-right.png" />
@@ -79,6 +81,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\Icons\bin.png" />
+    <Resource Include="Resources\Icons\checkmark.png" />
     <Resource Include="Resources\Icons\common\arrow-left.png" />
     <Resource Include="Resources\Icons\common\arrow-right.png" />
   </ItemGroup>

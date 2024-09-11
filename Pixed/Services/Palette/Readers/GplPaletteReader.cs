@@ -19,6 +19,7 @@ namespace Pixed.Services.Palette.Readers
 
             FileInfo info = new(_filename);
             PaletteModel model = new(info.Name);
+            model.Path = _filename;
 
             var lines = File.ReadAllLines(_filename);
 

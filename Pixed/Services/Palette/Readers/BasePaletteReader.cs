@@ -7,7 +7,9 @@ namespace Pixed.Services.Palette.Readers
     {
         public override PaletteModel Read()
         {
-            return PaletteModel.FromJson(File.ReadAllText(_filename));
+            PaletteModel model = PaletteModel.FromJson(File.ReadAllText(_filename));
+            model.Path = _filename;
+            return model;
         }
     }
 }
