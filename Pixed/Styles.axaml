@@ -1,104 +1,43 @@
-﻿<!--<ResourceDictionary xmlns="https://github.com/avaloniaui"
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Style TargetType="{x:Type Button}" x:Key="LayersButton">
-        <Setter Property="Background" Value="#3f3f3f"/>
-        <Setter Property="BorderBrush" Value="#333"/>
-        <Setter Property="BorderThickness" Value="0, 1, 0, 0"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type Button}">
-                    <Border Background="{TemplateBinding Background}">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="#444"/>
-            </Trigger>
-        </Style.Triggers>
+  <Design.PreviewWith>
+    <Border Padding="20">
+      <StackPanel Spacing="10">
+        <RadioButton Background="Green" >
+          <Image Source="avares://Pixed/Resources/Icons/common/arrow-left.png" Width="40" Height="40"/>
+        </RadioButton>
+        <RadioButton Content="Option 2" />
+        <RadioButton IsEnabled="False" Content="Option 3" />
+        <RadioButton Content="Option 2" />
+      </StackPanel>
+    </Border>
+  </Design.PreviewWith>
+  <ControlTheme x:Key="ToolRadio" TargetType="RadioButton">
+    <Style Selector="^:checked">
+      <Setter Property="BorderBrush" Value="#039BE5"/>
     </Style>
-    <Style TargetType="{x:Type Button}" x:Key="FramesButton">
-        <Setter Property="Background" Value="#3a3a3a"/>
-        <Setter Property="BorderBrush" Value="#333"/>
-        <Setter Property="BorderThickness" Value="0, 1, 0, 0"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type Button}">
-                    <Border Background="{TemplateBinding Background}">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="#444"/>
-            </Trigger>
-        </Style.Triggers>
-    </Style>
-    <Style TargetType="{x:Type Button}" x:Key="CreateFrameButton">
-        <Setter Property="Background" Value="#222"/>
-        <Setter Property="BorderBrush" Value="#888"/>
-        <Setter Property="BorderThickness" Value="3"/>
-        <Setter Property="Margin" Value="0, 8, 0, 0"/>
-        <Setter Property="FontSize" Value="13"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type Button}">
-                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Margin="{TemplateBinding Margin}">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="BorderBrush" Value="#039BE5"/>
-            </Trigger>
-        </Style.Triggers>
-    </Style>
-    <Style x:Key="ToolButton" TargetType="Button">
-        <Setter Property="Width" Value="46"/>
-        <Setter Property="Height" Value="46"/>
-        <Setter Property="BorderThickness" Value="3"/>
-        <Setter Property="Background" Value="#3a3a3a"/>
-        <Setter Property="BorderBrush" Value="#3a3a3a"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Button">
-                    <Border BorderThickness="{TemplateBinding BorderThickness}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            Background="{TemplateBinding Background}">
-                        <Image Source="{Binding Path=Content, RelativeSource={RelativeSource TemplatedParent}}"/>
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-    <Style x:Key="ToolRadio" TargetType="RadioButton">
-        <Style.Triggers>
-            <Trigger Property="IsChecked" Value="True">
-                <Setter Property="BorderBrush" Value="#039BE5"/>
-            </Trigger>
-        </Style.Triggers>
 
-        <Setter Property="Width" Value="46"/>
-        <Setter Property="Height" Value="46"/>
-        <Setter Property="BorderThickness" Value="3"/>
-        <Setter Property="Background" Value="#3a3a3a"/>
-        <Setter Property="BorderBrush" Value="#3a3a3a"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="RadioButton">
-                    <Border BorderThickness="{TemplateBinding BorderThickness}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                Background="{TemplateBinding Background}">
-                        <Image Source="{Binding Path=Content, RelativeSource={RelativeSource TemplatedParent}}"/>
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-</ResourceDictionary>-->
+    <Setter Property="Width" Value="46"/>
+    <Setter Property="Height" Value="46"/>
+    <Setter Property="BorderThickness" Value="3"/>
+    <Setter Property="Background" Value="#3a3a3a"/>
+    <Setter Property="BorderBrush" Value="#3a3a3a"/>
+    <Setter Property="Template">
+      <ControlTemplate TargetType="RadioButton">
+        <Border BorderThickness="{TemplateBinding BorderThickness}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    Background="{TemplateBinding Background}">
+          <ContentPresenter
+                Name="PART_ContentPresenter"
+                Margin="{TemplateBinding Padding}"
+                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                Content="{TemplateBinding Content}"
+                ContentTemplate="{TemplateBinding ContentTemplate}"
+                Foreground="{TemplateBinding Foreground}"
+                RecognizesAccessKey="True" />
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+</ResourceDictionary>

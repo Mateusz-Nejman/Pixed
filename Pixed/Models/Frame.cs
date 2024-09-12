@@ -113,7 +113,8 @@ namespace Pixed.Models
                 g.DrawImage(_layers[a].Render().OpacityImage(0.5f), 0, 0);
             }
 
-            g.DrawImage(_layers[_selectedLayer].Render(), 0, 0);
+            var rendered = _layers[_selectedLayer].Render();
+            g.DrawImage(rendered, 0, 0);
 
             return render;
         }

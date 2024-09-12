@@ -154,7 +154,7 @@ namespace Pixed.Models
             bitmap.UnlockBits(bitmapData);
             _renderedBitmap = bitmap;
             _needRerender = false;
-            return bitmap;
+            return bitmap.Clone(new Rectangle(0, 0, _width, _height), bitmap.PixelFormat);
         }
 
         public bool ContainsPixel(int x, int y)

@@ -30,11 +30,11 @@ namespace Pixed.Controls
             InitializeComponent();
         }
 
-        private void RefreshControls()
+        private void RefreshControls(ObservableCollection<UniColor> colors)
         {
             colorStack.Children.Clear();
 
-            int gridCount = (int)Math.Ceiling((double)Colors.Count / (double)Columns);
+            int gridCount = (int)Math.Ceiling((double)colors.Count / (double)Columns);
             int colorIndex = 0;
 
             for (int g = 0; g < gridCount; g++)
@@ -74,7 +74,9 @@ namespace Pixed.Controls
         private static ObservableCollection<UniColor> OnColorsChanged(AvaloniaObject o, ObservableCollection<UniColor> colors)
         {
             var grid = (ColorGrid)o;
-            grid.RefreshControls();
+
+            colors ??= [];
+            grid.RefreshControls(colors);
             return colors;
         }
     }
