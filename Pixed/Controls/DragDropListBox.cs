@@ -1,9 +1,11 @@
-﻿namespace Pixed.Controls
+﻿using Avalonia.Controls;
+
+namespace Pixed.Controls
 {
     public class DragDropListBox<T> : ListBox
         where T : class
     {
-        private Point _dragStartPoint;
+        /*private Point _dragStartPoint;
 
         private P FindVisualParent<P>(DependencyObject child)
             where P : DependencyObject
@@ -17,11 +19,12 @@
                 return parent;
 
             return FindVisualParent<P>(parentObject);
-        }
+        }*/
 
         public DragDropListBox()
         {
-            this.PreviewMouseMove += ListBox_PreviewMouseMove;
+            
+            /*this.PreviewMouseMove += ListBox_PreviewMouseMove;
 
             var style = new Style(typeof(ListBoxItem));
 
@@ -37,10 +40,10 @@
                         ListBoxItem.DropEvent,
                         new DragEventHandler(ListBoxItem_Drop)));
 
-            this.ItemContainerStyle = style;
+            this.ItemContainerStyle = style;*/
         }
 
-        private void ListBox_PreviewMouseMove(object sender, MouseEventArgs e)
+        /*private void ListBox_PreviewMouseMove(object sender, MouseEventArgs e)
         {
             Point point = e.GetPosition(null);
             Vector diff = _dragStartPoint - point;
@@ -100,6 +103,6 @@
                     }
                 }
             }
-        }
+        }*/
     }
 }

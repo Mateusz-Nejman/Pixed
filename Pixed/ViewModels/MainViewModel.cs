@@ -1,16 +1,20 @@
 ﻿using Avalonia.Input;
+using Avalonia.Media;
+using Avalonia.Platform.Storage;
 using Pixed.Input;
 using Pixed.Models;
 using Pixed.Tools.Transform;
 using Pixed.Windows;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Pixed.ViewModels
 {
-    internal class MainViewModel : PropertyChangedBase, IDropTarget
+    internal class MainViewModel : PropertyChangedBase
     {
         private int _selectedFrame = 0;
         private PaintCanvasViewModel? _paintCanvas;
@@ -20,11 +24,11 @@ namespace Pixed.ViewModels
         private bool _canLayerMoveDown = false;
         private bool _canLayerMerge = false;
         private bool _canLayerRemove = false;
-        private Visibility _removeFrameVisibility = Visibility.Hidden;
+        private bool _removeFrameVisibility = false;
         private UniColor _primaryColor = UniColor.Black;
         private UniColor _secondaryColor = UniColor.White;
 
-        public System.Windows.Media.Color PrimaryColor
+        public Color PrimaryColor
         {
             get => _primaryColor;
             set
@@ -35,7 +39,7 @@ namespace Pixed.ViewModels
             }
         }
 
-        public System.Windows.Media.Color SecondaryColor
+        public Color SecondaryColor
         {
             get => _secondaryColor;
             set
@@ -86,7 +90,7 @@ namespace Pixed.ViewModels
             }
         }
 
-        public Visibility RemoveFrameVisibility
+        public bool RemoveFrameVisibility
         {
             get => _removeFrameVisibility;
             set
@@ -183,13 +187,13 @@ namespace Pixed.ViewModels
         {
             Global.Models.Add(new PixedModel());
             Frames.Add(new Frame(Global.UserSettings.UserWidth, Global.UserSettings.UserHeight));
-            RemoveFrameVisibility = Frames.Count == 1 ? Visibility.Hidden : Visibility.Visible;
+            RemoveFrameVisibility = Frames.Count != 1;
             OnPropertyChanged(nameof(Layers));
 
             AddLayerCommand = new ActionCommand(AddLayerAction);
             MoveLayerUpCommand = new ActionCommand(MoveLayerUpAction);
             MoveLayerDownCommand = new ActionCommand(MoveLayerDownAction);
-            EditLayerNameCommand = new ActionCommand(EditLayerNameAction);
+            EditLayerNameCommand = new AsyncCommand(EditLayerNameAction);
             MergeLayerCommand = new ActionCommand(MergeLayerAction);
             RemoveLayerCommand = new ActionCommand(RemoveLayerAction);
             NewFrameCommand = new ActionCommand(NewFrameAction);
@@ -221,8 +225,8 @@ namespace Pixed.ViewModels
 
             PaletteAddPrimaryCommand = new ActionCommand(PaletteAddPrimaryAction);
             PaletteAddCurrentCommand = new ActionCommand(PaletteAddCurrentAction);
-            PaletteOpenCommand = new ActionCommand(PaletteOpenAction);
-            PaletteSaveCommand = new ActionCommand(PaletteSaveAction);
+            PaletteOpenCommand = new AsyncCommand(PaletteOpenAction);
+            PaletteSaveCommand = new AsyncCommand(PaletteSaveAction);
             PaletteClearCommand = new ActionCommand(PaletteClearAction);
             PaletteListCommand = new ActionCommand(PaletteListAction);
         }
@@ -239,7 +243,7 @@ namespace Pixed.ViewModels
             });
         }
 
-        public void DragOver(IDropInfo dropInfo)
+        /*public void DragOver(IDropInfo dropInfo)
         {
             if (dropInfo.Data is Frame sourceItem && dropInfo.TargetItem is Frame targetItem)
             {
@@ -272,7 +276,7 @@ namespace Pixed.ViewModels
                 Frames.RemoveAt(oldIndex);
                 SelectedFrame = newIndex;
             }
-        }
+        }*/
 
         private void AddLayerAction()
         {
@@ -348,7 +352,7 @@ namespace Pixed.ViewModels
         {
             Frames.Add(new Frame(Frames[0].Width, Frames[0].Height));
             SelectedFrame = Frames.Count - 1;
-            RemoveFrameVisibility = Frames.Count == 1 ? Visibility.Hidden : Visibility.Visible;
+            RemoveFrameVisibility = Frames.Count != 1;
         }
 
         private void RemoveFrameAction()
@@ -361,14 +365,14 @@ namespace Pixed.ViewModels
             int index = SelectedFrame;
             Frames.RemoveAt(index);
             SelectedFrame = Math.Clamp(index, 0, Frames.Count - 1);
-            RemoveFrameVisibility = Frames.Count == 1 ? Visibility.Hidden : Visibility.Visible;
+            RemoveFrameVisibility = Frames.Count != 1;
         }
 
         private void DuplicateFrameAction()
         {
             Frames.Add(Frames[SelectedFrame].Clone());
             SelectedFrame = Frames.Count - 1;
-            RemoveFrameVisibility = Frames.Count == 1 ? Visibility.Hidden : Visibility.Visible;
+            RemoveFrameVisibility = Frames.Count != 1;
         }
 
         private void ToolFlipAction()
@@ -413,31 +417,31 @@ namespace Pixed.ViewModels
             OnPropertyChanged(nameof(SelectedPaletteColors));
         }
 
-        private void PaletteOpenAction()
+        private async Task PaletteOpenAction()
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl|All Supported (.json;.gpl)|*.json;*.gpl";
-            openFileDialog.FilterIndex = 3;
-            if (openFileDialog.ShowDialog() == true)
+            var files = await IODialogs.OpenFileDialog("Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl|All Supported (.json;.gpl)|*.json;*.gpl", Global.PaletteService.SelectedPalette.Name);
+
+            if(files.Count == 0)
             {
-                Global.PaletteService.Load(openFileDialog.FileName);
+                return;
             }
+
+            var file = files[0];
+            Global.PaletteService.Load(file.Path.ToString());
         }
 
-        private void PaletteSaveAction()
+        private async Task PaletteSaveAction()
         {
             if (Global.PaletteService.SelectedPalette.Colors.Count == 0)
             {
                 return;
             }
 
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.FileName = Global.PaletteService.SelectedPalette.Name;
-            saveFileDialog.Filter = "Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl|All Supported (.json;.gpl)|*.json;*.gpl";
-            saveFileDialog.FilterIndex = 3;
-            if (saveFileDialog.ShowDialog() == true)
+            var file = await IODialogs.SaveFileDialog("Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl|All Supported (.json;.gpl)|*.json;*.gpl", Global.PaletteService.SelectedPalette.Name);
+
+            if(file != null)
             {
-                Global.PaletteService.Save(saveFileDialog.FileName);
+                Global.PaletteService.Save(file.Path.ToString());
             }
         }
 

@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:Pixed" 
         xmlns:controls="clr-namespace:Pixed.Controls" 
         xmlns:dd="urn:gong-wpf-dragdrop"
-        xmlns:viewmodels="clr-namespace:Pixed.ViewModels" 
-        xmlns:colorpicker="clr-namespace:ColorPicker;assembly=ColorPicker" 
+        xmlns:viewmodels="clr-namespace:Pixed.ViewModels"
+        xmlns:colorpicker="clr-namespace:ColorPicker;assembly=ColorPicker.AvaloniaUI"
         xmlns:converters="clr-namespace:Pixed.Converters"
         mc:Ignorable="d"
         Title="Pixed" Height="600" Width="800" Background="#1D1D1D" KeyDown="Window_KeyDown">

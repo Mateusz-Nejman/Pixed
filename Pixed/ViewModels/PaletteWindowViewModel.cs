@@ -1,9 +1,12 @@
-﻿using Pixed.Models;
+﻿using Avalonia.Media.Imaging;
+using Pixed.Models;
 using Pixed.Utils;
 using Pixed.Windows;
+using System;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Windows.Input;
+using Bitmap = Avalonia.Media.Imaging.Bitmap;
 
 namespace Pixed.ViewModels
 {
@@ -11,7 +14,7 @@ namespace Pixed.ViewModels
     {
         public struct PaletteData
         {
-            public BitmapImage BitmapImage { get; set; }
+            public Bitmap BitmapImage { get; set; }
             public string Name { get; set; }
             public string Path { get; set; }
             public PaletteModel Model { get; set; }
@@ -62,14 +65,14 @@ namespace Pixed.ViewModels
                     BitmapImage = GeneratePaleteBitmap(model),
                     SelectCommand = new ActionCommand<PaletteModel>(m => PaletteAction?.Invoke(true, m)),
                     RemoveCommand = new ActionCommand<PaletteModel>(m => PaletteAction?.Invoke(false, m)),
-                    RenameCommand = new ActionCommand<PaletteModel>(m =>
+                    RenameCommand = new ActionCommand<PaletteModel>(async(m) =>
                     {
                         Prompt window = new Prompt();
                         window.Title = "Rename Palette";
                         window.Text = "New name: ";
                         window.DefaultValue = m.Name;
 
-                        if (window.ShowDialog() == true)
+                        if (await window.ShowDialog<bool>(MainWindow.Handle) == true)
                         {
                             PaletteRenameAction?.Invoke(m, window.Value);
                             Initialize();
@@ -79,10 +82,10 @@ namespace Pixed.ViewModels
             }
         }
 
-        private BitmapImage GeneratePaleteBitmap(PaletteModel model)
+        private Bitmap GeneratePaleteBitmap(PaletteModel model)
         {
             int mod = (model.Colors.Count % 10) == 0 ? 0 : 1;
-            Bitmap bitmap = new Bitmap(200, ((model.Colors.Count / 10) + mod) * 20);
+            System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(200, ((model.Colors.Count / 10) + mod) * 20);
             Graphics graphics = Graphics.FromImage(bitmap);
             int x = 0;
             int y = 0;

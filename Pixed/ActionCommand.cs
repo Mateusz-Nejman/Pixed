@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Pixed
@@ -108,6 +109,79 @@ namespace Pixed
         public void Execute()
         {
             _action?.Invoke(_parameter);
+        }
+        #endregion
+    }
+
+    internal class AsyncCommand<T> : ICommand
+    {
+        #region Fields
+        private readonly Func<T, Task> _func;
+        #endregion
+        #region Events
+        public event EventHandler? CanExecuteChanged;
+        #endregion
+        #region Constructors
+        public AsyncCommand(Func<T, Task> func)
+        {
+            this._func = func;
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        #endregion
+        #region Public Methods
+        public bool CanExecute(object? parameter)
+        {
+            return true;
+        }
+
+        public void Execute(object? parameter)
+        {
+            if (parameter == null)
+            {
+                return;
+            }
+
+            Execute((T)parameter);
+        }
+
+        public async Task Execute(T parameter)
+        {
+            await _func?.Invoke(parameter);
+        }
+        #endregion
+    }
+
+    internal class AsyncCommand : ICommand
+    {
+        #region Fields
+        private readonly Func<Task> _func;
+        #endregion
+        #region Events
+        public event EventHandler? CanExecuteChanged;
+        #endregion
+        #region Constructors
+        public AsyncCommand(Func<Task> func)
+        {
+            this._func = func;
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        #endregion
+        #region Public Methods
+        public bool CanExecute(object? parameter)
+        {
+            return true;
+        }
+
+        public void Execute(object? parameter)
+        {
+            Execute();
+        }
+
+        public async Task Execute()
+        {
+            await _func?.Invoke();
         }
         #endregion
     }

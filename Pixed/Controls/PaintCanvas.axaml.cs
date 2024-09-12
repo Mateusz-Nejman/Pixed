@@ -1,5 +1,10 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Interactivity;
+using Pixed.Input;
 using Pixed.ViewModels;
+using System;
+using System.Drawing;
 
 namespace Pixed.Controls
 {
@@ -21,69 +26,71 @@ namespace Pixed.Controls
             Loaded += PaintCanvas_Loaded;
         }
 
-        private void PaintCanvas_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        private void PaintCanvas_Loaded(object sender, RoutedEventArgs e)
         {
-            _viewModel.RecalculateFactor(new System.Windows.Point(ActualWidth - _scrollBarSize, ActualHeight - _scrollBarSize));
+            _viewModel.RecalculateFactor(new Point((int)(Width - _scrollBarSize), (int)(Height - _scrollBarSize)));
         }
 
-        private void PaintCanvas_SizeChanged(object sender, System.Windows.SizeChangedEventArgs e)
+        private void PaintCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            _viewModel.RecalculateFactor(new System.Windows.Point(e.NewSize.Width - _scrollBarSize, e.NewSize.Height - _scrollBarSize));
+            _viewModel.RecalculateFactor(new Point((int)(e.NewSize.Width - _scrollBarSize), (int)(e.NewSize.Height - _scrollBarSize)));
         }
 
-        private void Frame_MouseDown(object sender, MouseButtonEventArgs e)
+        private void Frame_MouseDown(object sender, PointerPressedEventArgs e)
         {
-            Frame frame = (Frame)sender;
+            Panel frame = (Panel)sender;
             var pos = e.GetPosition(frame);
+            var currentPoint = e.GetCurrentPoint(sender as Control);
 
-            if (e.ChangedButton == MouseButton.Left && e.ButtonState == MouseButtonState.Pressed)
+            if (currentPoint.Properties.IsLeftButtonPressed)
             {
                 _viewModel.LeftMouseDown?.Execute(pos);
             }
-            else if (e.ChangedButton == MouseButton.Right && e.ButtonState == MouseButtonState.Pressed)
+            else if (currentPoint.Properties.IsRightButtonPressed)
             {
                 _viewModel.RightMouseDown?.Execute(pos);
             }
-            else if (e.ChangedButton == MouseButton.Middle && e.ButtonState == MouseButtonState.Pressed)
+            else if (currentPoint.Properties.IsMiddleButtonPressed)
             {
                 _viewModel.MiddleMouseDown?.Execute(pos);
             }
         }
 
-        private void Frame_MouseMove(object sender, MouseEventArgs e)
+        private void Frame_MouseMove(object sender, PointerEventArgs e)
         {
-            Frame frame = (Frame)sender;
+            Panel frame = (Panel)sender;
             var pos = e.GetPosition(frame);
 
             _viewModel.MouseMove?.Execute(pos);
         }
 
-        private void Frame_MouseUp(object sender, MouseButtonEventArgs e)
+        private void Frame_MouseUp(object sender, PointerReleasedEventArgs e)
         {
-            Frame frame = (Frame)sender;
+            Panel frame = (Panel)sender;
             var pos = e.GetPosition(frame);
+            MouseMapper mapper = new MouseMapper(e, sender as Control);
 
-            if (e.ChangedButton == MouseButton.Left && e.ButtonState == MouseButtonState.Released)
+            if (mapper.ChangedButton == MouseButton.Left && mapper.ButtonState == MouseButtonState.Released)
             {
                 _viewModel.LeftMouseUp?.Execute(pos);
             }
-            else if (e.ChangedButton == MouseButton.Right && e.ButtonState == MouseButtonState.Released)
+            else if (mapper.ChangedButton == MouseButton.Right && mapper.ButtonState == MouseButtonState.Released)
             {
                 _viewModel.RightMouseUp?.Execute(pos);
             }
-            else if (e.ChangedButton == MouseButton.Middle && e.ButtonState == MouseButtonState.Released)
+            else if (mapper.ChangedButton == MouseButton.Middle && mapper.ButtonState == MouseButtonState.Released)
             {
                 _viewModel.MiddleMouseUp?.Execute(pos);
             }
         }
 
-        private void Frame_MouseWheel(object sender, MouseWheelEventArgs e)
+        private void Frame_MouseWheel(object sender, PointerWheelEventArgs e)
         {
             _viewModel?.MouseWheel?.Execute(e.Delta);
             e.Handled = true;
         }
 
-        private void Frame_MouseLeave(object sender, MouseEventArgs e)
+        private void Frame_MouseLeave(object sender, PointerEventArgs e)
         {
             _viewModel.MouseLeave?.Execute();
         }

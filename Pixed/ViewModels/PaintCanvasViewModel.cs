@@ -1,8 +1,9 @@
-﻿using Pixed.Utils;
+﻿using Avalonia.Controls;
+using Pixed.Utils;
+using System;
 using System.Drawing;
 using Frame = Pixed.Models.Frame;
-using Image = System.Windows.Controls.Image;
-using Point = System.Windows.Point;
+using Image = Avalonia.Controls.Image;
 
 namespace Pixed.ViewModels
 {

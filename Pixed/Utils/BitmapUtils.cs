@@ -59,7 +59,7 @@ namespace Pixed.Utils
             await Clipboard.SetDataObjectAsync(clipboardObject);
         }
 
-        public static Bitmap BitmapFromSource(BitmapSource source)
+        /*public static Bitmap BitmapFromSource(BitmapSource source)
         {
             Bitmap bitmap;
             using (var outStream = new MemoryStream())
@@ -70,7 +70,7 @@ namespace Pixed.Utils
                 bitmap = new Bitmap(outStream);
             }
             return bitmap;
-        }
+        }*/
 
         public static Bitmap? CreateFromClipboard()
         {

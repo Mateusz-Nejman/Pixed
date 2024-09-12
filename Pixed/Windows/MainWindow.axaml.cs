@@ -36,11 +36,6 @@ namespace Pixed
             KeyUp += MainWindow_KeyUp;
         }
 
-        private void Tool_circle_IsCheckedChanged(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
         private void MainWindow_KeyUp(object? sender, KeyEventArgs e)
         {
             Keyboard.Modifiers = e.KeyModifiers;
@@ -80,11 +75,11 @@ namespace Pixed
 
         private void SelectTool(string name)
         {
-            var obj = FindName(name);
-
-            if (obj is RadioButton radioButton)
+            var obj = this.FindControl<RadioButton>(name);
+ 
+            if (obj != null)
             {
-                radioButton.IsChecked = true;
+                obj.IsChecked = true;
             }
         }
 
@@ -120,9 +115,25 @@ namespace Pixed
 
         private void ProcessMouse(PointerPoint point)
         {
-            Mouse.LeftButton = point.Properties.IsLeftButtonPressed ? MouseButtonState.Pressed : MouseButtonState.Released;
-            Mouse.MiddleButton = point.Properties.IsMiddleButtonPressed ? MouseButtonState.Pressed : MouseButtonState.Released;
-            Mouse.RightButton = point.Properties.IsRightButtonPressed ? MouseButtonState.Pressed : MouseButtonState.Released;
+            var newLeftButton = point.Properties.IsLeftButtonPressed ? MouseButtonState.Pressed : MouseButtonState.Released;
+            var newRightButton = point.Properties.IsRightButtonPressed ? MouseButtonState.Pressed : MouseButtonState.Released;
+            var newMiddleButton = point.Properties.IsMiddleButtonPressed ? MouseButtonState.Pressed : MouseButtonState.Released;
+
+            if(newLeftButton != Mouse.LeftButton)
+            {
+                Mouse.ButtonChanged = MouseButton.Left;
+            }
+            else if(newRightButton != Mouse.RightButton)
+            {
+                Mouse.ButtonChanged = MouseButton.Right;
+            }
+            else if(newMiddleButton != Mouse.MiddleButton)
+            {
+                Mouse.ButtonChanged = MouseButton.Middle;
+            }
+            Mouse.LeftButton = newLeftButton;
+            Mouse.MiddleButton = newMiddleButton;
+            Mouse.RightButton = newRightButton;
         }
     }
 }
