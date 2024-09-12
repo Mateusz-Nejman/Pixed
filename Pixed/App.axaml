@@ -1,7 +1,9 @@
 ﻿<Application x:Class="Pixed.App"
              xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:Pixed">
+             xmlns:templates="clr-namespace:ColorPicker.AvaloniaUI.Templates;assembly=ColorPicker.AvaloniaUI"
+             xmlns:local="clr-namespace:Pixed"
+             RequestedThemeVariant="Dark">
     <Application.Resources>
       <ResourceDictionary>
         <ResourceDictionary.MergedDictionaries>
@@ -9,4 +11,8 @@
         </ResourceDictionary.MergedDictionaries>
       </ResourceDictionary>
     </Application.Resources>
+  <Application.Styles>
+    <FluentTheme />
+    <templates:PixiPerfectColorPickerTheme />
+  </Application.Styles>
 </Application>
