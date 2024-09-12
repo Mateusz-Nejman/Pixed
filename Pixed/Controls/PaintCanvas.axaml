@@ -16,18 +16,16 @@
     HorizontalScrollBarVisibility="Auto">
         <Grid Name="imageGrid" Width="{Binding GridWidth}" Height="{Binding GridHeight}">
             <Grid.Background>
-                <!--<ImageBrush ImageSource="../Resources/transparentBackground.png" TileMode="Tile" Stretch="Uniform" AlignmentY="Top" Viewport="0,0,32,32" ViewportUnits="Absolute"/>-->
+				<ImageBrush Source="avares://Pixed/Resources/transparentBackground.png" TileMode="Tile" Stretch="Uniform" AlignmentY="Top" DestinationRect="0 0 32 32"/>
             </Grid.Background>
-            <Image 
-                Name="image"/>
-            <Image 
-                Name="overlay"/>
-            <!--<Frame Background="Transparent"
-           MouseDown="Frame_MouseDown"
-           MouseMove="Frame_MouseMove"
-           MouseUp="Frame_MouseUp"
-           MouseWheel="Frame_MouseWheel"
-           MouseLeave="Frame_MouseLeave"/>-->
+            <Image Name="image"/>
+            <Image Name="overlay"/>
+			<Border Background="Transparent" 
+					PointerExited="Border_PointerExited"
+					PointerMoved="Border_PointerMoved"
+					PointerPressed="Border_PointerPressed" 
+					PointerReleased="Border_PointerReleased" 
+					PointerWheelChanged="Border_PointerWheelChanged"/>
         </Grid>
     </ScrollViewer>
 </UserControl>

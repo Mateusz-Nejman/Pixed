@@ -10,7 +10,7 @@
         xmlns:colorpicker="clr-namespace:ColorPicker;assembly=ColorPicker.AvaloniaUI"
         xmlns:converters="clr-namespace:Pixed.Converters"
         mc:Ignorable="d"
-        Title="Pixed" Height="1000" Width="800" Background="#1D1D1D" KeyDown="Window_KeyDown">
+        Title="Pixed" Height="600" Width="800" Background="#1D1D1D" KeyDown="Window_KeyDown" WindowState="Maximized">
   <Window.DataContext>
     <viewmodels:MainViewModel/>
   </Window.DataContext>
@@ -70,7 +70,7 @@
             <Image Source="avares://Pixed/Resources/Icons/frame/frame-recyclebin-white.png" Width="32" Height="32"/>
           </Button>
         </Grid>
-        <ListBox ItemsSource="{Binding Frames}" SelectedIndex="{Binding SelectedFrame, Mode=TwoWay}" Width="110"
+        <ListBox Classes="FramesDragAndDrop" ItemsSource="{Binding Frames}" SelectedIndex="{Binding SelectedFrame, Mode=TwoWay}" Width="110"
                  Background="#1D1D1D">
           <ListBox.ItemTemplate>
             <DataTemplate>

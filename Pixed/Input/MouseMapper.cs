@@ -22,6 +22,7 @@ namespace Pixed.Input
             SetButtonState(ref state, MouseButton.Left, point.Properties.IsLeftButtonPressed);
             SetButtonState(ref state, MouseButton.Right, point.Properties.IsRightButtonPressed);
             SetButtonState(ref state, MouseButton.Middle, point.Properties.IsMiddleButtonPressed);
+            ButtonState = state;
         }
 
         private void SetButtonState(ref MouseButtonState state, MouseButton mouseButton, bool value)
