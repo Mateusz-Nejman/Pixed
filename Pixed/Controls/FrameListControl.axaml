@@ -8,9 +8,9 @@
              Width="96" Height="96">
     <Border BorderBrush="#444" BorderThickness="1">
         <Grid Width="96" Height="96">
-            <Grid.Background>
+            <!--<Grid.Background>
                 <ImageBrush ImageSource="../Resources/transparentBackground.png" TileMode="Tile" Stretch="Uniform" AlignmentY="Top" Viewport="0,0,32,32" ViewportUnits="Absolute"/>
-            </Grid.Background>
+            </Grid.Background>-->
             <Image Width="96" Height="96" Source="{Binding RenderSource}"/>
         </Grid>
     </Border>

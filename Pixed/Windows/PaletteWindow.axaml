@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pixed" xmlns:viewmodels="clr-namespace:Pixed.ViewModels" xmlns:controls="clr-namespace:Pixed.Controls"
         mc:Ignorable="d"
-        ResizeMode="NoResize"
         Title="PaletteWindow" Height="600" Width="800" Background="#1D1D1D">
     <Window.DataContext>
         <viewmodels:PaletteWindowViewModel/>
@@ -17,7 +16,7 @@
         </Grid.RowDefinitions>
 
         <ScrollViewer Grid.Row="1">
-            <ListView Background="#1D1D1D" ItemsSource="{Binding Palettes}" HorizontalContentAlignment="Stretch">
+            <!--<ListView Background="#1D1D1D" ItemsSource="{Binding Palettes}" HorizontalContentAlignment="Stretch">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid>
@@ -36,33 +35,21 @@
                             <TextBlock Text="{Binding Path}" Foreground="Gray" Grid.ColumnSpan="4" Grid.Row="1"/>
                             <Image Source="{Binding BitmapImage}" Grid.Row="2"/>
                             <Button Grid.Column="1" Grid.Row="2" BorderThickness="0" Background="Transparent" Command="{Binding SelectCommand}" CommandParameter="{Binding Model}">
-                                <Button.ToolTip>
-                                    <ToolTip Background="Black" BorderThickness="0">
-                                        <controls:SimpleTooltip Title="Set palette as current"/>
-                                    </ToolTip>
-                                </Button.ToolTip>
+                                
                                 <Image Source="./Resources/Icons/checkmark.png"/>
                             </Button>
                             <Button Grid.Column="2" Grid.Row="2" BorderThickness="0" Background="Transparent" Command="{Binding RenameCommand}" CommandParameter="{Binding Model}">
-                                <Button.ToolTip>
-                                    <ToolTip Background="Black" BorderThickness="0">
-                                        <controls:SimpleTooltip Title="Rename palette"/>
-                                    </ToolTip>
-                                </Button.ToolTip>
+                                
                                 <Image Source="./Resources/Icons/common/pencil.png"/>
                             </Button>
                             <Button Grid.Column="3" Grid.Row="2" BorderThickness="0" Background="Transparent" Command="{Binding RemoveCommand}" CommandParameter="{Binding Model}">
-                                <Button.ToolTip>
-                                    <ToolTip Background="Black" BorderThickness="0">
-                                        <controls:SimpleTooltip Title="Remove palette from disk"/>
-                                    </ToolTip>
-                                </Button.ToolTip>
+                                
                                 <Image Source="./Resources/Icons/bin.png"/>
                             </Button>
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
-            </ListView>
+            </ListView>-->
         </ScrollViewer>
     </Grid>
 </Window>

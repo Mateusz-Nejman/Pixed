@@ -6,13 +6,13 @@
         xmlns:local="clr-namespace:Pixed.Windows"
         mc:Ignorable="d"
         Title="Prompt" MinWidth="200"
-        MinHeight="150" ResizeMode="NoResize" 
+        MinHeight="150"
         ShowInTaskbar="False" SizeToContent="WidthAndHeight"
-        WindowStartupLocation="CenterOwner" WindowStyle="SingleBorderWindow">
+        WindowStartupLocation="CenterOwner">
     <StackPanel>
         <TextBlock Text="{Binding Text, RelativeSource={RelativeSource FindAncestor, AncestorType=local:Prompt}}" Margin="10"/>
         <TextBox x:Name="textBox" Margin="10" Text="{Binding DefaultValue, RelativeSource={RelativeSource FindAncestor, AncestorType=local:Prompt}}"/>
         <Button Content="OK" Click="Button_Click"
-            Height="24" MinWidth="80" Padding="10,0" TextOptions.TextFormattingMode="Display" Margin="10"/>
+            Height="24" MinWidth="80" Padding="10,0" Margin="10"/>
     </StackPanel>
 </Window>

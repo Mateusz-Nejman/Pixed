@@ -14,21 +14,6 @@
     <Window.DataContext>
         <viewmodels:MainViewModel/>
     </Window.DataContext>
-    <Window.Resources>
-        <converters:TabSizeConverter x:Key="tabSizeConverter"/>
-        <Style TargetType="{x:Type TabItem}">
-            <Setter Property="Width">
-                <Setter.Value>
-                    <MultiBinding Converter="{StaticResource tabSizeConverter}">
-                        <Binding RelativeSource="{RelativeSource Mode=FindAncestor,
-            AncestorType={x:Type TabControl}}" />
-                        <Binding RelativeSource="{RelativeSource Mode=FindAncestor,
-            AncestorType={x:Type TabControl}}" Path="ActualWidth" />
-                    </MultiBinding>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -39,24 +24,24 @@
         </Grid.ColumnDefinitions>
         <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
             <StackPanel Margin="8">
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-pen.png" Name="tool_pen" IsCheckedChanged="ToolRadio_Checked"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-vertical-mirror-pen.png" Name="tool_mirror_pen" IsCheckedChanged="ToolRadio_Checked"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-paint-bucket.png" Name="tool_paint_bucket" IsCheckedChanged="ToolRadio_Checked"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-colorswap.png" Name="tool_colorswap" IsCheckedChanged="ToolRadio_Checked"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-eraser.png" Name="tool_eraser" IsCheckedChanged="ToolRadio_Checked"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-stroke.png" Name="tool_stroke" IsCheckedChanged="ToolRadio_Checked"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-rectangle.png" Name="tool_rectangle" IsCheckedChanged="ToolRadio_Checked"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-circle.png" Name="tool_circle" IsCheckedChanged="ToolRadio_Checked"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-move.png" Name="tool_move" IsCheckedChanged="ToolRadio_Checked"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-shape-select.png" Name="tool_shape_select" IsCheckedChanged="ToolRadio_Checked"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-rectangle-select.png" Name="tool_rectangle_select" IsCheckedChanged="ToolRadio_Checked"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-lasso-select.png" Name="tool_lasso_select" IsCheckedChanged="ToolRadio_Checked"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-lighten.png" Name="tool_lighten" IsCheckedChanged="ToolRadio_Checked"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-dithering.png" Name="tool_dithering" IsCheckedChanged="ToolRadio_Checked"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-colorpicker.png" Name="tool_colorpicker" IsCheckedChanged="ToolRadio_Checked"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-noise.png" Name="tool_noise" IsCheckedChanged="ToolRadio_Checked"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-noise-fill.png" Name="tool_noise_fill" IsCheckedChanged="ToolRadio_Checked"/>
-                <RadioButton GroupName="Tool" Style="{StaticResource ToolRadio}" Content="../Resources/Icons/tools/tool-outliner.png" Name="tool_outliner" IsCheckedChanged="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Content="avares://Pixed/Resources/Icons/tools/tool-pen.png" Name="tool_pen" IsCheckedChanged="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Content="avares://Pixed/Resources/Icons/tools/tool-vertical-mirror-pen.png" Name="tool_mirror_pen" IsCheckedChanged="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Content="avares://Pixed/Resources/Icons/tools/tool-paint-bucket.png" Name="tool_paint_bucket" IsCheckedChanged="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Content="avares://Pixed/Resources/Icons/tools/tool-colorswap.png" Name="tool_colorswap" IsCheckedChanged="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Content="avares://Pixed/Resources/Icons/tools/tool-eraser.png" Name="tool_eraser" IsCheckedChanged="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Content="avares://Pixed/Resources/Icons/tools/tool-stroke.png" Name="tool_stroke" IsCheckedChanged="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Content="avares://Pixed/Resources/Icons/tools/tool-rectangle.png" Name="tool_rectangle" IsCheckedChanged="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Content="avares://Pixed/Resources/Icons/tools/tool-circle.png" Name="tool_circle" IsCheckedChanged="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Content="avares://Pixed/Resources/Icons/tools/tool-move.png" Name="tool_move" IsCheckedChanged="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Content="avares://Pixed/Resources/Icons/tools/tool-shape-select.png" Name="tool_shape_select" IsCheckedChanged="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Content="avares://Pixed/Resources/Icons/tools/tool-rectangle-select.png" Name="tool_rectangle_select" IsCheckedChanged="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Content="avares://Pixed/Resources/Icons/tools/tool-lasso-select.png" Name="tool_lasso_select" IsCheckedChanged="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Content="avares://Pixed/Resources/Icons/tools/tool-lighten.png" Name="tool_lighten" IsCheckedChanged="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Content="avares://Pixed/Resources/Icons/tools/tool-dithering.png" Name="tool_dithering" IsCheckedChanged="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Content="avares://Pixed/Resources/Icons/tools/tool-colorpicker.png" Name="tool_colorpicker" IsCheckedChanged="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Content="avares://Pixed/Resources/Icons/tools/tool-noise.png" Name="tool_noise" IsCheckedChanged="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Content="avares://Pixed/Resources/Icons/tools/tool-noise-fill.png" Name="tool_noise_fill" IsCheckedChanged="ToolRadio_Checked"/>
+                <RadioButton GroupName="Tool" Content="avares://Pixed/Resources/Icons/tools/tool-outliner.png" Name="tool_outliner" IsCheckedChanged="ToolRadio_Checked"/>
             </StackPanel>
         </ScrollViewer>
         <Grid x:Name="mainSection" Grid.Column="1">
@@ -78,39 +63,26 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="32"/>
                     </Grid.RowDefinitions>
-                    <Button Style="{StaticResource FramesButton}"  Command="{Binding DuplicateFrameCommand}">
-                        <Button.ToolTip>
-                            <ToolTip Background="Black" BorderThickness="0">
-                                <controls:SimpleTooltip Title="Duplicate this frame"/>
-                            </ToolTip>
-                        </Button.ToolTip>
-                        <Image Source="./Resources/icons/frame/frame-duplicate-white.png" Width="32" Height="32"/>
+                    <Button Command="{Binding DuplicateFrameCommand}">
+                        
+                        <Image Source="avares://Pixed/Resources/Icons/frame/frame-duplicate-white.png" Width="32" Height="32"/>
                     </Button>
-                    <Button Style="{StaticResource FramesButton}" Grid.Column="1" Command="{Binding RemoveFrameCommand}" Visibility="{Binding RemoveFrameVisibility}">
-                        <Button.ToolTip>
-                            <ToolTip Background="Black" BorderThickness="0">
-                                <controls:SimpleTooltip Title="Delete this frame"/>
-                            </ToolTip>
-                        </Button.ToolTip>
-                        <Image Source="./Resources/icons/frame/frame-recyclebin-white.png" Width="32" Height="32"/>
+                    <Button Grid.Column="1" Command="{Binding RemoveFrameCommand}" IsVisible="{Binding RemoveFrameVisibility}">
+                        
+                        <Image Source="avares://Pixed/Resources/Icons/frame/frame-recyclebin-white.png" Width="32" Height="32"/>
                     </Button>
                 </Grid>
                 <ListBox ItemsSource="{Binding Frames}" SelectedIndex="{Binding SelectedFrame, Mode=TwoWay}" Width="110"
-                         Background="#1D1D1D"
-                                       dd:DragDrop.DropTargetAdornerBrush="#039BE5"
-                                         dd:DragDrop.IsDragSource="True"
-                                         dd:DragDrop.IsDropTarget="True"
-                                         dd:DragDrop.UseDefaultEffectDataTemplate="True"
-                                         dd:DragDrop.DropHandler="{Binding}">
+                         Background="#1D1D1D">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <controls:FrameListControl/>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-                <Button Style="{StaticResource CreateFrameButton}" Margin="3" Command="{Binding NewFrameCommand}">
+                <Button Margin="3" Command="{Binding NewFrameCommand}">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Image Margin="3" Width="26" Height="26" Source="../Resources/Icons/frame/frame-plus-white.png"/>
+                        <Image Margin="3" Width="26" Height="26" Source="avares://Pixed/Resources/Icons/frame/frame-plus-white.png"/>
                         <TextBlock Text="New frame" FontSize="13" Foreground="White" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
@@ -129,13 +101,13 @@
                 <StackPanel Name="rightPanel" Grid.Column="4" Width="226" HorizontalAlignment="Stretch">
                     <Border BorderThickness="2" BorderBrush="#888" Margin="8">
                         <StackPanel>
-                            <colorpicker:StandardColorPicker Width="186" Style="{DynamicResource DefaultColorPickerStyle}" SelectedColor="{Binding PrimaryColor,Mode=TwoWay}" SecondaryColor="{Binding SecondaryColor, Mode=TwoWay}"/>
+                            <colorpicker:StandardColorPicker Width="186" SelectedColor="{Binding PrimaryColor,Mode=TwoWay}" SecondaryColor="{Binding SecondaryColor, Mode=TwoWay}"/>
                         </StackPanel>
                     </Border>
 
                     <Border BorderThickness="2" BorderBrush="#888" Margin="8">
                         <StackPanel>
-                            <TextBlock Text="Layers" Height="32" Foreground="White" FontSize="15px" Padding="4" FontWeight="Bold"/>
+                            <TextBlock Text="Layers" Height="32" Foreground="White" FontSize="15" Padding="4" FontWeight="Bold"/>
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
@@ -148,53 +120,23 @@
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="26"/>
                                 </Grid.RowDefinitions>
-                                <Button Style="{StaticResource LayersButton}" Command="{Binding AddLayerCommand}">
-                                    <Button.ToolTip>
-                                        <ToolTip Background="Black" BorderThickness="0">
-                                            <controls:TooltipWithButton Title="Add Layer" ButtonText="Shift" ButtonTextHelper="Clone current layer"/>
-                                        </ToolTip>
-                                    </Button.ToolTip>
-                                    <Image Source="./Resources/icons/common/plus.png" Width="10" Height="10"/>
+                                <Button Command="{Binding AddLayerCommand}">
+                                    <Image Source="avares://Pixed/Resources/Icons/common/plus.png" Width="10" Height="10"/>
                                 </Button>
-                                <Button Style="{StaticResource LayersButton}" Grid.Column="1" Command="{Binding MoveLayerUpCommand}" IsEnabled="{Binding CanLayerMoveUp}">
-                                    <Button.ToolTip>
-                                        <ToolTip Background="Black" BorderThickness="0">
-                                            <controls:TooltipWithButton Title="Move layer up" ButtonText="Shift" ButtonTextHelper="Move to the top"/>
-                                        </ToolTip>
-                                    </Button.ToolTip>
-                                    <Image Source="./Resources/icons/common/arrow-up.png" Width="10" Height="10"/>
+                                <Button Grid.Column="1" Command="{Binding MoveLayerUpCommand}" IsEnabled="{Binding CanLayerMoveUp}">
+                                    <Image Source="avares://Pixed/Resources/Icons/common/arrow-up.png" Width="10" Height="10"/>
                                 </Button>
-                                <Button Style="{StaticResource LayersButton}" Grid.Column="2" Command="{Binding MoveLayerDownCommand}" IsEnabled="{Binding CanLayerMoveDown}">
-                                    <Button.ToolTip>
-                                        <ToolTip Background="Black" BorderThickness="0">
-                                            <controls:TooltipWithButton Title="Move layer down" ButtonText="Shift" ButtonTextHelper="Move to the bottom"/>
-                                        </ToolTip>
-                                    </Button.ToolTip>
-                                    <Image Source="./Resources/icons/common/arrow-down.png" Width="10" Height="10"/>
+                                <Button Grid.Column="2" Command="{Binding MoveLayerDownCommand}" IsEnabled="{Binding CanLayerMoveDown}">
+                                    <Image Source="avares://Pixed/Resources/Icons/common/arrow-down.png" Width="10" Height="10"/>
                                 </Button>
-                                <Button Style="{StaticResource LayersButton}" Grid.Column="3" Command="{Binding EditLayerNameCommand}">
-                                    <Button.ToolTip>
-                                        <ToolTip Background="Black" BorderThickness="0">
-                                            <controls:SimpleTooltip Title="Edit layer name"/>
-                                        </ToolTip>
-                                    </Button.ToolTip>
-                                    <Image Source="./Resources/icons/common/pencil.png" Width="10" Height="10"/>
+                                <Button Grid.Column="3" Command="{Binding EditLayerNameCommand}">
+                                    <Image Source="avares://Pixed/Resources/Icons/common/pencil.png" Width="10" Height="10"/>
                                 </Button>
-                                <Button Style="{StaticResource LayersButton}" Grid.Column="4" Command="{Binding MergeLayerCommand}" IsEnabled="{Binding CanLayerMerge}">
-                                    <Button.ToolTip>
-                                        <ToolTip Background="Black" BorderThickness="0">
-                                            <controls:SimpleTooltip Title="Merge with layer below"/>
-                                        </ToolTip>
-                                    </Button.ToolTip>
-                                    <Image Source="./Resources/icons/common/download2.png" Width="10" Height="10"/>
+                                <Button Grid.Column="4" Command="{Binding MergeLayerCommand}" IsEnabled="{Binding CanLayerMerge}">
+                                    <Image Source="avares://Pixed/Resources/Icons/common/download2.png" Width="10" Height="10"/>
                                 </Button>
-                                <Button Style="{StaticResource LayersButton}" Grid.Column="5" Command="{Binding RemoveLayerCommand}" IsEnabled="{Binding CanLayerRemove}">
-                                    <Button.ToolTip>
-                                        <ToolTip Background="Black" BorderThickness="0">
-                                            <controls:SimpleTooltip Title="Delete selected layer"/>
-                                        </ToolTip>
-                                    </Button.ToolTip>
-                                    <Image Source="./Resources/icons/common/cross.png" Width="10" Height="10"/>
+                                <Button Grid.Column="5" Command="{Binding RemoveLayerCommand}" IsEnabled="{Binding CanLayerRemove}">
+                                    <Image Source="avares://Pixed/Resources/Icons/common/cross.png" Width="10" Height="10"/>
                                 </Button>
                             </Grid>
                             <ListBox ItemsSource="{Binding Layers}" 
@@ -211,43 +153,19 @@
 
                     <Border BorderThickness="2" BorderBrush="#888" Margin="8">
                         <StackPanel>
-                            <TextBlock Text="Transform" Height="32" Foreground="White" FontSize="15px" Padding="4" FontWeight="Bold"/>
+                            <TextBlock Text="Transform" Height="32" Foreground="White" FontSize="15" Padding="4" FontWeight="Bold"/>
                             <UniformGrid Rows="1" Columns="4" Width="184" Height="46">
-                                <Button Style="{StaticResource ToolButton}" Command="{Binding ToolFlipCommand}" Content="../Resources/Icons/transform/tool-flip.png" Grid.Column="0" Grid.Row="0">
-                                    <Button.ToolTip>
-                                        <ToolTip Background="Black" BorderThickness="0">
-                                            <controls:TooltipWith3Buttons Title="Flip horizontaly" 
-                                                          ButtonText1="Alt" ButtonTextHelper1="Flip vertically" 
-                                                          ButtonText2="Ctrl" ButtonTextHelper2="Apply to all layers"
-                                                          ButtonText3="Shift" ButtonTextHelper3="Apply to all frames"/>
-                                        </ToolTip>
-                                    </Button.ToolTip>
+                                <Button Command="{Binding ToolFlipCommand}" Content="avares://Pixed/Resources/Icons/transform/tool-flip.png" Grid.Column="0" Grid.Row="0">
+                                    
                                 </Button>
-                                <Button Style="{StaticResource ToolButton}" Command="{Binding ToolRotateCommand}" Content="../Resources/Icons/transform/tool-rotate.png" Grid.Column="1" Grid.Row="0">
-                                    <Button.ToolTip>
-                                        <ToolTip Background="Black" BorderThickness="0">
-                                            <controls:TooltipWith3Buttons Title="Counter-clockwise rotation"
-                                                          ButtonText1="Alt" ButtonTextHelper1="Clockwise rotation"
-                                                          ButtonText2="Ctrl"  ButtonTextHelper2="Apply to all layers"
-                                                          ButtonText3="Shift" ButtonTextHelper3="Apply to all frames"/>
-                                        </ToolTip>
-                                    </Button.ToolTip>
+                                <Button Command="{Binding ToolRotateCommand}" Content="avares://Pixed/Resources/Icons/transform/tool-rotate.png" Grid.Column="1" Grid.Row="0">
+                                    
                                 </Button>
-                                <Button Style="{StaticResource ToolButton}" Command="{Binding ToolCenterCommand}" Content="../Resources/Icons/transform/tool-center.png" Grid.Column="2" Grid.Row="0">
-                                    <Button.ToolTip>
-                                        <ToolTip Background="Black" BorderThickness="0">
-                                            <controls:TooltipWith2Buttons Title="Align image to the center"
-                                                          ButtonText1="Ctrl" ButtonTextHelper1="Apply to all layers"
-                                                          ButtonText2="Shift" ButtonTextHelper2="Apply to all frames"/>
-                                        </ToolTip>
-                                    </Button.ToolTip>
+                                <Button Command="{Binding ToolCenterCommand}" Content="avares://Pixed/Resources/Icons/transform/tool-center.png" Grid.Column="2" Grid.Row="0">
+                                    
                                 </Button>
-                                <Button Style="{StaticResource ToolButton}" Command="{Binding ToolCropCommand}" Content="../Resources/Icons/transform/tool-crop.png" Grid.Column="3" Grid.Row="0">
-                                    <Button.ToolTip>
-                                        <ToolTip Background="Black" BorderThickness="0">
-                                            <controls:SimpleTooltip Title="Crop to fit the content or the selection. Applies to all frames and layers!"/>
-                                        </ToolTip>
-                                    </Button.ToolTip>
+                                <Button Command="{Binding ToolCropCommand}" Content="avares://Pixed/Resources/Icons/transform/tool-crop.png" Grid.Column="3" Grid.Row="0">
+                                    
                                 </Button>
                             </UniformGrid>
                         </StackPanel>
@@ -255,7 +173,7 @@
 
                     <Border BorderThickness="2" BorderBrush="#888" Margin="8">
                         <StackPanel>
-                            <TextBlock Text="Palettes" Height="32" Foreground="White" FontSize="15px" Padding="4" FontWeight="Bold"/>
+                            <TextBlock Text="Palettes" Height="32" Foreground="White" FontSize="15" Padding="4" FontWeight="Bold"/>
                             <TabControl BorderThickness="0" Background="Transparent">
                                 <TabItem Header="Palette" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch">
                                     <StackPanel>
@@ -271,53 +189,23 @@
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="26"/>
                                             </Grid.RowDefinitions>
-                                            <Button Style="{StaticResource LayersButton}" Command="{Binding PaletteAddPrimaryCommand}">
-                                                <Button.ToolTip>
-                                                    <ToolTip Background="Black" BorderThickness="0">
-                                                        <controls:SimpleTooltip Title="Add Primary color to palette"/>
-                                                    </ToolTip>
-                                                </Button.ToolTip>
-                                                <Image Source="./Resources/icons/common/plus.png" Width="10" Height="10"/>
+                                            <Button Command="{Binding PaletteAddPrimaryCommand}">
+                                                <Image Source="avares://Pixed/Resources/Icons/common/plus.png" Width="10" Height="10"/>
                                             </Button>
-                                            <Button Style="{StaticResource LayersButton}" Grid.Column="1" Command="{Binding PaletteAddCurrentCommand}">
-                                                <Button.ToolTip>
-                                                    <ToolTip Background="Black" BorderThickness="0">
-                                                        <controls:SimpleTooltip Title="Add current colors to palette"/>
-                                                    </ToolTip>
-                                                </Button.ToolTip>
-                                                <Image Source="./Resources/icons/merge_palettes.png" Width="10" Height="10"/>
+                                            <Button Grid.Column="1" Command="{Binding PaletteAddCurrentCommand}">
+                                                <Image Source="avares://Pixed/Resources/Icons/merge_palettes.png" Width="10" Height="10"/>
                                             </Button>
-                                            <Button Style="{StaticResource LayersButton}" Grid.Column="2" Command="{Binding PaletteListCommand}">
-                                                <Button.ToolTip>
-                                                    <ToolTip Background="Black" BorderThickness="0">
-                                                        <controls:SimpleTooltip Title="Palettes list"/>
-                                                    </ToolTip>
-                                                </Button.ToolTip>
-                                                <Image Source="./Resources/icons/database.png" Width="10" Height="10"/>
+                                            <Button Grid.Column="2" Command="{Binding PaletteListCommand}">
+                                                <Image Source="avares://Pixed/Resources/Icons/database.png" Width="10" Height="10"/>
                                             </Button>
-                                            <Button Style="{StaticResource LayersButton}" Grid.Column="3" Command="{Binding PaletteOpenCommand}">
-                                                <Button.ToolTip>
-                                                    <ToolTip Background="Black" BorderThickness="0">
-                                                        <controls:SimpleTooltip Title="Load palete"/>
-                                                    </ToolTip>
-                                                </Button.ToolTip>
-                                                <Image Source="./Resources/Icons/folder-open.png" Width="10" Height="10"/>
+                                            <Button Grid.Column="3" Command="{Binding PaletteOpenCommand}">
+                                                <Image Source="avares://Pixed/Resources/Icons/folder-open.png" Width="10" Height="10"/>
                                             </Button>
-                                            <Button Style="{StaticResource LayersButton}" Grid.Column="4" Command="{Binding PaletteSaveCommand}">
-                                                <Button.ToolTip>
-                                                    <ToolTip Background="Black" BorderThickness="0">
-                                                        <controls:SimpleTooltip Title="Save palette"/>
-                                                    </ToolTip>
-                                                </Button.ToolTip>
-                                                <Image Source="./Resources/Icons/floppy-disk.png" Width="10" Height="10"/>
+                                            <Button Grid.Column="4" Command="{Binding PaletteSaveCommand}">
+                                                <Image Source="avares://Pixed/Resources/Icons/floppy-disk.png" Width="10" Height="10"/>
                                             </Button>
-                                            <Button Style="{StaticResource LayersButton}" Grid.Column="5" Command="{Binding PaletteClearCommand}">
-                                                <Button.ToolTip>
-                                                    <ToolTip Background="Black" BorderThickness="0">
-                                                        <controls:SimpleTooltip Title="Clear palette"/>
-                                                    </ToolTip>
-                                                </Button.ToolTip>
-                                                <Image Source="./Resources/icons/common/cross.png" Width="10" Height="10"/>
+                                            <Button Grid.Column="5" Command="{Binding PaletteClearCommand}">
+                                                <Image Source="avares://Pixed/Resources/Icons/common/cross.png" Width="10" Height="10"/>
                                             </Button>
                                         </Grid>
                                         <controls:ColorGrid Columns="5" Colors="{Binding SelectedPaletteColors}"/>
@@ -332,7 +220,7 @@
 
                     <Border BorderThickness="2" BorderBrush="#888" Margin="8">
                         <StackPanel>
-                            <TextBlock Text="Touch buttons" Height="32" Foreground="White" FontSize="15px" Padding="4" FontWeight="Bold"/>
+                            <TextBlock Text="Touch buttons" Height="32" Foreground="White" FontSize="15" Padding="4" FontWeight="Bold"/>
                         </StackPanel>
                     </Border>
                 </StackPanel>
