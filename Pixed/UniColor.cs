@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Avalonia;
+using System;
+using System.Linq;
 
 namespace Pixed
 {
@@ -141,6 +143,18 @@ namespace Pixed
         public static implicit operator Avalonia.Media.Color(UniColor color)
         {
             return Avalonia.Media.Color.FromArgb(color.A, color.R, color.G, color.B);
+        }
+
+        public static UniColor GetFromResources(string name)
+        {
+            if(Application.Current.Resources.TryGetResource(name, Application.Current.ActualThemeVariant, out object? obj))
+            {
+                if(obj is Avalonia.Media.Color color)
+                {
+                    return color;
+                }
+            }
+            return new UniColor();
         }
     }
 }
