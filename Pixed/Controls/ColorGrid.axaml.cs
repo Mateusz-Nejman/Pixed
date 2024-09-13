@@ -49,16 +49,16 @@ namespace Pixed.Controls
 
                 for (int a = 0; a < Columns; a++)
                 {
-                    if (colorIndex >= Colors.Count)
+                    if (colorIndex >= colors.Count)
                     {
                         break;
                     }
 
                     Button colorButton = new Button();
-                    colorButton.BorderBrush = new SolidColorBrush(Colors[colorIndex]);
-                    colorButton.Background = new SolidColorBrush(Colors[colorIndex]);
+                    colorButton.BorderBrush = new SolidColorBrush(colors[colorIndex]);
+                    colorButton.Background = new SolidColorBrush(colors[colorIndex]);
                     colorButton.Command = new ActionCommand<UniColor>(Subjects.PrimaryColorChange.OnNext);
-                    colorButton.CommandParameter = Colors[colorIndex];
+                    colorButton.CommandParameter = colors[colorIndex];
                     colorButton.Width = 30;
                     colorButton.Height = 30;
                     Grid.SetColumn(colorButton, a);

@@ -152,7 +152,7 @@ namespace Pixed.ViewModels
         public ICommand ToolCenterCommand { get; }
         public ICommand ToolCropCommand { get; }
 
-        public PaletteModel SelectedPalette { get; private set; }
+        public PaletteModel SelectedPalette => Global.PaletteService == null ? null : Global.PaletteService.SelectedPalette;
         public ObservableCollection<UniColor> SelectedPaletteColors
         {
             get
@@ -219,7 +219,6 @@ namespace Pixed.ViewModels
 
             Subjects.PaletteSelected.Subscribe(p =>
             {
-                SelectedPalette = p.ToCurrentPalette();
                 OnPropertyChanged(nameof(SelectedPaletteColors));
             });
 
@@ -242,41 +241,6 @@ namespace Pixed.ViewModels
                 OnPropertyChanged(nameof(CurrentPaletteColors));
             });
         }
-
-        /*public void DragOver(IDropInfo dropInfo)
-        {
-            if (dropInfo.Data is Frame sourceItem && dropInfo.TargetItem is Frame targetItem)
-            {
-                dropInfo.DropTargetAdorner = DropTargetAdorners.Highlight;
-                dropInfo.Effects = DragDropEffects.Copy;
-            }
-        }
-
-        public void Drop(IDropInfo dropInfo)
-        {
-            if (dropInfo.Data is Frame sourceItem)
-            {
-                int oldIndex = Frames.IndexOf(sourceItem);
-                int newIndex = dropInfo.UnfilteredInsertIndex;
-
-                if (oldIndex == newIndex && dropInfo.TargetItem is Frame targetItem)
-                {
-                    newIndex = Frames.IndexOf(targetItem);
-                }
-                Frames.Insert(newIndex, sourceItem);
-
-                if (oldIndex > newIndex)
-                {
-                    oldIndex++;
-                }
-                else
-                {
-                    newIndex--;
-                }
-                Frames.RemoveAt(oldIndex);
-                SelectedFrame = newIndex;
-            }
-        }*/
 
         private void AddLayerAction()
         {
@@ -427,7 +391,7 @@ namespace Pixed.ViewModels
             }
 
             var file = files[0];
-            Global.PaletteService.Load(file.Path.ToString());
+            Global.PaletteService.Load(file.Path.AbsolutePath);
         }
 
         private async Task PaletteSaveAction()
@@ -441,7 +405,7 @@ namespace Pixed.ViewModels
 
             if(file != null)
             {
-                Global.PaletteService.Save(file.Path.ToString());
+                Global.PaletteService.Save(file.Path.AbsolutePath);
             }
         }
 
