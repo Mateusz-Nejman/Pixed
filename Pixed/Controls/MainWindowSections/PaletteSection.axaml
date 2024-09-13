@@ -1,0 +1,60 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:local="clr-namespace:Pixed.Controls.MainWindowSections"
+             xmlns:vm="clr-namespace:Pixed.ViewModels"
+             xmlns:controls="clr-namespace:Pixed.Controls"
+             xmlns:colorpicker="clr-namespace:ColorPicker;assembly=ColorPicker.AvaloniaUI"
+             x:Class="Pixed.Controls.MainWindowSections.PaletteSection">
+  <UserControl.DataContext>
+    <vm:PaletteSectionViewModel/>
+  </UserControl.DataContext>
+  <local:Section>
+    <StackPanel>
+      <colorpicker:StandardColorPicker Width="186" Height="400" SelectedColor="{Binding PrimaryColor, Mode=TwoWay}" SecondaryColor="{Binding SecondaryColor, Mode=TwoWay}"/>
+      <TabControl BorderThickness="0" Background="Transparent" Padding="0">
+        <TabItem Header="Current colors" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" FontSize="13" FontWeight="Bold">
+          <controls:ColorGrid Columns="5" Colors="{Binding CurrentPaletteColors}"/>
+        </TabItem>
+        <TabItem Header="Palette" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" FontSize="13" FontWeight="Bold">
+          <StackPanel>
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+              </Grid.ColumnDefinitions>
+              <Grid.RowDefinitions>
+                <RowDefinition Height="26"/>
+              </Grid.RowDefinitions>
+              <Button Theme="{StaticResource LayersButton}" Command="{Binding PaletteAddPrimaryCommand}">
+                <Image Source="avares://Pixed/Resources/Icons/common/plus.png" Width="10" Height="10"/>
+              </Button>
+              <Button Theme="{StaticResource LayersButton}" Grid.Column="1" Command="{Binding PaletteAddCurrentCommand}">
+                <Image Source="avares://Pixed/Resources/Icons/merge_palettes.png" Width="10" Height="10"/>
+              </Button>
+              <Button Theme="{StaticResource LayersButton}" Grid.Column="2" Command="{Binding PaletteListCommand}">
+                <Image Source="avares://Pixed/Resources/Icons/database.png" Width="10" Height="10"/>
+              </Button>
+              <Button Theme="{StaticResource LayersButton}" Grid.Column="3" Command="{Binding PaletteOpenCommand}">
+                <Image Source="avares://Pixed/Resources/Icons/folder-open.png" Width="10" Height="10"/>
+              </Button>
+              <Button Theme="{StaticResource LayersButton}" Grid.Column="4" Command="{Binding PaletteSaveCommand}">
+                <Image Source="avares://Pixed/Resources/Icons/floppy-disk.png" Width="10" Height="10"/>
+              </Button>
+              <Button Theme="{StaticResource LayersButton}" Grid.Column="5" Command="{Binding PaletteClearCommand}">
+                <Image Source="avares://Pixed/Resources/Icons/common/cross.png" Width="10" Height="10"/>
+              </Button>
+            </Grid>
+            <controls:ColorGrid Columns="5" Colors="{Binding SelectedPaletteColors}"/>
+          </StackPanel>
+        </TabItem>
+      </TabControl>
+    </StackPanel>
+  </local:Section>
+</UserControl>

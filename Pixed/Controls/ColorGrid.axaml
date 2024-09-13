@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Pixed.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <StackPanel Name="colorStack" MinHeight="30">
+    <StackPanel Name="colorStack" MinHeight="30" Margin="8">
         
     </StackPanel>
 </UserControl>
