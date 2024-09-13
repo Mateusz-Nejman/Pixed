@@ -1,13 +1,8 @@
-﻿using ReactiveUI;
-using System.Runtime.CompilerServices;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Pixed
 {
-    internal class PropertyChangedBase : ReactiveObject
+    internal class PropertyChangedBase : ObservableObject
     {
-        public void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            this.RaisePropertyChanged(propertyName);
-        }
     }
 }
