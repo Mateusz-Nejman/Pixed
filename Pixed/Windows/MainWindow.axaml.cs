@@ -104,36 +104,13 @@ namespace Pixed
         private void MouseUpHandler(object sender, PointerReleasedEventArgs e)
         {
             var point = e.GetCurrentPoint(sender as Control);
-            ProcessMouse(point);
+            Mouse.ProcessPoint(point);
         }
 
         private void MouseDownHandler(object sender, PointerPressedEventArgs e)
         {
             var point = e.GetCurrentPoint(sender as Control);
-            ProcessMouse(point);
-        }
-
-        private void ProcessMouse(PointerPoint point)
-        {
-            var newLeftButton = point.Properties.IsLeftButtonPressed ? MouseButtonState.Pressed : MouseButtonState.Released;
-            var newRightButton = point.Properties.IsRightButtonPressed ? MouseButtonState.Pressed : MouseButtonState.Released;
-            var newMiddleButton = point.Properties.IsMiddleButtonPressed ? MouseButtonState.Pressed : MouseButtonState.Released;
-
-            if(newLeftButton != Mouse.LeftButton)
-            {
-                Mouse.ButtonChanged = MouseButton.Left;
-            }
-            else if(newRightButton != Mouse.RightButton)
-            {
-                Mouse.ButtonChanged = MouseButton.Right;
-            }
-            else if(newMiddleButton != Mouse.MiddleButton)
-            {
-                Mouse.ButtonChanged = MouseButton.Middle;
-            }
-            Mouse.LeftButton = newLeftButton;
-            Mouse.MiddleButton = newMiddleButton;
-            Mouse.RightButton = newRightButton;
+            Mouse.ProcessPoint(point);
         }
     }
 }

@@ -15,8 +15,9 @@ namespace Pixed.Input
 
         public MouseMapper(PointerEventArgs eventArgs, Control control)
         {
-            ChangedButton = Mouse.ButtonChanged;
             var point = eventArgs.GetCurrentPoint(control);
+            Mouse.ProcessPoint(point);
+            ChangedButton = Mouse.ButtonChanged;
             MouseButtonState state = MouseButtonState.Released;
 
             SetButtonState(ref state, MouseButton.Left, point.Properties.IsLeftButtonPressed);
