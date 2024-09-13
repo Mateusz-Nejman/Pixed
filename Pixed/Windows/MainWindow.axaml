@@ -11,7 +11,7 @@
         xmlns:converters="clr-namespace:Pixed.Converters"
         mc:Ignorable="d"
         Title="Pixed" Height="600" Width="800" 
-        Background="#1D1D1D" WindowState="Maximized"
+        Background="{StaticResource BaseBackground}" WindowState="Maximized"
         KeyDown="Window_KeyDown" 
         KeyUp="Window_KeyUp"
         PointerPressed="Window_PointerPressed"

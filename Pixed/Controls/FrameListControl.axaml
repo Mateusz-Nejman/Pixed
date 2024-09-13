@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Pixed.Controls"
              mc:Ignorable="d" 
              Width="96" Height="96">
-    <Border BorderBrush="#444" BorderThickness="1">
+    <Border BorderBrush="{StaticResource BaseBorder}" BorderThickness="1">
         <Grid Width="96" Height="96">
             <Grid.Background>
                 <ImageBrush Source="avares://Pixed/Resources/transparentBackground.png" TileMode="Tile" Stretch="Uniform" AlignmentY="Top" DestinationRect="0 0 32 32"/>

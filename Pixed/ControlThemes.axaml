@@ -10,8 +10,8 @@
     </Border>
   </Design.PreviewWith>
   <ControlTheme x:Key="LayersButton" TargetType="Button">
-    <Setter Property="Background" Value="#3f3f3f"/>
-    <Setter Property="BorderBrush" Value="#333"/>
+    <Setter Property="Background" Value="{StaticResource ButtonBackground}"/>
+    <Setter Property="BorderBrush" Value="{StaticResource BaseBorder}"/>
     <Setter Property="BorderThickness" Value="0, 1, 0, 0"/>
     <Setter Property="Template">
       <Setter.Value>
@@ -23,12 +23,12 @@
       </Setter.Value>
     </Setter>
     <Style Selector="^:pointerover">
-      <Setter Property="Background" Value="#444"/>
+      <Setter Property="Background" Value="{StaticResource BaseBorder}"/>
     </Style>
   </ControlTheme>
   <ControlTheme x:Key="FramesButton" TargetType="Button">
-    <Setter Property="Background" Value="#3A3A3A"/>
-    <Setter Property="BorderBrush" Value="#333"/>
+    <Setter Property="Background" Value="{StaticResource ButtonBackground}"/>
+    <Setter Property="BorderBrush" Value="{StaticResource BaseBorder}"/>
     <Setter Property="BorderThickness" Value="0, 1, 0, 0"/>
     <Setter Property="Template">
       <Setter.Value>
@@ -40,13 +40,13 @@
       </Setter.Value>
     </Setter>
     <Style Selector="^:pointerover">
-      <Setter Property="Background" Value="#444"/>
+      <Setter Property="Background" Value="{StaticResource BaseBorder}"/>
     </Style>
   </ControlTheme>
   <ControlTheme x:Key="CreateFrameButton" TargetType="Button">
-    <Setter Property="Background" Value="#222"/>
-    <Setter Property="BorderBrush" Value="#888"/>
-    <Setter Property="BorderThickness" Value="3"/>
+    <Setter Property="Background" Value="{StaticResource BaseBorder}"/>
+    <Setter Property="BorderBrush" Value="{StaticResource ButtonBorder}"/>
+    <Setter Property="BorderThickness" Value="2"/>
     <Setter Property="Margin" Value="0, 8, 0, 0"/>
     <Setter Property="FontSize" Value="13"/>
     <Setter Property="Template">
@@ -59,15 +59,15 @@
       </Setter.Value>
     </Setter>
     <Style Selector="^:pointerover">
-      <Setter Property="BorderBrush" Value="#039BE5"/>
+      <Setter Property="BorderBrush" Value="{StaticResource Accent}"/>
     </Style>
   </ControlTheme>
   <ControlTheme x:Key="ToolButton" TargetType="Button">
     <Setter Property="Width" Value="46"/>
     <Setter Property="Height" Value="46"/>
     <Setter Property="BorderThickness" Value="3"/>
-    <Setter Property="Background" Value="#3a3a3a"/>
-    <Setter Property="BorderBrush" Value="#3a3a3a"/>
+    <Setter Property="Background" Value="{StaticResource ButtonBackground}"/>
+    <Setter Property="BorderBrush" Value="{StaticResource ButtonBackground}"/>
     <Setter Property="Template">
       <ControlTemplate TargetType="RadioButton">
         <Border BorderThickness="{TemplateBinding BorderThickness}"
@@ -88,14 +88,14 @@
   </ControlTheme>
   <ControlTheme x:Key="ToolRadio" TargetType="RadioButton">
     <Style Selector="^:checked">
-      <Setter Property="BorderBrush" Value="#039BE5"/>
+      <Setter Property="BorderBrush" Value="{StaticResource Accent}"/>
     </Style>
 
     <Setter Property="Width" Value="46"/>
     <Setter Property="Height" Value="46"/>
     <Setter Property="BorderThickness" Value="3"/>
-    <Setter Property="Background" Value="#3a3a3a"/>
-    <Setter Property="BorderBrush" Value="#3a3a3a"/>
+    <Setter Property="Background" Value="{StaticResource ButtonBackground}"/>
+    <Setter Property="BorderBrush" Value="{StaticResource ButtonBackground}"/>
     <Setter Property="Template">
       <ControlTemplate TargetType="RadioButton">
         <Border BorderThickness="{TemplateBinding BorderThickness}"

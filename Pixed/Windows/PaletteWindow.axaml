@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pixed" xmlns:viewmodels="clr-namespace:Pixed.ViewModels" xmlns:controls="clr-namespace:Pixed.Controls"
         mc:Ignorable="d"
-        Title="PaletteWindow" Height="600" Width="800" Background="#1D1D1D">
+        Title="PaletteWindow" Height="600" Width="800" Background="{StaticResource BaseBackground}">
     <Window.DataContext>
         <viewmodels:PaletteWindowViewModel/>
     </Window.DataContext>
@@ -16,7 +16,7 @@
         </Grid.RowDefinitions>
 
         <ScrollViewer Grid.Row="1">
-          <ListBox Background="#1D1D1D" ItemsSource="{Binding Palettes}" HorizontalAlignment="Stretch">
+          <ListBox Background="{StaticResource BaseBackground}" ItemsSource="{Binding Palettes}" HorizontalAlignment="Stretch">
             <ListBox.ItemTemplate>
               <DataTemplate>
                 <Grid>

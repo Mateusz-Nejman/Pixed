@@ -46,7 +46,7 @@
       </Grid>
       <ListBox ItemsSource="{Binding Layers}"
        SelectedIndex="{Binding SelectedLayer, Mode=TwoWay}"
-       Background="#222">
+       Background="{StaticResource BaseBorder}">
         <ListBox.ItemTemplate>
           <DataTemplate>
             <controls:LayerListControl/>

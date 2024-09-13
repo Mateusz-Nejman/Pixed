@@ -7,6 +7,7 @@
     <Application.Resources>
       <ResourceDictionary>
         <ResourceDictionary.MergedDictionaries>
+          <ResourceInclude Source="/Colors.axaml"/>
           <ResourceInclude Source="/ControlThemes.axaml"/>
         </ResourceDictionary.MergedDictionaries>
       </ResourceDictionary>

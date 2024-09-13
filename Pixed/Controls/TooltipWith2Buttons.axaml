@@ -9,13 +9,13 @@
     <StackPanel Background="Black">
         <TextBlock FontWeight="Bold" FontSize="14" Margin="0,0,0,5" Text="{Binding Title, RelativeSource={RelativeSource FindAncestor, AncestorType=local:TooltipWith2Buttons}}" Foreground="White"></TextBlock>
         <WrapPanel>
-            <Border Padding="2" BorderBrush="#999" BorderThickness="1" Margin="0,0,5,0">
+            <Border Padding="2" BorderBrush="{StaticResource ButtonBorder}" BorderThickness="1" Margin="0,0,5,0">
                 <TextBlock Text="{Binding ButtonText1, RelativeSource={RelativeSource FindAncestor, AncestorType=local:TooltipWith2Buttons}}" FontSize="10" Foreground="White"/>
             </Border>
             <TextBlock FontSize="12" Foreground="White" Text="{Binding ButtonTextHelper1, RelativeSource={RelativeSource FindAncestor, AncestorType=local:TooltipWith2Buttons}}"/>
         </WrapPanel>
         <WrapPanel>
-            <Border Padding="2" BorderBrush="#999" BorderThickness="1" Margin="0,0,5,0">
+            <Border Padding="2" BorderBrush="{StaticResource ButtonBorder}" BorderThickness="1" Margin="0,0,5,0">
                 <TextBlock Text="{Binding ButtonText2, RelativeSource={RelativeSource FindAncestor, AncestorType=local:TooltipWith2Buttons}}" FontSize="10" Foreground="White"/>
             </Border>
             <TextBlock FontSize="12" Foreground="White" Text="{Binding ButtonTextHelper2, RelativeSource={RelativeSource FindAncestor, AncestorType=local:TooltipWith2Buttons}}"/>

@@ -27,7 +27,7 @@
       </Button>
     </Grid>
     <ListBox Classes="FramesDragAndDrop" ItemsSource="{Binding Frames}" SelectedIndex="{Binding SelectedFrame, Mode=TwoWay}" Width="110"
-             Background="#1D1D1D">
+             Background="{StaticResource BaseBackground}">
       <ListBox.ItemTemplate>
         <DataTemplate>
           <controls:FrameListControl/>
