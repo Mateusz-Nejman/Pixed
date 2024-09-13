@@ -1,7 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using Pixed.ViewModels;
+using Pixed.Windows;
 
 namespace Pixed
 {
@@ -21,13 +21,6 @@ namespace Pixed
             {
                 desktop.MainWindow = new MainWindow();
             }
-            /*else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
-            {
-                singleViewPlatform.MainView = new MainView
-                {
-                    DataContext = new MainViewModel()
-                };
-            }*/
 
             base.OnFrameworkInitializationCompleted();
         }

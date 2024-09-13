@@ -1,14 +1,14 @@
 ﻿using Avalonia.Controls;
 using Pixed.ViewModels;
 
-namespace Pixed
+namespace Pixed.Windows
 {
     /// <summary>
     /// Interaction logic for PaletteWindow.xaml
     /// </summary>
     public partial class PaletteWindow : Window
     {
-        private PaletteWindowViewModel _viewModel;
+        private readonly PaletteWindowViewModel _viewModel;
         public PaletteWindow()
         {
             InitializeComponent();

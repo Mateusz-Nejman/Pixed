@@ -3,7 +3,7 @@ using Avalonia.Input;
 using Pixed.Input;
 using Pixed.Models;
 
-namespace Pixed
+namespace Pixed.Windows
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

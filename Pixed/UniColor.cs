@@ -1,6 +1,5 @@
 ﻿using Avalonia;
 using System;
-using System.Linq;
 
 namespace Pixed
 {
@@ -147,9 +146,9 @@ namespace Pixed
 
         public static UniColor GetFromResources(string name)
         {
-            if(Application.Current.Resources.TryGetResource(name, Application.Current.ActualThemeVariant, out object? obj))
+            if (Application.Current.Resources.TryGetResource(name, Application.Current.ActualThemeVariant, out object? obj))
             {
-                if(obj is Avalonia.Media.Color color)
+                if (obj is Avalonia.Media.Color color)
                 {
                     return color;
                 }
