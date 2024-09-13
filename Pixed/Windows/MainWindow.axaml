@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pixed"
         xmlns:controls="clr-namespace:Pixed.Controls"
+        xmlns:mainsections="clr-namespace:Pixed.Controls.MainWindowSections"
         xmlns:dd="urn:gong-wpf-dragdrop"
         xmlns:viewmodels="clr-namespace:Pixed.ViewModels"
         xmlns:colorpicker="clr-namespace:ColorPicker;assembly=ColorPicker.AvaloniaUI"
@@ -22,28 +23,7 @@
       <ColumnDefinition Width="80"/>
       <ColumnDefinition Width="*"/>
     </Grid.ColumnDefinitions>
-    <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
-      <StackPanel Margin="8">
-        <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-pen.png" Name="tool_pen" IsCheckedChanged="ToolRadio_Checked"/>
-        <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-vertical-mirror-pen.png" Name="tool_mirror_pen" IsCheckedChanged="ToolRadio_Checked"/>
-        <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-paint-bucket.png" Name="tool_paint_bucket" IsCheckedChanged="ToolRadio_Checked"/>
-        <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-colorswap.png" Name="tool_colorswap" IsCheckedChanged="ToolRadio_Checked"/>
-        <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-eraser.png" Name="tool_eraser" IsCheckedChanged="ToolRadio_Checked"/>
-        <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-stroke.png" Name="tool_stroke" IsCheckedChanged="ToolRadio_Checked"/>
-        <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-rectangle.png" Name="tool_rectangle" IsCheckedChanged="ToolRadio_Checked"/>
-        <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-circle.png" Name="tool_circle" IsCheckedChanged="ToolRadio_Checked"/>
-        <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-move.png" Name="tool_move" IsCheckedChanged="ToolRadio_Checked"/>
-        <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-shape-select.png" Name="tool_shape_select" IsCheckedChanged="ToolRadio_Checked"/>
-        <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-rectangle-select.png" Name="tool_rectangle_select" IsCheckedChanged="ToolRadio_Checked"/>
-        <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-lasso-select.png" Name="tool_lasso_select" IsCheckedChanged="ToolRadio_Checked"/>
-        <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-lighten.png" Name="tool_lighten" IsCheckedChanged="ToolRadio_Checked"/>
-        <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-dithering.png" Name="tool_dithering" IsCheckedChanged="ToolRadio_Checked"/>
-        <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-colorpicker.png" Name="tool_colorpicker" IsCheckedChanged="ToolRadio_Checked"/>
-        <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-noise.png" Name="tool_noise" IsCheckedChanged="ToolRadio_Checked"/>
-        <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-noise-fill.png" Name="tool_noise_fill" IsCheckedChanged="ToolRadio_Checked"/>
-        <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-outliner.png" Name="tool_outliner" IsCheckedChanged="ToolRadio_Checked"/>
-      </StackPanel>
-    </ScrollViewer>
+    <mainsections:ToolsSection x:Name="toolsSection"/>
     <Grid x:Name="mainSection" Grid.Column="1">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="124"/>
@@ -97,58 +77,10 @@
 
       <ScrollViewer Grid.Column="4" Width="242" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
         <StackPanel Name="rightPanel" Grid.Column="4" Width="226" HorizontalAlignment="Stretch">
-          <Border BorderThickness="2" BorderBrush="#888" Margin="8">
-            <StackPanel>
-              <colorpicker:StandardColorPicker Width="186" Height="400" SelectedColor="{Binding PrimaryColor,Mode=TwoWay}" SecondaryColor="{Binding SecondaryColor, Mode=TwoWay}"/>
-            </StackPanel>
-          </Border>
-
-          <Border BorderThickness="2" BorderBrush="#888" Margin="8">
-            <StackPanel>
-              <TextBlock Text="Layers" Height="32" Foreground="White" FontSize="15" Padding="4" FontWeight="Bold"/>
-              <Grid>
-                <Grid.ColumnDefinitions>
-                  <ColumnDefinition Width="*"/>
-                  <ColumnDefinition Width="*"/>
-                  <ColumnDefinition Width="*"/>
-                  <ColumnDefinition Width="*"/>
-                  <ColumnDefinition Width="*"/>
-                  <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                  <RowDefinition Height="26"/>
-                </Grid.RowDefinitions>
-                <Button Theme="{StaticResource LayersButton}" Command="{Binding AddLayerCommand}">
-                  <Image Source="avares://Pixed/Resources/Icons/common/plus.png" Width="10" Height="10"/>
-                </Button>
-                <Button Theme="{StaticResource LayersButton}" Grid.Column="1" Command="{Binding MoveLayerUpCommand}" IsEnabled="{Binding CanLayerMoveUp}">
-                  <Image Source="avares://Pixed/Resources/Icons/common/arrow-up.png" Width="10" Height="10"/>
-                </Button>
-                <Button Theme="{StaticResource LayersButton}" Grid.Column="2" Command="{Binding MoveLayerDownCommand}" IsEnabled="{Binding CanLayerMoveDown}">
-                  <Image Source="avares://Pixed/Resources/Icons/common/arrow-down.png" Width="10" Height="10"/>
-                </Button>
-                <Button Theme="{StaticResource LayersButton}" Grid.Column="3" Command="{Binding EditLayerNameCommand}">
-                  <Image Source="avares://Pixed/Resources/Icons/common/pencil.png" Width="10" Height="10"/>
-                </Button>
-                <Button Theme="{StaticResource LayersButton}" Grid.Column="4" Command="{Binding MergeLayerCommand}" IsEnabled="{Binding CanLayerMerge}">
-                  <Image Source="avares://Pixed/Resources/Icons/common/download2.png" Width="10" Height="10"/>
-                </Button>
-                <Button Theme="{StaticResource LayersButton}" Grid.Column="5" Command="{Binding RemoveLayerCommand}" IsEnabled="{Binding CanLayerRemove}">
-                  <Image Source="avares://Pixed/Resources/Icons/common/cross.png" Width="10" Height="10"/>
-                </Button>
-              </Grid>
-              <ListBox ItemsSource="{Binding Layers}"
-       SelectedIndex="{Binding SelectedLayer, Mode=TwoWay}"
-       Background="#222">
-                <ListBox.ItemTemplate>
-                  <DataTemplate>
-                    <controls:LayerListControl/>
-                  </DataTemplate>
-                </ListBox.ItemTemplate>
-              </ListBox>
-            </StackPanel>
-          </Border>
-
+          <mainsections:Section>
+            <colorpicker:StandardColorPicker Width="186" Height="400" SelectedColor="{Binding PrimaryColor,Mode=TwoWay}" SecondaryColor="{Binding SecondaryColor, Mode=TwoWay}"/>
+          </mainsections:Section>
+          <mainsections:LayersSection/>
           <Border BorderThickness="2" BorderBrush="#888" Margin="8">
             <StackPanel>
               <TextBlock Text="Transform" Height="32" Foreground="White" FontSize="15" Padding="4" FontWeight="Bold"/>

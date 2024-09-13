@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:controls="clr-namespace:Pixed.Controls"
+             x:Class="Pixed.Controls.MainWindowSections.ToolsSection">
+  <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="8">
+      <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-pen.png" Name="tool_pen" IsCheckedChanged="ToolRadioButton_IsCheckedChanged"/>
+      <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-vertical-mirror-pen.png" Name="tool_mirror_pen" IsCheckedChanged="ToolRadioButton_IsCheckedChanged"/>
+      <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-paint-bucket.png" Name="tool_paint_bucket" IsCheckedChanged="ToolRadioButton_IsCheckedChanged"/>
+      <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-colorswap.png" Name="tool_colorswap" IsCheckedChanged="ToolRadioButton_IsCheckedChanged"/>
+      <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-eraser.png" Name="tool_eraser" IsCheckedChanged="ToolRadioButton_IsCheckedChanged"/>
+      <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-stroke.png" Name="tool_stroke" IsCheckedChanged="ToolRadioButton_IsCheckedChanged"/>
+      <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-rectangle.png" Name="tool_rectangle" IsCheckedChanged="ToolRadioButton_IsCheckedChanged"/>
+      <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-circle.png" Name="tool_circle" IsCheckedChanged="ToolRadioButton_IsCheckedChanged"/>
+      <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-move.png" Name="tool_move" IsCheckedChanged="ToolRadioButton_IsCheckedChanged"/>
+      <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-shape-select.png" Name="tool_shape_select" IsCheckedChanged="ToolRadioButton_IsCheckedChanged"/>
+      <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-rectangle-select.png" Name="tool_rectangle_select" IsCheckedChanged="ToolRadioButton_IsCheckedChanged"/>
+      <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-lasso-select.png" Name="tool_lasso_select" IsCheckedChanged="ToolRadioButton_IsCheckedChanged"/>
+      <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-lighten.png" Name="tool_lighten" IsCheckedChanged="ToolRadioButton_IsCheckedChanged"/>
+      <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-dithering.png" Name="tool_dithering" IsCheckedChanged="ToolRadioButton_IsCheckedChanged"/>
+      <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-colorpicker.png" Name="tool_colorpicker" IsCheckedChanged="ToolRadioButton_IsCheckedChanged"/>
+      <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-noise.png" Name="tool_noise" IsCheckedChanged="ToolRadioButton_IsCheckedChanged"/>
+      <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-noise-fill.png" Name="tool_noise_fill" IsCheckedChanged="ToolRadioButton_IsCheckedChanged"/>
+      <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-outliner.png" Name="tool_outliner" IsCheckedChanged="ToolRadioButton_IsCheckedChanged"/>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

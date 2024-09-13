@@ -22,5 +22,7 @@ namespace Pixed
         public static Subject<UniColor> SecondaryColorChanged { get; } = new Subject<UniColor>();
         public static Subject<PaletteModel> PaletteAdded { get; } = new Subject<PaletteModel>();
         public static Subject<PaletteModel> PaletteSelected { get; } = new Subject<PaletteModel>();
+
+        public static Subject<int> LayerChanged { get; } = new Subject<int>();
     }
 }

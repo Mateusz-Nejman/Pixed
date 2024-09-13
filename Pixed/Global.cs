@@ -9,12 +9,12 @@ namespace Pixed
 {
     internal static class Global
     {
-        public static string DataFolder { get; set; }
+        public static string DataFolder { get; set; } = string.Empty;
         public static ShortcutService? ShortcutService { get; set; }
         public static PaletteService? PaletteService { get; set; }
         public static SelectionManager? SelectionManager { get; set; }
         public static Settings UserSettings { get; set; } = new Settings();
-        public static BaseTool ToolSelected { get; set; }
+        public static BaseTool? ToolSelected { get; set; }
         public static List<PixedModel> Models { get; } = [];
         public static int CurrentModelIndex { get; set; }
         public static int CurrentFrameIndex { get; set; }

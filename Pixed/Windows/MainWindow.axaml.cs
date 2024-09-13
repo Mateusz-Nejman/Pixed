@@ -1,11 +1,9 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Interactivity;
 using Pixed.Controls;
 using Pixed.Input;
 using Pixed.Services.Keyboard;
 using Pixed.Services.Palette;
-using Pixed.Tools;
 using Pixed.ViewModels;
 using System;
 using System.IO;
@@ -29,6 +27,8 @@ namespace Pixed
             _viewModel = (MainViewModel)DataContext;
             Initialize();
             _viewModel.Initialize(_paintCanvas.ViewModel);
+
+            toolsSection.PaintCanvas = _paintCanvas.ViewModel;
 
             AddHandler(PointerPressedEvent, MouseDownHandler, handledEventsToo: true);
             AddHandler(PointerReleasedEvent, MouseUpHandler, handledEventsToo: true);
@@ -69,27 +69,8 @@ namespace Pixed
             {
                 _paintCanvas.ViewModel.Overlay = ov;
             });
-            Global.ToolSelector = new ToolSelector(SelectTool);
+
             Global.ToolSelector.SelectTool("tool_pen");
-        }
-
-        private void SelectTool(string name)
-        {
-            var obj = this.FindControl<RadioButton>(name);
-
-            if (obj != null)
-            {
-                obj.IsChecked = true;
-            }
-        }
-
-        private void ToolRadio_Checked(object sender, RoutedEventArgs e)
-        {
-            RadioButton radio = (RadioButton)sender;
-            string name = radio.Name;
-
-            Global.ToolSelected = Global.ToolSelector.GetTool(name);
-            _paintCanvas.ViewModel.ResetOverlay();
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
