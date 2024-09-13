@@ -1,12 +1,10 @@
 ﻿using Avalonia.Input;
 using Avalonia.Media;
-using Avalonia.Platform.Storage;
 using Pixed.Input;
 using Pixed.Models;
 using Pixed.Tools.Transform;
 using Pixed.Windows;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -385,7 +383,7 @@ namespace Pixed.ViewModels
         {
             var files = await IODialogs.OpenFileDialog("Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl|All Supported (.json;.gpl)|*.json;*.gpl", Global.PaletteService.SelectedPalette.Name);
 
-            if(files.Count == 0)
+            if (files.Count == 0)
             {
                 return;
             }
@@ -403,7 +401,7 @@ namespace Pixed.ViewModels
 
             var file = await IODialogs.SaveFileDialog("Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl|All Supported (.json;.gpl)|*.json;*.gpl", Global.PaletteService.SelectedPalette.Name);
 
-            if(file != null)
+            if (file != null)
             {
                 Global.PaletteService.Save(file.Path.AbsolutePath);
             }

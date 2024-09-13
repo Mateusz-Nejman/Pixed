@@ -2,11 +2,6 @@
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Metadata;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pixed.Controls
 {
@@ -22,7 +17,7 @@ namespace Pixed.Controls
         public static readonly StyledProperty<IImage?> SourceProperty =
             AvaloniaProperty.Register<ToolRadioButton, IImage?>(nameof(Source), coerce: (o, img) =>
             {
-                if(o is ToolRadioButton radio)
+                if (o is ToolRadioButton radio)
                 {
                     Image image = new Image();
                     image.Source = img;

@@ -1,5 +1,4 @@
-﻿using Avalonia.Media.Imaging;
-using Pixed.Models;
+﻿using Pixed.Models;
 using Pixed.Utils;
 using Pixed.Windows;
 using System;
@@ -65,7 +64,7 @@ namespace Pixed.ViewModels
                     BitmapImage = GeneratePaleteBitmap(model),
                     SelectCommand = new ActionCommand<PaletteModel>(m => PaletteAction?.Invoke(true, m)),
                     RemoveCommand = new ActionCommand<PaletteModel>(m => PaletteAction?.Invoke(false, m)),
-                    RenameCommand = new ActionCommand<PaletteModel>(async(m) =>
+                    RenameCommand = new ActionCommand<PaletteModel>(async (m) =>
                     {
                         Prompt window = new Prompt();
                         window.Title = "Rename Palette";

@@ -76,7 +76,7 @@ namespace Pixed
         private void SelectTool(string name)
         {
             var obj = this.FindControl<RadioButton>(name);
- 
+
             if (obj != null)
             {
                 obj.IsChecked = true;

@@ -23,7 +23,7 @@ namespace Pixed.Controls
 
         public DragDropListBox()
         {
-            
+
             /*this.PreviewMouseMove += ListBox_PreviewMouseMove;
 
             var style = new Style(typeof(ListBoxItem));

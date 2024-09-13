@@ -1,15 +1,8 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Interactivity;
 using Avalonia.VisualTree;
-using Avalonia.Xaml.Interactions.DragAndDrop;
 using Pixed.Models;
 using Pixed.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pixed.Input
 {

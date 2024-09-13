@@ -1,10 +1,8 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Interactivity;
 using Pixed.Input;
 using Pixed.Utils;
 using Pixed.ViewModels;
-using System;
 using System.Drawing;
 
 namespace Pixed.Controls

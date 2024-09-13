@@ -1,10 +1,5 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pixed.Input
 {
@@ -28,7 +23,7 @@ namespace Pixed.Input
 
         private void SetButtonState(ref MouseButtonState state, MouseButton mouseButton, bool value)
         {
-            if(ChangedButton == mouseButton)
+            if (ChangedButton == mouseButton)
             {
                 state = value ? MouseButtonState.Pressed : MouseButtonState.Released;
             }
