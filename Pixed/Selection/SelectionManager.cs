@@ -97,7 +97,7 @@ namespace Pixed.Selection
             }
 
             Global.CurrentModel.AddHistory(entry.ToEntry());
-            Subjects.RefreshCanvas.OnNext(true);
+            Subjects.RefreshCanvas.OnNext(null);
         }
 
         private void Copy(BaseSelection _)
@@ -165,7 +165,7 @@ namespace Pixed.Selection
                 }
             }
 
-            Subjects.RefreshCanvas.OnNext(true);
+            Subjects.RefreshCanvas.OnNext(null);
         }
 
         private static bool IsSelectToolActive()

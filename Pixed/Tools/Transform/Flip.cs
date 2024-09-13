@@ -14,7 +14,7 @@ namespace Pixed.Tools.Transform
             }
 
             TransformUtils.Flip(ref layer, axis);
-            Subjects.RefreshCanvas.OnNext(true);
+            Subjects.RefreshCanvas.OnNext(null);
         }
     }
 }

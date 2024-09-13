@@ -86,9 +86,9 @@ namespace Pixed.ViewModels
 
         public LayersSectionViewModel()
         {
-            Subjects.LayerChanged.Subscribe(index =>
+            Subjects.LayerChanged.Subscribe(layer =>
             {
-                SelectedLayer = index;
+                SelectedLayer = Layers.IndexOf(layer);
                 OnPropertyChanged(nameof(Layers));
             });
 
@@ -116,7 +116,8 @@ namespace Pixed.ViewModels
             {
                 Frame.AddLayer(new Layer(Frame.Width, Frame.Height));
             }
-
+           
+            Subjects.LayerAdded.OnNext(Frame.AddLayer(Keyboard.Modifiers == KeyModifiers.Shift ? Layers[_selectedLayer].Clone() : new Layer(Frame.Width, Frame.Height)));
             OnPropertyChanged(nameof(Layers));
             SelectedLayer = Frame.Layers.Count - 1;
         }
@@ -171,7 +172,9 @@ namespace Pixed.ViewModels
             }
 
             int index = SelectedLayer;
+            var layer = Layers[index];
             Layers.RemoveAt(index);
+            Subjects.LayerRemoved.OnNext(layer);
             SelectedLayer = Math.Clamp(index, 0, Layers.Count - 1);
         }
     }

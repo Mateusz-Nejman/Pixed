@@ -27,9 +27,9 @@ namespace Pixed.Tools.Transform
 
             if (applied)
             {
-                Subjects.RefreshCanvas.OnNext(true);
+                Subjects.RefreshCanvas.OnNext(null);
                 Global.CurrentFrame.RefreshRenderSource();
-                Subjects.FrameChanged.OnNext(Global.CurrentFrameIndex);
+                Subjects.FrameChanged.OnNext(Global.CurrentFrame);
                 //TODO undo/redo
             }
         }

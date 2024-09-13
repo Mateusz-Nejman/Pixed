@@ -7,7 +7,7 @@ namespace Pixed.Tools.Transform
         public override void ApplyToolOnLayer(Layer layer, bool altKey)
         {
             TransformUtils.Center(layer);
-            Subjects.RefreshCanvas.OnNext(true);
+            Subjects.RefreshCanvas.OnNext(null);
         }
     }
 }

@@ -29,10 +29,10 @@ namespace Pixed.ViewModels
             {
                 _selectedFrame = Math.Clamp(value, 0, Frames.Count);
                 Global.CurrentFrameIndex = _selectedFrame;
-                Subjects.FrameChanged.OnNext(_selectedFrame);
-                Subjects.LayerChanged.OnNext(0);
+                Subjects.FrameChanged.OnNext(Frames[_selectedFrame]);
+                Subjects.LayerChanged.OnNext(Frames[_selectedFrame].Layers[0]);
                 OnPropertyChanged();
-                Subjects.RefreshCanvas.OnNext(true);
+                Subjects.RefreshCanvas.OnNext(null);
             }
         }
 
@@ -42,7 +42,7 @@ namespace Pixed.ViewModels
 
         public FramesSectionViewModel()
         {
-            Subjects.FrameChanged.OnNext(Frames.Count - 1);
+            Subjects.FrameChanged.OnNext(Global.CurrentFrame);
 
             NewFrameCommand = new ActionCommand(NewFrameAction);
             RemoveFrameCommand = new ActionCommand(RemoveFrameAction);

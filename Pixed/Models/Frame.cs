@@ -23,7 +23,7 @@ namespace Pixed.Models
             {
                 _selectedLayer = Math.Clamp(value, 0, Layers.Count - 1);
                 OnPropertyChanged();
-                Subjects.RefreshCanvas.OnNext(true);
+                Subjects.RefreshCanvas.OnNext(null);
             }
         }
 
@@ -85,13 +85,14 @@ namespace Pixed.Models
             return _layers[SelectedLayer].GetPixel(x, y);
         }
 
-        public void AddLayer(Layer layer)
+        public Layer AddLayer(Layer layer)
         {
             string name = "Layer " + _layers.Count;
             layer.Name = name;
             layer.RefreshRenderSource();
             _layers.Add(layer);
             OnPropertyChanged(nameof(Layers));
+            return layer;
         }
 
         public void RefreshRenderSource()

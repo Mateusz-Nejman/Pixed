@@ -86,7 +86,7 @@ namespace Pixed.Models
             }
 
             _historyIndex--;
-            Subjects.RefreshCanvas.OnNext(true);
+            Subjects.RefreshCanvas.OnNext(null);
         }
 
         public void Redo()
@@ -134,7 +134,7 @@ namespace Pixed.Models
             }
 
             _historyIndex++;
-            Subjects.RefreshCanvas.OnNext(true);
+            Subjects.RefreshCanvas.OnNext(null);
         }
     }
 }

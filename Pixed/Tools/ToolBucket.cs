@@ -13,7 +13,7 @@ namespace Pixed.Tools
             var history = PaintUtils.PaintSimiliarConnected(frame.Layers[frame.SelectedLayer], x, y, color);
             history.FrameId = frame.Id;
             Global.Models[0].AddHistory(history.ToEntry());
-            Subjects.RefreshCanvas.OnNext(true);
+            Subjects.RefreshCanvas.OnNext(null);
         }
     }
 }

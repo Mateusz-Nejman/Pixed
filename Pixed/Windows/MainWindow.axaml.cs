@@ -19,7 +19,7 @@ namespace Pixed
 
             Global.ToolSelector.SelectTool("tool_pen");
             toolsSection.PaintCanvas = paintCanvas.ViewModel;
-            Subjects.FrameChanged.OnNext(0);
+            Subjects.FrameChanged.OnNext(Global.CurrentFrame);
 
             Global.SelectionManager = new Selection.SelectionManager(ov =>
             {

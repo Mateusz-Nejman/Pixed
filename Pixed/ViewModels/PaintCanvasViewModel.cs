@@ -40,7 +40,7 @@ namespace Pixed.ViewModels
             {
                 _frame = value;
                 OnPropertyChanged();
-                Subjects.RefreshCanvas.OnNext(true);
+                Subjects.RefreshCanvas.OnNext(null);
             }
         }
 
@@ -67,7 +67,7 @@ namespace Pixed.ViewModels
             });
 
             _frame = new Frame(32, 32);
-            Subjects.RefreshCanvas.OnNext(true);
+            Subjects.RefreshCanvas.OnNext(null);
             LeftMouseDown = new ActionCommand<Point>(LeftMouseDownAction);
             LeftMouseUp = new ActionCommand<Point>(LeftMouseUpAction);
             RightMouseDown = new ActionCommand<Point>(RightMouseDownAction);
@@ -78,7 +78,7 @@ namespace Pixed.ViewModels
 
             Subjects.FrameChanged.Subscribe(f =>
             {
-                CurrentFrame = Global.CurrentModel.Frames[f];
+                CurrentFrame = f;
                 RecalculateFactor(_lastWindowSize);
             });
         }
@@ -171,7 +171,7 @@ namespace Pixed.ViewModels
             {
                 Global.ToolSelected?.MoveTool(imageX, imageY, _frame, ref _overlayBitmap);
                 RefreshOverlay();
-                Subjects.RefreshCanvas.OnNext(true);
+                Subjects.RefreshCanvas.OnNext(null);
             }
             else
             {
