@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace Pixed;
+namespace Pixed.Controls.MainWindowSections;
 
 public partial class FramesSection : UserControl
 {

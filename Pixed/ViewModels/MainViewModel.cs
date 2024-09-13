@@ -6,7 +6,6 @@ namespace Pixed.ViewModels
     {
         public MainViewModel()
         {
-            Global.Models.Add(new PixedModel());
         }
     }
 }

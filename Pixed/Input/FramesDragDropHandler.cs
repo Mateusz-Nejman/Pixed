@@ -29,7 +29,7 @@ namespace Pixed.Input
         private bool Validate<T>(ListBox listBox, DragEventArgs e, object? sourceContext, object? targetContext, bool bExecute) where T : Frame
         {
             if (sourceContext is not T sourceItem
-                || targetContext is not MainViewModel vm
+                || targetContext is not FramesSectionViewModel vm
                 || listBox.GetVisualAt(e.GetPosition(listBox)) is not Control targetControl
                 || targetControl.DataContext is not T targetItem)
             {

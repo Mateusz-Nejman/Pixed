@@ -2,6 +2,7 @@
 using Avalonia.Input;
 using Pixed.Controls;
 using Pixed.Input;
+using Pixed.Models;
 using Pixed.Services.Keyboard;
 using Pixed.Services.Palette;
 using System;
@@ -19,18 +20,19 @@ namespace Pixed
         public static Window? Handle { get; private set; }
         public MainWindow()
         {
+            InitializeBeforeUI();
             InitializeComponent();
+
             Handle = this;
             _paintCanvas = paintCanvas;
-            Initialize();
-            Subjects.PaletteSelected.OnNext(Global.PaletteService.Palettes[1]); //TODO check if needed
 
-            toolsSection.PaintCanvas = _paintCanvas.ViewModel;
+            InitializeAfterUI();
+        }
 
-            AddHandler(PointerPressedEvent, MouseDownHandler, handledEventsToo: true);
-            AddHandler(PointerReleasedEvent, MouseUpHandler, handledEventsToo: true);
-            KeyDown += MainWindow_KeyDown;
-            KeyUp += MainWindow_KeyUp;
+        private void InitializeBeforeUI()
+        {
+            Global.Models.Add(new PixedModel());
+            Global.CurrentModel.Frames.Add(new Frame(Global.UserSettings.UserWidth, Global.UserSettings.UserHeight));
         }
 
         private void MainWindow_KeyUp(object? sender, KeyEventArgs e)
@@ -45,7 +47,7 @@ namespace Pixed
             Keyboard.ProcessPressed(e.Key);
         }
 
-        private void Initialize()
+        private void InitializeAfterUI()
         {
             Global.DataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Pixed");
 
@@ -68,6 +70,16 @@ namespace Pixed
             });
 
             Global.ToolSelector.SelectTool("tool_pen");
+
+            Subjects.FrameChanged.OnNext(0);
+            Subjects.PaletteSelected.OnNext(Global.PaletteService.Palettes[1]); //TODO check if needed
+
+            toolsSection.PaintCanvas = _paintCanvas.ViewModel;
+
+            AddHandler(PointerPressedEvent, MouseDownHandler, handledEventsToo: true);
+            AddHandler(PointerReleasedEvent, MouseUpHandler, handledEventsToo: true);
+            KeyDown += MainWindow_KeyDown;
+            KeyUp += MainWindow_KeyUp;
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)

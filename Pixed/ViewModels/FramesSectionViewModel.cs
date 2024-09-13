@@ -42,8 +42,6 @@ namespace Pixed.ViewModels
 
         public FramesSectionViewModel()
         {
-            Frames.Add(new Frame(Global.UserSettings.UserWidth, Global.UserSettings.UserHeight));
-
             Subjects.FrameChanged.OnNext(Frames.Count - 1);
 
             NewFrameCommand = new ActionCommand(NewFrameAction);
