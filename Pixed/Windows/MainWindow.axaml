@@ -10,7 +10,12 @@
         xmlns:viewmodels="clr-namespace:Pixed.ViewModels"
         xmlns:converters="clr-namespace:Pixed.Converters"
         mc:Ignorable="d"
-        Title="Pixed" Height="600" Width="800" Background="#1D1D1D" KeyDown="Window_KeyDown" WindowState="Maximized">
+        Title="Pixed" Height="600" Width="800" 
+        Background="#1D1D1D" WindowState="Maximized"
+        KeyDown="Window_KeyDown" 
+        KeyUp="Window_KeyUp"
+        PointerPressed="Window_PointerPressed"
+        PointerReleased="Window_PointerReleased">
   <Window.DataContext>
     <viewmodels:MainViewModel/>
   </Window.DataContext>
