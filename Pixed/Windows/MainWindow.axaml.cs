@@ -4,7 +4,6 @@ using Pixed.Controls;
 using Pixed.Input;
 using Pixed.Services.Keyboard;
 using Pixed.Services.Palette;
-using Pixed.ViewModels;
 using System;
 using System.IO;
 
@@ -16,7 +15,6 @@ namespace Pixed
     public partial class MainWindow : Window
     {
         private readonly PaintCanvas _paintCanvas;
-        private readonly MainViewModel _viewModel;
 
         public static Window? Handle { get; private set; }
         public MainWindow()
@@ -24,9 +22,8 @@ namespace Pixed
             InitializeComponent();
             Handle = this;
             _paintCanvas = paintCanvas;
-            _viewModel = (MainViewModel)DataContext;
             Initialize();
-            _viewModel.Initialize(_paintCanvas.ViewModel);
+            Subjects.PaletteSelected.OnNext(Global.PaletteService.Palettes[1]); //TODO check if needed
 
             toolsSection.PaintCanvas = _paintCanvas.ViewModel;
 
