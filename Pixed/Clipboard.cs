@@ -1,38 +1,38 @@
 ﻿using Avalonia.Input;
+using Pixed.Windows;
 using System.Threading.Tasks;
 
-namespace Pixed
+namespace Pixed;
+
+internal static class Clipboard
 {
-    internal static class Clipboard
+    public static Task<string?> GetTextAsync()
     {
-        public static Task<string?> GetTextAsync()
-        {
-            return MainWindow.Handle.Clipboard.GetTextAsync();
-        }
+        return MainWindow.Handle.Clipboard.GetTextAsync();
+    }
 
-        public static Task SetTextAsync(string? text)
-        {
-            return MainWindow.Handle.Clipboard.SetTextAsync(text);
-        }
+    public static Task SetTextAsync(string? text)
+    {
+        return MainWindow.Handle.Clipboard.SetTextAsync(text);
+    }
 
-        public static Task ClearAsync()
-        {
-            return MainWindow.Handle.Clipboard.ClearAsync();
-        }
+    public static Task ClearAsync()
+    {
+        return MainWindow.Handle.Clipboard.ClearAsync();
+    }
 
-        public static Task SetDataObjectAsync(IDataObject data)
-        {
-            return MainWindow.Handle.Clipboard.SetDataObjectAsync(data);
-        }
+    public static Task SetDataObjectAsync(IDataObject data)
+    {
+        return MainWindow.Handle.Clipboard.SetDataObjectAsync(data);
+    }
 
-        public static Task<string[]> GetFormatsAsync()
-        {
-            return MainWindow.Handle.Clipboard.GetFormatsAsync();
-        }
+    public static Task<string[]> GetFormatsAsync()
+    {
+        return MainWindow.Handle.Clipboard.GetFormatsAsync();
+    }
 
-        public static Task<object?> GetDataAsync(string format)
-        {
-            return MainWindow.Handle.Clipboard.GetDataAsync(format);
-        }
+    public static Task<object?> GetDataAsync(string format)
+    {
+        return MainWindow.Handle.Clipboard.GetDataAsync(format);
     }
 }

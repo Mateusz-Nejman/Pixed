@@ -1,12 +1,11 @@
 ﻿using System.Drawing;
 
-namespace Pixed.Utils
+namespace Pixed.Utils;
+
+internal static class ConversionUtils
 {
-    internal static class ConversionUtils
+    public static Point ToSystemPoint(this Avalonia.Point point)
     {
-        public static Point ToSystemPoint(this Avalonia.Point point)
-        {
-            return new Point((int)point.X, (int)point.Y);
-        }
+        return new Point((int)point.X, (int)point.Y);
     }
 }

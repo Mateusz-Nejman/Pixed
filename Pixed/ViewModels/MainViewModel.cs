@@ -3,28 +3,27 @@ using Pixed.Services.Palette;
 using System;
 using System.IO;
 
-namespace Pixed.ViewModels
+namespace Pixed.ViewModels;
+
+internal class MainViewModel : PropertyChangedBase
 {
-    internal class MainViewModel : PropertyChangedBase
+    public MainViewModel()
     {
-        public MainViewModel()
+        Global.DataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Pixed");
+
+        if (!Directory.Exists(Global.DataFolder))
         {
-            Global.DataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Pixed");
-
-            if (!Directory.Exists(Global.DataFolder))
-            {
-                Directory.CreateDirectory(Global.DataFolder);
-            }
-
-            if (!Directory.Exists(Path.Combine(Global.DataFolder, "Palettes")))
-            {
-                Directory.CreateDirectory(Path.Combine(Global.DataFolder, "Palettes"));
-            }
-
-            Global.ShortcutService = new ShortcutService();
-            Global.PaletteService = new PaletteService();
-            Global.PaletteService.LoadAll();
-            Subjects.PaletteSelected.OnNext(Global.PaletteService.Palettes[1]); //TODO check if needed
+            Directory.CreateDirectory(Global.DataFolder);
         }
+
+        if (!Directory.Exists(Path.Combine(Global.DataFolder, "Palettes")))
+        {
+            Directory.CreateDirectory(Path.Combine(Global.DataFolder, "Palettes"));
+        }
+
+        Global.ShortcutService = new ShortcutService();
+        Global.PaletteService = new PaletteService();
+        Global.PaletteService.LoadAll();
+        Subjects.PaletteSelected.OnNext(Global.PaletteService.Palettes[1]); //TODO check if needed
     }
 }

@@ -1,15 +1,11 @@
 ﻿using Avalonia.Controls;
 
-namespace Pixed.Controls
+namespace Pixed.Controls;
+
+public partial class FrameListControl : UserControl
 {
-    /// <summary>
-    /// Interaction logic for FrameListControl.xaml
-    /// </summary>
-    public partial class FrameListControl : UserControl
+    public FrameListControl()
     {
-        public FrameListControl()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

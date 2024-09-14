@@ -1,11 +1,10 @@
-﻿namespace Pixed.Input
+﻿namespace Pixed.Input;
+
+internal enum ModifierKeys
 {
-    internal enum ModifierKeys
-    {
-        None = 0,
-        Alt = 1,
-        Control = 2,
-        Shift = 4,
-        Windows = 8
-    }
+    None = 0,
+    Alt = 1,
+    Control = 2,
+    Shift = 4,
+    Windows = 8
 }

@@ -1,8 +1,7 @@
-﻿namespace Pixed.Input
+﻿namespace Pixed.Input;
+
+internal enum MouseButtonState
 {
-    internal enum MouseButtonState
-    {
-        Released,
-        Pressed
-    }
+    Released,
+    Pressed
 }

@@ -1,15 +1,11 @@
 ﻿using Avalonia.Controls;
 
-namespace Pixed.Controls
+namespace Pixed.Controls;
+
+public partial class LayerListControl : UserControl
 {
-    /// <summary>
-    /// Interaction logic for LayerListControl.xaml
-    /// </summary>
-    public partial class LayerListControl : UserControl
+    public LayerListControl()
     {
-        public LayerListControl()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

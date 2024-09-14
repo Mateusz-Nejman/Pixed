@@ -2,51 +2,45 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Pixed.Models
+namespace Pixed.Models;
+
+internal class PaletteModel(string id)
 {
-    internal class PaletteModel
+    [JsonIgnore]
+    public string Id { get; } = id;
+    public string Name { get; set; } = string.Empty;
+    public List<int> Colors { get; set; } = [];
+    [JsonIgnore]
+    public string Path { get; set; } = string.Empty;
+
+    public void Sort()
     {
-        [JsonIgnore]
-        public string Id { get; } = string.Empty;
-        public string Name { get; set; } = string.Empty;
-        public List<int> Colors { get; set; } = [];
-        [JsonIgnore]
-        public string Path { get; set; }
+        Colors.Sort();
+    }
 
-        public PaletteModel(string id)
+    public PaletteModel ToCurrentPalette()
+    {
+        return new PaletteModel("palette")
         {
-            Id = id;
-        }
+            Colors = [.. Colors],
+            Name = Name,
+        };
+    }
 
-        public void Sort()
-        {
-            Colors.Sort();
-        }
+    public UniColor[] ToColors()
+    {
+        return Colors.Select(i => (UniColor)i).ToArray();
+    }
 
-        public PaletteModel ToCurrentPalette()
-        {
-            return new PaletteModel("palette")
-            {
-                Colors = [.. Colors],
-                Name = Name,
-            };
-        }
+    public static PaletteModel FromJson(string json, string id)
+    {
+        PaletteModel model = new(id);
+        JsonConvert.PopulateObject(json, model);
+        return model;
+    }
 
-        public UniColor[] ToColors()
-        {
-            return Colors.Select(i => (UniColor)i).ToArray();
-        }
-
-        public static PaletteModel FromJson(string json, string id)
-        {
-            PaletteModel model = new PaletteModel(id);
-            JsonConvert.PopulateObject(json, model);
-            return model;
-        }
-
-        public string ToJson()
-        {
-            return JsonConvert.SerializeObject(this);
-        }
+    public string ToJson()
+    {
+        return JsonConvert.SerializeObject(this);
     }
 }

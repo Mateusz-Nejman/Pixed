@@ -4,68 +4,67 @@ using Avalonia.VisualTree;
 using Pixed.Models;
 using Pixed.ViewModels;
 
-namespace Pixed.Input
+namespace Pixed.Input;
+
+internal class FramesDragDropHandler : DropHandlerBase
 {
-    internal class FramesDragDropHandler : DropHandlerBase
+    public override bool Validate(object? sender, DragEventArgs e, object? sourceContext, object? targetContext, object? state)
     {
-        public override bool Validate(object? sender, DragEventArgs e, object? sourceContext, object? targetContext, object? state)
+        if (e.Source is Control && sender is ListBox listBox)
         {
-            if (e.Source is Control && sender is ListBox listBox)
-            {
-                return Validate<Frame>(listBox, e, sourceContext, targetContext, false);
-            }
+            return Validate<Frame>(listBox, e, sourceContext, targetContext, false);
+        }
+        return false;
+    }
+
+    public override bool Execute(object? sender, DragEventArgs e, object? sourceContext, object? targetContext, object? state)
+    {
+        if (e.Source is Control && sender is ListBox listBox)
+        {
+            return Validate<Frame>(listBox, e, sourceContext, targetContext, true);
+        }
+        return false;
+    }
+
+    private static bool Validate<T>(ListBox listBox, DragEventArgs e, object? sourceContext, object? targetContext, bool bExecute) where T : Frame
+    {
+        if (sourceContext is not T sourceItem
+            || targetContext is not FramesSectionViewModel
+            || listBox.GetVisualAt(e.GetPosition(listBox)) is not Control targetControl
+            || targetControl.DataContext is not T targetItem)
+        {
             return false;
         }
 
-        public override bool Execute(object? sender, DragEventArgs e, object? sourceContext, object? targetContext, object? state)
+        var items = FramesSectionViewModel.Frames;
+        var sourceIndex = items.IndexOf(sourceItem);
+        var targetIndex = items.IndexOf(targetItem);
+
+        if (sourceIndex < 0 || targetIndex < 0)
         {
-            if (e.Source is Control && sender is ListBox listBox)
-            {
-                return Validate<Frame>(listBox, e, sourceContext, targetContext, true);
-            }
             return false;
         }
 
-        private bool Validate<T>(ListBox listBox, DragEventArgs e, object? sourceContext, object? targetContext, bool bExecute) where T : Frame
+        switch (e.DragEffects)
         {
-            if (sourceContext is not T sourceItem
-                || targetContext is not FramesSectionViewModel vm
-                || listBox.GetVisualAt(e.GetPosition(listBox)) is not Control targetControl
-                || targetControl.DataContext is not T targetItem)
-            {
-                return false;
-            }
-
-            var items = vm.Frames;
-            var sourceIndex = items.IndexOf(sourceItem);
-            var targetIndex = items.IndexOf(targetItem);
-
-            if (sourceIndex < 0 || targetIndex < 0)
-            {
-                return false;
-            }
-
-            switch (e.DragEffects)
-            {
-                case DragDropEffects.Move:
+            case DragDropEffects.Move:
+                {
+                    if (bExecute)
                     {
-                        if (bExecute)
-                        {
-                            MoveItem(items, sourceIndex, targetIndex);
-                        }
-                        return true;
+                        MoveItem(items, sourceIndex, targetIndex);
                     }
-                case DragDropEffects.Link:
+                    return true;
+                }
+            case DragDropEffects.Link:
+                {
+                    if (bExecute)
                     {
-                        if (bExecute)
-                        {
-                            SwapItem(items, sourceIndex, targetIndex);
-                        }
-                        return true;
+                        SwapItem(items, sourceIndex, targetIndex);
                     }
-                default:
-                    return false;
-            }
+                    return true;
+                }
+            default:
+                return false;
         }
     }
 }

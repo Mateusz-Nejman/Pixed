@@ -5,35 +5,33 @@ using Pixed.Utils;
 using Pixed.ViewModels;
 using System.Drawing;
 
-namespace Pixed.Controls
+namespace Pixed.Controls;
+
+public partial class PaintCanvas : UserControl
 {
-    /// <summary>
-    /// Interaction logic for PaintCanvas.xaml
-    /// </summary>
-    public partial class PaintCanvas : UserControl
+    private readonly PaintCanvasViewModel _viewModel;
+    private readonly int _scrollBarSize = 18;
+
+    internal PaintCanvasViewModel ViewModel => _viewModel;
+    public PaintCanvas()
     {
-        private readonly PaintCanvasViewModel _viewModel;
-        private readonly int _scrollBarSize = 18;
+        InitializeComponent();
+        _viewModel = DataContext as PaintCanvasViewModel;
+        _viewModel?.Initialize(image, imageGrid, overlay);
+        SizeChanged += PaintCanvas_SizeChanged;
+    }
 
-        internal PaintCanvasViewModel ViewModel => _viewModel;
-        public PaintCanvas()
-        {
-            InitializeComponent();
-            _viewModel = (PaintCanvasViewModel)DataContext;
-            _viewModel.Initialize(image, imageGrid, overlay);
-            SizeChanged += PaintCanvas_SizeChanged;
-        }
+    private void PaintCanvas_SizeChanged(object? sender, SizeChangedEventArgs e)
+    {
+        _viewModel.RecalculateFactor(new Point((int)(e.NewSize.Width - _scrollBarSize), (int)(e.NewSize.Height - _scrollBarSize)));
+    }
 
-        private void PaintCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
+    private void Border_PointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (sender is Border border)
         {
-            _viewModel.RecalculateFactor(new Point((int)(e.NewSize.Width - _scrollBarSize), (int)(e.NewSize.Height - _scrollBarSize)));
-        }
-
-        private void Border_PointerPressed(object? sender, PointerPressedEventArgs e)
-        {
-            Border border = (Border)sender;
             var pos = e.GetPosition(border);
-            MouseMapper mapper = new MouseMapper(e, border);
+            MouseMapper mapper = new(e, border);
 
             if (mapper.ChangedButton == MouseButton.Left && mapper.ButtonState == MouseButtonState.Pressed)
             {
@@ -48,12 +46,14 @@ namespace Pixed.Controls
                 _viewModel.MiddleMouseDown?.Execute(pos.ToSystemPoint());
             }
         }
+    }
 
-        private void Border_PointerReleased(object? sender, PointerReleasedEventArgs e)
+    private void Border_PointerReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        if (sender is Border border)
         {
-            Border border = (Border)sender;
             var pos = e.GetPosition(border);
-            MouseMapper mapper = new MouseMapper(e, border);
+            MouseMapper mapper = new(e, border);
 
             if (mapper.ChangedButton == MouseButton.Left && mapper.ButtonState == MouseButtonState.Released)
             {
@@ -68,21 +68,23 @@ namespace Pixed.Controls
                 _viewModel.MiddleMouseUp?.Execute(pos.ToSystemPoint());
             }
         }
+    }
 
-        private void Border_PointerWheelChanged(object? sender, PointerWheelEventArgs e)
-        {
-            _viewModel?.MouseWheel?.Execute((int)e.Delta.Y);
-            e.Handled = true;
-        }
+    private void Border_PointerWheelChanged(object? sender, PointerWheelEventArgs e)
+    {
+        _viewModel?.MouseWheel?.Execute((int)e.Delta.Y);
+        e.Handled = true;
+    }
 
-        private void Border_PointerExited(object? sender, PointerEventArgs e)
-        {
-            _viewModel?.MouseLeave?.Execute();
-        }
+    private void Border_PointerExited(object? sender, PointerEventArgs e)
+    {
+        _viewModel?.MouseLeave?.Execute();
+    }
 
-        private void Border_PointerMoved(object? sender, PointerEventArgs e)
+    private void Border_PointerMoved(object? sender, PointerEventArgs e)
+    {
+        if (sender is Border border)
         {
-            Border border = (Border)sender;
             var pos = e.GetPosition(border);
 
             _viewModel?.MouseMove?.Execute(pos.ToSystemPoint());

@@ -1,8 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace Pixed
+namespace Pixed;
+
+internal class PropertyChangedBase : ObservableObject
 {
-    internal class PropertyChangedBase : ObservableObject
-    {
-    }
 }

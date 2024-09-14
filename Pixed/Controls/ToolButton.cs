@@ -3,31 +3,32 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Metadata;
 
-namespace Pixed.Controls
+namespace Pixed.Controls;
+
+internal class ToolButton : Button
 {
-    internal class ToolButton : Button
+    [Content]
+    public IImage? Source
     {
-        [Content]
-        public IImage? Source
-        {
-            get => GetValue(SourceProperty);
-            set => SetValue(SourceProperty, value);
-        }
+        get => GetValue(SourceProperty);
+        set => SetValue(SourceProperty, value);
+    }
 
-        public static readonly StyledProperty<IImage?> SourceProperty =
-            AvaloniaProperty.Register<ToolButton, IImage?>(nameof(Source), coerce: (o, img) =>
+    public static readonly StyledProperty<IImage?> SourceProperty =
+        AvaloniaProperty.Register<ToolButton, IImage?>(nameof(Source), coerce: (o, img) =>
+        {
+            if (o is ToolButton button)
             {
-                if (o is ToolButton button)
+                Image image = new()
                 {
-                    Image image = new Image();
-                    image.Source = img;
-                    button.Content = image;
-                }
+                    Source = img
+                };
+                button.Content = image;
+            }
 
-                return img;
-            });
-        public ToolButton()
-        {
-        }
+            return img;
+        });
+    public ToolButton()
+    {
     }
 }

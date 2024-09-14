@@ -1,10 +1,9 @@
-﻿namespace Pixed.Tools
+﻿namespace Pixed.Tools;
+
+internal class ToolEraser : ToolPen
 {
-    internal class ToolEraser : ToolPen
+    public override UniColor GetToolColor()
     {
-        public override UniColor GetToolColor()
-        {
-            return UniColor.Transparent;
-        }
+        return UniColor.Transparent;
     }
 }

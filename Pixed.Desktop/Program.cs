@@ -1,7 +1,7 @@
 ﻿using Avalonia;
 using System;
 
-namespace Pixed;
+namespace Pixed.Desktop;
 
 class Program
 {

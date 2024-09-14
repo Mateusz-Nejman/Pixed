@@ -3,195 +3,195 @@ using System;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using Bitmap = Avalonia.Media.Imaging.Bitmap;
-namespace Pixed.Models
+
+namespace Pixed.Models;
+
+internal class Frame : PropertyChangedBase
 {
-    internal class Frame : PropertyChangedBase
+    private readonly ObservableCollection<Layer> _layers;
+    private readonly int _width;
+    private readonly int _height;
+    private int _selectedLayer = 0;
+    private readonly string _id;
+    private Bitmap _renderSource;
+
+    public int Width => _width;
+    public int Height => _height;
+    public int SelectedLayer
     {
-        private readonly ObservableCollection<Layer> _layers;
-        private readonly int _width;
-        private readonly int _height;
-        private int _selectedLayer = 0;
-        private string _id;
-        private Bitmap _renderSource;
-
-        public int Width => _width;
-        public int Height => _height;
-        public int SelectedLayer
+        get => _selectedLayer;
+        set
         {
-            get => _selectedLayer;
-            set
+            _selectedLayer = Math.Clamp(value, 0, Layers.Count - 1);
+            OnPropertyChanged();
+            Subjects.RefreshCanvas.OnNext(null);
+        }
+    }
+
+    public Bitmap RenderSource
+    {
+        get => _renderSource;
+        set
+        {
+            _renderSource = value;
+            OnPropertyChanged();
+        }
+    }
+    public ObservableCollection<Layer> Layers => _layers;
+
+    public string Id => _id;
+
+    public Frame(int width, int height)
+    {
+        _id = Guid.NewGuid().ToString();
+        _layers = [];
+        _width = width;
+        _height = height;
+        AddLayer(new Layer(width, height));
+    }
+
+    public static Frame FromLayers(ObservableCollection<Layer> layers)
+    {
+        Frame frame = new(layers[0].Width, layers[0].Height);
+        frame.Layers.Clear();
+
+        foreach (var layer in layers)
+        {
+            frame.AddLayer(layer);
+        }
+
+        return frame;
+    }
+
+    public Frame Clone()
+    {
+        Frame frame = new(Width, Height);
+        frame._layers.Clear();
+
+        foreach (Layer layer in _layers)
+        {
+            frame._layers.Add(layer.Clone());
+        }
+
+        return frame;
+    }
+
+    public void SetPixel(int x, int y, int color)
+    {
+        _layers[SelectedLayer].SetPixel(x, y, color);
+    }
+
+    public int GetPixel(int x, int y)
+    {
+        return _layers[SelectedLayer].GetPixel(x, y);
+    }
+
+    public Layer AddLayer(Layer layer)
+    {
+        string name = "Layer " + _layers.Count;
+        layer.Name = name;
+        layer.RefreshRenderSource();
+        _layers.Add(layer);
+        OnPropertyChanged(nameof(Layers));
+        return layer;
+    }
+
+    public void RefreshRenderSource()
+    {
+        RenderSource = Render().ToAvaloniaBitmap();
+    }
+
+    public System.Drawing.Bitmap RenderTransparent()
+    {
+        System.Drawing.Bitmap render = new(Width, Height);
+        Graphics g = Graphics.FromImage(render);
+        for (int a = 0; a < _layers.Count; a++)
+        {
+            if (a == SelectedLayer)
             {
-                _selectedLayer = Math.Clamp(value, 0, Layers.Count - 1);
-                OnPropertyChanged();
-                Subjects.RefreshCanvas.OnNext(null);
-            }
-        }
-
-        public Bitmap RenderSource
-        {
-            get => _renderSource;
-            set
-            {
-                _renderSource = value;
-                OnPropertyChanged();
-            }
-        }
-        public ObservableCollection<Layer> Layers => _layers;
-
-        public string Id => _id;
-
-        public Frame(int width, int height)
-        {
-            _id = Guid.NewGuid().ToString();
-            _layers = [];
-            _width = width;
-            _height = height;
-            AddLayer(new Layer(width, height));
-        }
-
-        public static Frame FromLayers(ObservableCollection<Layer> layers)
-        {
-            Frame frame = new Frame(layers[0].Width, layers[0].Height);
-            frame.Layers.Clear();
-
-            foreach (var layer in layers)
-            {
-                frame.AddLayer(layer);
+                continue;
             }
 
-            return frame;
+            g.DrawImage(_layers[a].Render().OpacityImage(0.5f), 0, 0);
         }
 
-        public Frame Clone()
+        var rendered = _layers[_selectedLayer].Render();
+        g.DrawImage(rendered, 0, 0);
+
+        return render;
+    }
+
+    public System.Drawing.Bitmap Render()
+    {
+        System.Drawing.Bitmap render = new(Width, Height);
+        Graphics g = Graphics.FromImage(render);
+        for (int a = 0; a < _layers.Count; a++)
         {
-            Frame frame = new Frame(Width, Height);
-            frame._layers.Clear();
-
-            foreach (Layer layer in _layers)
-            {
-                frame._layers.Add(layer.Clone());
-            }
-
-            return frame;
+            g.DrawImage(_layers[a].Render(), 0, 0);
         }
 
-        public void SetPixel(int x, int y, int color)
+        return render;
+    }
+
+    public bool ContainsPixel(int x, int y)
+    {
+        return _layers[_selectedLayer].ContainsPixel(x, y);
+    }
+
+    public void MoveLayerUp(bool toTop)
+    {
+        if (_selectedLayer == 0)
         {
-            _layers[SelectedLayer].SetPixel(x, y, color);
+            return;
         }
 
-        public int GetPixel(int x, int y)
+        int oldIndex = _selectedLayer;
+        int newIndex = toTop ? 0 : oldIndex - 1;
+        Layer layer = Layers[oldIndex];
+        _layers.RemoveAt(oldIndex);
+        _layers.Insert(newIndex, layer);
+        SelectedLayer = newIndex;
+        OnPropertyChanged(nameof(Layers));
+    }
+
+    public void MoveLayerDown(bool toBottom)
+    {
+        if (_selectedLayer == Layers.Count - 1)
         {
-            return _layers[SelectedLayer].GetPixel(x, y);
+            return;
         }
 
-        public Layer AddLayer(Layer layer)
+        int oldIndex = _selectedLayer;
+        Layer layer = _layers[oldIndex];
+
+        if (toBottom)
         {
-            string name = "Layer " + _layers.Count;
-            layer.Name = name;
-            layer.RefreshRenderSource();
             _layers.Add(layer);
-            OnPropertyChanged(nameof(Layers));
-            return layer;
-        }
-
-        public void RefreshRenderSource()
-        {
-            RenderSource = Render().ToAvaloniaBitmap();
-        }
-
-        public System.Drawing.Bitmap RenderTransparent()
-        {
-            System.Drawing.Bitmap render = new(Width, Height);
-            Graphics g = Graphics.FromImage(render);
-            for (int a = 0; a < _layers.Count; a++)
-            {
-                if (a == SelectedLayer)
-                {
-                    continue;
-                }
-
-                g.DrawImage(_layers[a].Render().OpacityImage(0.5f), 0, 0);
-            }
-
-            var rendered = _layers[_selectedLayer].Render();
-            g.DrawImage(rendered, 0, 0);
-
-            return render;
-        }
-
-        public System.Drawing.Bitmap Render()
-        {
-            System.Drawing.Bitmap render = new(Width, Height);
-            Graphics g = Graphics.FromImage(render);
-            for (int a = 0; a < _layers.Count; a++)
-            {
-                g.DrawImage(_layers[a].Render(), 0, 0);
-            }
-
-            return render;
-        }
-
-        public bool ContainsPixel(int x, int y)
-        {
-            return _layers[_selectedLayer].ContainsPixel(x, y);
-        }
-
-        public void MoveLayerUp(bool toTop)
-        {
-            if (_selectedLayer == 0)
-            {
-                return;
-            }
-
-            int oldIndex = _selectedLayer;
-            int newIndex = toTop ? 0 : oldIndex - 1;
-            Layer layer = Layers[oldIndex];
             _layers.RemoveAt(oldIndex);
-            _layers.Insert(newIndex, layer);
-            SelectedLayer = newIndex;
-            OnPropertyChanged(nameof(Layers));
+            SelectedLayer = _layers.Count - 1;
         }
-
-        public void MoveLayerDown(bool toBottom)
+        else
         {
-            if (_selectedLayer == Layers.Count - 1)
-            {
-                return;
-            }
-
-            int oldIndex = _selectedLayer;
-            Layer layer = _layers[oldIndex];
-
-            if (toBottom)
-            {
-                _layers.Add(layer);
-                _layers.RemoveAt(oldIndex);
-                SelectedLayer = _layers.Count - 1;
-            }
-            else
-            {
-                _layers.Insert(oldIndex + 2, layer);
-                _layers.RemoveAt(oldIndex);
-                SelectedLayer = oldIndex + 1;
-            }
-            OnPropertyChanged(nameof(Layers));
+            _layers.Insert(oldIndex + 2, layer);
+            _layers.RemoveAt(oldIndex);
+            SelectedLayer = oldIndex + 1;
         }
+        OnPropertyChanged(nameof(Layers));
+    }
 
-        public void MergeLayerBelow()
+    public void MergeLayerBelow()
+    {
+        if (SelectedLayer >= Layers.Count - 1)
         {
-            if (SelectedLayer >= Layers.Count - 1)
-            {
-                return;
-            }
-
-            int index = SelectedLayer;
-            Layer layer = _layers[index];
-            Layer layer2 = _layers[index + 1];
-            layer.MergeLayers(layer2);
-            Layers.RemoveAt(index + 1);
-            Layers[index].RefreshRenderSource();
-            SelectedLayer = index;
+            return;
         }
+
+        int index = SelectedLayer;
+        Layer layer = _layers[index];
+        Layer layer2 = _layers[index + 1];
+        layer.MergeLayers(layer2);
+        Layers.RemoveAt(index + 1);
+        Layers[index].RefreshRenderSource();
+        SelectedLayer = index;
     }
 }

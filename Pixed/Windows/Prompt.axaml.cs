@@ -3,38 +3,34 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 
 
-namespace Pixed.Windows
+namespace Pixed.Windows;
+
+public partial class Prompt : Window
 {
-    /// <summary>
-    /// Interaction logic for Prompt.xaml
-    /// </summary>
-    public partial class Prompt : Window
+    public string Text
     {
-        public string Text
-        {
-            get => GetValue(TextProperty);
-            set => SetValue(TextProperty, value);
-        }
+        get => GetValue(TextProperty);
+        set => SetValue(TextProperty, value);
+    }
 
-        public string DefaultValue
-        {
-            get => GetValue(DefaultValueProperty);
-            set { SetValue(DefaultValueProperty, value); }
-        }
+    public string DefaultValue
+    {
+        get => GetValue(DefaultValueProperty);
+        set { SetValue(DefaultValueProperty, value); }
+    }
 
-        public string Value { get; private set; } = string.Empty;
+    public string Value { get; private set; } = string.Empty;
 
-        public static readonly StyledProperty<string> TextProperty = AvaloniaProperty.Register<Prompt, string>("Text", string.Empty);
-        public static readonly StyledProperty<string> DefaultValueProperty = AvaloniaProperty.Register<Prompt, string>("DefaultValue", string.Empty);
-        public Prompt()
-        {
-            InitializeComponent();
-        }
+    public static readonly StyledProperty<string> TextProperty = AvaloniaProperty.Register<Prompt, string>("Text", string.Empty);
+    public static readonly StyledProperty<string> DefaultValueProperty = AvaloniaProperty.Register<Prompt, string>("DefaultValue", string.Empty);
+    public Prompt()
+    {
+        InitializeComponent();
+    }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            Value = textBox.Text;
-            Close(true);
-        }
+    private void Button_Click(object sender, RoutedEventArgs e)
+    {
+        Value = textBox.Text;
+        Close(true);
     }
 }
