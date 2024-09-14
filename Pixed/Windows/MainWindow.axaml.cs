@@ -2,6 +2,7 @@
 using Avalonia.Input;
 using Pixed.Input;
 using Pixed.Models;
+using Pixed.Services.Keyboard;
 
 namespace Pixed.Windows;
 
@@ -40,6 +41,11 @@ public partial class MainWindow : Window
     {
         Keyboard.Modifiers = e.KeyModifiers;
         Keyboard.ProcessPressed(e.Key);
+        Subjects.KeyState.OnNext(new KeyState(
+                e.Key,
+                Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift),
+                Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl),
+                Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt)));
     }
 
     private void Window_PointerPressed(object? sender, PointerPressedEventArgs e)

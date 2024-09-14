@@ -3,6 +3,7 @@ using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
@@ -54,42 +55,24 @@ internal static class BitmapUtils
         DataObject clipboardObject = new();
         MemoryStream memoryStream = new();
         src.Save(memoryStream, ImageFormat.Png);
-        clipboardObject.Set("PNG", memoryStream);
+        clipboardObject.Set("PNG", memoryStream.ToArray());
         await Clipboard.ClearAsync();
         await Clipboard.SetDataObjectAsync(clipboardObject);
     }
-
-    /*public static Bitmap BitmapFromSource(BitmapSource source)
+    
+    public static async Task<Bitmap?> CreateFromClipboard()
     {
-        Bitmap bitmap;
-        using (var outStream = new MemoryStream())
-        {
-            BitmapEncoder enc = new BmpBitmapEncoder();
-            enc.Frames.Add(BitmapFrame.Create(source));
-            enc.Save(outStream);
-            bitmap = new Bitmap(outStream);
-        }
-        return bitmap;
-    }*/
+        var formats = await Clipboard.GetFormatsAsync();
 
-    public static Bitmap? CreateFromClipboard()
-    {
-        //TODO
-        /*
-        if (Clipboard.ContainsData("PNG"))
+        if(formats.Contains("PNG"))
         {
-            var obj = Clipboard.GetData("PNG");
+            var data = await Clipboard.GetDataAsync("PNG");
 
-            if (obj is MemoryStream memoryStream)
+            if(data is byte[] array)
             {
-                return (Bitmap?)Bitmap.FromStream(memoryStream);
+                return (Bitmap?)Bitmap.FromStream(new MemoryStream(array));
             }
         }
-
-        if (Clipboard.ContainsImage())
-        {
-            return BitmapFromSource(Clipboard.GetImage());
-        }*/
 
         return null;
     }

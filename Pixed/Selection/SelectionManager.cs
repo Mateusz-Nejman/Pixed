@@ -6,6 +6,7 @@ using Pixed.Utils;
 using System;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using Point = System.Drawing.Point;
 
 namespace Pixed.Selection;
@@ -30,7 +31,7 @@ internal class SelectionManager
         Subjects.SelectionDismissed.Subscribe(OnSelectionDismissed);
         Global.ShortcutService?.Add(new Services.Keyboard.KeyState(Key.C, false, true, false), Copy);
         Global.ShortcutService?.Add(new Services.Keyboard.KeyState(Key.X, false, true, false), Cut);
-        Global.ShortcutService?.Add(new Services.Keyboard.KeyState(Key.V, false, true, false), Paste);
+        Global.ShortcutService?.Add(new Services.Keyboard.KeyState(Key.V, false, true, false), () => Paste());
         Global.ShortcutService?.Add(new Services.Keyboard.KeyState(Key.A, false, true, false), SelectAll);
         Global.ShortcutService?.Add(new Services.Keyboard.KeyState(Key.Delete, false, false, false), Erase);
     }
@@ -117,9 +118,9 @@ internal class SelectionManager
         Erase();
     }
 
-    private void Paste()
+    private async Task Paste()
     {
-        Bitmap? source = BitmapUtils.CreateFromClipboard();
+        Bitmap? source = await BitmapUtils.CreateFromClipboard();
 
         if (source == null)
         {

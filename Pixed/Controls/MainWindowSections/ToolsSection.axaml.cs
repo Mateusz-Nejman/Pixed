@@ -18,6 +18,10 @@ internal partial class ToolsSection : UserControl
     {
         if (sender is RadioButton radio && radio.Name != null)
         {
+            if(!radio.IsChecked.HasValue || !radio.IsChecked.Value)
+            {
+                return;
+            }
             string name = radio.Name;
 
             Global.ToolSelected = Global.ToolSelector.GetTool(name);
