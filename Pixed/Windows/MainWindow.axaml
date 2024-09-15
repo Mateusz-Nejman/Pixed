@@ -1,0 +1,61 @@
+﻿<Window x:Class="Pixed.Windows.MainWindow"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Pixed"
+        xmlns:controls="clr-namespace:Pixed.Controls"
+        xmlns:mainsections="clr-namespace:Pixed.Controls.MainWindowSections"
+        xmlns:dd="urn:gong-wpf-dragdrop"
+        xmlns:viewmodels="clr-namespace:Pixed.ViewModels"
+        xmlns:converters="clr-namespace:Pixed.Converters"
+        mc:Ignorable="d"
+        Title="Pixed" Height="600" Width="800" 
+        Background="{StaticResource BaseBackground}" WindowState="Maximized"
+        KeyDown="Window_KeyDown" 
+        KeyUp="Window_KeyUp"
+        PointerPressed="Window_PointerPressed"
+        PointerReleased="Window_PointerReleased">
+  <Window.DataContext>
+    <viewmodels:MainViewModel/>
+  </Window.DataContext>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="80"/>
+      <ColumnDefinition Width="*"/>
+    </Grid.ColumnDefinitions>
+    <mainsections:ToolsSection x:Name="toolsSection"/>
+    <Grid x:Name="mainSection" Grid.Column="1">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="124"/>
+        <ColumnDefinition Width="auto"/>
+        <!-- Open/close button-->
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="auto"/>
+        <!-- Open/close button-->
+        <ColumnDefinition Width="auto"/>
+      </Grid.ColumnDefinitions>
+     
+      <mainsections:FramesSection/>
+      <Grid Name="centerPanel" Grid.Column="2">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="60"/>
+          <RowDefinition Height="*">
+          </RowDefinition>
+        </Grid.RowDefinitions>
+        <controls:PaintCanvas Grid.Row="1" x:Name="paintCanvas"/>
+      </Grid>
+
+      <ScrollViewer Grid.Column="4" Width="242" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
+        <StackPanel Name="rightPanel" Grid.Column="4" Width="226" HorizontalAlignment="Stretch">
+          <mainsections:PaletteSection/>
+          <mainsections:LayersSection/>
+          <mainsections:TransformSection/>
+        </StackPanel>
+      </ScrollViewer>
+    </Grid>
+  </Grid>
+</Window>

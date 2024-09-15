@@ -1,49 +1,48 @@
 ﻿using Pixed.Models;
 using System.Drawing;
 
-namespace Pixed.Tools.Selection
+namespace Pixed.Tools.Selection;
+
+internal abstract class AbstractDragSelect : BaseSelect
 {
-    internal abstract class AbstractDragSelect : BaseSelect
+    public override void OnSelect(int x, int y, Frame frame, ref Bitmap overlay)
     {
-        public override void OnSelect(int x, int y, Frame frame, ref Bitmap overlay)
+        if (!_hasSelection && (x != _startX || y != _startY))
         {
-            if (!_hasSelection && (x != _startX || y != _startY))
-            {
-                _hasSelection = true;
-                OnDragSelectStart(x, y, frame, ref overlay);
-            }
-
-            if (_hasSelection)
-            {
-                OnDragSelect(x, y, frame, ref overlay);
-            }
+            _hasSelection = true;
+            OnDragSelectStart(x, y, frame, ref overlay);
         }
 
-        public override void OnSelectEnd(int x, int y, Frame frame, ref Bitmap overlay)
+        if (_hasSelection)
         {
-            if (_hasSelection)
-            {
-                OnDragSelectEnd(x, y, frame, ref overlay);
-            }
+            OnDragSelect(x, y, frame, ref overlay);
         }
-
-        public override void OnSelectStart(int x, int y, Frame frame, ref Bitmap overlay)
-        {
-            if (_hasSelection)
-            {
-                _hasSelection = false;
-                //CommitSelection(ref overlay);
-            }
-            else
-            {
-                _hasSelection = true;
-                OnDragSelectStart(x, y, frame, ref overlay);
-                overlay.SetPixel(x, y, UniColor.WithAlpha(128, UniColor.CornflowerBlue));
-            }
-        }
-
-        public virtual void OnDragSelectStart(int x, int y, Frame frame, ref Bitmap overlay) { }
-        public virtual void OnDragSelect(int x, int y, Frame frame, ref Bitmap overlay) { }
-        public virtual void OnDragSelectEnd(int x, int y, Frame frame, ref Bitmap overlay) { }
     }
+
+    public override void OnSelectEnd(int x, int y, Frame frame, ref Bitmap overlay)
+    {
+        if (_hasSelection)
+        {
+            OnDragSelectEnd(x, y, frame, ref overlay);
+        }
+    }
+
+    public override void OnSelectStart(int x, int y, Frame frame, ref Bitmap overlay)
+    {
+        if (_hasSelection)
+        {
+            _hasSelection = false;
+            //CommitSelection(ref overlay);
+        }
+        else
+        {
+            _hasSelection = true;
+            OnDragSelectStart(x, y, frame, ref overlay);
+            overlay.SetPixel(x, y, UniColor.WithAlpha(128, UniColor.CornflowerBlue));
+        }
+    }
+
+    public virtual void OnDragSelectStart(int x, int y, Frame frame, ref Bitmap overlay) { }
+    public virtual void OnDragSelect(int x, int y, Frame frame, ref Bitmap overlay) { }
+    public virtual void OnDragSelectEnd(int x, int y, Frame frame, ref Bitmap overlay) { }
 }

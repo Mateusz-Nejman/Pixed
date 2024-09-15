@@ -1,30 +1,29 @@
-﻿using System.Windows.Media.Imaging;
+﻿using Avalonia.Media.Imaging;
 
-namespace Pixed.Models
+namespace Pixed.Models;
+
+internal class LayersListEntry : PropertyChangedBase
 {
-    internal class LayersListEntry : PropertyChangedBase
+    private string _name = string.Empty;
+    private Bitmap? _thumbnail;
+
+    public string Name
     {
-        private string _name;
-        private BitmapImage _thumbnail;
-
-        public string Name
+        get => _name;
+        set
         {
-            get => _name;
-            set
-            {
-                _name = value;
-                OnPropertyChanged();
-            }
+            _name = value;
+            OnPropertyChanged();
         }
+    }
 
-        public BitmapImage Thumbnail
+    public Bitmap? Thumbnail
+    {
+        get => _thumbnail;
+        set
         {
-            get => _thumbnail;
-            set
-            {
-                _thumbnail = value;
-                OnPropertyChanged();
-            }
+            _thumbnail = value;
+            OnPropertyChanged();
         }
     }
 }

@@ -1,0 +1,31 @@
+﻿<UserControl x:Class="Pixed.Controls.PaintCanvas"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Pixed.Controls" 
+             xmlns:viewmodels="clr-namespace:Pixed.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <viewmodels:PaintCanvasViewModel/>
+    </UserControl.DataContext>
+    <ScrollViewer 
+    x:Name="scrollView"
+    VerticalScrollBarVisibility="Auto" 
+    HorizontalScrollBarVisibility="Auto">
+        <Grid Name="imageGrid" Width="{Binding GridWidth}" Height="{Binding GridHeight}">
+            <Grid.Background>
+				<ImageBrush Source="avares://Pixed/Resources/transparentBackground.png" TileMode="Tile" Stretch="Uniform" AlignmentY="Top" DestinationRect="0 0 32 32"/>
+            </Grid.Background>
+            <Image Name="image" RenderOptions.BitmapInterpolationMode="None"/>
+            <Image Name="overlay" RenderOptions.BitmapInterpolationMode="None"/>
+			<Border Background="Transparent" 
+					PointerExited="Border_PointerExited"
+					PointerMoved="Border_PointerMoved"
+					PointerPressed="Border_PointerPressed" 
+					PointerReleased="Border_PointerReleased" 
+					PointerWheelChanged="Border_PointerWheelChanged"/>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

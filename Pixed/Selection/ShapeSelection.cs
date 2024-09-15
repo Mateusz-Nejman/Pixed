@@ -1,12 +1,12 @@
 ﻿using Pixed.Models;
+using System.Collections.Generic;
 
-namespace Pixed.Selection
+namespace Pixed.Selection;
+
+internal class ShapeSelection : BaseSelection
 {
-    internal class ShapeSelection : BaseSelection
+    public ShapeSelection(List<Pixel> pixels) : base()
     {
-        public ShapeSelection(List<Pixel> pixels) : base()
-        {
-            Pixels.AddRange(pixels);
-        }
+        Pixels.AddRange(pixels);
     }
 }

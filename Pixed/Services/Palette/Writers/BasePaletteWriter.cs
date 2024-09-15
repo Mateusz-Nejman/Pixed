@@ -1,18 +1,12 @@
 ﻿using Pixed.Models;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Pixed.Services.Palette.Writers
+namespace Pixed.Services.Palette.Writers;
+
+internal class BasePaletteWriter : IAbstractPaletteWriter
 {
-    internal class BasePaletteWriter : AbstractPaletteWriter
+    public void Write(PaletteModel model, string filename)
     {
-        public override void Write(PaletteModel model, string filename)
-        {
-            File.WriteAllText(filename, model.ToJson());
-        }
+        File.WriteAllText(filename, model.ToJson());
     }
 }

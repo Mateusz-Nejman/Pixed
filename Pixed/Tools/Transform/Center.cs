@@ -1,13 +1,12 @@
 ﻿using Pixed.Models;
 
-namespace Pixed.Tools.Transform
+namespace Pixed.Tools.Transform;
+
+internal class Center : AbstractTransformTool
 {
-    internal class Center : AbstractTransformTool
+    public override void ApplyToolOnLayer(Layer layer, bool altKey)
     {
-        public override void ApplyToolOnLayer(Layer layer, bool altKey)
-        {
-            TransformUtils.Center(layer);
-            Subjects.RefreshCanvas.OnNext(true);
-        }
+        TransformUtils.Center(layer);
+        Subjects.RefreshCanvas.OnNext(null);
     }
 }

@@ -1,0 +1,12 @@
+﻿<UserControl x:Class="Pixed.Controls.ColorGrid"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Pixed.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <StackPanel Name="colorStack" MinHeight="30" Margin="8">
+        
+    </StackPanel>
+</UserControl>
