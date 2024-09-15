@@ -10,6 +10,6 @@
   <Color x:Key="ButtonBorder">#888888</Color>
   <Color x:Key="BaseBorder">#444444</Color>
   <Color x:Key="BaseBackground">#1D1D1D</Color>
-  <Color x:Key="Accent">#039BE5</Color>
+  <Color x:Key="Accent">#0c548b</Color>
   <Color x:Key="ButtonBackground">#3f3f3f</Color>
 </ResourceDictionary>

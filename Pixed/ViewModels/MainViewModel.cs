@@ -24,6 +24,5 @@ internal class MainViewModel : PropertyChangedBase
         Global.ShortcutService = new ShortcutService();
         Global.PaletteService = new PaletteService();
         Global.PaletteService.LoadAll();
-        Subjects.PaletteSelected.OnNext(Global.PaletteService.Palettes[1]); //TODO check if needed
     }
 }

@@ -108,15 +108,6 @@ internal class LayersSectionViewModel : PropertyChangedBase
 
     private void AddLayerAction()
     {
-        if (Keyboard.Modifiers == KeyModifiers.Shift)
-        {
-            Frame.AddLayer(Layers[_selectedLayer].Clone());
-        }
-        else
-        {
-            Frame.AddLayer(new Layer(Frame.Width, Frame.Height));
-        }
-
         Subjects.LayerAdded.OnNext(Frame.AddLayer(Keyboard.Modifiers == KeyModifiers.Shift ? Layers[_selectedLayer].Clone() : new Layer(Frame.Width, Frame.Height)));
         OnPropertyChanged(nameof(Layers));
         SelectedLayer = Frame.Layers.Count - 1;

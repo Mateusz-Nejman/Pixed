@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Pixed.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <StackPanel Background="Black">
+    <StackPanel>
         <TextBlock FontWeight="Bold" FontSize="14" Margin="0,0,0,5" Text="{Binding Title, RelativeSource={RelativeSource FindAncestor, AncestorType=local:TooltipWithButton}}" Foreground="White"></TextBlock>
         <WrapPanel>
             <Border Padding="2" BorderBrush="{StaticResource ButtonBorder}" BorderThickness="1" Margin="0,0,5,0">

@@ -7,52 +7,70 @@
              xmlns:vm="clr-namespace:Pixed.ViewModels"
              xmlns:controls="clr-namespace:Pixed.Controls"
              x:Class="Pixed.Controls.MainWindowSections.LayersSection">
-  <UserControl.DataContext>
-    <vm:LayersSectionViewModel/>
-  </UserControl.DataContext>
-  <local:Section>
-    <StackPanel>
-      <TextBlock Text="Layers" Height="32" Foreground="White" FontSize="15" Padding="4" FontWeight="Bold"/>
-      <Grid>
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="*"/>
-          <ColumnDefinition Width="*"/>
-          <ColumnDefinition Width="*"/>
-          <ColumnDefinition Width="*"/>
-          <ColumnDefinition Width="*"/>
-          <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-          <RowDefinition Height="26"/>
-        </Grid.RowDefinitions>
-        <Button Theme="{StaticResource LayersButton}" Command="{Binding AddLayerCommand}">
-          <Image Source="avares://Pixed/Resources/Icons/common/plus.png" Width="10" Height="10"/>
-        </Button>
-        <Button Theme="{StaticResource LayersButton}" Grid.Column="1" Command="{Binding MoveLayerUpCommand}" IsEnabled="{Binding CanLayerMoveUp}">
-          <Image Source="avares://Pixed/Resources/Icons/common/arrow-up.png" Width="10" Height="10"/>
-        </Button>
-        <Button Theme="{StaticResource LayersButton}" Grid.Column="2" Command="{Binding MoveLayerDownCommand}" IsEnabled="{Binding CanLayerMoveDown}">
-          <Image Source="avares://Pixed/Resources/Icons/common/arrow-down.png" Width="10" Height="10"/>
-        </Button>
-        <Button Theme="{StaticResource LayersButton}" Grid.Column="3" Command="{Binding EditLayerNameCommand}">
-          <Image Source="avares://Pixed/Resources/Icons/common/pencil.png" Width="10" Height="10"/>
-        </Button>
-        <Button Theme="{StaticResource LayersButton}" Grid.Column="4" Command="{Binding MergeLayerCommand}" IsEnabled="{Binding CanLayerMerge}">
-          <Image Source="avares://Pixed/Resources/Icons/common/download2.png" Width="10" Height="10"/>
-        </Button>
-        <Button Theme="{StaticResource LayersButton}" Grid.Column="5" Command="{Binding RemoveLayerCommand}" IsEnabled="{Binding CanLayerRemove}">
-          <Image Source="avares://Pixed/Resources/Icons/common/cross.png" Width="10" Height="10"/>
-        </Button>
-      </Grid>
-      <ListBox ItemsSource="{Binding Layers}"
-       SelectedIndex="{Binding SelectedLayer, Mode=TwoWay}"
-       Background="{StaticResource BaseBorder}">
-        <ListBox.ItemTemplate>
-          <DataTemplate>
-            <controls:LayerListControl/>
-          </DataTemplate>
-        </ListBox.ItemTemplate>
-      </ListBox>
-    </StackPanel>
-  </local:Section>
+	<UserControl.DataContext>
+		<vm:LayersSectionViewModel/>
+	</UserControl.DataContext>
+	<local:Section>
+		<StackPanel>
+			<TextBlock Text="Layers" Height="32" Foreground="White" FontSize="15" Padding="4" FontWeight="Bold"/>
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="*"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="26"/>
+				</Grid.RowDefinitions>
+				<Button Theme="{StaticResource LayersButton}" Command="{Binding AddLayerCommand}">
+					<Image Source="avares://Pixed/Resources/Icons/common/plus.png" Width="10" Height="10"/>
+					<ToolTip.Tip>
+						<controls:TooltipWithButton Title="Add Layer" ButtonText="Shift" ButtonTextHelper="Clone current layer"/>
+					</ToolTip.Tip>
+				</Button>
+				<Button Theme="{StaticResource LayersButton}" Grid.Column="1" Command="{Binding MoveLayerUpCommand}" IsEnabled="{Binding CanLayerMoveUp}">
+					<Image Source="avares://Pixed/Resources/Icons/common/arrow-up.png" Width="10" Height="10"/>
+					<ToolTip.Tip>
+						<controls:TooltipWithButton Title="Move layer up" ButtonText="Shift" ButtonTextHelper="Move to the top"/>
+					</ToolTip.Tip>
+				</Button>
+				<Button Theme="{StaticResource LayersButton}" Grid.Column="2" Command="{Binding MoveLayerDownCommand}" IsEnabled="{Binding CanLayerMoveDown}">
+					<Image Source="avares://Pixed/Resources/Icons/common/arrow-down.png" Width="10" Height="10"/>
+					<ToolTip.Tip>
+						<controls:TooltipWithButton Title="Move layer down" ButtonText="Shift" ButtonTextHelper="Move to the bottom"/>
+					</ToolTip.Tip>
+				</Button>
+				<Button Theme="{StaticResource LayersButton}" Grid.Column="3" Command="{Binding EditLayerNameCommand}">
+					<Image Source="avares://Pixed/Resources/Icons/common/pencil.png" Width="10" Height="10"/>
+					<ToolTip.Tip>
+						<controls:SimpleTooltip Title="Edit layer name"/>
+					</ToolTip.Tip>
+				</Button>
+				<Button Theme="{StaticResource LayersButton}" Grid.Column="4" Command="{Binding MergeLayerCommand}" IsEnabled="{Binding CanLayerMerge}">
+					<Image Source="avares://Pixed/Resources/Icons/common/download2.png" Width="10" Height="10"/>
+					<ToolTip.Tip>
+						<controls:SimpleTooltip Title="Merge with layer below"/>
+					</ToolTip.Tip>
+				</Button>
+				<Button Theme="{StaticResource LayersButton}" Grid.Column="5" Command="{Binding RemoveLayerCommand}" IsEnabled="{Binding CanLayerRemove}">
+					<Image Source="avares://Pixed/Resources/Icons/common/cross.png" Width="10" Height="10"/>
+					<ToolTip.Tip>
+						<controls:SimpleTooltip Title="Delete selected layer"/>
+					</ToolTip.Tip>
+				</Button>
+			</Grid>
+			<ListBox ItemsSource="{Binding Layers}"
+			 SelectedIndex="{Binding SelectedLayer, Mode=TwoWay}"
+			 Background="{StaticResource BaseBorder}">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<controls:LayerListControl/>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+		</StackPanel>
+	</local:Section>
 </UserControl>
