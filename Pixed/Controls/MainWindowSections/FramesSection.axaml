@@ -29,19 +29,19 @@
         <RowDefinition Height="32"/>
       </Grid.RowDefinitions>
       <Button Command="{Binding NewFrameCommand}" Theme="{StaticResource BaseButton}">
-        <Image Source="avares://Pixed/Resources/Icons/frame/frame-plus-white.png" Width="20" Height="20"/>
+        <Image Source="avares://Pixed/Resources/Icons/plus.png" Width="16" Height="16"/>
         <ToolTip.Tip>
           <controls:SimpleTooltip Title="New frame"/>
         </ToolTip.Tip>
       </Button>
       <Button Grid.Column="1" Command="{Binding DuplicateFrameCommand}" Theme="{StaticResource BaseButton}">
-        <Image Source="avares://Pixed/Resources/Icons/frame/frame-duplicate-white.png" Width="20" Height="20"/>
+        <Image Source="avares://Pixed/Resources/Icons/files-empty.png" Width="16" Height="16"/>
         <ToolTip.Tip>
           <controls:SimpleTooltip Title="Duplicate frame"/>
         </ToolTip.Tip>
       </Button>
       <Button Grid.Column="2" Command="{Binding RemoveFrameCommand}" IsEnabled="{Binding RemoveFrameEnabled}" Theme="{StaticResource BaseButton}">
-        <Image Source="avares://Pixed/Resources/Icons/frame/frame-recyclebin-white.png" Width="20" Height="20"/>
+        <Image Source="avares://Pixed/Resources/Icons/bin.png" Width="16" Height="16"/>
         <ToolTip.Tip>
           <controls:SimpleTooltip Title="Remove frame"/>
         </ToolTip.Tip>

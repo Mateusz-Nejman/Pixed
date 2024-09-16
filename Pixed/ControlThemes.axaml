@@ -4,7 +4,7 @@
     <Border Padding="20">
       <StackPanel Spacing="10">
         <RadioButton>
-          <Image Source="avares://Pixed/Resources/Icons/common/arrow-left.png" Width="40" Height="40"/>
+          <Image Source="avares://Pixed/Resources/Icons/arrow-left.png" Width="40" Height="40"/>
         </RadioButton>
       </StackPanel>
     </Border>
