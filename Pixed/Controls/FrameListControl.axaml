@@ -5,13 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Pixed.Controls"
              mc:Ignorable="d" 
-             Width="96" Height="96">
-    <Border BorderBrush="{StaticResource BaseBorder}" BorderThickness="1">
-        <Grid Width="96" Height="96">
-            <Grid.Background>
-                <ImageBrush Source="avares://Pixed/Resources/transparentBackground.png" TileMode="Tile" Stretch="Uniform" AlignmentY="Top" DestinationRect="0 0 32 32"/>
-            </Grid.Background>
-            <Image Width="96" Height="96" Source="{Binding RenderSource}" RenderOptions.BitmapInterpolationMode="None"/>
-        </Grid>
-    </Border>
+             Width="100" Height="102">
+  <Grid Width="96" Height="96">
+    <Grid.Background>
+      <ImageBrush Source="avares://Pixed/Resources/transparentBackground.png" TileMode="Tile" Stretch="Uniform" AlignmentY="Top" DestinationRect="0 0 32 32"/>
+    </Grid.Background>
+    <Image Width="96" Height="96" Source="{Binding RenderSource}" RenderOptions.BitmapInterpolationMode="None"/>
+  </Grid>
 </UserControl>

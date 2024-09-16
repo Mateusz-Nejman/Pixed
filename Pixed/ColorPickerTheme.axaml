@@ -1,0 +1,7 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Color x:Key="ColorPickerBackgroundColor">#1D1D1D</Color>
+  <Color x:Key="ThemeForegroundLowBrush">White</Color>
+  <Color x:Key="ThemeForegroundBrush">White</Color>
+  <Color x:Key="ColorPickerTabSelectedBrush">#3F3F3F</Color>
+</ResourceDictionary>

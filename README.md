@@ -15,4 +15,8 @@ Pixed is a pixel-art editor highly inspired by [Mateusz-Nejman/piskel_touch](htt
 - PixiEditor.ColorPicker [PixiEditor/ColorPicker] (https://github.com/PixiEditor/ColorPicker)
 - System.Reactive (RX) [dotnet/reactive] (https://github.com/dotnet/reactive)
 
-**Work in progress. Code will be refactored later. More MVVM, more controls, less code-behind.**
+## Assets
+- Icons from IcoMoon [https://icomoon.io/](https://icomoon.io/)
+- Icons from Piskel [piskelapp/piskel](https://github.com/piskelapp/piskel)
+
+**Work in progress. More MVVM, more controls, less code-behind.**

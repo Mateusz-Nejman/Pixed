@@ -72,7 +72,7 @@ public partial class PaintCanvas : UserControl
 
     private void Border_PointerWheelChanged(object? sender, PointerWheelEventArgs e)
     {
-        _viewModel?.MouseWheel?.Execute((int)e.Delta.Y);
+        _viewModel?.MouseWheel?.Execute(e.Delta.Y);
         e.Handled = true;
     }
 
