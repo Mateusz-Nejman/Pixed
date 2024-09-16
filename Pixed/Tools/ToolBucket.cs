@@ -11,7 +11,7 @@ internal class ToolBucket : BaseTool
 
         var history = PaintUtils.PaintSimiliarConnected(frame.Layers[frame.SelectedLayer], x, y, color);
         history.FrameId = frame.Id;
-        Global.Models[0].AddHistory(history.ToEntry());
+        Global.CurrentModel.AddHistory(history.ToEntry());
         Subjects.RefreshCanvas.OnNext(null);
     }
 }
