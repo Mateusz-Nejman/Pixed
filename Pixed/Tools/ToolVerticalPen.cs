@@ -1,7 +1,5 @@
 ﻿using Pixed.Input;
 using Pixed.Models;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
 
 namespace Pixed.Tools
@@ -19,7 +17,7 @@ namespace Pixed.Tools
             bool ctrlClicked = Keyboard.Modifiers.HasFlag(Avalonia.Input.KeyModifiers.Control);
             bool shiftClicked = Keyboard.Modifiers.HasFlag(Avalonia.Input.KeyModifiers.Shift);
 
-            if(!ctrlClicked)
+            if (!ctrlClicked)
             {
                 DrawOnOverlay(color, symX, y, frame, ref overlay);
             }
@@ -29,7 +27,7 @@ namespace Pixed.Tools
                 DrawOnOverlay(color, x, symY, frame, ref overlay);
             }
 
-            if(shiftClicked)
+            if (shiftClicked)
             {
                 DrawOnOverlay(color, symX, symY, frame, ref overlay);
             }
