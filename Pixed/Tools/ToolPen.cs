@@ -9,8 +9,8 @@ namespace Pixed.Tools;
 
 internal class ToolPen : BaseTool
 {
-    private int _prevX = -1;
-    private int _prevY = -1;
+    protected int _prevX = -1;
+    protected int _prevY = -1;
     private List<Pixel> _pixels = [];
     public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay)
     {
@@ -51,7 +51,7 @@ internal class ToolPen : BaseTool
         Subjects.RefreshCanvas.OnNext(null);
     }
 
-    private void DrawOnOverlay(UniColor color, int x, int y, Frame frame, ref Bitmap overlay)
+    protected void DrawOnOverlay(UniColor color, int x, int y, Frame frame, ref Bitmap overlay)
     {
         overlay.SetPixel(x, y, color);
 
