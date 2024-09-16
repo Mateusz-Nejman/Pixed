@@ -97,4 +97,9 @@ internal static class MathUtils
         var dy = Math.Abs((double)y1 - (double)y0);
         return Math.Sqrt(Math.Pow(dx, 2) + Math.Pow(dy, 2));
     }
+
+    public static int[] GetOrderedRectangle(int x0, int y0, int x1, int y1)
+    {
+        return [Math.Min(x0, x1), Math.Min(y0, y1), Math.Max(x0, x1), Math.Max(y0, y1)];
+    }
 }

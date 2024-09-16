@@ -22,6 +22,7 @@ internal class ToolSelector
         _tools.Add("tool_mirror_pen", new ToolVerticalPen());
         _tools.Add("tool_colorswap", new ToolColorSwap());
         _tools.Add("tool_stroke", new ToolStroke());
+        _tools.Add("tool_rectangle", new ToolRectangle());
     }
 
     public void SelectTool(string name)
@@ -33,11 +34,7 @@ internal class ToolSelector
     }
     public BaseTool? GetTool(string name)
     {
-        if (_tools.ContainsKey(name))
-        {
-            return _tools[name];
-        }
-
-        return null;
+        _tools.TryGetValue(name, out BaseTool? value);
+        return value;
     }
 }
