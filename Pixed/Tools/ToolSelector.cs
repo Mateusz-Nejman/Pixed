@@ -21,6 +21,7 @@ internal class ToolSelector
         _tools.Add("tool_lasso_select", new LassoSelect());
         _tools.Add("tool_mirror_pen", new ToolVerticalPen());
         _tools.Add("tool_colorswap", new ToolColorSwap());
+        _tools.Add("tool_stroke", new ToolStroke());
     }
 
     public void SelectTool(string name)
