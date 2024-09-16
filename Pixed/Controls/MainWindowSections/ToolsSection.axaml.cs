@@ -18,7 +18,7 @@ internal partial class ToolsSection : PixedUserControl
     {
         if (sender is RadioButton radio && radio.Name != null)
         {
-            if(!radio.IsChecked.HasValue || !radio.IsChecked.Value)
+            if (!radio.IsChecked.HasValue || !radio.IsChecked.Value)
             {
                 return;
             }

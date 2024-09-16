@@ -28,7 +28,7 @@
 			</controls:ToolRadioButton>
 			<controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-colorswap.png" Name="tool_colorswap" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">
 				<ToolTip.Tip>
-					<controls:TooltipWith2Buttons Title="Paint all pixels of the same color" ButtonText1="Ctrl" ButtonTextHelper1="Apply to all layers" ButtonText2="Shift" ButtonTextHelper2="Apply to all frames"/>
+					<controls:TooltipWithButton Title="Paint all pixels of the same color" ButtonText="Ctrl" ButtonTextHelper="Apply to all layers"/>
 				</ToolTip.Tip>
 			</controls:ToolRadioButton>
 			<controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-eraser.png" Name="tool_eraser" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">

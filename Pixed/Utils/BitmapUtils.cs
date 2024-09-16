@@ -59,16 +59,16 @@ internal static class BitmapUtils
         await Clipboard.ClearAsync();
         await Clipboard.SetDataObjectAsync(clipboardObject);
     }
-    
+
     public static async Task<Bitmap?> CreateFromClipboard()
     {
         var formats = await Clipboard.GetFormatsAsync();
 
-        if(formats.Contains("PNG"))
+        if (formats.Contains("PNG"))
         {
             var data = await Clipboard.GetDataAsync("PNG");
 
-            if(data is byte[] array)
+            if (data is byte[] array)
             {
                 return (Bitmap?)Bitmap.FromStream(new MemoryStream(array));
             }

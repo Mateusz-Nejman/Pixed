@@ -1,9 +1,5 @@
 ﻿using Avalonia.Controls;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using static Pixed.StaticMenuBuilder;
 
@@ -13,7 +9,7 @@ namespace Pixed.Controls
     {
         public virtual void RegisterMenuItems()
         {
-            if(DataContext is IPixedViewModel model)
+            if (DataContext is IPixedViewModel model)
             {
                 model.RegisterMenuItems();
             }

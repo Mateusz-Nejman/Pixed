@@ -1,12 +1,8 @@
 ﻿using Avalonia.Controls;
-using Pixed.Controls;
 using Pixed.Windows;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Subjects;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pixed
 {
@@ -52,7 +48,7 @@ namespace Pixed
             AddToMenu(ref projectMenu, GetEntries(BaseMenuItem.Project));
             AddToMenu(ref helpMenu, GetEntries(BaseMenuItem.Help));
 
-            if(clear)
+            if (clear)
             {
                 _entries.Clear();
             }

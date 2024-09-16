@@ -9,8 +9,8 @@ namespace Pixed.Tools;
 
 internal class ToolPen : BaseTool
 {
-    protected int _prevX = -1;
-    protected int _prevY = -1;
+    private int _prevX = -1;
+    private int _prevY = -1;
     private List<Pixel> _pixels = [];
     public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay)
     {
@@ -23,11 +23,11 @@ internal class ToolPen : BaseTool
 
     public override void MoveTool(int x, int y, Frame frame, ref Bitmap overlay)
     {
-        if((Math.Abs(x - _prevX) > 1) || (Math.Abs(y - _prevY) > 1))
+        if ((Math.Abs(x - _prevX) > 1) || (Math.Abs(y - _prevY) > 1))
         {
             var interpolatedPixels = MathUtils.GetBresenhamLine(x, y, _prevX, _prevY);
 
-            foreach(var pixel in interpolatedPixels)
+            foreach (var pixel in interpolatedPixels)
             {
                 ApplyTool(pixel.X, pixel.Y, frame, ref overlay);
             }
@@ -51,11 +51,11 @@ internal class ToolPen : BaseTool
         Subjects.RefreshCanvas.OnNext(null);
     }
 
-    protected void DrawOnOverlay(UniColor color, int x, int y, Frame frame, ref Bitmap overlay)
+    private void DrawOnOverlay(UniColor color, int x, int y, Frame frame, ref Bitmap overlay)
     {
         overlay.SetPixel(x, y, color);
 
-        if(color == UniColor.Transparent)
+        if (color == UniColor.Transparent)
         {
             frame.SetPixel(x, y, color);
         }
