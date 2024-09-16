@@ -9,16 +9,16 @@ namespace Pixed.ViewModels;
 internal class FramesSectionViewModel : PropertyChangedBase, IPixedViewModel
 {
     private int _selectedFrame = 0;
-    private bool _removeFrameVisibility = false;
+    private bool _removeFrameEnabled = false;
 
     public static ObservableCollection<Frame> Frames => Global.CurrentModel.Frames;
 
-    public bool RemoveFrameVisibility
+    public bool RemoveFrameEnabled
     {
-        get => _removeFrameVisibility;
+        get => _removeFrameEnabled;
         set
         {
-            _removeFrameVisibility = value;
+            _removeFrameEnabled = value;
             OnPropertyChanged();
         }
     }
@@ -54,8 +54,8 @@ internal class FramesSectionViewModel : PropertyChangedBase, IPixedViewModel
             OnPropertyChanged(nameof(ViewModels.FramesSectionViewModel.Frames));
         });
 
-        Subjects.FrameAdded.Subscribe(_ => RemoveFrameVisibility = Global.CurrentModel.Frames.Count != 1);
-        Subjects.FrameRemoved.Subscribe(_ => RemoveFrameVisibility = Global.CurrentModel.Frames.Count != 1);
+        Subjects.FrameAdded.Subscribe(_ => RemoveFrameEnabled = Global.CurrentModel.Frames.Count != 1);
+        Subjects.FrameRemoved.Subscribe(_ => RemoveFrameEnabled = Global.CurrentModel.Frames.Count != 1);
     }
 
     public void RegisterMenuItems()

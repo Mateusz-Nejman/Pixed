@@ -10,6 +10,9 @@
           <ResourceInclude Source="/Colors.axaml"/>
           <ResourceInclude Source="/ControlThemes.axaml"/>
         </ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary.ThemeDictionaries>
+          <ResourceInclude x:Key="Default" Source="/ColorPickerTheme.axaml"/>
+        </ResourceDictionary.ThemeDictionaries>
       </ResourceDictionary>
     </Application.Resources>
   <Application.Styles>

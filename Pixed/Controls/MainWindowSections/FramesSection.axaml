@@ -7,45 +7,55 @@
              xmlns:vm="clr-namespace:Pixed.ViewModels"
              xmlns:controls="clr-namespace:Pixed.Controls"
              x:Class="Pixed.Controls.MainWindowSections.FramesSection">
-	<UserControl.DataContext>
-		<vm:FramesSectionViewModel/>
-	</UserControl.DataContext>
-	<StackPanel x:Name="framesPanel" Width="124">
-		<Grid Margin="6, 0, 6, 0">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="*"/>
-				<ColumnDefinition Width="*"/>
-				<ColumnDefinition Width="*"/>
-			</Grid.ColumnDefinitions>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="32"/>
-			</Grid.RowDefinitions>
-			<Button Command="{Binding NewFrameCommand}" Theme="{StaticResource FramesButton}">
-				<Image Source="avares://Pixed/Resources/Icons/frame/frame-plus-white.png" Width="20" Height="20"/>
-				<ToolTip.Tip>
-					<controls:SimpleTooltip Title="New frame"/>
-				</ToolTip.Tip>
-			</Button>
-			<Button Grid.Column="1" Command="{Binding DuplicateFrameCommand}" Theme="{StaticResource FramesButton}">
-				<Image Source="avares://Pixed/Resources/Icons/frame/frame-duplicate-white.png" Width="20" Height="20"/>
-				<ToolTip.Tip>
-					<controls:SimpleTooltip Title="Duplicate frame"/>
-				</ToolTip.Tip>
-			</Button>
-			<Button Grid.Column="2" Command="{Binding RemoveFrameCommand}" IsVisible="{Binding RemoveFrameVisibility}" Theme="{StaticResource FramesButton}">
-				<Image Source="avares://Pixed/Resources/Icons/frame/frame-recyclebin-white.png" Width="20" Height="20"/>
-				<ToolTip.Tip>
-					<controls:SimpleTooltip Title="Remove frame"/>
-				</ToolTip.Tip>
-			</Button>
-		</Grid>
-		<ListBox Classes="FramesDragAndDrop" ItemsSource="{Binding Frames}" SelectedIndex="{Binding SelectedFrame, Mode=TwoWay}" Width="110"
-				 Background="{StaticResource BaseBackground}">
-			<ListBox.ItemTemplate>
-				<DataTemplate>
-					<controls:FrameListControl/>
-				</DataTemplate>
-			</ListBox.ItemTemplate>
-		</ListBox>
-	</StackPanel>
+  <UserControl.DataContext>
+    <vm:FramesSectionViewModel/>
+  </UserControl.DataContext>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="32"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="124"/>
+    </Grid.ColumnDefinitions>
+
+    <Grid Margin="6, 0, 6, 0">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="32"/>
+      </Grid.RowDefinitions>
+      <Button Command="{Binding NewFrameCommand}" Theme="{StaticResource BaseButton}">
+        <Image Source="avares://Pixed/Resources/Icons/frame/frame-plus-white.png" Width="20" Height="20"/>
+        <ToolTip.Tip>
+          <controls:SimpleTooltip Title="New frame"/>
+        </ToolTip.Tip>
+      </Button>
+      <Button Grid.Column="1" Command="{Binding DuplicateFrameCommand}" Theme="{StaticResource BaseButton}">
+        <Image Source="avares://Pixed/Resources/Icons/frame/frame-duplicate-white.png" Width="20" Height="20"/>
+        <ToolTip.Tip>
+          <controls:SimpleTooltip Title="Duplicate frame"/>
+        </ToolTip.Tip>
+      </Button>
+      <Button Grid.Column="2" Command="{Binding RemoveFrameCommand}" IsEnabled="{Binding RemoveFrameEnabled}" Theme="{StaticResource BaseButton}">
+        <Image Source="avares://Pixed/Resources/Icons/frame/frame-recyclebin-white.png" Width="20" Height="20"/>
+        <ToolTip.Tip>
+          <controls:SimpleTooltip Title="Remove frame"/>
+        </ToolTip.Tip>
+      </Button>
+    </Grid>
+    <ScrollViewer Grid.Row="1" Width="110" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
+      <ListBox Classes="FramesDragAndDrop" ItemsSource="{Binding Frames}" SelectedIndex="{Binding SelectedFrame, Mode=TwoWay}" Width="102"
+           Background="{StaticResource BaseBackground}" ItemContainerTheme="{StaticResource FrameListBoxItem}">
+        <ListBox.ItemTemplate>
+          <DataTemplate>
+            <controls:FrameListControl/>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+    </ScrollViewer>
+  </Grid>
 </UserControl>

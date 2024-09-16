@@ -10,6 +10,6 @@
         <Border BorderBrush="Gray" BorderThickness="1">
             <Image Width="32" Height="32" Source="{Binding RenderSource}" RenderOptions.BitmapInterpolationMode="None"/>
         </Border>
-        <TextBlock Text="{Binding Name}" Foreground="White"/>
+        <TextBlock Text="{Binding Name}" Foreground="White" VerticalAlignment="Center" Margin="4"/>
     </StackPanel>
 </UserControl>

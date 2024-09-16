@@ -30,7 +30,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase
     public ActionCommand<Point> RightMouseUp { get; set; }
     public ActionCommand<Point> MiddleMouseDown { get; set; }
     public ActionCommand<Point> MiddleMouseUp { get; set; }
-    public ActionCommand<int> MouseWheel { get; set; }
+    public ActionCommand<double> MouseWheel { get; set; }
     public ActionCommand MouseLeave { get; set; }
     public double Zoom { get; set; } = 1.0;
     public Frame CurrentFrame
@@ -73,7 +73,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase
         RightMouseDown = new ActionCommand<Point>(RightMouseDownAction);
         RightMouseUp = new ActionCommand<Point>(RightMouseUpAction);
         MouseMove = new ActionCommand<Point>(MouseMoveAction);
-        MouseWheel = new ActionCommand<int>(MouseWheelAction);
+        MouseWheel = new ActionCommand<double>(MouseWheelAction);
         MouseLeave = new ActionCommand(MouseLeaveAction);
 
         Subjects.FrameChanged.Subscribe(f =>
@@ -180,9 +180,9 @@ internal class PaintCanvasViewModel : PropertyChangedBase
         }
     }
 
-    private void MouseWheelAction(int delta)
+    private void MouseWheelAction(double delta)
     {
-        double multiplier = (double)delta / 120.0;
+        double multiplier = delta;
         var step = multiplier * Math.Max(0.1, Math.Abs(_imageFactor) / 15);
         _imageFactor = Math.Max(0.1, _imageFactor + step);
         _grid.Width = _frame.Width * _imageFactor;
