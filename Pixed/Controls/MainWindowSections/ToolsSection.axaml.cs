@@ -5,7 +5,7 @@ using Pixed.ViewModels;
 
 namespace Pixed.Controls.MainWindowSections;
 
-internal partial class ToolsSection : UserControl
+internal partial class ToolsSection : PixedUserControl
 {
     public PaintCanvasViewModel? PaintCanvas { get; set; }
     public ToolsSection()

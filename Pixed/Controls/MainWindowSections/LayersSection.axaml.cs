@@ -2,7 +2,7 @@ using Avalonia.Controls;
 
 namespace Pixed.Controls.MainWindowSections;
 
-public partial class LayersSection : UserControl
+internal partial class LayersSection : PixedUserControl
 {
     public LayersSection()
     {

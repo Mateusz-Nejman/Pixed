@@ -2,7 +2,7 @@ using Avalonia.Controls;
 
 namespace Pixed.Controls.MainWindowSections;
 
-public partial class FramesSection : UserControl
+internal partial class FramesSection : PixedUserControl
 {
     public FramesSection()
     {

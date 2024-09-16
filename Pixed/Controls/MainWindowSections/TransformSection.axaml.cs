@@ -2,7 +2,7 @@ using Avalonia.Controls;
 
 namespace Pixed.Controls.MainWindowSections;
 
-public partial class TransformSection : UserControl
+internal partial class TransformSection : PixedUserControl
 {
     public TransformSection()
     {

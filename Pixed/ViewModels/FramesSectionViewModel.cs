@@ -1,11 +1,12 @@
-﻿using Pixed.Models;
+﻿using Pixed.Controls;
+using Pixed.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace Pixed.ViewModels;
 
-internal class FramesSectionViewModel : PropertyChangedBase
+internal class FramesSectionViewModel : PropertyChangedBase, IPixedViewModel
 {
     private int _selectedFrame = 0;
     private bool _removeFrameVisibility = false;
@@ -55,6 +56,13 @@ internal class FramesSectionViewModel : PropertyChangedBase
 
         Subjects.FrameAdded.Subscribe(_ => RemoveFrameVisibility = Global.CurrentModel.Frames.Count != 1);
         Subjects.FrameRemoved.Subscribe(_ => RemoveFrameVisibility = Global.CurrentModel.Frames.Count != 1);
+    }
+
+    public void RegisterMenuItems()
+    {
+        PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Project, "New Frame", NewFrameCommand);
+        PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Project, "Duplicate Frame", DuplicateFrameCommand);
+        PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Project, "Remove Frame", RemoveFrameCommand);
     }
 
     private void NewFrameAction()
