@@ -1,4 +1,5 @@
 ﻿using Avalonia.Media;
+using Pixed.Controls;
 using Pixed.Models;
 using Pixed.Windows;
 using System;
@@ -9,7 +10,7 @@ using System.Windows.Input;
 
 namespace Pixed.ViewModels;
 
-internal class PaletteSectionViewModel : PropertyChangedBase
+internal class PaletteSectionViewModel : PropertyChangedBase, IPixedViewModel
 {
     private UniColor _primaryColor = UniColor.Black;
     private UniColor _secondaryColor = UniColor.White;
@@ -94,6 +95,16 @@ internal class PaletteSectionViewModel : PropertyChangedBase
             Global.PaletteService.SetCurrentColors();
             OnPropertyChanged(nameof(ViewModels.PaletteSectionViewModel.CurrentPaletteColors));
         });
+    }
+
+    public void RegisterMenuItems()
+    {
+        PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Palette, "Add Primary color to palette", PaletteAddPrimaryCommand);
+        PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Palette, "Merge palette with current colors", PaletteAddCurrentCommand);
+        PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Palette, "Clear palette", PaletteClearCommand);
+        PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Palette, "Open palette from file", PaletteOpenCommand);
+        PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Palette, "Save palette to file", PaletteSaveCommand);
+        PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Palette, "Palettes list", PaletteListCommand);
     }
 
     private void PaletteAddPrimaryAction()

@@ -3,17 +3,22 @@ using Avalonia.Input;
 using Pixed.Input;
 using Pixed.Models;
 using Pixed.Services.Keyboard;
+using System.Windows.Input;
 
 namespace Pixed.Windows;
 
 public partial class MainWindow : Window
 {
     public static Window? Handle { get; private set; }
+    public static ICommand? QuitCommand { get; private set; }
     public MainWindow()
     {
         Handle = this;
+        QuitCommand = new ActionCommand(() => Handle.Close());
         InitializeBeforeUI();
         InitializeComponent();
+
+        var menu = NativeMenu.GetMenu(this);
 
         Global.ToolSelector.SelectTool("tool_pen");
         toolsSection.PaintCanvas = paintCanvas.ViewModel;
@@ -23,6 +28,12 @@ public partial class MainWindow : Window
         {
             paintCanvas.ViewModel.Overlay = ov;
         });
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        StaticMenuBuilder.Build();
     }
 
     private static void InitializeBeforeUI()

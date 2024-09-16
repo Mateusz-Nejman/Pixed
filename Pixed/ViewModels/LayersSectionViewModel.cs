@@ -1,4 +1,5 @@
 ﻿using Avalonia.Input;
+using Pixed.Controls;
 using Pixed.Input;
 using Pixed.Models;
 using Pixed.Windows;
@@ -9,7 +10,7 @@ using System.Windows.Input;
 
 namespace Pixed.ViewModels;
 
-internal class LayersSectionViewModel : PropertyChangedBase
+internal class LayersSectionViewModel : PropertyChangedBase, IPixedViewModel
 {
     private int _selectedLayer = 0;
 
@@ -104,6 +105,16 @@ internal class LayersSectionViewModel : PropertyChangedBase
         EditLayerNameCommand = new AsyncCommand(EditLayerNameAction);
         MergeLayerCommand = new ActionCommand(MergeLayerAction);
         RemoveLayerCommand = new ActionCommand(RemoveLayerAction);
+    }
+
+    public void RegisterMenuItems()
+    {
+        PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Project, "Add Layer to current frame", AddLayerCommand);
+        PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Project, "Edit layer name", EditLayerNameCommand);
+        PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Project, "Merge with layer below", MergeLayerCommand);
+        PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Project, "Move layer up", MoveLayerUpCommand);
+        PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Project, "Move layer down", MoveLayerDownCommand);
+        PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Project, "Remove current layer", RemoveLayerCommand);
     }
 
     private void AddLayerAction()

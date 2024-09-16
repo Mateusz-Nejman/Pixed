@@ -4,7 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:controls="clr-namespace:Pixed.Controls"
+			 xmlns:vm="clr-namespace:Pixed.ViewModels"
              x:Class="Pixed.Controls.MainWindowSections.ToolsSection">
+	<UserControl.DataContext>
+		<vm:ToolsSectionViewModel/>
+	</UserControl.DataContext>
 	<ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
 		<StackPanel Margin="8">
 			<controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-pen.png" Name="tool_pen" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">
