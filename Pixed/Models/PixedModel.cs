@@ -58,7 +58,6 @@ internal class PixedModel
         {
             _history.RemoveAt(_historyIndex);
             _historyIndex--;
-            Undo();
             return;
         }
 
@@ -68,7 +67,6 @@ internal class PixedModel
         {
             _history.RemoveAt(_historyIndex);
             _historyIndex--;
-            Undo();
             return;
         }
 

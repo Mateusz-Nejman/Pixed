@@ -12,7 +12,7 @@ internal static class PaintUtils
     {
         int targetColor = frame.GetPixel(x, y);
 
-        List<Point> visited = [];
+        List<Pixel> visited = [];
         return VisitConnectedPixels(frame.Layers[frame.SelectedLayer], x, y, p =>
         {
             if (visited.Contains(p))
@@ -33,94 +33,54 @@ internal static class PaintUtils
             return new DynamicHistoryEntry();
         }
 
-        DynamicHistoryEntry paintedPixels = VisitConnectedPixelsHistory(layer, x, y, pixel =>
+        DynamicHistoryEntry entry = new()
+        {
+            LayerId = layer.Id
+        };
+        var pixels = VisitConnectedPixels(layer, x, y, pixel =>
         {
             var sourceColor = layer.GetPixel(pixel.X, pixel.Y);
             if (sourceColor == targetColor)
             {
-                layer.SetPixel(pixel.X, pixel.Y, replacementColor);
                 return true;
             }
 
             return false;
         });
 
-        return paintedPixels;
-    }
-
-    public static DynamicHistoryEntry VisitConnectedPixelsHistory(Layer layer, int x, int y, Func<Point, bool> visitor)
-    {
-        Queue<Point> queue = [];
-        DynamicHistoryEntry entry = new()
+        foreach(var pixel in pixels)
         {
-            LayerId = layer.Id
-        };
-        int[] dy = [-1, 0, 1, 0];
-        int[] dx = [0, 1, 0, -1];
-
-        queue.Enqueue(new Point(x, y));
-        int oldColor = layer.GetPixel(x, y);
-        visitor.Invoke(new Point(x, y));
-        int newColor = layer.GetPixel(x, y);
-        entry.Add(x, y, oldColor, newColor);
-
-        int loopCount = 0;
-        int cellCount = layer.Width * layer.Height;
-        while (queue.Count > 0)
-        {
-            loopCount++;
-
-            var current = queue.Dequeue();
-
-            for (int i = 0; i < 4; i++)
-            {
-                int nextX = current.X + dx[i];
-                int nextY = current.Y + dy[i];
-                try
-                {
-                    oldColor = layer.GetPixel(nextX, nextY);
-                    bool isValid = visitor(new Point(nextX, nextY));
-                    newColor = layer.GetPixel(nextX, nextY);
-
-                    if (isValid)
-                    {
-                        queue.Enqueue(new Point(nextX, nextY));
-                        entry.Add(nextX, nextY, oldColor, newColor);
-                    }
-                }
-                catch (Exception e)
-                {
-                    //Ignored
-                }
-            }
-
-            if (loopCount > 10 * cellCount)
-            {
-                break;
-            }
+            layer.SetPixel(pixel.X, pixel.Y, replacementColor);
+            entry.Add(pixel.X, pixel.Y, pixel.Color, replacementColor);
         }
 
         return entry;
     }
 
-    public static List<Pixel> VisitConnectedPixels(Layer layer, int x, int y, Func<Point, bool> visitor)
+    public static List<Pixel> VisitConnectedPixels(Layer layer, int x, int y, Func<Pixel, bool> visitor) //TODO optimize
     {
-        Queue<Point> queue = [];
-        List<Pixel> points = [];
+        List<Point> toVisit = [];
+        List<Point> visited = [];
+        List<Pixel> pixels = [];
         int[] dy = [-1, 0, 1, 0];
         int[] dx = [0, 1, 0, -1];
 
-        queue.Enqueue(new Point(x, y));
-        visitor.Invoke(new Point(x, y));
-        points.Add(new Pixel(x, y, layer.GetPixel(x, y)));
+        toVisit.Add(new Point(x, y));
+        int color = layer.GetPixel(x, y);
+        visitor.Invoke(new Pixel(x, y, color));
+        pixels.Add(new Pixel(x, y, color));
 
         int loopCount = 0;
         int cellCount = layer.Width * layer.Height;
-        while (queue.Count > 0)
+        while (toVisit.Count > 0)
         {
-            loopCount++;
+            var current = toVisit.Pop();
 
-            var current = queue.Dequeue();
+            if (visited.Contains(current)) continue;
+
+            visited.Add(current);
+
+            loopCount++;
 
             for (int i = 0; i < 4; i++)
             {
@@ -128,12 +88,13 @@ internal static class PaintUtils
                 int nextY = current.Y + dy[i];
                 try
                 {
-                    bool isValid = visitor(new Point(nextX, nextY));
+                    color = layer.GetPixel(nextX, nextY);
+                    bool isValid = visitor(new Pixel(nextX, nextY, color));
 
-                    if (isValid)
+                    if (isValid && layer.ContainsPixel(nextX, nextY))
                     {
-                        queue.Enqueue(new Point(nextX, nextY));
-                        points.Add(new Pixel(nextX, nextY, layer.GetPixel(nextX, nextY)));
+                        toVisit.Add(new Point(nextX, nextY));
+                        pixels.Add(new Pixel(nextX, nextY, color));
                     }
                 }
                 catch (Exception e)
@@ -148,6 +109,6 @@ internal static class PaintUtils
             }
         }
 
-        return points;
+        return pixels;
     }
 }

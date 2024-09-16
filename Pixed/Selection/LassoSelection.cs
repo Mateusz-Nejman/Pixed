@@ -59,7 +59,7 @@ internal class LassoSelection : BaseSelection
     private void VisitPixel(Point point, Frame frame)
     {
         bool frameBorderReached = false;
-        var entry = PaintUtils.VisitConnectedPixelsHistory(frame.Layers[frame.SelectedLayer], point.X, point.Y, p =>
+        var visited = PaintUtils.VisitConnectedPixels(frame.Layers[frame.SelectedLayer], point.X, point.Y, p =>
         {
             var alreadyVisited = GetPixel(point);
 
@@ -78,12 +78,9 @@ internal class LassoSelection : BaseSelection
             return true;
         });
 
-        for (int a = 0; a < entry.PixelX.Count; a++)
+        foreach(var pixel in visited)
         {
-            int x = entry.PixelX[a];
-            int y = entry.PixelY[a];
-
-            SetPixel(new Point(x, y), frameBorderReached ? OUTSIDE : INSIDE);
+            SetPixel(new Point(pixel.X, pixel.Y), frameBorderReached ? OUTSIDE : INSIDE);
         }
     }
 
