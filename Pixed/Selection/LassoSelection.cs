@@ -78,7 +78,7 @@ internal class LassoSelection : BaseSelection
             return true;
         });
 
-        foreach(var pixel in visited)
+        foreach (var pixel in visited)
         {
             SetPixel(new Point(pixel.X, pixel.Y), frameBorderReached ? OUTSIDE : INSIDE);
         }

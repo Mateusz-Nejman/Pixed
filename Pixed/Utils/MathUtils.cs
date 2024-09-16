@@ -1,8 +1,6 @@
-﻿using Avalonia.Media.TextFormatting.Unicode;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Numerics;
 
 namespace Pixed.Utils;
 
@@ -55,7 +53,7 @@ internal static class MathUtils
 
         var ratio = (double)Math.Max(dx, dy) / (double)Math.Min(dx, dy);
         var step = Math.Round(ratio);
-        if(step > Math.Min(dx, dy))
+        if (step > Math.Min(dx, dy))
         {
             step = double.MaxValue;
         }
@@ -66,7 +64,7 @@ internal static class MathUtils
         var y = y0;
         int i = 0;
 
-        while(true)
+        while (true)
         {
             i++;
             pixels.Add(new Point(x, y));
@@ -77,12 +75,12 @@ internal static class MathUtils
 
             bool isAtStep = (int)(i % step) == 0;
 
-            if(dx >= dy || isAtStep)
+            if (dx >= dy || isAtStep)
             {
                 x += sx;
             }
 
-            if(dy >= dx || isAtStep)
+            if (dy >= dx || isAtStep)
             {
                 y += sy;
             }
@@ -96,5 +94,10 @@ internal static class MathUtils
         var dx = Math.Abs((double)x1 - (double)x0);
         var dy = Math.Abs((double)y1 - (double)y0);
         return Math.Sqrt(Math.Pow(dx, 2) + Math.Pow(dy, 2));
+    }
+
+    public static int[] GetOrderedRectangle(int x0, int y0, int x1, int y1)
+    {
+        return [Math.Min(x0, x1), Math.Min(y0, y1), Math.Max(x0, x1), Math.Max(y0, y1)];
     }
 }
