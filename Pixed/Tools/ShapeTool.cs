@@ -3,11 +3,7 @@ using Pixed.Models;
 using Pixed.Services.History;
 using Pixed.Utils;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pixed.Tools
 {

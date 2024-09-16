@@ -1,12 +1,5 @@
-﻿using Pixed.Models;
-using Pixed.Services.History;
-using Pixed.Utils;
+﻿using Pixed.Utils;
 using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pixed.Tools
 {
@@ -16,7 +9,7 @@ namespace Pixed.Tools
         {
             var rectangle = MathUtils.GetOrderedRectangle(_startX, _startY, x, y);
 
-            if(isShift)
+            if (isShift)
             {
                 int width = Math.Abs(rectangle[2] - rectangle[0]);
                 int height = Math.Abs(rectangle[3] - rectangle[1]);
@@ -26,11 +19,11 @@ namespace Pixed.Tools
                 rectangle[3] = rectangle[1] + size;
             }
 
-            for(int rx = rectangle[0]; rx <= rectangle[2]; rx++)
+            for (int rx = rectangle[0]; rx <= rectangle[2]; rx++)
             {
-                for(int ry = rectangle[1]; ry <= rectangle[3]; ry++)
+                for (int ry = rectangle[1]; ry <= rectangle[3]; ry++)
                 {
-                    if(rx == rectangle[0] || rx == rectangle[2] || ry == rectangle[1] || ry == rectangle[3])
+                    if (rx == rectangle[0] || rx == rectangle[2] || ry == rectangle[1] || ry == rectangle[3])
                     {
                         setPixelAction.Invoke(rx, ry, color);
                     }

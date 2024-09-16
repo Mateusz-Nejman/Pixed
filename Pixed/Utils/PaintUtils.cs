@@ -48,7 +48,7 @@ internal static class PaintUtils
             return false;
         });
 
-        foreach(var pixel in pixels)
+        foreach (var pixel in pixels)
         {
             layer.SetPixel(pixel.X, pixel.Y, replacementColor);
             entry.Add(pixel.X, pixel.Y, pixel.Color, replacementColor);
