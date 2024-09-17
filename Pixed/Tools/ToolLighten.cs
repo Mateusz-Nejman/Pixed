@@ -1,15 +1,14 @@
 ﻿using Pixed.Input;
 using Pixed.Models;
 using System.Drawing;
-using System.Linq;
 
 namespace Pixed.Tools
 {
     internal class ToolLighten : ToolPen
-    {   
+    {
         public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay)
         {
-            if(!frame.ContainsPixel(x, y))
+            if (!frame.ContainsPixel(x, y))
             {
                 return;
             }
@@ -31,13 +30,13 @@ namespace Pixed.Tools
 
             bool isTransparent = pixelColor == UniColor.Transparent;
 
-            if(isTransparent)
+            if (isTransparent)
             {
                 return UniColor.Transparent;
             }
 
             bool oncePerPixel = Keyboard.Modifiers.HasFlag(Avalonia.Input.KeyModifiers.Shift);
-            if(oncePerPixel && isPixelModified)
+            if (oncePerPixel && isPixelModified)
             {
                 return pixelColor;
             }
@@ -46,7 +45,7 @@ namespace Pixed.Tools
             var isDarken = Keyboard.Modifiers.HasFlag(Avalonia.Input.KeyModifiers.Control);
 
             UniColor color;
-            if(isDarken)
+            if (isDarken)
             {
                 color = pixelColor.Darken(step);
             }
