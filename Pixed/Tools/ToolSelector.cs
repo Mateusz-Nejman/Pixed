@@ -21,7 +21,7 @@ internal class ToolSelector
         _tools.Add("tool_stroke", new ToolStroke());
         _tools.Add("tool_rectangle", new ToolRectangle());
         _tools.Add("tool_circle", new ToolCircle());
-        //TODO move tool
+        _tools.Add("tool_move", new ToolMove());
         _tools.Add("tool_shape_select", new ShapeSelect());
         _tools.Add("tool_rectangle_select", new RectangleSelect());
         _tools.Add("tool_lasso_select", new LassoSelect());
