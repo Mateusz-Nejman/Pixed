@@ -79,6 +79,14 @@ internal struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatab
         return new UniColor(hsl);
     }
 
+    public readonly UniColor Blend(UniColor color, double amount)
+    {
+        byte r = (byte)(R * amount + color.R * (1 - amount));
+        byte g = (byte)(G * amount + color.G * (1 - amount));
+        byte b = (byte)(B * amount + color.B * (1 - amount));
+        return new UniColor(r, g, b);
+    }
+
     public readonly int ToInt()
     {
         return (int)this;

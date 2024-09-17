@@ -111,4 +111,12 @@ internal static class PaintUtils
 
         return pixels;
     }
+
+    public static UniColor GetNoiseColor()
+    {
+        Random random = new Random(Guid.NewGuid().GetHashCode());
+        double[] colors = [0, 0.25, 0.5, 0.75, 1];
+        double color = colors[(int)Math.Floor(random.NextDouble() * colors.Length)];
+        return Global.PrimaryColor.Blend(Global.SecondaryColor, color);
+    }
 }

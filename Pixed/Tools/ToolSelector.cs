@@ -28,6 +28,7 @@ internal class ToolSelector
         _tools.Add("tool_lighten", new ToolLighten());
         _tools.Add("tool_dithering", new ToolDithering());
         _tools.Add("tool_colorpicker", new ToolColorPicker());
+        _tools.Add("tool_noise", new ToolNoise());
     }
 
     public void SelectTool(string name)
