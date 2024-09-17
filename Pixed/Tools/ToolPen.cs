@@ -11,7 +11,7 @@ internal class ToolPen : BaseTool
 {
     protected int _prevX = -1;
     protected int _prevY = -1;
-    private List<Pixel> _pixels = [];
+    protected List<Pixel> _pixels = [];
     public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay)
     {
         _prevX = x;
