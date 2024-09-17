@@ -100,4 +100,74 @@ internal static class MathUtils
     {
         return [Math.Min(x0, x1), Math.Min(y0, y1), Math.Max(x0, x1), Math.Max(y0, y1)];
     }
+
+    public static List<Point> GetCircle(int x0, int y0, int x1, int y1)
+    {
+        //https://stackoverflow.com/questions/2914807/plot-ellipse-from-rectangle
+        List<Point> pixels = [];
+        int centerX1, centerY1, centerX, centerY;
+
+        // Calculate height
+        centerY1 = centerY = (y0 + y1) / 2;
+        int height = y1 - y0;
+        int qy = height;
+        int dy = height / 2;
+        if (height % 2 != 0)
+        {
+            centerY++;
+        }
+
+        // Calculate width
+        centerX1 = centerX = (x0 + x1) / 2;
+        int width = x1 - x0;
+        int qx = width % 2;
+        int dx = 0;
+        long qt = (long)width * width + (long)height * height - 2L * width * width * height;
+
+        if (qx != 0)
+        {
+            centerX++;
+            qt += 3L * height * height;
+        }
+
+        // Start at (dx, dy) = (0, b) and iterate until (a, 0) is reached
+        while (qy >= 0 && qx <= width)
+        {
+            pixels.Add(new Point(centerX1 - dx, centerY1 - dy));
+            if (dx != 0 || centerX1 != centerX)
+            {
+                pixels.Add(new Point(centerX + dx, centerY1 - dy));
+                if (dy != 0 || centerY1 != centerY)
+                    pixels.Add(new Point(centerX + dx, centerY + dy));
+            }
+            if (dy != 0 || centerY1 != centerY)
+                pixels.Add(new Point(centerX1 - dx, centerY + dy));
+
+            // If a (+1, 0) step stays inside the ellipse, do it
+            if (qt + 2L * height * height * qx + 3L * height * height <= 0L ||
+                qt + 2L * width * width * qy - (long)width * width <= 0L)
+            {
+                qt += 8L * height * height + 4L * height * height * qx;
+                dx++;
+                qx += 2;
+                // If a (0, -1) step stays outside the ellipse, do it
+            }
+            else if (qt - 2L * width * width * qy + 3L * width * width > 0L)
+            {
+                qt += 8L * width * width - 4L * width * width * qy;
+                dy--;
+                qy -= 2;
+                // Else step (+1, -1)
+            }
+            else
+            {
+                qt += 8L * height * height + 4L * height * height * qx + 8L * width * width - 4L * width * width * qy;
+                dx++;
+                qx += 2;
+                dy--;
+                qy -= 2;
+            }
+        }   // End of while loop
+        return pixels;
+    }
 }
