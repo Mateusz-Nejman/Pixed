@@ -119,4 +119,33 @@ internal static class PaintUtils
         double color = colors[(int)Math.Floor(random.NextDouble() * colors.Length)];
         return Global.PrimaryColor.Blend(Global.SecondaryColor, color);
     }
+
+    public static DynamicHistoryEntry PaintNoiseSimiliarConnected(Layer layer, int x, int y)
+    {
+        int targetColor = layer.GetPixel(x, y);
+
+        DynamicHistoryEntry entry = new()
+        {
+            LayerId = layer.Id
+        };
+        var pixels = VisitConnectedPixels(layer, x, y, pixel =>
+        {
+            var sourceColor = layer.GetPixel(pixel.X, pixel.Y);
+            if (sourceColor == targetColor)
+            {
+                return true;
+            }
+
+            return false;
+        });
+
+        foreach (var pixel in pixels)
+        {
+            var color = GetNoiseColor();
+            layer.SetPixel(pixel.X, pixel.Y, color);
+            entry.Add(pixel.X, pixel.Y, pixel.Color, color);
+        }
+
+        return entry;
+    }
 }
