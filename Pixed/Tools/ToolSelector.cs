@@ -14,15 +14,17 @@ internal class ToolSelector
         _selectUIToolAction = selectToolAction;
         _tools = [];
         _tools.Add("tool_pen", new ToolPen());
-        _tools.Add("tool_eraser", new ToolEraser());
-        _tools.Add("tool_paint_bucket", new ToolBucket());
-        _tools.Add("tool_rectangle_select", new RectangleSelect());
-        _tools.Add("tool_shape_select", new ShapeSelect());
-        _tools.Add("tool_lasso_select", new LassoSelect());
         _tools.Add("tool_mirror_pen", new ToolVerticalPen());
+        _tools.Add("tool_paint_bucket", new ToolBucket());
         _tools.Add("tool_colorswap", new ToolColorSwap());
+        _tools.Add("tool_eraser", new ToolEraser());
         _tools.Add("tool_stroke", new ToolStroke());
         _tools.Add("tool_rectangle", new ToolRectangle());
+        _tools.Add("tool_circle", new ToolCircle());
+        //TODO move tool
+        _tools.Add("tool_shape_select", new ShapeSelect());
+        _tools.Add("tool_rectangle_select", new RectangleSelect());
+        _tools.Add("tool_lasso_select", new LassoSelect());
     }
 
     public void SelectTool(string name)
