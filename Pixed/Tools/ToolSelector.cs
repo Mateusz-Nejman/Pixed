@@ -26,6 +26,7 @@ internal class ToolSelector
         _tools.Add("tool_rectangle_select", new RectangleSelect());
         _tools.Add("tool_lasso_select", new LassoSelect());
         _tools.Add("tool_lighten", new ToolLighten());
+        _tools.Add("tool_dithering", new ToolDithering());
     }
 
     public void SelectTool(string name)
