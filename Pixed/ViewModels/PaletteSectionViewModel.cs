@@ -74,6 +74,7 @@ internal class PaletteSectionViewModel : PropertyChangedBase, IPixedViewModel
         Subjects.PrimaryColorChanged.Subscribe(c => Global.PrimaryColor = c);
         Subjects.SecondaryColorChanged.Subscribe(c => Global.SecondaryColor = c);
         Subjects.PrimaryColorChange.Subscribe(c => PrimaryColor = c);
+        Subjects.SecondaryColorChange.Subscribe(c => SecondaryColor = c);
 
         PrimaryColor = UniColor.Black;
         SecondaryColor = UniColor.White;
