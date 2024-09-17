@@ -1,5 +1,6 @@
 ﻿using Pixed.Input;
 using Pixed.Models;
+using Pixed.Utils;
 using System.Drawing;
 
 namespace Pixed.Tools;
@@ -40,9 +41,7 @@ internal abstract class BaseTool
 
         if (highlightedX != x || highlightedY != y)
         {
-            //overlay.Clear();
-            overlay?.Dispose();
-            overlay = new Bitmap(frame.Width, frame.Height);
+            overlay?.Clear();
         }
 
         int pixel = frame.GetPixel(x, y);
@@ -57,7 +56,7 @@ internal abstract class BaseTool
     {
         UniColor.Hsl hsl = ((UniColor)pixel).ToHsl();
 
-        if (hsl.L > 0.5f)
+        if (hsl.L > 0.5)
         {
             return UniColor.WithAlpha(50, UniColor.Black);
         }

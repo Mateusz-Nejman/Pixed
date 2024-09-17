@@ -1,15 +1,16 @@
 ﻿using Avalonia;
+using ColorPicker.Models;
 using System;
 
 namespace Pixed;
 
 internal struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatable<UniColor>
 {
-    public readonly struct Hsl(float h, float s, float l)
+    public readonly struct Hsl(double h, double s, double l)
     {
-        public float H { get; } = h;
-        public float S { get; } = s;
-        public float L { get; } = l;
+        public double H { get; } = h;
+        public double S { get; } = s;
+        public double L { get; } = l;
     }
 
     public readonly static UniColor Transparent = new();
@@ -34,62 +35,63 @@ internal struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatab
     { }
 
     public UniColor(int red, int green, int blue) : this((byte)red, (byte)green, (byte)blue) { }
-
-    public Hsl ToHsl()
+    public UniColor(double alpha, double red, double green, double blue) : this()
     {
-        float r = R;
-        float g = G;
-        float b = B;
-
-        r /= 255f;
-        g /= 255f;
-        b /= 255f;
-
-        var min = Math.Min(r, Math.Min(g, b));
-        var max = Math.Max(r, Math.Max(g, b));
-        var delta = max - min;
-        float h;
-        if (delta == 0)
-        {
-            h = 0;
-        }
-        else if (max == r)
-        {
-            h = ((g - b) / delta) % 6;
-        }
-        else if (max == g)
-        {
-            h = (b - r) / delta + 2;
-        }
-        else
-        {
-            h = (r - g) / delta + 4;
-        }
-
-        h = MathF.Round(h * 60f);
-
-        if (h < 0)
-        {
-            h += 360f;
-        }
-
-        float l = (max + min) / 2;
-        float s = delta == 0 ? 0 : delta / (1 - Math.Abs(2 * l - 1));
-
-        s = +(s * 100);
-        l = +(l * 100);
-
-        return new Hsl(h, s, l);
+        A = (byte)(alpha * 255d);
+        R = (byte)(red * 255d);
+        G = (byte)(green * 255d);
+        B = (byte)(blue * 255d);
     }
 
-    public int ToInt()
+    public UniColor(Hsl hsl) : this(255, hsl) { }
+
+    public UniColor(byte alpha, Hsl hsl) : this()
+    {
+        A = alpha;
+        var rgb = ColorSpaceHelper.HslToRgb(hsl.H, hsl.S, hsl.L);
+        R = (byte)(rgb.Item1 * 255d);
+        G = (byte)(rgb.Item2 * 255d);
+        B = (byte)(rgb.Item3 * 255d);
+    }
+
+    public readonly Hsl ToHsl()
+    {
+        var hsl = ColorSpaceHelper.RgbToHsl((double)(R / 255d), (double)(G / 255f), (double)(B / 255f));
+
+        return new Hsl(hsl.Item1, hsl.Item2, hsl.Item3);
+    }
+
+    public readonly UniColor Darken(int amount)
+    {
+        var hsl = ToHsl();
+        double l = hsl.L - amount / 100d;
+        l = Math.Min(1.0d, Math.Max(0d, l));
+        hsl = new Hsl(hsl.H, hsl.S, l);
+        return new UniColor(hsl);
+    }
+
+    public readonly UniColor Lighten(int amount)
+    {
+        var hsl = ToHsl();
+        double l = hsl.L + amount / 100d;
+        l = Math.Min(1.0d, Math.Max(0d, l));
+        hsl = new Hsl(hsl.H, hsl.S, l);
+        return new UniColor(hsl);
+    }
+
+    public readonly int ToInt()
     {
         return (int)this;
     }
 
-    public bool Equals(UniColor other)
+    public readonly bool Equals(UniColor other)
     {
         return (other == null && this == null) || (other.R == R && other.G == G && other.B == B && other.A == A);
+    }
+
+    public readonly override bool Equals(object? obj)
+    {
+        return obj is UniColor color && Equals(color);
     }
 
     public static UniColor WithAlpha(byte alpha, UniColor color)
