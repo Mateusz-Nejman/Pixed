@@ -1,11 +1,7 @@
 ﻿using Pixed.Input;
 using Pixed.Models;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pixed.Tools
 {
@@ -50,20 +46,20 @@ namespace Pixed.Tools
         private static void ShiftLayer(Layer layer, Layer reference, int diffX, int diffY)
         {
             int color;
-            for(int x = 0; x < layer.Width; x++)
+            for (int x = 0; x < layer.Width; x++)
             {
-                for(int y = 0; y < layer.Height; y++)
+                for (int y = 0; y < layer.Height; y++)
                 {
                     int x1 = x - diffX;
                     int y1 = y - diffY;
 
-                    if(Keyboard.Modifiers.HasFlag(Avalonia.Input.KeyModifiers.Alt))
+                    if (Keyboard.Modifiers.HasFlag(Avalonia.Input.KeyModifiers.Alt))
                     {
                         x1 = (x1 + layer.Width) % layer.Width;
                         y1 = (y1 + layer.Height) % layer.Height;
                     }
 
-                    if(reference.ContainsPixel(x1, y1))
+                    if (reference.ContainsPixel(x1, y1))
                     {
                         color = reference.GetPixel(x1, y1);
                     }

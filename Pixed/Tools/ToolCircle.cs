@@ -1,9 +1,5 @@
 ﻿using Pixed.Utils;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pixed.Tools
 {
@@ -25,7 +21,7 @@ namespace Pixed.Tools
 
             var circle = MathUtils.GetCircle(rectangle[0], rectangle[1], rectangle[2], rectangle[3]);
 
-            foreach(var point in circle)
+            foreach (var point in circle)
             {
                 setPixelAction?.Invoke(point.X, point.Y, color);
             }
