@@ -7,21 +7,29 @@ using Image = Avalonia.Controls.Image;
 
 namespace Pixed.ViewModels;
 
-internal class PaintCanvasViewModel : PropertyChangedBase
+internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
 {
     private readonly double _gridWidth = 128;
     private readonly double _gridHeight = 128;
     private Point _imageOffset;
     private double _imageFactor;
-    private Image? _image;
-    private Image? _overlayImage;
     private Bitmap _overlayBitmap;
+    private Avalonia.Media.Imaging.Bitmap _avaloniaImageBitmap;
+    private Avalonia.Media.Imaging.Bitmap _avaloniaOverlayBitmap;
     private bool _leftPressed;
     private bool _rightPressed;
-    private readonly IDisposable _refreshDisposable;
     private Frame _frame;
     private Grid _grid;
     private Point _lastWindowSize;
+    private bool _disposedValue;
+
+    private IDisposable _projectModified;
+    private IDisposable _projectChanged;
+    private IDisposable _frameChanged;
+    private IDisposable _frameModified;
+    private IDisposable _layerRemoved;
+    private IDisposable _layerAdded;
+    private IDisposable _layerChanged;
 
     public ActionCommand<Point> LeftMouseDown { get; set; }
     public ActionCommand<Point> LeftMouseUp { get; set; }
@@ -33,16 +41,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase
     public ActionCommand<double> MouseWheel { get; set; }
     public ActionCommand MouseLeave { get; set; }
     public double Zoom { get; set; } = 1.0;
-    public Frame CurrentFrame
-    {
-        get => _frame;
-        set
-        {
-            _frame = value;
-            OnPropertyChanged();
-            Subjects.RefreshCanvas.OnNext(null);
-        }
-    }
+
 
     public Bitmap Overlay
     {
@@ -51,23 +50,33 @@ internal class PaintCanvasViewModel : PropertyChangedBase
         {
             _overlayBitmap = value;
             OnPropertyChanged();
-            RefreshOverlay();
+            AvaloniaOverlayBitmap = _overlayBitmap.ToAvaloniaBitmap();
+        }
+    }
+
+    public Avalonia.Media.Imaging.Bitmap AvaloniaImageBitmap
+    {
+        get => _avaloniaImageBitmap;
+        set
+        {
+            _avaloniaImageBitmap = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public Avalonia.Media.Imaging.Bitmap AvaloniaOverlayBitmap
+    {
+        get => _avaloniaOverlayBitmap;
+        set
+        {
+            _avaloniaOverlayBitmap = value;
+            OnPropertyChanged();
         }
     }
 
     public PaintCanvasViewModel()
     {
-        _refreshDisposable = Subjects.RefreshCanvas.Subscribe(_ =>
-        {
-            if (_image != null)
-            {
-                _image.Source = _frame.RenderTransparent().ToAvaloniaBitmap();
-                _frame.RefreshRenderSource();
-            }
-        });
-
         _frame = new Frame(32, 32);
-        Subjects.RefreshCanvas.OnNext(null);
         LeftMouseDown = new ActionCommand<Point>(LeftMouseDownAction);
         LeftMouseUp = new ActionCommand<Point>(LeftMouseUpAction);
         RightMouseDown = new ActionCommand<Point>(RightMouseDownAction);
@@ -76,19 +85,42 @@ internal class PaintCanvasViewModel : PropertyChangedBase
         MouseWheel = new ActionCommand<double>(MouseWheelAction);
         MouseLeave = new ActionCommand(MouseLeaveAction);
 
-        Subjects.FrameChanged.Subscribe(f =>
+        _projectModified = Subjects.ProjectModified.Subscribe(p =>
         {
-            CurrentFrame = f;
             RecalculateFactor(_lastWindowSize);
         });
 
-        Subjects.FrameModified.Subscribe(f =>
+        _projectChanged = Subjects.ProjectChanged.Subscribe(p =>
         {
-            if (f.Id == CurrentFrame.Id)
-            {
-                CurrentFrame = f;
-            }
             RecalculateFactor(_lastWindowSize);
+        });
+
+        _frameChanged = Subjects.FrameChanged.Subscribe(f =>
+        {
+            _frame = f;
+            _frame.RefreshLayerRenderSources();
+            AvaloniaImageBitmap = _frame.RenderTransparent().ToAvaloniaBitmap();
+        });
+
+        _frameModified = Subjects.FrameModified.Subscribe(f =>
+        {
+            f.RefreshLayerRenderSources();
+            f.RefreshRenderSource();
+        });
+
+        _layerAdded = Subjects.LayerAdded.Subscribe(l =>
+        {
+            AvaloniaImageBitmap = _frame.RenderTransparent().ToAvaloniaBitmap();
+        });
+
+        _layerRemoved = Subjects.LayerRemoved.Subscribe(l =>
+        {
+            AvaloniaImageBitmap = _frame.RenderTransparent().ToAvaloniaBitmap();
+        });
+
+        _layerChanged = Subjects.LayerChanged.Subscribe(l =>
+        {
+            AvaloniaImageBitmap = _frame.RenderTransparent().ToAvaloniaBitmap();
         });
     }
     public void RecalculateFactor(Point windowSize)
@@ -100,17 +132,40 @@ internal class PaintCanvasViewModel : PropertyChangedBase
         _lastWindowSize = windowSize;
         ResetOverlay();
     }
-    public void Initialize(Image image, Grid grid, Image overlay)
+    public void Initialize(Grid grid)
     {
-        _image = image;
         _grid = grid;
-        _overlayImage = overlay;
     }
 
     public void ResetOverlay()
     {
         Overlay?.Dispose();
-        Overlay = new Bitmap(CurrentFrame.Width, CurrentFrame.Height);
+        Overlay = new Bitmap(_frame.Width, _frame.Height);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposedValue)
+        {
+            if (disposing)
+            {
+                _projectModified?.Dispose();
+                _projectChanged?.Dispose();
+                _frameChanged?.Dispose();
+                _frameModified?.Dispose();
+                _layerAdded?.Dispose();
+                _layerChanged?.Dispose();
+                _layerRemoved.Dispose();
+            }
+
+            _disposedValue = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
     }
 
     private void LeftMouseDownAction(Point point)
@@ -140,8 +195,10 @@ internal class PaintCanvasViewModel : PropertyChangedBase
 
         _leftPressed = false;
         Global.ToolSelected?.ReleaseTool(imageX, imageY, _frame, ref _overlayBitmap);
-        Subjects.FrameModified.OnNext(_frame);
         RefreshOverlay();
+        AvaloniaImageBitmap = _frame.RenderTransparent().ToAvaloniaBitmap();
+        Subjects.LayerModified.OnNext(_frame.CurrentLayer);
+        Subjects.FrameModified.OnNext(_frame);
     }
 
     private void RightMouseDownAction(Point point)
@@ -171,19 +228,26 @@ internal class PaintCanvasViewModel : PropertyChangedBase
 
         _rightPressed = false;
         Global.ToolSelected?.ReleaseTool(imageX, imageY, _frame, ref _overlayBitmap);
-        Subjects.FrameModified.OnNext(_frame);
         RefreshOverlay();
+        AvaloniaImageBitmap = _frame.RenderTransparent().ToAvaloniaBitmap();
+        Subjects.LayerModified.OnNext(_frame.CurrentLayer);
+        Subjects.FrameModified.OnNext(_frame);
     }
 
     private void MouseMoveAction(Point point)
     {
         int imageX = (int)(point.X / _imageFactor);
         int imageY = (int)(point.Y / _imageFactor);
+
+        if (!_frame.ContainsPixel(imageX, imageY))
+        {
+            return;
+        }
+
         if (_leftPressed || _rightPressed)
         {
             Global.ToolSelected?.MoveTool(imageX, imageY, _frame, ref _overlayBitmap);
             RefreshOverlay();
-            Subjects.RefreshCanvas.OnNext(null);
         }
         else
         {
@@ -213,9 +277,6 @@ internal class PaintCanvasViewModel : PropertyChangedBase
 
     private void RefreshOverlay()
     {
-        if (_overlayImage != null && _overlayBitmap != null)
-        {
-            _overlayImage.Source = _overlayBitmap.ToAvaloniaBitmap();
-        }
+        AvaloniaOverlayBitmap = Overlay.ToAvaloniaBitmap();
     }
 }

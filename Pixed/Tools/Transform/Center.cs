@@ -7,6 +7,6 @@ internal class Center : AbstractTransformTool
     public override void ApplyToolOnLayer(Layer layer, bool altKey)
     {
         TransformUtils.Center(layer);
-        Subjects.RefreshCanvas.OnNext(null);
+        Subjects.LayerModified.OnNext(layer);
     }
 }

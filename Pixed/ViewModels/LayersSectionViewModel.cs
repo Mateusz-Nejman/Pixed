@@ -10,7 +10,7 @@ using System.Windows.Input;
 
 namespace Pixed.ViewModels;
 
-internal class LayersSectionViewModel : PropertyChangedBase, IPixedViewModel
+internal class LayersSectionViewModel : PropertyChangedBase, IPixedViewModel, IDisposable
 {
     private int _selectedLayer = 0;
 
@@ -18,6 +18,12 @@ internal class LayersSectionViewModel : PropertyChangedBase, IPixedViewModel
     private bool _canLayerMoveDown = false;
     private bool _canLayerMerge = false;
     private bool _canLayerRemove = false;
+    private bool _disposedValue;
+
+    private IDisposable _frameChanged;
+    private IDisposable _layerModified;
+    private IDisposable _layerAdded;
+    private IDisposable _layerRemoved;
 
     public static Frame Frame => Global.CurrentFrame;
     public static ObservableCollection<Layer> Layers => Frame.Layers;
@@ -26,6 +32,10 @@ internal class LayersSectionViewModel : PropertyChangedBase, IPixedViewModel
         get => _selectedLayer;
         set
         {
+            if(value == -1)
+            {
+                return;
+            }
             int val = Math.Clamp(value, 0, Layers.Count);
             _selectedLayer = val;
             Frame.SelectedLayer = val;
@@ -34,7 +44,8 @@ internal class LayersSectionViewModel : PropertyChangedBase, IPixedViewModel
             CanLayerMoveDown = _selectedLayer < Layers.Count - 1;
             CanLayerMerge = CanLayerMoveDown;
             CanLayerRemove = Layers.Count > 1;
-            Global.CurrentLayerIndex = val;
+            Global.CurrentFrame.SelectedLayer = val;
+            Subjects.LayerChanged.OnNext(Global.CurrentLayer);
         }
     }
 
@@ -87,24 +98,33 @@ internal class LayersSectionViewModel : PropertyChangedBase, IPixedViewModel
 
     public LayersSectionViewModel()
     {
-        Subjects.LayerChanged.Subscribe(layer =>
-        {
-            SelectedLayer = Layers.IndexOf(layer);
-            OnPropertyChanged(nameof(Layers));
-        });
-
-        Subjects.FrameChanged.Subscribe(frame =>
-        {
-            OnPropertyChanged(nameof(Layers));
-            SelectedLayer = 0;
-        });
-
         AddLayerCommand = new ActionCommand(AddLayerAction);
         MoveLayerUpCommand = new ActionCommand(MoveLayerUpAction);
         MoveLayerDownCommand = new ActionCommand(MoveLayerDownAction);
         EditLayerNameCommand = new AsyncCommand(EditLayerNameAction);
         MergeLayerCommand = new ActionCommand(MergeLayerAction);
         RemoveLayerCommand = new ActionCommand(RemoveLayerAction);
+
+        _frameChanged = Subjects.FrameChanged.Subscribe(f =>
+        {
+            OnPropertyChanged(nameof(Layers));
+            SelectedLayer = f.SelectedLayer;
+        });
+
+        _layerModified = Subjects.LayerModified.Subscribe(l =>
+        {
+            l.Rerender();
+        });
+
+        _layerAdded = Subjects.LayerAdded.Subscribe(l =>
+        {
+            SelectedLayer = Global.CurrentFrame.Layers.IndexOf(l);
+        });
+
+        _layerRemoved = Subjects.LayerRemoved.Subscribe(l =>
+        {
+            Subjects.FrameModified.OnNext(Global.CurrentFrame);
+        });
     }
 
     public void RegisterMenuItems()
@@ -117,11 +137,34 @@ internal class LayersSectionViewModel : PropertyChangedBase, IPixedViewModel
         PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Project, "Remove current layer", RemoveLayerCommand);
     }
 
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposedValue)
+        {
+            if (disposing)
+            {
+                _frameChanged?.Dispose();
+                _layerModified?.Dispose();
+                _layerAdded?.Dispose();
+                _layerRemoved?.Dispose();
+            }
+
+            _disposedValue = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
+
     private void AddLayerAction()
     {
-        Subjects.LayerAdded.OnNext(Frame.AddLayer(Keyboard.Modifiers == KeyModifiers.Shift ? Layers[_selectedLayer].Clone() : new Layer(Frame.Width, Frame.Height)));
+        Layer layer = Frame.AddLayer(Keyboard.Modifiers == KeyModifiers.Shift ? Layers[_selectedLayer].Clone() : new Layer(Frame.Width, Frame.Height));
         OnPropertyChanged(nameof(Layers));
-        SelectedLayer = Frame.Layers.Count - 1;
+        Subjects.LayerAdded.OnNext(layer);
+        Subjects.FrameModified.OnNext(Frame);
     }
     private void MoveLayerUpAction()
     {
@@ -132,6 +175,7 @@ internal class LayersSectionViewModel : PropertyChangedBase, IPixedViewModel
 
         Frame.MoveLayerUp(Keyboard.Modifiers == KeyModifiers.Shift);
         OnPropertyChanged(nameof(Layers));
+        Subjects.FrameModified.OnNext(Frame);
     }
 
     private void MoveLayerDownAction()
@@ -143,6 +187,7 @@ internal class LayersSectionViewModel : PropertyChangedBase, IPixedViewModel
 
         Frame.MoveLayerDown(Keyboard.Modifiers == KeyModifiers.Shift);
         OnPropertyChanged(nameof(Layers));
+        Subjects.FrameModified.OnNext(Frame);
     }
 
     private async Task EditLayerNameAction()
@@ -166,6 +211,7 @@ internal class LayersSectionViewModel : PropertyChangedBase, IPixedViewModel
     {
         Frame.MergeLayerBelow();
         OnPropertyChanged(nameof(Layers));
+        Subjects.FrameModified.OnNext(Frame);
     }
 
     private void RemoveLayerAction()
@@ -178,7 +224,7 @@ internal class LayersSectionViewModel : PropertyChangedBase, IPixedViewModel
         int index = SelectedLayer;
         var layer = Layers[index];
         Layers.RemoveAt(index);
-        Subjects.LayerRemoved.OnNext(layer);
         SelectedLayer = Math.Clamp(index, 0, Layers.Count - 1);
+        Subjects.LayerRemoved.OnNext(layer);
     }
 }

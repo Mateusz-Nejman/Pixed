@@ -89,8 +89,9 @@ internal class SelectionManager
             frame.SetPixel(p.X, p.Y, newColor);
         }
 
+        Subjects.FrameModified.OnNext(frame);
+
         Global.CurrentModel.AddHistory(entry.ToEntry());
-        Subjects.RefreshCanvas.OnNext(null);
     }
 
     private void Copy()
@@ -157,8 +158,6 @@ internal class SelectionManager
                 }
             }
         }
-
-        Subjects.RefreshCanvas.OnNext(null);
     }
 
     private static bool IsSelectToolActive()

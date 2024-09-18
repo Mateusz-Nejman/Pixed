@@ -48,7 +48,6 @@ internal class ToolPen : BaseTool
         _pixels.Clear();
         _prevX = -1;
         _prevY = -1;
-        Subjects.RefreshCanvas.OnNext(null);
     }
 
     protected void DrawOnOverlay(UniColor color, int x, int y, Frame frame, ref Bitmap overlay)
@@ -68,7 +67,7 @@ internal class ToolPen : BaseTool
         DynamicHistoryEntry entry = new()
         {
             FrameId = frame.Id,
-            LayerId = frame.Layers[frame.SelectedLayer].Id
+            LayerId = frame.CurrentLayer.Id
         };
         foreach (var pixel in this._pixels)
         {
@@ -76,6 +75,8 @@ internal class ToolPen : BaseTool
             frame.SetPixel(pixel.X, pixel.Y, pixel.Color);
             entry.Add(pixel.X, pixel.Y, oldColor, pixel.Color);
         }
+
+        Subjects.FrameModified.OnNext(frame);
 
         return entry.ToEntry();
     }

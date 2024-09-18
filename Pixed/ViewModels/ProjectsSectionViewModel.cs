@@ -4,9 +4,17 @@ using System.Collections.ObjectModel;
 
 namespace Pixed.ViewModels
 {
-    internal class ProjectsSectionViewModel : PropertyChangedBase
+    internal class ProjectsSectionViewModel : PropertyChangedBase, IDisposable
     {
         private int _selectedProject = 0;
+        private bool _disposedValue;
+        private IDisposable _frameModified;
+        private IDisposable _frameRemoved;
+        private IDisposable _layerModified;
+        private IDisposable _layerRemoved;
+        private IDisposable _projectAdded;
+        private IDisposable _projectRemoved;
+
         public static ObservableCollection<PixedModel> Projects => Global.Models;
 
         public int SelectedProject
@@ -16,45 +24,52 @@ namespace Pixed.ViewModels
             {
                 _selectedProject = value;
                 Global.CurrentModelIndex = value;
+                OnPropertyChanged();
                 Subjects.ProjectChanged.OnNext(Global.CurrentModel);
+                Subjects.FrameChanged.OnNext(Global.CurrentFrame);
+                Subjects.LayerChanged.OnNext(Global.CurrentLayer);
             }
         }
 
         public ProjectsSectionViewModel()
         {
-            Subjects.FrameChanged.Subscribe(FrameSubjects);
-            Subjects.FrameModified.Subscribe(FrameSubjects);
-            Subjects.LayerChanged.Subscribe(LayerSubjects);
-
-            Subjects.ProjectModified.Subscribe(p =>
-            {
-                p.UpdatePreview();
-                OnPropertyChanged(nameof(Projects));
-            });
-
-            Subjects.ProjectChanged.Subscribe(p =>
-            {
-                _selectedProject = Global.Models.IndexOf(p);
-                OnPropertyChanged(nameof(SelectedProject));
-                Subjects.FrameChanged.OnNext(p.Frames[0]);
-                Subjects.LayerChanged.OnNext(p.Frames[0].Layers[p.Frames[0].SelectedLayer]); //TODO
-            });
-
-            Subjects.ProjectAdded.Subscribe(p =>
+            _frameRemoved = Subjects.FrameRemoved.Subscribe(f => Global.CurrentModel.UpdatePreview());
+            _frameModified = Subjects.FrameModified.Subscribe(f => Global.CurrentModel.UpdatePreview());
+            _layerModified = Subjects.LayerModified.Subscribe(f => Global.CurrentModel.UpdatePreview());
+            _layerRemoved = Subjects.LayerRemoved.Subscribe(f => Global.CurrentModel.UpdatePreview());
+            _projectAdded = Subjects.ProjectAdded.Subscribe(p =>
             {
                 int index = Global.Models.IndexOf(p);
                 SelectedProject = index;
             });
+            _projectRemoved = Subjects.ProjectRemoved.Subscribe(p =>
+            {
+                SelectedProject = Math.Clamp(SelectedProject, 0, Global.Models.Count - 1);
+            });
         }
 
-        private void FrameSubjects(Frame _)
+        protected virtual void Dispose(bool disposing)
         {
-            Subjects.ProjectModified.OnNext(Global.CurrentModel);
+            if (!_disposedValue)
+            {
+                if (disposing)
+                {
+                    _frameRemoved?.Dispose();
+                    _frameModified?.Dispose();
+                    _layerModified?.Dispose();
+                    _layerRemoved?.Dispose();
+                    _projectAdded?.Dispose();
+                    _projectRemoved?.Dispose();
+                }
+
+                _disposedValue = true;
+            }
         }
 
-        private void LayerSubjects(Layer _)
+        public void Dispose()
         {
-            Subjects.ProjectModified?.OnNext(Global.CurrentModel);
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

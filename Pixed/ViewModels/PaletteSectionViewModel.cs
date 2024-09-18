@@ -10,10 +10,19 @@ using System.Windows.Input;
 
 namespace Pixed.ViewModels;
 
-internal class PaletteSectionViewModel : PropertyChangedBase, IPixedViewModel
+internal class PaletteSectionViewModel : PropertyChangedBase, IPixedViewModel, IDisposable
 {
     private UniColor _primaryColor = UniColor.Black;
     private UniColor _secondaryColor = UniColor.White;
+    private bool _disposedValue;
+
+    private IDisposable _layerModified;
+    private IDisposable _projectChanged;
+    private IDisposable _primaryProjectChanged;
+    private IDisposable _secondaryProjectChanged;
+    private IDisposable _primaryProjectChange;
+    private IDisposable _secondaryProjectChange;
+    private IDisposable _paletteSelected;
 
     public Color PrimaryColor
     {
@@ -71,17 +80,29 @@ internal class PaletteSectionViewModel : PropertyChangedBase, IPixedViewModel
 
     public PaletteSectionViewModel()
     {
-        Subjects.PrimaryColorChanged.Subscribe(c => Global.PrimaryColor = c);
-        Subjects.SecondaryColorChanged.Subscribe(c => Global.SecondaryColor = c);
-        Subjects.PrimaryColorChange.Subscribe(c => PrimaryColor = c);
-        Subjects.SecondaryColorChange.Subscribe(c => SecondaryColor = c);
+        _primaryProjectChanged = Subjects.PrimaryColorChanged.Subscribe(c => Global.PrimaryColor = c);
+        _secondaryProjectChanged = Subjects.SecondaryColorChanged.Subscribe(c => Global.SecondaryColor = c);
+        _primaryProjectChange = Subjects.PrimaryColorChange.Subscribe(c => PrimaryColor = c);
+        _secondaryProjectChange = Subjects.SecondaryColorChange.Subscribe(c => SecondaryColor = c);
+
+        _projectChanged = Subjects.ProjectChanged.Subscribe(p =>
+        {
+            Global.PaletteService?.SetCurrentColors();
+            OnPropertyChanged(nameof(CurrentPaletteColors));
+        });
+
+        _layerModified = Subjects.LayerModified.Subscribe(l =>
+        {
+            Global.PaletteService?.SetCurrentColors();
+            OnPropertyChanged(nameof(CurrentPaletteColors));
+        });
 
         PrimaryColor = UniColor.Black;
         SecondaryColor = UniColor.White;
 
-        Subjects.PaletteSelected.Subscribe(p =>
+        _paletteSelected = Subjects.PaletteSelected.Subscribe(p =>
         {
-            OnPropertyChanged(nameof(ViewModels.PaletteSectionViewModel.SelectedPaletteColors));
+            OnPropertyChanged(nameof(SelectedPaletteColors));
         });
 
         PaletteAddPrimaryCommand = new ActionCommand(PaletteAddPrimaryAction);
@@ -90,12 +111,31 @@ internal class PaletteSectionViewModel : PropertyChangedBase, IPixedViewModel
         PaletteSaveCommand = new AsyncCommand(PaletteSaveAction);
         PaletteClearCommand = new ActionCommand(PaletteClearAction);
         PaletteListCommand = new ActionCommand(PaletteListAction);
+    }
 
-        Subjects.RefreshCanvas.Subscribe(_ =>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposedValue)
         {
-            Global.PaletteService.SetCurrentColors();
-            OnPropertyChanged(nameof(ViewModels.PaletteSectionViewModel.CurrentPaletteColors));
-        });
+            if (disposing)
+            {
+                _layerModified?.Dispose();
+                _projectChanged?.Dispose();
+                _paletteSelected?.Dispose();
+                _primaryProjectChanged?.Dispose();
+                _primaryProjectChange?.Dispose();
+                _secondaryProjectChanged?.Dispose();
+                _secondaryProjectChange?.Dispose();
+            }
+
+            _disposedValue = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
     }
 
     public void RegisterMenuItems()

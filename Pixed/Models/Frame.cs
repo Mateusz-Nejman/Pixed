@@ -17,6 +17,7 @@ internal class Frame : PropertyChangedBase
 
     public int Width => _width;
     public int Height => _height;
+    public Layer CurrentLayer => Layers[SelectedLayer];
     public int SelectedLayer
     {
         get => _selectedLayer;
@@ -24,7 +25,6 @@ internal class Frame : PropertyChangedBase
         {
             _selectedLayer = Math.Clamp(value, 0, Layers.Count - 1);
             OnPropertyChanged();
-            Subjects.RefreshCanvas.OnNext(null);
         }
     }
 
@@ -78,12 +78,12 @@ internal class Frame : PropertyChangedBase
 
     public void SetPixel(int x, int y, int color)
     {
-        _layers[SelectedLayer].SetPixel(x, y, color);
+        CurrentLayer.SetPixel(x, y, color);
     }
 
     public int GetPixel(int x, int y)
     {
-        return _layers[SelectedLayer].GetPixel(x, y);
+        return CurrentLayer.GetPixel(x, y);
     }
 
     public Layer AddLayer(Layer layer)
@@ -123,7 +123,7 @@ internal class Frame : PropertyChangedBase
             g.DrawImage(_layers[a].Render().OpacityImage(0.5f), 0, 0);
         }
 
-        var rendered = _layers[_selectedLayer].Render();
+        var rendered = CurrentLayer.Render();
         g.DrawImage(rendered, 0, 0);
 
         return render;
@@ -143,7 +143,7 @@ internal class Frame : PropertyChangedBase
 
     public bool ContainsPixel(int x, int y)
     {
-        return _layers[_selectedLayer].ContainsPixel(x, y);
+        return CurrentLayer.ContainsPixel(x, y);
     }
 
     public void MoveLayerUp(bool toTop)
@@ -201,5 +201,7 @@ internal class Frame : PropertyChangedBase
         Layers.RemoveAt(index + 1);
         Layers[index].RefreshRenderSource();
         SelectedLayer = index;
+        Subjects.LayerRemoved.OnNext(layer2);
+        Subjects.LayerModified.OnNext(layer);
     }
 }

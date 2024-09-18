@@ -3,7 +3,7 @@ using Avalonia.Controls;
 
 namespace Pixed.Controls;
 
-public partial class TooltipWithButton : UserControl
+internal partial class TooltipWithButton : PixedUserControl
 {
     public string Title
     {

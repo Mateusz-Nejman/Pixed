@@ -8,10 +8,9 @@ namespace Pixed.Tools
     {
         public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay)
         {
-            var history = PaintUtils.PaintNoiseSimiliarConnected(frame.Layers[frame.SelectedLayer], x, y);
+            var history = PaintUtils.PaintNoiseSimiliarConnected(frame.CurrentLayer, x, y);
             history.FrameId = frame.Id;
             Global.CurrentModel.AddHistory(history.ToEntry());
-            Subjects.RefreshCanvas.OnNext(null);
         }
     }
 }

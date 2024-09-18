@@ -18,10 +18,11 @@ public partial class MainWindow : Window
         InitializeBeforeUI();
         InitializeComponent();
 
-        var menu = NativeMenu.GetMenu(this);
-
         Global.ToolSelector.SelectTool("tool_pen");
         toolsSection.PaintCanvas = paintCanvas.ViewModel;
+
+        Subjects.ProjectAdded.OnNext(Global.CurrentModel);
+        Subjects.ProjectChanged.OnNext(Global.CurrentModel);
         Subjects.FrameChanged.OnNext(Global.CurrentFrame);
 
         Global.SelectionManager = new Selection.SelectionManager(ov =>
