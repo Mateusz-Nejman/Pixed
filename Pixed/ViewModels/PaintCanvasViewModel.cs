@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Pixed.Models;
 using Pixed.Utils;
 using System;
 using System.Drawing;
@@ -140,6 +141,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase
 
         _leftPressed = false;
         Global.ToolSelected?.ReleaseTool(imageX, imageY, _frame, ref _overlayBitmap);
+        Subjects.FrameModified.OnNext(_frame);
         RefreshOverlay();
     }
 
@@ -170,6 +172,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase
 
         _rightPressed = false;
         Global.ToolSelected?.ReleaseTool(imageX, imageY, _frame, ref _overlayBitmap);
+        Subjects.FrameModified.OnNext(_frame);
         RefreshOverlay();
     }
 

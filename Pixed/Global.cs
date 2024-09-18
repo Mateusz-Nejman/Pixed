@@ -4,6 +4,7 @@ using Pixed.Services.Keyboard;
 using Pixed.Services.Palette;
 using Pixed.Tools;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Pixed;
 
@@ -15,7 +16,7 @@ internal static class Global
     public static SelectionManager? SelectionManager { get; set; }
     public static Settings UserSettings { get; set; } = new Settings();
     public static BaseTool? ToolSelected { get; set; }
-    public static List<PixedModel> Models { get; } = [];
+    public static ObservableCollection<PixedModel> Models { get; } = [];
     public static int CurrentModelIndex { get; set; }
     public static int CurrentFrameIndex { get; set; }
     public static int CurrentLayerIndex { get; set; }

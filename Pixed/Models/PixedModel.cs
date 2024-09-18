@@ -1,4 +1,6 @@
-﻿using Pixed.Services.History;
+﻿using Avalonia.Media.Imaging;
+using Pixed.Services.History;
+using Pixed.Utils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -6,20 +8,36 @@ using System.Linq;
 
 namespace Pixed.Models;
 
-internal class PixedModel
+internal class PixedModel : PropertyChangedBase
 {
     private readonly ObservableCollection<Frame> _frames;
     private readonly ObservableCollection<HistoryEntry> _history;
     private int _historyIndex = -1;
+    private Bitmap _renderSource;
 
     public ObservableCollection<Frame> Frames => _frames;
     public int Width => Frames[0].Width;
     public int Height => Frames[0].Height;
 
+    public Bitmap RenderSource
+    {
+        get => _renderSource;
+        set
+        {
+            _renderSource = value;
+            OnPropertyChanged();
+        }
+    }
+
     public PixedModel()
     {
         _frames = [];
         _history = [];
+    }
+
+    public void UpdatePreview()
+    {
+        RenderSource = Frames.First().Render().ToAvaloniaBitmap();
     }
 
     public void Process(bool allFrames, bool allLayers, Func<Frame, Layer, HistoryEntry?> action)

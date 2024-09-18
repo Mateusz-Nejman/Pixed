@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Pixed.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Pixed.Controls.MainWindowSections.ProjectsSection">
+  <UserControl.DataContext>
+    <vm:ProjectsSectionViewModel/>
+  </UserControl.DataContext>
+  <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden">
+    <TabControl ItemsSource="{Binding Projects}">
+      <TabControl.ItemTemplate>
+        <DataTemplate>
+          <Grid Width="100" Height="68">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="64"/>
+              <ColumnDefinition Width="32"/>
+            </Grid.ColumnDefinitions>
+            <Grid>
+              <Grid.Background>
+                <ImageBrush Source="avares://Pixed/Resources/transparentBackground.png" TileMode="Tile" Stretch="Uniform" AlignmentY="Top" DestinationRect="0 0 32 32"/>
+              </Grid.Background>
+              <Image Width="64" Height="64" Source="{Binding RenderSource}" RenderOptions.BitmapInterpolationMode="None"/>
+            </Grid>
+          </Grid>
+        </DataTemplate>
+      </TabControl.ItemTemplate>
+    </TabControl>
+  </ScrollViewer>
+</UserControl>
