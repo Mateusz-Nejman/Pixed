@@ -51,7 +51,13 @@ internal class FramesSectionViewModel : PropertyChangedBase, IPixedViewModel
 
         Subjects.FrameChanged.Subscribe(f =>
         {
-            OnPropertyChanged(nameof(ViewModels.FramesSectionViewModel.Frames));
+            OnPropertyChanged(nameof(Frames));
+        });
+        Subjects.FrameModified.Subscribe(f =>
+        {
+            f.RefreshRenderSource();
+            Subjects.RefreshCanvas.OnNext(null);
+            OnPropertyChanged(nameof(Frames));
         });
 
         Subjects.FrameAdded.Subscribe(_ => RemoveFrameEnabled = Global.CurrentModel.Frames.Count != 1);

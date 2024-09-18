@@ -11,6 +11,7 @@ internal static class Subjects
     public static Subject<object?> RefreshCanvas { get; } = new Subject<object?>();
 
     public static Subject<Frame> FrameChanged { get; } = new Subject<Frame>();
+    public static Subject<Frame> FrameModified { get; } = new Subject<Frame>();
     public static Subject<Frame> FrameAdded { get; } = new Subject<Frame>();
     public static Subject<Frame> FrameRemoved { get; } = new Subject<Frame>();
 

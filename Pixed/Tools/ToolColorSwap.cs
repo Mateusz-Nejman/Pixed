@@ -16,18 +16,16 @@ namespace Pixed.Tools
                 var newColor = GetToolColor();
 
                 bool allLayers = Keyboard.Modifiers.HasFlag(Avalonia.Input.KeyModifiers.Control);
+                bool allFrames = Keyboard.Modifiers.HasFlag(Avalonia.Input.KeyModifiers.Shift);
 
-                SwapColors(oldColor, newColor, allLayers);
+                SwapColors(oldColor, newColor, allLayers, allFrames);
                 Subjects.RefreshCanvas.OnNext(null);
             }
         }
 
-        private void SwapColors(int oldColor, int newColor, bool allLayers)
+        private void SwapColors(int oldColor, int newColor, bool allLayers, bool allFrames)
         {
-            Frame frame = Global.CurrentFrame;
-            Layer[] layers = allLayers ? frame.Layers.ToArray() : [Global.CurrentLayer];
-
-            foreach (Layer layer in layers)
+            Global.CurrentModel.Process(allFrames, allLayers, (frame, layer) =>
             {
                 DynamicHistoryEntry entry = new()
                 {
@@ -35,8 +33,8 @@ namespace Pixed.Tools
                     LayerId = layer.Id
                 };
                 ApplyToolOnLayer(layer, oldColor, newColor, ref entry);
-                Global.CurrentModel.AddHistory(entry.ToEntry());
-            }
+                return entry.ToEntry();
+            });
         }
 
         private void ApplyToolOnLayer(Layer layer, int oldColor, int newColor, ref DynamicHistoryEntry historyEntry)

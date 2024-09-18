@@ -10,9 +10,6 @@ internal class Crop : AbstractTransformTool
 {
     public override void ApplyTransformation()
     {
-
-        var layers = Getlayers();
-
         int[] boundaries;
         if (Global.SelectionManager.HasSelection)
         {
@@ -20,16 +17,14 @@ internal class Crop : AbstractTransformTool
         }
         else
         {
-            boundaries = TransformUtils.GetBoundaries([.. layers]);
+            boundaries = TransformUtils.GetBoundaries([.. Global.CurrentFrame.Layers]);
         }
 
-        bool applied = ApplyTool(layers, boundaries);
+        bool applied = ApplyTool(boundaries);
 
         if (applied)
         {
             Subjects.RefreshCanvas.OnNext(null);
-            Global.CurrentFrame.RefreshRenderSource();
-            Subjects.FrameChanged.OnNext(Global.CurrentFrame);
             //TODO undo/redo
         }
     }
@@ -42,12 +37,7 @@ internal class Crop : AbstractTransformTool
         throw new NotImplementedException();
     }
 
-    private static ObservableCollection<Layer> Getlayers()
-    {
-        return new ObservableCollection<Layer>(Global.CurrentModel.Frames.SelectMany(f => f.Layers));
-    }
-
-    private static bool ApplyTool(ObservableCollection<Layer> layers, int[] boundaries)
+    private static bool ApplyTool(int[] boundaries)
     {
         //return [minx, miny, maxx, maxy];
 
@@ -65,14 +55,24 @@ internal class Crop : AbstractTransformTool
             return false;
         }
 
-        foreach (var layer in layers)
+        foreach (var frame in Global.CurrentModel.Frames)
         {
-            TransformUtils.MoveLayerFixes(layer, -boundaries[0], -boundaries[1]);
+            foreach (var layer in frame.Layers)
+            {
+                TransformUtils.MoveLayerFixes(layer, -boundaries[0], -boundaries[1]);
+            }
         }
-
+        
         var newModel = ResizeUtils.ResizeModel(model, 1 + boundaries[2] - boundaries[0], 1 + boundaries[3] - boundaries[1], false, ResizeUtils.Origin.TopLeft);
         Subjects.SelectionDismissed.OnNext(null);
         Global.Models[Global.CurrentModelIndex] = newModel;
+        
+        foreach(var frame in Global.CurrentModel.Frames)
+        {
+            frame.RefreshLayerRenderSources();
+            frame.RefreshRenderSource();
+            Subjects.FrameModified.OnNext(frame);
+        }
         return true;
     }
 }

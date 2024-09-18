@@ -90,12 +90,12 @@ internal class LayersSectionViewModel : PropertyChangedBase, IPixedViewModel
         Subjects.LayerChanged.Subscribe(layer =>
         {
             SelectedLayer = Layers.IndexOf(layer);
-            OnPropertyChanged(nameof(ViewModels.LayersSectionViewModel.Layers));
+            OnPropertyChanged(nameof(Layers));
         });
 
         Subjects.FrameChanged.Subscribe(frame =>
         {
-            OnPropertyChanged(nameof(ViewModels.LayersSectionViewModel.Layers));
+            OnPropertyChanged(nameof(Layers));
             SelectedLayer = 0;
         });
 

@@ -96,6 +96,14 @@ internal class Frame : PropertyChangedBase
         return layer;
     }
 
+    public void RefreshLayerRenderSources()
+    {
+        foreach (var layer in _layers)
+        {
+            layer.Rerender();
+        }
+    }
+
     public void RefreshRenderSource()
     {
         RenderSource = Render().ToAvaloniaBitmap();

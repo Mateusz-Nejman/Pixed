@@ -28,7 +28,7 @@
 			</controls:ToolRadioButton>
 			<controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-colorswap.png" Name="tool_colorswap" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">
 				<ToolTip.Tip>
-					<controls:TooltipWithButton Title="Paint all pixels of the same color" ButtonText="Ctrl" ButtonTextHelper="Apply to all layers"/>
+					<controls:TooltipWith2Buttons Title="Paint all pixels of the same color" ButtonText1="Ctrl" ButtonTextHelper1="Apply to all layers" ButtonText2="Shift" ButtonTextHelper2="Apply to all frames"/>
 				</ToolTip.Tip>
 			</controls:ToolRadioButton>
 			<controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-eraser.png" Name="tool_eraser" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">
@@ -53,7 +53,7 @@
 			</controls:ToolRadioButton>
 			<controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-move.png" Name="tool_move" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">
 				<ToolTip.Tip>
-					<controls:TooltipWith2Buttons Title="Move tool" ButtonText1="Ctrl" ButtonTextHelper1="Apply to all layers" ButtonText2="Alt" ButtonTextHelper2="Wrap canvas borders"/>
+					<controls:TooltipWith3Buttons Title="Move tool" ButtonText1="Ctrl" ButtonTextHelper1="Apply to all layers" ButtonText2="Shift" ButtonTextHelper2="Apply to all frames" ButtonText3="Alt" ButtonTextHelper3="Wrap canvas borders"/>
 				</ToolTip.Tip>
 			</controls:ToolRadioButton>
 			<controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed/Resources/Icons/tools/tool-shape-select.png" Name="tool_shape_select" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">
