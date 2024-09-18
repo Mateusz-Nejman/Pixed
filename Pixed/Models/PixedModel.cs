@@ -1,25 +1,56 @@
-﻿using Pixed.Services.History;
+﻿using Avalonia.Media.Imaging;
+using Pixed.Services.History;
+using Pixed.Utils;
+using Pixed.Windows;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Input;
 
 namespace Pixed.Models;
 
-internal class PixedModel
+internal class PixedModel : PropertyChangedBase
 {
     private readonly ObservableCollection<Frame> _frames;
     private readonly ObservableCollection<HistoryEntry> _history;
     private int _historyIndex = -1;
+    private Bitmap _renderSource;
 
     public ObservableCollection<Frame> Frames => _frames;
     public int Width => Frames[0].Width;
     public int Height => Frames[0].Height;
 
-    public PixedModel()
+    public Bitmap RenderSource
+    {
+        get => _renderSource;
+        set
+        {
+            _renderSource = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public ICommand CloseCommand { get; }
+
+    public PixedModel() : this(Global.UserSettings.UserWidth, Global.UserSettings.UserHeight)
+    {
+
+    }
+
+    public PixedModel(int width, int height)
     {
         _frames = [];
         _history = [];
+
+        CloseCommand = new ActionCommand(CloseCommandAction);
+
+        Frames.Add(new Frame(width, height));
+    }
+
+    public void UpdatePreview()
+    {
+        RenderSource = Frames.First().Render().ToAvaloniaBitmap();
     }
 
     public void Process(bool allFrames, bool allLayers, Func<Frame, Layer, HistoryEntry?> action)
@@ -34,7 +65,7 @@ internal class PixedModel
             {
                 var entry = action?.Invoke(frame, layer);
 
-                if(entry.HasValue && entry.Value.OldColor.Length > 0)
+                if (entry.HasValue && entry.Value.OldColor.Length > 0)
                 {
                     AddHistory(entry.Value);
                 }
@@ -156,5 +187,20 @@ internal class PixedModel
 
         _historyIndex++;
         Subjects.RefreshCanvas.OnNext(null);
+    }
+
+    private void CloseCommandAction()
+    {
+        if (Global.Models.Count == 1)
+        {
+            MainWindow.QuitCommand.Execute(null);
+        }
+        else
+        {
+            Global.Models.Remove(this);
+            Global.CurrentModelIndex = Math.Clamp(Global.CurrentModelIndex, 0, Global.Models.Count - 1);
+            Subjects.FrameChanged.OnNext(Global.CurrentFrame);
+            Subjects.LayerChanged.OnNext(Global.CurrentLayer);
+        }
     }
 }

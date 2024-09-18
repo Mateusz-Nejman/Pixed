@@ -84,7 +84,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase
 
         Subjects.FrameModified.Subscribe(f =>
         {
-            if(f.Id == CurrentFrame.Id)
+            if (f.Id == CurrentFrame.Id)
             {
                 CurrentFrame = f;
             }
@@ -140,6 +140,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase
 
         _leftPressed = false;
         Global.ToolSelected?.ReleaseTool(imageX, imageY, _frame, ref _overlayBitmap);
+        Subjects.FrameModified.OnNext(_frame);
         RefreshOverlay();
     }
 
@@ -170,6 +171,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase
 
         _rightPressed = false;
         Global.ToolSelected?.ReleaseTool(imageX, imageY, _frame, ref _overlayBitmap);
+        Subjects.FrameModified.OnNext(_frame);
         RefreshOverlay();
     }
 

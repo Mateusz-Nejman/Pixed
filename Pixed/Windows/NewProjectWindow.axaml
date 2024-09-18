@@ -1,0 +1,20 @@
+<Window x:Class="Pixed.Windows.NewProjectWindow"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Pixed.Windows"
+        mc:Ignorable="d"
+        Title="New Project" MinWidth="200"
+        MinHeight="150"
+        ShowInTaskbar="False" SizeToContent="WidthAndHeight"
+        WindowStartupLocation="CenterOwner">
+  <StackPanel>
+    <TextBlock Text="Width:" Margin="10"/>
+    <NumericUpDown Margin="10" Value="{Binding WidthValue, RelativeSource={RelativeSource FindAncestor, AncestorType=local:NewProjectWindow}, Mode=TwoWay}" Minimum="1"/>
+    <TextBlock Text="Height:" Margin="10"/>
+    <NumericUpDown Margin="10" Value="{Binding HeightValue, RelativeSource={RelativeSource FindAncestor, AncestorType=local:NewProjectWindow}, Mode=TwoWay}" Minimum="1"/>
+    <Button Content="OK" Click="Button_Click"
+        Height="24" MinWidth="80" Padding="10,0" Margin="10"/>
+  </StackPanel>
+</Window>

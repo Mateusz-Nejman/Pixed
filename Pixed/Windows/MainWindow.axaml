@@ -57,10 +57,11 @@
           <mainsections:FramesSection/>
           <Grid Name="centerPanel" Grid.Column="2">
             <Grid.RowDefinitions>
-              <RowDefinition Height="60"/>
+              <RowDefinition Height="70"/>
               <RowDefinition Height="*">
               </RowDefinition>
             </Grid.RowDefinitions>
+            <mainsections:ProjectsSection/>
             <controls:PaintCanvas Grid.Row="1" x:Name="paintCanvas"/>
           </Grid>
 

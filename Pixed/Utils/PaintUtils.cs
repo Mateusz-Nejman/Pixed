@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Security.Cryptography;
 
 namespace Pixed.Utils;
 
@@ -199,7 +198,7 @@ internal static class PaintUtils
         var pixels = GetSimiliarConnectedPixels(layer, x, y);
         pixels = pixels.Where(neighbourCheck).ToList();
 
-        foreach(var pixel in pixels)
+        foreach (var pixel in pixels)
         {
             int oldColor = layer.GetPixel(pixel.X, pixel.Y);
             layer.SetPixel(pixel.X, pixel.Y, replacementColor);

@@ -10,6 +10,11 @@ internal static class Subjects
     public static Subject<KeyState> KeyState { get; } = new Subject<KeyState>();
     public static Subject<object?> RefreshCanvas { get; } = new Subject<object?>();
 
+    public static Subject<PixedModel> ProjectAdded { get; } = new Subject<PixedModel>();
+    public static Subject<PixedModel> ProjectRemoved { get; } = new Subject<PixedModel>();
+    public static Subject<PixedModel> ProjectModified { get; } = new Subject<PixedModel>();
+    public static Subject<PixedModel> ProjectChanged { get; } = new Subject<PixedModel>();
+
     public static Subject<Frame> FrameChanged { get; } = new Subject<Frame>();
     public static Subject<Frame> FrameModified { get; } = new Subject<Frame>();
     public static Subject<Frame> FrameAdded { get; } = new Subject<Frame>();
