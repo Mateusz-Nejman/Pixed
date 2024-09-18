@@ -81,6 +81,15 @@ internal class PaintCanvasViewModel : PropertyChangedBase
             CurrentFrame = f;
             RecalculateFactor(_lastWindowSize);
         });
+
+        Subjects.FrameModified.Subscribe(f =>
+        {
+            if(f.Id == CurrentFrame.Id)
+            {
+                CurrentFrame = f;
+            }
+            RecalculateFactor(_lastWindowSize);
+        });
     }
     public void RecalculateFactor(Point windowSize)
     {
@@ -89,6 +98,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase
         _grid.Width = _frame.Width * factor;
         _grid.Height = _frame.Height * factor;
         _lastWindowSize = windowSize;
+        ResetOverlay();
     }
     public void Initialize(Image image, Grid grid, Image overlay)
     {
@@ -99,8 +109,8 @@ internal class PaintCanvasViewModel : PropertyChangedBase
 
     public void ResetOverlay()
     {
-        Overlay?.Clear();
-        RefreshOverlay();
+        Overlay?.Dispose();
+        Overlay = new Bitmap(CurrentFrame.Width, CurrentFrame.Height);
     }
 
     private void LeftMouseDownAction(Point point)

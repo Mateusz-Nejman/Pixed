@@ -16,18 +16,11 @@ internal abstract class AbstractTransformTool
     }
     public virtual void ApplyTool(bool altKey, bool allFrames, bool allLayers)
     {
-        var model = Global.CurrentModel;
-        ObservableCollection<Frame> frames = allFrames ? model.Frames : [Global.CurrentFrame];
-
-        foreach (Frame frame in frames)
+        Global.CurrentModel.Process(allFrames, allLayers, (frame, layer) =>
         {
-            ObservableCollection<Layer> layers = allLayers ? frame.Layers : [Global.CurrentLayer];
-
-            foreach (Layer layer in layers)
-            {
-                ApplyToolOnLayer(layer, altKey);
-            }
-        }
+            ApplyToolOnLayer(layer, altKey);
+            return null;
+        });
     }
 
     public abstract void ApplyToolOnLayer(Layer layer, bool altKey);

@@ -114,6 +114,12 @@ internal class Layer : PropertyChangedBase
         _needRerender = true;
     }
 
+    public void Rerender()
+    {
+        _needRerender = true;
+        RefreshRenderSource();
+    }
+
     public void RefreshRenderSource()
     {
         RenderSource = Render().ToAvaloniaBitmap();

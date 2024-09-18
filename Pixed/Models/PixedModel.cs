@@ -1,4 +1,5 @@
 ﻿using Pixed.Services.History;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -19,6 +20,28 @@ internal class PixedModel
     {
         _frames = [];
         _history = [];
+    }
+
+    public void Process(bool allFrames, bool allLayers, Func<Frame, Layer, HistoryEntry?> action)
+    {
+        Frame[] frames = allFrames ? Frames.ToArray() : [Global.CurrentFrame];
+
+        foreach (Frame frame in frames)
+        {
+            Layer[] layers = allLayers ? frame.Layers.ToArray() : [Global.CurrentLayer];
+
+            foreach (Layer layer in layers)
+            {
+                var entry = action?.Invoke(frame, layer);
+
+                if(entry.HasValue && entry.Value.OldColor.Length > 0)
+                {
+                    AddHistory(entry.Value);
+                }
+            }
+
+            Subjects.FrameModified.OnNext(frame);
+        }
     }
 
     public List<int> GetAllColors()

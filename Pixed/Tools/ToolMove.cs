@@ -1,5 +1,6 @@
 ﻿using Pixed.Input;
 using Pixed.Models;
+using Pixed.Services.History;
 using System.Drawing;
 using System.Linq;
 
@@ -28,18 +29,27 @@ namespace Pixed.Tools
             ShiftLayer(frame.Layers[frame.SelectedLayer], _currentLayerClone, diffX, diffY);
         }
 
-        public override void ReleaseTool(int x, int y, Frame frame, ref Bitmap overlay)
+        public override void ReleaseTool(int x, int y, Frame _, ref Bitmap overlay)
         {
             int diffX = x - _startX;
             int diffY = y - _startY;
 
             bool ctrlKey = Keyboard.Modifiers.HasFlag(Avalonia.Input.KeyModifiers.Control);
-            Layer[] layers = ctrlKey ? frame.Layers.ToArray() : [Global.CurrentLayer];
+            bool shiftKey = Keyboard.Modifiers.HasFlag(Avalonia.Input.KeyModifiers.Control);
 
-            foreach (Layer layer in layers)
+            Frame[] frames = shiftKey ? Global.CurrentModel.Frames.ToArray() : [Global.CurrentFrame];
+
+            foreach (Frame frame in frames)
             {
-                var reference = this._currentLayer == layer ? this._currentLayerClone : layer.Clone();
-                ShiftLayer(layer, reference, diffX, diffY);
+                Layer[] layers = ctrlKey ? frame.Layers.ToArray() : [Global.CurrentLayer];
+
+                foreach (Layer layer in layers)
+                {
+                    var reference = this._currentLayer == layer ? this._currentLayerClone : layer.Clone();
+                    ShiftLayer(layer, reference, diffX, diffY);
+                }
+
+                Subjects.FrameModified.OnNext(frame);
             }
         }
 
