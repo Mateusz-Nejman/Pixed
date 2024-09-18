@@ -1,10 +1,12 @@
 ﻿using Avalonia.Media.Imaging;
 using Pixed.Services.History;
 using Pixed.Utils;
+using Pixed.Windows;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Input;
 
 namespace Pixed.Models;
 
@@ -29,10 +31,21 @@ internal class PixedModel : PropertyChangedBase
         }
     }
 
-    public PixedModel()
+    public ICommand CloseCommand { get; }
+
+    public PixedModel() : this(Global.UserSettings.UserWidth, Global.UserSettings.UserHeight)
+    {
+        
+    }
+
+    public PixedModel(int width, int height)
     {
         _frames = [];
         _history = [];
+
+        CloseCommand = new ActionCommand(CloseCommandAction);
+
+        Frames.Add(new Frame(width, height));
     }
 
     public void UpdatePreview()
@@ -174,5 +187,20 @@ internal class PixedModel : PropertyChangedBase
 
         _historyIndex++;
         Subjects.RefreshCanvas.OnNext(null);
+    }
+
+    private void CloseCommandAction()
+    {
+        if(Global.Models.Count == 1)
+        {
+            MainWindow.QuitCommand.Execute(null);
+        }
+        else
+        {
+            Global.Models.Remove(this);
+            Global.CurrentModelIndex = Math.Clamp(Global.CurrentModelIndex, 0, Global.Models.Count - 1);
+            Subjects.FrameChanged.OnNext(Global.CurrentFrame);
+            Subjects.LayerChanged.OnNext(Global.CurrentLayer);
+        }
     }
 }

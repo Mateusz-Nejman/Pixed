@@ -57,7 +57,7 @@
           <mainsections:FramesSection/>
           <Grid Name="centerPanel" Grid.Column="2">
             <Grid.RowDefinitions>
-              <RowDefinition Height="68"/>
+              <RowDefinition Height="70"/>
               <RowDefinition Height="*">
               </RowDefinition>
             </Grid.RowDefinitions>

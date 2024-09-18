@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Pixed.Models;
 using Pixed.Windows;
 using System.Collections.Generic;
 using System.Linq;
@@ -68,6 +69,18 @@ namespace Pixed
         {
             NativeMenuItem fileMenu = new("File");
             NativeMenuItem fileNew = new("New"); //TODO
+            fileNew.Command = new ActionCommand(async() =>
+            {
+                NewProjectWindow window = new();
+                var success = await window.ShowDialog<bool>(MainWindow.Handle);
+
+                if(success)
+                {
+                    PixedModel model = new(window.WidthValue, window.HeightValue);
+                    Global.Models.Add(model);
+                    Subjects.ProjectAdded.OnNext(model);
+                }
+            });
             NativeMenuItem fileOpen = new("Open"); //TODO
             NativeMenuItem fileSave = new("Save"); //TODO
             NativeMenuItem fileSaveAs = new("Save as"); //TODO

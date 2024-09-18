@@ -38,8 +38,7 @@ public partial class MainWindow : Window
 
     private static void InitializeBeforeUI()
     {
-        Global.Models.Add(new PixedModel());
-        Global.CurrentModel.Frames.Add(new Frame(Global.UserSettings.UserWidth, Global.UserSettings.UserHeight));
+        Global.Models.Add(new PixedModel(Global.UserSettings.UserWidth, Global.UserSettings.UserHeight));
     }
 
     private void Window_KeyUp(object? sender, KeyEventArgs e)

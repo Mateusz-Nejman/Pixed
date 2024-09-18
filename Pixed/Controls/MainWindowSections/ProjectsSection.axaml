@@ -9,10 +9,10 @@
     <vm:ProjectsSectionViewModel/>
   </UserControl.DataContext>
   <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden">
-    <TabControl ItemsSource="{Binding Projects}">
+    <TabControl ItemsSource="{Binding Projects}" SelectedIndex="{Binding SelectedProject, Mode=TwoWay}">
       <TabControl.ItemTemplate>
         <DataTemplate>
-          <Grid Width="100" Height="68">
+          <Grid Width="100" Height="72">
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="64"/>
               <ColumnDefinition Width="32"/>
@@ -23,6 +23,9 @@
               </Grid.Background>
               <Image Width="64" Height="64" Source="{Binding RenderSource}" RenderOptions.BitmapInterpolationMode="None"/>
             </Grid>
+            <Button Grid.Column="1" Theme="{StaticResource BaseButton}" Command="{Binding CloseCommand}">
+              <Image Source="/Resources/Icons/cross.png" Width="16" Height="16"/>
+            </Button>
           </Grid>
         </DataTemplate>
       </TabControl.ItemTemplate>

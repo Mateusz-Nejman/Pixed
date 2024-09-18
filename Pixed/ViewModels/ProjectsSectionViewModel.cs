@@ -6,7 +6,19 @@ namespace Pixed.ViewModels
 {
     internal class ProjectsSectionViewModel : PropertyChangedBase
     {
+        private int _selectedProject = 0;
         public static ObservableCollection<PixedModel> Projects => Global.Models;
+
+        public int SelectedProject
+        {
+            get => _selectedProject;
+            set
+            {
+                _selectedProject = value;
+                Global.CurrentModelIndex = value;
+                Subjects.ProjectChanged.OnNext(Global.CurrentModel);
+            }
+        }
 
         public ProjectsSectionViewModel()
         {
@@ -22,8 +34,16 @@ namespace Pixed.ViewModels
 
             Subjects.ProjectChanged.Subscribe(p =>
             {
+                _selectedProject = Global.Models.IndexOf(p);
+                OnPropertyChanged(nameof(SelectedProject));
                 Subjects.FrameChanged.OnNext(p.Frames[0]);
                 Subjects.LayerChanged.OnNext(p.Frames[0].Layers[p.Frames[0].SelectedLayer]); //TODO
+            });
+
+            Subjects.ProjectAdded.Subscribe(p =>
+            {
+                int index = Global.Models.IndexOf(p);
+                SelectedProject = index;
             });
         }
 
