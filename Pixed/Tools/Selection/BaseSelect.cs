@@ -61,7 +61,7 @@ internal class BaseSelect : BaseTool
         {
             _mode = SelectionMode.MoveSelection;
 
-            if (Keyboard.Modifiers == KeyModifiers.Shift)
+            if (Keyboard.Modifiers.HasFlag(KeyModifiers.Shift))
             {
                 _isMovingContent = true;
                 Subjects.ClipboardCut.OnNext(_selection);

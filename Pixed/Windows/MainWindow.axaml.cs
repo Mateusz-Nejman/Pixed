@@ -54,9 +54,9 @@ public partial class MainWindow : Window
         Keyboard.ProcessPressed(e.Key);
         Subjects.KeyState.OnNext(new KeyState(
                 e.Key,
-                Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift),
-                Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl),
-                Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt)));
+                Keyboard.Modifiers.HasFlag(KeyModifiers.Shift),
+                Keyboard.Modifiers.HasFlag(KeyModifiers.Control),
+                Keyboard.Modifiers.HasFlag(KeyModifiers.Alt));
     }
 
     private void Window_PointerPressed(object? sender, PointerPressedEventArgs e)

@@ -8,7 +8,6 @@ namespace Pixed;
 internal static class Subjects
 {
     public static Subject<KeyState> KeyState { get; } = new Subject<KeyState>();
-    public static Subject<object?> _RefreshCanvas { get; } = new Subject<object?>();
     public static Subject<BaseSelection> SelectionCreated { get; } = new Subject<BaseSelection>();
     public static Subject<BaseSelection> SelectionDismissed { get; } = new Subject<BaseSelection>();
 

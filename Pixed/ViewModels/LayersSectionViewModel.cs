@@ -161,7 +161,7 @@ internal class LayersSectionViewModel : PropertyChangedBase, IPixedViewModel, ID
 
     private void AddLayerAction()
     {
-        Layer layer = Frame.AddLayer(Keyboard.Modifiers == KeyModifiers.Shift ? Layers[_selectedLayer].Clone() : new Layer(Frame.Width, Frame.Height));
+        Layer layer = Frame.AddLayer(Keyboard.Modifiers.HasFlag(KeyModifiers.Shift) ? Layers[_selectedLayer].Clone() : new Layer(Frame.Width, Frame.Height));
         OnPropertyChanged(nameof(Layers));
         Subjects.LayerAdded.OnNext(layer);
         Subjects.FrameModified.OnNext(Frame);
@@ -173,7 +173,7 @@ internal class LayersSectionViewModel : PropertyChangedBase, IPixedViewModel, ID
             return;
         }
 
-        Frame.MoveLayerUp(Keyboard.Modifiers == KeyModifiers.Shift);
+        Frame.MoveLayerUp(Keyboard.Modifiers.HasFlag(KeyModifiers.Shift));
         OnPropertyChanged(nameof(Layers));
         Subjects.FrameModified.OnNext(Frame);
     }
@@ -185,7 +185,7 @@ internal class LayersSectionViewModel : PropertyChangedBase, IPixedViewModel, ID
             return;
         }
 
-        Frame.MoveLayerDown(Keyboard.Modifiers == KeyModifiers.Shift);
+        Frame.MoveLayerDown(Keyboard.Modifiers.HasFlag(KeyModifiers.Shift));
         OnPropertyChanged(nameof(Layers));
         Subjects.FrameModified.OnNext(Frame);
     }
