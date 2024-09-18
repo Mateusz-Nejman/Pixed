@@ -1,5 +1,4 @@
 ﻿using Avalonia;
-using Avalonia.Controls;
 
 namespace Pixed.Controls;
 

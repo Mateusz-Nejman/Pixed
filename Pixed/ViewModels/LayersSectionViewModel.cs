@@ -32,7 +32,7 @@ internal class LayersSectionViewModel : PropertyChangedBase, IPixedViewModel, ID
         get => _selectedLayer;
         set
         {
-            if(value == -1)
+            if (value == -1)
             {
                 return;
             }

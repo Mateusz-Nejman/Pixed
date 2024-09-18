@@ -3,7 +3,6 @@ using Pixed.Utils;
 using System;
 using System.Drawing;
 using Frame = Pixed.Models.Frame;
-using Image = Avalonia.Controls.Image;
 
 namespace Pixed.ViewModels;
 

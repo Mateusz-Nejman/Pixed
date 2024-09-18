@@ -32,7 +32,7 @@ internal class FramesSectionViewModel : PropertyChangedBase, IPixedViewModel, ID
         get => _selectedFrame;
         set
         {
-            if(value == -1)
+            if (value == -1)
             {
                 return;
             }
