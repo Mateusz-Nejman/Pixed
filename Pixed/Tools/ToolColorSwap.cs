@@ -2,7 +2,6 @@
 using Pixed.Models;
 using Pixed.Services.History;
 using System.Drawing;
-using System.Linq;
 
 namespace Pixed.Tools
 {

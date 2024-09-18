@@ -35,7 +35,7 @@ internal class PixedModel : PropertyChangedBase
 
     public PixedModel() : this(Global.UserSettings.UserWidth, Global.UserSettings.UserHeight)
     {
-        
+
     }
 
     public PixedModel(int width, int height)
@@ -65,7 +65,7 @@ internal class PixedModel : PropertyChangedBase
             {
                 var entry = action?.Invoke(frame, layer);
 
-                if(entry.HasValue && entry.Value.OldColor.Length > 0)
+                if (entry.HasValue && entry.Value.OldColor.Length > 0)
                 {
                     AddHistory(entry.Value);
                 }
@@ -191,7 +191,7 @@ internal class PixedModel : PropertyChangedBase
 
     private void CloseCommandAction()
     {
-        if(Global.Models.Count == 1)
+        if (Global.Models.Count == 1)
         {
             MainWindow.QuitCommand.Execute(null);
         }

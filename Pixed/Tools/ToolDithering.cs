@@ -13,7 +13,7 @@ namespace Pixed.Tools
 
             bool usePrimary = (x + y) % 2 != 0;
 
-            if(Mouse.LeftButton == MouseButtonState.Pressed)
+            if (Mouse.LeftButton == MouseButtonState.Pressed)
             {
                 usePrimary = !usePrimary;
             }

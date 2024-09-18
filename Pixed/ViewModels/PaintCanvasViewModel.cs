@@ -1,5 +1,4 @@
 ﻿using Avalonia.Controls;
-using Pixed.Models;
 using Pixed.Utils;
 using System;
 using System.Drawing;
@@ -85,7 +84,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase
 
         Subjects.FrameModified.Subscribe(f =>
         {
-            if(f.Id == CurrentFrame.Id)
+            if (f.Id == CurrentFrame.Id)
             {
                 CurrentFrame = f;
             }

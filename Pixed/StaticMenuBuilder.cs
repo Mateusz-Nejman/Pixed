@@ -68,13 +68,13 @@ namespace Pixed
         private static NativeMenuItem GetFileMenu()
         {
             NativeMenuItem fileMenu = new("File");
-            NativeMenuItem fileNew = new("New"); //TODO
-            fileNew.Command = new ActionCommand(async() =>
+            NativeMenuItem fileNew = new("New");
+            fileNew.Command = new ActionCommand(async () =>
             {
                 NewProjectWindow window = new();
                 var success = await window.ShowDialog<bool>(MainWindow.Handle);
 
-                if(success)
+                if (success)
                 {
                     PixedModel model = new(window.WidthValue, window.HeightValue);
                     Global.Models.Add(model);
