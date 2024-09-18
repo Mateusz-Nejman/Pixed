@@ -16,7 +16,7 @@ namespace Pixed.Tools
         {
             _startX = x;
             _startY = y;
-            _currentLayer = frame.Layers[frame.SelectedLayer];
+            _currentLayer = frame.CurrentLayer;
             _currentLayerClone = _currentLayer.Clone();
         }
 
@@ -25,7 +25,8 @@ namespace Pixed.Tools
             int diffX = x - _startX;
             int diffY = y - _startY;
 
-            ShiftLayer(frame.Layers[frame.SelectedLayer], _currentLayerClone, diffX, diffY);
+            ShiftLayer(frame.CurrentLayer, _currentLayerClone, diffX, diffY);
+            Subjects.LayerModified.OnNext(frame.CurrentLayer);
         }
 
         public override void ReleaseTool(int x, int y, Frame _, ref Bitmap overlay)
@@ -46,6 +47,7 @@ namespace Pixed.Tools
                 {
                     var reference = this._currentLayer == layer ? this._currentLayerClone : layer.Clone();
                     ShiftLayer(layer, reference, diffX, diffY);
+                    Subjects.LayerModified.OnNext(layer);
                 }
 
                 Subjects.FrameModified.OnNext(frame);

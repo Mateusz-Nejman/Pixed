@@ -6,10 +6,14 @@ using System.Windows.Input;
 
 namespace Pixed.ViewModels;
 
-internal class FramesSectionViewModel : PropertyChangedBase, IPixedViewModel
+internal class FramesSectionViewModel : PropertyChangedBase, IPixedViewModel, IDisposable
 {
     private int _selectedFrame = 0;
     private bool _removeFrameEnabled = false;
+    private bool _disposedValue;
+    private IDisposable _projectChanged;
+    private IDisposable _frameAdded;
+    private IDisposable _frameRemoved;
 
     public static ObservableCollection<Frame> Frames => Global.CurrentModel.Frames;
 
@@ -28,12 +32,14 @@ internal class FramesSectionViewModel : PropertyChangedBase, IPixedViewModel
         get => _selectedFrame;
         set
         {
+            if (value == -1)
+            {
+                return;
+            }
             _selectedFrame = Math.Clamp(value, 0, Frames.Count);
-            Global.CurrentFrameIndex = _selectedFrame;
-            Subjects.FrameChanged.OnNext(Frames[_selectedFrame]);
-            Subjects.LayerChanged.OnNext(Frames[_selectedFrame].Layers[0]);
+            Global.CurrentModel.CurrentFrameIndex = _selectedFrame;
             OnPropertyChanged();
-            Subjects.RefreshCanvas.OnNext(null);
+            Subjects.FrameChanged.OnNext(Global.CurrentFrame);
         }
     }
 
@@ -43,25 +49,25 @@ internal class FramesSectionViewModel : PropertyChangedBase, IPixedViewModel
 
     public FramesSectionViewModel()
     {
-        Subjects.FrameChanged.OnNext(Global.CurrentFrame);
-
         NewFrameCommand = new ActionCommand(NewFrameAction);
         RemoveFrameCommand = new ActionCommand(RemoveFrameAction);
         DuplicateFrameCommand = new ActionCommand(DuplicateFrameAction);
-
-        Subjects.FrameChanged.Subscribe(f =>
+        _projectChanged = Subjects.ProjectChanged.Subscribe(p =>
         {
             OnPropertyChanged(nameof(Frames));
-        });
-        Subjects.FrameModified.Subscribe(f =>
-        {
-            f.RefreshRenderSource();
-            Subjects.RefreshCanvas.OnNext(null);
-            OnPropertyChanged(nameof(Frames));
+            SelectedFrame = p.CurrentFrameIndex;
+            RemoveFrameEnabled = Global.CurrentModel.Frames.Count > 1;
         });
 
-        Subjects.FrameAdded.Subscribe(_ => RemoveFrameEnabled = Global.CurrentModel.Frames.Count != 1);
-        Subjects.FrameRemoved.Subscribe(_ => RemoveFrameEnabled = Global.CurrentModel.Frames.Count != 1);
+        _frameAdded = Subjects.FrameAdded.Subscribe(f =>
+        {
+            RemoveFrameEnabled = Global.CurrentModel.Frames.Count > 1;
+        });
+
+        _frameRemoved = Subjects.FrameRemoved.Subscribe(f =>
+        {
+            RemoveFrameEnabled = Global.CurrentModel.Frames.Count > 1;
+        });
     }
 
     public void RegisterMenuItems()
@@ -71,11 +77,31 @@ internal class FramesSectionViewModel : PropertyChangedBase, IPixedViewModel
         PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Project, "Remove Frame", RemoveFrameCommand);
     }
 
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposedValue)
+        {
+            if (disposing)
+            {
+                _projectChanged?.Dispose();
+                _frameAdded?.Dispose();
+                _frameRemoved?.Dispose();
+            }
+
+            _disposedValue = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
+
     private void NewFrameAction()
     {
         Frames.Add(new Frame(Frames[0].Width, Frames[0].Height));
         SelectedFrame = Frames.Count - 1;
-        Subjects.FrameAdded.OnNext(Frames[^1]);
     }
 
     private void RemoveFrameAction()
@@ -88,13 +114,11 @@ internal class FramesSectionViewModel : PropertyChangedBase, IPixedViewModel
         int index = SelectedFrame;
         Frames.RemoveAt(index);
         SelectedFrame = Math.Clamp(index, 0, Frames.Count - 1);
-        Subjects.FrameRemoved.OnNext(Frames[^1]);
     }
 
     private void DuplicateFrameAction()
     {
         Frames.Add(Frames[SelectedFrame].Clone());
         SelectedFrame = Frames.Count - 1;
-        Subjects.FrameAdded.OnNext(Frames[^1]);
     }
 }

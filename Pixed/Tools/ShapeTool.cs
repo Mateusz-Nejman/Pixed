@@ -43,7 +43,6 @@ namespace Pixed.Tools
             Global.CurrentModel.AddHistory(historyEntry);
 
             overlay.Clear();
-            Subjects.RefreshCanvas.OnNext(null);
         }
 
         protected void Draw(int x, int y, int color, bool isShift, ref Bitmap overlay)
@@ -62,7 +61,7 @@ namespace Pixed.Tools
             DynamicHistoryEntry entry = new()
             {
                 FrameId = frame.Id,
-                LayerId = frame.Layers[frame.SelectedLayer].Id
+                LayerId = frame.CurrentLayer.Id
             };
             Draw(x, y, color, isShift, (x1, y1, _) =>
             {
@@ -70,6 +69,8 @@ namespace Pixed.Tools
                 entry.Add(x1, y1, oldColor, color);
                 frame.SetPixel(x1, y1, color);
             });
+
+            Subjects.FrameModified.OnNext(frame);
 
             return entry.ToEntry();
         }

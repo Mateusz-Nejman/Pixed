@@ -1,8 +1,6 @@
-using Avalonia.Controls;
-
 namespace Pixed.Controls.MainWindowSections;
 
-public partial class ProjectsSection : UserControl
+internal partial class ProjectsSection : PixedUserControl
 {
     public ProjectsSection()
     {

@@ -14,6 +14,6 @@ internal class Flip : AbstractTransformTool
         }
 
         TransformUtils.Flip(ref layer, axis);
-        Subjects.RefreshCanvas.OnNext(null);
+        Subjects.LayerModified.OnNext(layer);
     }
 }

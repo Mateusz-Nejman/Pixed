@@ -8,10 +8,10 @@ internal abstract class AbstractTransformTool
 {
     public virtual void ApplyTransformation()
     {
-        bool allFrames = Keyboard.Modifiers == KeyModifiers.Shift;
-        bool allLayers = Keyboard.Modifiers == KeyModifiers.Control;
+        bool allFrames = Keyboard.Modifiers.HasFlag(KeyModifiers.Shift);
+        bool allLayers = Keyboard.Modifiers.HasFlag(KeyModifiers.Control);
 
-        ApplyTool(Keyboard.Modifiers == KeyModifiers.Alt, allFrames, allLayers);
+        ApplyTool(Keyboard.Modifiers.HasFlag(KeyModifiers.Alt), allFrames, allLayers);
     }
     public virtual void ApplyTool(bool altKey, bool allFrames, bool allLayers)
     {

@@ -16,10 +16,23 @@ internal class PixedModel : PropertyChangedBase
     private readonly ObservableCollection<HistoryEntry> _history;
     private int _historyIndex = -1;
     private Bitmap _renderSource;
+    private int _currentFrameIndex = 0;
 
     public ObservableCollection<Frame> Frames => _frames;
     public int Width => Frames[0].Width;
     public int Height => Frames[0].Height;
+
+    public Frame CurrentFrame => Frames[_currentFrameIndex];
+
+    public int CurrentFrameIndex
+    {
+        get => _currentFrameIndex;
+        set
+        {
+            _currentFrameIndex = value;
+            OnPropertyChanged();
+        }
+    }
 
     public Bitmap RenderSource
     {
@@ -55,7 +68,7 @@ internal class PixedModel : PropertyChangedBase
 
     public void Process(bool allFrames, bool allLayers, Func<Frame, Layer, HistoryEntry?> action)
     {
-        Frame[] frames = allFrames ? Frames.ToArray() : [Global.CurrentFrame];
+        Frame[] frames = allFrames ? [.. Frames] : [Global.CurrentFrame];
 
         foreach (Frame frame in frames)
         {
@@ -69,6 +82,8 @@ internal class PixedModel : PropertyChangedBase
                 {
                     AddHistory(entry.Value);
                 }
+
+                Subjects.LayerModified.OnNext(layer);
             }
 
             Subjects.FrameModified.OnNext(frame);
@@ -138,7 +153,6 @@ internal class PixedModel : PropertyChangedBase
         }
 
         _historyIndex--;
-        Subjects.RefreshCanvas.OnNext(null);
     }
 
     public void Redo()
@@ -186,7 +200,6 @@ internal class PixedModel : PropertyChangedBase
         }
 
         _historyIndex++;
-        Subjects.RefreshCanvas.OnNext(null);
     }
 
     private void CloseCommandAction()
@@ -198,9 +211,8 @@ internal class PixedModel : PropertyChangedBase
         else
         {
             Global.Models.Remove(this);
+            Subjects.ProjectRemoved.OnNext(this);
             Global.CurrentModelIndex = Math.Clamp(Global.CurrentModelIndex, 0, Global.Models.Count - 1);
-            Subjects.FrameChanged.OnNext(Global.CurrentFrame);
-            Subjects.LayerChanged.OnNext(Global.CurrentLayer);
         }
     }
 }

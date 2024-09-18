@@ -11,7 +11,7 @@ internal static class PaintUtils
 {
     public static List<Pixel> GetSimiliarConnectedPixels(Frame frame, int x, int y)
     {
-        return GetSimiliarConnectedPixels(frame.Layers[frame.SelectedLayer], x, y);
+        return GetSimiliarConnectedPixels(frame.CurrentLayer, x, y);
     }
 
     public static List<Pixel> GetSimiliarConnectedPixels(Layer layer, int x, int y)
@@ -60,6 +60,8 @@ internal static class PaintUtils
             layer.SetPixel(pixel.X, pixel.Y, replacementColor);
             entry.Add(pixel.X, pixel.Y, pixel.Color, replacementColor);
         }
+
+        Subjects.LayerModified.OnNext(layer);
 
         return entry;
     }
@@ -154,6 +156,8 @@ internal static class PaintUtils
             entry.Add(pixel.X, pixel.Y, pixel.Color, color);
         }
 
+        Subjects.LayerModified.OnNext(layer);
+
         return entry;
     }
 
@@ -204,6 +208,8 @@ internal static class PaintUtils
             layer.SetPixel(pixel.X, pixel.Y, replacementColor);
             entry.Add(pixel.X, pixel.Y, oldColor, replacementColor);
         }
+
+        Subjects.LayerModified.OnNext(layer);
 
         return entry;
     }

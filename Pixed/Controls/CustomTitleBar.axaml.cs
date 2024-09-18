@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Pixed.Controls;
 
-public partial class CustomTitleBar : UserControl
+internal partial class CustomTitleBar : PixedUserControl
 {
     private readonly Button _minimizeButton;
     private readonly Button _maximizeButton;

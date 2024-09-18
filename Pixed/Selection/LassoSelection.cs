@@ -59,7 +59,7 @@ internal class LassoSelection : BaseSelection
     private void VisitPixel(Point point, Frame frame)
     {
         bool frameBorderReached = false;
-        var visited = PaintUtils.VisitConnectedPixels(frame.Layers[frame.SelectedLayer], point.X, point.Y, p =>
+        var visited = PaintUtils.VisitConnectedPixels(frame.CurrentLayer, point.X, point.Y, p =>
         {
             var alreadyVisited = GetPixel(point);
 

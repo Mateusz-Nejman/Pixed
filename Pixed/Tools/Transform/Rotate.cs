@@ -14,6 +14,6 @@ internal class Rotate : AbstractTransformTool
         }
 
         TransformUtils.Rotate(ref layer, direction);
-        Subjects.RefreshCanvas.OnNext(null);
+        Subjects.LayerModified.OnNext(layer);
     }
 }

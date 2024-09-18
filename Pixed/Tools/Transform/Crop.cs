@@ -22,7 +22,6 @@ internal class Crop : AbstractTransformTool
 
         if (applied)
         {
-            Subjects.RefreshCanvas.OnNext(null);
             //TODO undo/redo
         }
     }
@@ -58,18 +57,21 @@ internal class Crop : AbstractTransformTool
             foreach (var layer in frame.Layers)
             {
                 TransformUtils.MoveLayerFixes(layer, -boundaries[0], -boundaries[1]);
+                Subjects.LayerModified.OnNext(layer);
             }
+
+            Subjects.FrameModified.OnNext(frame);
         }
 
         var newModel = ResizeUtils.ResizeModel(model, 1 + boundaries[2] - boundaries[0], 1 + boundaries[3] - boundaries[1], false, ResizeUtils.Origin.TopLeft);
         Subjects.SelectionDismissed.OnNext(null);
         Global.Models[Global.CurrentModelIndex] = newModel;
+        Subjects.ProjectModified.OnNext(newModel);
 
         foreach (var frame in Global.CurrentModel.Frames)
         {
             frame.RefreshLayerRenderSources();
             frame.RefreshRenderSource();
-            Subjects.FrameModified.OnNext(frame);
         }
         return true;
     }

@@ -18,8 +18,8 @@
             <Grid.Background>
 				<ImageBrush Source="avares://Pixed/Resources/transparentBackground.png" TileMode="Tile" Stretch="Uniform" AlignmentY="Top" DestinationRect="0 0 32 32"/>
             </Grid.Background>
-            <Image Name="image" RenderOptions.BitmapInterpolationMode="None"/>
-            <Image Name="overlay" RenderOptions.BitmapInterpolationMode="None"/>
+            <Image Name="image" RenderOptions.BitmapInterpolationMode="None" Source="{Binding AvaloniaImageBitmap}"/>
+            <Image Name="overlay" RenderOptions.BitmapInterpolationMode="None" Source="{Binding AvaloniaOverlayBitmap}"/>
 			<Border Background="Transparent" 
 					PointerExited="Border_PointerExited"
 					PointerMoved="Border_PointerMoved"

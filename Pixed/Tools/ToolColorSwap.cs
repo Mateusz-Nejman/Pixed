@@ -18,7 +18,6 @@ namespace Pixed.Tools
                 bool allFrames = Keyboard.Modifiers.HasFlag(Avalonia.Input.KeyModifiers.Shift);
 
                 SwapColors(oldColor, newColor, allLayers, allFrames);
-                Subjects.RefreshCanvas.OnNext(null);
             }
         }
 

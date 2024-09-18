@@ -1,9 +1,8 @@
 ﻿using Avalonia;
-using Avalonia.Controls;
 
 namespace Pixed.Controls;
 
-public partial class TooltipWith3Buttons : UserControl
+internal partial class TooltipWith3Buttons : PixedUserControl
 {
     public string Title
     {

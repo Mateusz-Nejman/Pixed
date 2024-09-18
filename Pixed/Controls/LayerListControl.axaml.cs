@@ -1,8 +1,6 @@
-﻿using Avalonia.Controls;
+﻿namespace Pixed.Controls;
 
-namespace Pixed.Controls;
-
-public partial class LayerListControl : UserControl
+internal partial class LayerListControl : PixedUserControl
 {
     public LayerListControl()
     {

@@ -17,11 +17,9 @@ internal static class Global
     public static BaseTool? ToolSelected { get; set; }
     public static ObservableCollection<PixedModel> Models { get; } = [];
     public static int CurrentModelIndex { get; set; }
-    public static int CurrentFrameIndex { get; set; }
-    public static int CurrentLayerIndex { get; set; }
     public static PixedModel CurrentModel => Models[CurrentModelIndex];
-    public static Frame CurrentFrame => CurrentModel.Frames[CurrentFrameIndex];
-    public static Layer CurrentLayer => CurrentFrame.Layers[CurrentLayerIndex];
+    public static Frame CurrentFrame => CurrentModel.CurrentFrame;
+    public static Layer CurrentLayer => CurrentFrame.CurrentLayer;
     public static ToolSelector ToolSelector { get; set; }
     public static UniColor PrimaryColor { get; set; }
     public static UniColor SecondaryColor { get; set; }

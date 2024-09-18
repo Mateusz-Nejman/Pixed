@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace Pixed.Controls;
 
-public partial class PaintCanvas : UserControl
+internal partial class PaintCanvas : PixedUserControl
 {
     private readonly PaintCanvasViewModel _viewModel;
     private readonly int _scrollBarSize = 18;
@@ -17,7 +17,6 @@ public partial class PaintCanvas : UserControl
     {
         InitializeComponent();
         _viewModel = DataContext as PaintCanvasViewModel;
-        _viewModel?.Initialize(image, imageGrid, overlay);
         SizeChanged += PaintCanvas_SizeChanged;
     }
 

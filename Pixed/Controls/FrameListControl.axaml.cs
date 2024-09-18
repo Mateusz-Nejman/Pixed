@@ -1,8 +1,6 @@
-﻿using Avalonia.Controls;
+﻿namespace Pixed.Controls;
 
-namespace Pixed.Controls;
-
-public partial class FrameListControl : UserControl
+internal partial class FrameListControl : PixedUserControl
 {
     public FrameListControl()
     {
