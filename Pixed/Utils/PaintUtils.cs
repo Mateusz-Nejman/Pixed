@@ -3,6 +3,8 @@ using Pixed.Services.History;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
+using System.Security.Cryptography;
 
 namespace Pixed.Utils;
 
@@ -10,10 +12,15 @@ internal static class PaintUtils
 {
     public static List<Pixel> GetSimiliarConnectedPixels(Frame frame, int x, int y)
     {
-        int targetColor = frame.GetPixel(x, y);
+        return GetSimiliarConnectedPixels(frame.Layers[frame.SelectedLayer], x, y);
+    }
+
+    public static List<Pixel> GetSimiliarConnectedPixels(Layer layer, int x, int y)
+    {
+        int targetColor = layer.GetPixel(x, y);
 
         List<Pixel> visited = [];
-        return VisitConnectedPixels(frame.Layers[frame.SelectedLayer], x, y, p =>
+        return VisitConnectedPixels(layer, x, y, p =>
         {
             if (visited.Contains(p))
             {
@@ -21,9 +28,10 @@ internal static class PaintUtils
             }
 
             visited.Add(p);
-            return frame.GetPixel(p.X, p.Y) == targetColor;
+            return layer.GetPixel(p.X, p.Y) == targetColor;
         });
     }
+
     public static DynamicHistoryEntry PaintSimiliarConnected(Layer layer, int x, int y, int replacementColor)
     {
         int targetColor = layer.GetPixel(x, y);
@@ -109,6 +117,7 @@ internal static class PaintUtils
             }
         }
 
+        pixels = pixels.DistinctBy(p => p.X + ";" + p.Y).ToList();
         return pixels;
     }
 
@@ -144,6 +153,57 @@ internal static class PaintUtils
             var color = GetNoiseColor();
             layer.SetPixel(pixel.X, pixel.Y, color);
             entry.Add(pixel.X, pixel.Y, pixel.Color, color);
+        }
+
+        return entry;
+    }
+
+    public static DynamicHistoryEntry OutlineSimiliarConnectedPixels(Layer layer, int x, int y, int replacementColor, bool fillCorners)
+    {
+        DynamicHistoryEntry entry = new DynamicHistoryEntry();
+        entry.LayerId = layer.Id;
+
+        var targetColor = layer.GetPixel(x, y);
+
+        if (targetColor == replacementColor)
+        {
+            return entry;
+        }
+
+        bool neighbourCheck(Pixel pixel)
+        {
+            for (int y1 = -1; y1 <= 1; y1++)
+            {
+                for (int x1 = -1; x1 <= 1; x1++)
+                {
+                    if (!layer.ContainsPixel(pixel.X + x1, pixel.Y + y1))
+                    {
+                        continue;
+                    }
+
+                    if (fillCorners || (x1 == 0 || y1 == 0))
+                    {
+                        var pixelColor = layer.GetPixel(pixel.X + x1, pixel.Y + y1);
+
+                        if (pixelColor != targetColor)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        var pixels = GetSimiliarConnectedPixels(layer, x, y);
+        pixels = pixels.Where(neighbourCheck).ToList();
+
+        foreach(var pixel in pixels)
+        {
+            int oldColor = layer.GetPixel(pixel.X, pixel.Y);
+            layer.SetPixel(pixel.X, pixel.Y, replacementColor);
+            entry.Add(pixel.X, pixel.Y, oldColor, replacementColor);
         }
 
         return entry;

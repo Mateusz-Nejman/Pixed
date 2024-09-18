@@ -30,6 +30,7 @@ internal class ToolSelector
         _tools.Add("tool_colorpicker", new ToolColorPicker());
         _tools.Add("tool_noise", new ToolNoise());
         _tools.Add("tool_noise_fill", new ToolNoiseFill());
+        _tools.Add("tool_outliner", new ToolOutliner());
     }
 
     public void SelectTool(string name)
