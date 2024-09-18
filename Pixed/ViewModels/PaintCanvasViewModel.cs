@@ -1,5 +1,4 @@
-﻿using Avalonia.Controls;
-using Pixed.Utils;
+﻿using Pixed.Utils;
 using System;
 using System.Drawing;
 using Frame = Pixed.Models.Frame;
@@ -8,9 +7,8 @@ namespace Pixed.ViewModels;
 
 internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
 {
-    private readonly double _gridWidth = 128;
-    private readonly double _gridHeight = 128;
-    private Point _imageOffset;
+    private double _gridWidth;
+    private double _gridHeight;
     private double _imageFactor;
     private Bitmap _overlayBitmap;
     private Avalonia.Media.Imaging.Bitmap _avaloniaImageBitmap;
@@ -18,7 +16,6 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
     private bool _leftPressed;
     private bool _rightPressed;
     private Frame _frame;
-    private Grid _grid;
     private Point _lastWindowSize;
     private bool _disposedValue;
 
@@ -69,6 +66,26 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
         set
         {
             _avaloniaOverlayBitmap = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public double GridWidth
+    {
+        get => _gridWidth;
+        set
+        {
+            _gridWidth = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public double GridHeight
+    {
+        get => _gridHeight;
+        set
+        {
+            _gridHeight = value;
             OnPropertyChanged();
         }
     }
@@ -126,14 +143,10 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
     {
         var factor = Math.Min(windowSize.X, windowSize.Y) / Math.Min(_frame.Width, _frame.Height);
         _imageFactor = factor;
-        _grid.Width = _frame.Width * factor;
-        _grid.Height = _frame.Height * factor;
+        GridWidth = _frame.Width * factor;
+        GridHeight = _frame.Height * factor;
         _lastWindowSize = windowSize;
         ResetOverlay();
-    }
-    public void Initialize(Grid grid)
-    {
-        _grid = grid;
     }
 
     public void ResetOverlay()
@@ -260,8 +273,8 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
         double multiplier = delta;
         var step = multiplier * Math.Max(0.1, Math.Abs(_imageFactor) / 15);
         _imageFactor = Math.Max(0.1, _imageFactor + step);
-        _grid.Width = _frame.Width * _imageFactor;
-        _grid.Height = _frame.Height * _imageFactor;
+        GridWidth = _frame.Width * _imageFactor;
+        GridHeight = _frame.Height * _imageFactor;
     }
 
     private void MouseLeaveAction()

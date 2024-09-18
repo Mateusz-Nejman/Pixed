@@ -17,7 +17,6 @@ internal partial class PaintCanvas : PixedUserControl
     {
         InitializeComponent();
         _viewModel = DataContext as PaintCanvasViewModel;
-        _viewModel?.Initialize(imageGrid);
         SizeChanged += PaintCanvas_SizeChanged;
     }
 
