@@ -63,6 +63,19 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
         Frames.Add(new Frame(width, height));
     }
 
+    public PixedModel Clone()
+    {
+        PixedModel model = new PixedModel();
+        model._currentFrameIndex = _currentFrameIndex;
+
+        foreach (Frame frame in Frames)
+        {
+            model._frames.Add(frame.Clone());
+        }
+
+        return model;
+    }
+
     public void UpdatePreview()
     {
         RenderSource = Frames.First().Render().ToAvaloniaBitmap();

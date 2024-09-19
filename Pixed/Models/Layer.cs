@@ -4,6 +4,7 @@ using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using Bitmap = Avalonia.Media.Imaging.Bitmap;
 
@@ -208,5 +209,17 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
             _name = name
         };
         return layer;
+    }
+
+    public static Layer MergeAll(Layer[] layers)
+    {
+        Layer first = layers.First().Clone();
+
+        for(int a = 1;  a < layers.Length; a++)
+        {
+            first.MergeLayers(layers[a]);
+        }
+
+        return first;
     }
 }
