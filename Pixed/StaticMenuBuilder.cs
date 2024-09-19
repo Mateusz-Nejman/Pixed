@@ -3,8 +3,10 @@ using Pixed.IO;
 using Pixed.Models;
 using Pixed.Windows;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reactive.Subjects;
+using System.Threading.Tasks;
 
 namespace Pixed
 {
@@ -95,7 +97,7 @@ namespace Pixed
                     var stream = await item.OpenReadAsync();
 
                     IPixedProjectSerializer serializer;
-                    if (item.Name.EndsWith("*.pixed"))
+                    if (item.Name.EndsWith(".pixed"))
                     {
                         serializer = new PixedProjectSerializer();
                     }
@@ -105,8 +107,14 @@ namespace Pixed
                     }
 
                     PixedModel model = serializer.Deserialize(stream);
+                    model.FileName = item.Name.Replace(".png", ".pixed");
 
-                    if(Global.CurrentModel.IsEmpty)
+                    if (item.Name.EndsWith(".pixed"))
+                    {
+                        model.FilePath = item.Path.AbsolutePath;
+                    }
+
+                    if (Global.CurrentModel.IsEmpty)
                     {
                         Global.Models[Global.CurrentModelIndex] = model;
                     }
@@ -119,11 +127,21 @@ namespace Pixed
                 }
             })
             };
-            NativeMenuItem fileSave = new("Save"); //TODO
-            NativeMenuItem fileSaveAs = new("Save as"); //TODO
+            NativeMenuItem fileSave = new("Save")
+            {
+                Command = new AsyncCommand<bool>(SaveAction),
+                CommandParameter = false
+            };
+            NativeMenuItem fileSaveAs = new("Save as")
+            {
+                Command = new AsyncCommand<bool>(SaveAction),
+                CommandParameter = true
+            };
             NativeMenuItem fileRecent = new("Recent"); //TODO
-            NativeMenuItem fileQuit = new("Quit");
-            fileQuit.Command = MainWindow.QuitCommand;
+            NativeMenuItem fileQuit = new("Quit")
+            {
+                Command = MainWindow.QuitCommand
+            };
 
             fileMenu.Menu = [fileNew, fileOpen, fileSave, fileSaveAs];
             AddToMenu(ref fileMenu, GetEntries(BaseMenuItem.File));
@@ -145,6 +163,38 @@ namespace Pixed
             foreach (var item in items)
             {
                 menuItem.Menu.Add(item);
+            }
+        }
+
+        private async static Task SaveAction(bool saveAs = false)
+        {
+            Stream fileStream = null;
+            if (Global.CurrentModel.FilePath == null)
+            {
+                saveAs = true;
+            }
+            else
+            {
+                fileStream = File.OpenWrite(Global.CurrentModel.FilePath);
+            }
+
+            if (saveAs)
+            {
+                var file = await IODialogs.SaveFileDialog("Pixed project (*.pixed)|*.pixed", Global.CurrentModel.FileName ?? "project.pixed");
+
+                if (file == null)
+                {
+                    return;
+                }
+
+                Global.CurrentModel.FilePath = file.Path.AbsolutePath;
+                fileStream = await file.OpenWriteAsync();
+            }
+
+            if (fileStream != null)
+            {
+                PixedProjectSerializer serializer = new PixedProjectSerializer();
+                serializer.Serialize(fileStream, Global.CurrentModel, true);
             }
         }
     }

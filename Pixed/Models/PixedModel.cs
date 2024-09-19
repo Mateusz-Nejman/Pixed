@@ -21,6 +21,9 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
     private int _currentFrameIndex = 0;
     private bool _isEmpty = true;
 
+    public string? FilePath { get; set; }
+    public string? FileName { get; set; }
+
     public ObservableCollection<Frame> Frames => _frames;
     public int Width => Frames[0].Width;
     public int Height => Frames[0].Height;
@@ -68,9 +71,11 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
 
     public PixedModel Clone()
     {
-        PixedModel model = new PixedModel();
-        model._isEmpty = _isEmpty;
-        model._currentFrameIndex = _currentFrameIndex;
+        PixedModel model = new()
+        {
+            _isEmpty = _isEmpty,
+            _currentFrameIndex = _currentFrameIndex
+        };
 
         foreach (Frame frame in Frames)
         {

@@ -34,15 +34,15 @@ namespace Pixed.IO
 
             var builder = PngBuilder.Create(model.Width * model.Frames.Count, model.Height, true);
 
-            for(int a = 0; a < model.Frames.Count; a++)
+            for (int a = 0; a < model.Frames.Count; a++)
             {
                 //TODO optimize
                 Frame frame = model.Frames[a];
                 Layer layer = Layer.MergeAll([.. frame.Layers]);
                 var pixels = layer.GetPixels();
-                for(int x = 0; x < model.Width; x++)
+                for (int x = 0; x < model.Width; x++)
                 {
-                    for(int y = 0; y < model.Height; y++)
+                    for (int y = 0; y < model.Height; y++)
                     {
                         UniColor color = pixels[y * model.Width + x];
                         var pixel = new BigGustave.Pixel(color.R, color.G, color.B, color.A, false);

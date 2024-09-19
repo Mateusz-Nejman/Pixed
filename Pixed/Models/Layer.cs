@@ -194,6 +194,7 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
         _height = stream.ReadInt();
         _name = stream.ReadString();
         int pixelsSize = stream.ReadInt();
+        _pixels = new int[pixelsSize];
 
         for (int i = 0; i < pixelsSize; i++)
         {
@@ -215,7 +216,7 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
     {
         Layer first = layers.First().Clone();
 
-        for(int a = 1;  a < layers.Length; a++)
+        for (int a = 1; a < layers.Length; a++)
         {
             first.MergeLayers(layers[a]);
         }
