@@ -1,16 +1,18 @@
 ﻿using Avalonia.Media.Imaging;
+using Pixed.IO;
 using Pixed.Services.History;
 using Pixed.Utils;
 using Pixed.Windows;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Windows.Input;
 
 namespace Pixed.Models;
 
-internal class PixedModel : PropertyChangedBase
+internal class PixedModel : PropertyChangedBase, IPixedSerializer
 {
     private readonly ObservableCollection<Frame> _frames;
     private readonly ObservableCollection<HistoryEntry> _history;
@@ -200,6 +202,30 @@ internal class PixedModel : PropertyChangedBase
         }
 
         _historyIndex++;
+    }
+
+    public void Serialize(Stream stream)
+    {
+        stream.WriteInt(_currentFrameIndex);
+        stream.WriteInt(_frames.Count);
+        foreach (var frame in _frames)
+        {
+            frame.Serialize(stream);
+        }
+    }
+
+    public void Deserialize(Stream stream)
+    {
+        _currentFrameIndex = stream.ReadInt();
+        _frames.Clear();
+        int framesCount = stream.ReadInt();
+
+        for (int i = 0; i < framesCount; i++)
+        {
+            Frame frame = new(1, 1);
+            frame.Deserialize(stream);
+            _frames.Add(frame);
+        }
     }
 
     private void CloseCommandAction()

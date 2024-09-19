@@ -1,17 +1,19 @@
-﻿using Pixed.Utils;
+﻿using Pixed.IO;
+using Pixed.Utils;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Runtime.InteropServices;
 using Bitmap = Avalonia.Media.Imaging.Bitmap;
 
 namespace Pixed.Models;
 
-internal class Layer : PropertyChangedBase
+internal class Layer : PropertyChangedBase, IPixedSerializer
 {
-    private readonly int[] _pixels;
-    private readonly int _width;
-    private readonly int _height;
+    private int[] _pixels;
+    private int _width;
+    private int _height;
     private System.Drawing.Bitmap _renderedBitmap = null;
     private bool _needRerender = true;
     private float _opacity = 1.0f;
@@ -168,5 +170,43 @@ internal class Layer : PropertyChangedBase
     public bool ContainsPixel(int x, int y)
     {
         return x >= 0 && y >= 0 && x < Width && y < Height;
+    }
+
+    public void Serialize(Stream stream)
+    {
+        stream.WriteFloat(Opacity);
+        stream.WriteInt(Width);
+        stream.WriteInt(Height);
+        stream.WriteString(Name);
+        stream.WriteInt(_pixels.Length);
+
+        foreach (var pixel in _pixels)
+        {
+            stream.WriteInt(pixel);
+        }
+    }
+
+    public void Deserialize(Stream stream)
+    {
+        Opacity = stream.ReadFloat();
+        _width = stream.ReadInt();
+        _height = stream.ReadInt();
+        _name = stream.ReadString();
+        int pixelsSize = stream.ReadInt();
+
+        for (int i = 0; i < pixelsSize; i++)
+        {
+            _pixels[i] = stream.ReadInt();
+        }
+    }
+
+    public static Layer FromColors(int[] colors, int width, int height, string name)
+    {
+        Layer layer = new(width, height)
+        {
+            _pixels = colors,
+            _name = name
+        };
+        return layer;
     }
 }
