@@ -98,6 +98,7 @@ internal class PixedModel : PropertyChangedBase
     public static PixedModel FromFrames(ObservableCollection<Frame> frames)
     {
         PixedModel model = new();
+        model.Frames.Clear();
 
         foreach (var frame in frames)
         {

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Pixed.Windows"
         mc:Ignorable="d"
         Title="New Project" MinWidth="200"
-        MinHeight="150"
+        MinHeight="230"
         ShowInTaskbar="False" SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterOwner">
   <StackPanel>
