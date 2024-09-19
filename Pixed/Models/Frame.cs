@@ -11,8 +11,6 @@ namespace Pixed.Models;
 internal class Frame : PropertyChangedBase, IPixedSerializer
 {
     private readonly ObservableCollection<Layer> _layers;
-    private readonly int _width;
-    private readonly int _height;
     private int _selectedLayer = 0;
     private readonly string _id;
     private Bitmap _renderSource;

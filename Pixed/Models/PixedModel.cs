@@ -19,6 +19,7 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
     private int _historyIndex = -1;
     private Bitmap _renderSource;
     private int _currentFrameIndex = 0;
+    private bool _isEmpty = true;
 
     public ObservableCollection<Frame> Frames => _frames;
     public int Width => Frames[0].Width;
@@ -46,6 +47,8 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
         }
     }
 
+    public bool IsEmpty => _isEmpty;
+
     public ICommand CloseCommand { get; }
 
     public PixedModel() : this(Global.UserSettings.UserWidth, Global.UserSettings.UserHeight)
@@ -66,6 +69,7 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
     public PixedModel Clone()
     {
         PixedModel model = new PixedModel();
+        model._isEmpty = _isEmpty;
         model._currentFrameIndex = _currentFrameIndex;
 
         foreach (Frame frame in Frames)
@@ -113,6 +117,8 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
     public static PixedModel FromFrames(ObservableCollection<Frame> frames)
     {
         PixedModel model = new();
+        model.Frames.Clear();
+        model._isEmpty = false;
 
         foreach (var frame in frames)
         {
@@ -126,6 +132,7 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
     {
         _history.Add(entry);
         _historyIndex = _history.Count - 1;
+        _isEmpty = false;
     }
 
     public void Undo()
@@ -229,6 +236,7 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
 
     public void Deserialize(Stream stream)
     {
+        _isEmpty = false;
         _currentFrameIndex = stream.ReadInt();
         _frames.Clear();
         int framesCount = stream.ReadInt();

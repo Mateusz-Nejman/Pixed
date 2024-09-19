@@ -168,7 +168,7 @@ internal class PaletteSectionViewModel : PropertyChangedBase, IPixedViewModel, I
 
     private async Task PaletteOpenAction()
     {
-        var files = await IODialogs.OpenFileDialog("Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl|All Supported (.json;.gpl)|*.json;*.gpl", Global.PaletteService.SelectedPalette.Name);
+        var files = await IODialogs.OpenFileDialog("All Supported (.json;.gpl)|*.json;*.gpl|Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl", Global.PaletteService.SelectedPalette.Name);
 
         if (files.Count == 0)
         {
@@ -186,7 +186,7 @@ internal class PaletteSectionViewModel : PropertyChangedBase, IPixedViewModel, I
             return;
         }
 
-        var file = await IODialogs.SaveFileDialog("Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl|All Supported (.json;.gpl)|*.json;*.gpl", Global.PaletteService.SelectedPalette.Name);
+        var file = await IODialogs.SaveFileDialog("All Supported (.json;.gpl)|*.json;*.gpl|Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl", Global.PaletteService.SelectedPalette.Name);
 
         if (file != null)
         {

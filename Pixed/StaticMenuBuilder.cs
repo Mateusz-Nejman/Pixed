@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Pixed.IO;
 using Pixed.Models;
 using Pixed.Windows;
 using System.Collections.Generic;
@@ -68,8 +69,9 @@ namespace Pixed
         private static NativeMenuItem GetFileMenu()
         {
             NativeMenuItem fileMenu = new("File");
-            NativeMenuItem fileNew = new("New");
-            fileNew.Command = new ActionCommand(async () =>
+            NativeMenuItem fileNew = new("New")
+            {
+                Command = new ActionCommand(async () =>
             {
                 NewProjectWindow window = new();
                 var success = await window.ShowDialog<bool>(MainWindow.Handle);
@@ -80,8 +82,43 @@ namespace Pixed
                     Global.Models.Add(model);
                     Subjects.ProjectAdded.OnNext(model);
                 }
-            });
-            NativeMenuItem fileOpen = new("Open"); //TODO
+            })
+            };
+            NativeMenuItem fileOpen = new("Open")
+            {
+                Command = new ActionCommand(async () =>
+            {
+                var files = await IODialogs.OpenFileDialog("All supported (*.pixed;*.png)|*.pixed;*.png|Pixed project (*.pixed)|*.pixed|PNG images (*.png)|*.png", "Open file", true);
+
+                foreach (var item in files)
+                {
+                    var stream = await item.OpenReadAsync();
+
+                    IPixedProjectSerializer serializer;
+                    if (item.Name.EndsWith("*.pixed"))
+                    {
+                        serializer = new PixedProjectSerializer();
+                    }
+                    else
+                    {
+                        serializer = new PngProjectSerializer();
+                    }
+
+                    PixedModel model = serializer.Deserialize(stream);
+
+                    if(Global.CurrentModel.IsEmpty)
+                    {
+                        Global.Models[Global.CurrentModelIndex] = model;
+                    }
+                    else
+                    {
+                        Global.Models.Add(model);
+                    }
+
+                    Subjects.ProjectAdded.OnNext(model);
+                }
+            })
+            };
             NativeMenuItem fileSave = new("Save"); //TODO
             NativeMenuItem fileSaveAs = new("Save as"); //TODO
             NativeMenuItem fileRecent = new("Recent"); //TODO
