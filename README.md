@@ -14,6 +14,7 @@ Pixed is a pixel-art editor highly inspired by [Mateusz-Nejman/piskel_touch](htt
 - Newtonsoft.JSON [JamesNK/Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json)
 - PixiEditor.ColorPicker [PixiEditor/ColorPicker] (https://github.com/PixiEditor/ColorPicker)
 - System.Reactive (RX) [dotnet/reactive] (https://github.com/dotnet/reactive)
+- BigGustave [EliotJones/BigGustave] (https://github.com/EliotJones/BigGustave)
 
 ## Assets
 - Icons from IcoMoon [https://icomoon.io/](https://icomoon.io/)
