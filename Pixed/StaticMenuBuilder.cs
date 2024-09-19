@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using Pixed.Models;
+using Pixed.Utils;
 using Pixed.Windows;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,13 +41,12 @@ namespace Pixed
             NativeMenuItem editMenu = new("Edit");
             NativeMenuItem toolsMenu = new("Tools");
             NativeMenuItem paletteMenu = new("Palette");
-            NativeMenuItem projectMenu = new("Project");
+            NativeMenuItem projectMenu = GetProjectMenu();
             NativeMenuItem helpMenu = new("Help");
 
             AddToMenu(ref editMenu, GetEntries(BaseMenuItem.Edit));
             AddToMenu(ref toolsMenu, GetEntries(BaseMenuItem.Tools));
             AddToMenu(ref paletteMenu, GetEntries(BaseMenuItem.Palette));
-            AddToMenu(ref projectMenu, GetEntries(BaseMenuItem.Project));
             AddToMenu(ref helpMenu, GetEntries(BaseMenuItem.Help));
 
             if (clear)
@@ -94,6 +94,31 @@ namespace Pixed
             fileMenu.Menu.Add(fileRecent);
             fileMenu.Menu.Add(fileQuit);
             return fileMenu;
+        }
+
+        private static NativeMenuItem GetProjectMenu()
+        {
+            NativeMenuItem projectMenu = new("Project");
+            NativeMenuItem projectResize = new("Resize project");
+
+            projectMenu.Menu = [];
+            projectResize.Command = new ActionCommand(async () =>
+            {
+                ResizeProjectWindow window = new(Global.CurrentModel);
+                bool success = await window.ShowDialog<bool>(MainWindow.Handle);
+
+                if (success)
+                {
+                    var result = window.Result;
+                    var model = ResizeUtils.ResizeModel(Global.CurrentModel, result.Width, result.Height, result.ResizeCanvasContent, result.Anchor);
+                    Global.Models[Global.CurrentModelIndex] = model;
+                    Subjects.ProjectModified.OnNext(model);
+                }
+            });
+
+            projectMenu.Menu.Add(projectResize);
+            AddToMenu(ref projectMenu, GetEntries(BaseMenuItem.Project));
+            return projectMenu;
         }
 
         private static List<NativeMenuItem> GetEntries(BaseMenuItem baseMenu)

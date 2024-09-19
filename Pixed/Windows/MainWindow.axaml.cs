@@ -56,7 +56,7 @@ public partial class MainWindow : Window
                 e.Key,
                 Keyboard.Modifiers.HasFlag(KeyModifiers.Shift),
                 Keyboard.Modifiers.HasFlag(KeyModifiers.Control),
-                Keyboard.Modifiers.HasFlag(KeyModifiers.Alt));
+                Keyboard.Modifiers.HasFlag(KeyModifiers.Alt)));
     }
 
     private void Window_PointerPressed(object? sender, PointerPressedEventArgs e)
