@@ -14,6 +14,7 @@ namespace Pixed.ViewModels
         private readonly IDisposable _layerRemoved;
         private readonly IDisposable _projectAdded;
         private readonly IDisposable _projectRemoved;
+        private readonly IDisposable _projectModified;
 
         public static ObservableCollection<PixedModel> Projects => Global.Models;
 
