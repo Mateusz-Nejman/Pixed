@@ -1,5 +1,6 @@
 ﻿using Pixed.Models;
 using Pixed.Selection;
+using Pixed.Services;
 using Pixed.Services.Keyboard;
 using Pixed.Services.Palette;
 using Pixed.Tools;
@@ -23,4 +24,5 @@ internal static class Global
     public static ToolSelector ToolSelector { get; set; }
     public static UniColor PrimaryColor { get; set; }
     public static UniColor SecondaryColor { get; set; }
+    public static RecentFilesService RecentFilesService { get; set; }
 }

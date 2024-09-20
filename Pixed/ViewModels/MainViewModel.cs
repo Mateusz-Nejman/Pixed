@@ -39,6 +39,8 @@ internal class MainViewModel : PropertyChangedBase
 
         Global.ShortcutService = new ShortcutService();
         Global.PaletteService = new PaletteService();
+        Global.RecentFilesService = new Services.RecentFilesService();
+        Global.RecentFilesService.Load();
         Global.PaletteService.LoadAll();
         StaticMenuBuilder.OnMenuBuilt.Subscribe(menu =>
         {

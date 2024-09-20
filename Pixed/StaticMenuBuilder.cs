@@ -100,6 +100,8 @@ namespace Pixed
                     if (item.Name.EndsWith(".pixed"))
                     {
                         serializer = new PixedProjectSerializer();
+
+                        Global.RecentFilesService.AddRecent(item.Path.AbsolutePath);
                     }
                     else
                     {
@@ -142,7 +144,9 @@ namespace Pixed
             {
                 Command = new AsyncCommand(ExportAction)
             };
-            NativeMenuItem fileRecent = new("Recent"); //TODO
+            NativeMenuItem fileRecent = new("Recent");
+            fileRecent.Menu = Global.RecentFilesService.BuildMenu();
+
             NativeMenuItem fileQuit = new("Quit")
             {
                 Command = MainWindow.QuitCommand
@@ -210,7 +214,8 @@ namespace Pixed
 
             if (saveAs)
             {
-                var file = await IODialogs.SaveFileDialog("Pixed project (*.pixed)|*.pixed", Global.CurrentModel.FileName ?? "project.pixed");
+                FileInfo info = new FileInfo(Global.CurrentModel.FileName);
+                var file = await IODialogs.SaveFileDialog("Pixed project (*.pixed)|*.pixed", info.Name.Replace(info.Extension, string.Empty) ?? "project.pixed");
 
                 if (file == null)
                 {
@@ -225,12 +230,14 @@ namespace Pixed
             {
                 PixedProjectSerializer serializer = new();
                 serializer.Serialize(fileStream, Global.CurrentModel, true);
+                Global.RecentFilesService.AddRecent(Global.CurrentModel.FilePath);
             }
         }
 
         private async static Task ExportAction()
         {
-            var file = await IODialogs.SaveFileDialog("PNG image (*.png)|*.png", Global.CurrentModel.FileName ?? "pixed.png");
+            FileInfo info = new FileInfo(Global.CurrentModel.FileName);
+            var file = await IODialogs.SaveFileDialog("PNG image (*.png)|*.png", info.Name.Replace(info.Extension, string.Empty) ?? "pixed.png");
 
             if (file == null)
             {
