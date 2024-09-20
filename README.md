@@ -6,7 +6,7 @@ Pixed is a pixel-art editor highly inspired by [Mateusz-Nejman/piskel_touch](htt
 - Most tools from Piskel Touch
 - Touch friendly
 - Export to PNG
-- Import from PNG/Piskel
+- Import from PNG
 - Own project format
 
 ## Stack
@@ -15,6 +15,7 @@ Pixed is a pixel-art editor highly inspired by [Mateusz-Nejman/piskel_touch](htt
 - PixiEditor.ColorPicker [PixiEditor/ColorPicker] (https://github.com/PixiEditor/ColorPicker)
 - System.Reactive (RX) [dotnet/reactive] (https://github.com/dotnet/reactive)
 - BigGustave [EliotJones/BigGustave] (https://github.com/EliotJones/BigGustave)
+- LZMA SDK [monemihir/LZMA-SDK] (https://github.com/monemihir/LZMA-SDK)
 
 ## Assets
 - Icons from IcoMoon [https://icomoon.io/](https://icomoon.io/)
