@@ -30,7 +30,7 @@ namespace Pixed.IO
         readonly static bool eos = false;
 
         readonly static CoderPropID[] _propIds =
-        {
+        [
             CoderPropID.DictionarySize,
             CoderPropID.PosStateBits,
             CoderPropID.LitContextBits,
@@ -39,10 +39,10 @@ namespace Pixed.IO
             CoderPropID.NumFastBytes,
             CoderPropID.MatchFinder,
             CoderPropID.EndMarker
-        };
+        ];
 
         readonly static object[] _properties =
-        {
+        [
             (Int32)(dictionary),
             (Int32)(posStateBits),
             (Int32)(litContextBits),
@@ -51,13 +51,13 @@ namespace Pixed.IO
             (Int32)(numFastBytes),
             "bt4",
             eos
-        };
+        ];
 
         #endregion
 
         public void Serialize(Stream stream, PixedModel model, bool close = false)
         {
-            MemoryStream memoryStream = new MemoryStream();
+            MemoryStream memoryStream = new();
             model.Serialize(memoryStream);
             memoryStream.Position = 0;
             Compress(memoryStream, stream);
@@ -70,7 +70,7 @@ namespace Pixed.IO
         public PixedModel Deserialize(Stream stream)
         {
             PixedModel model = new();
-            MemoryStream memoryStream = new MemoryStream();
+            MemoryStream memoryStream = new();
             Decompress(stream, memoryStream);
             memoryStream.Position = 0;
             model.Deserialize(memoryStream);

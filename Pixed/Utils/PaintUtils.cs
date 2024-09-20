@@ -124,7 +124,7 @@ internal static class PaintUtils
 
     public static UniColor GetNoiseColor()
     {
-        Random random = new Random(Guid.NewGuid().GetHashCode());
+        Random random = new(Guid.NewGuid().GetHashCode());
         double[] colors = [0, 0.25, 0.5, 0.75, 1];
         double color = colors[(int)Math.Floor(random.NextDouble() * colors.Length)];
         return Global.PrimaryColor.Blend(Global.SecondaryColor, color);
@@ -163,8 +163,10 @@ internal static class PaintUtils
 
     public static DynamicHistoryEntry OutlineSimiliarConnectedPixels(Layer layer, int x, int y, int replacementColor, bool fillCorners)
     {
-        DynamicHistoryEntry entry = new DynamicHistoryEntry();
-        entry.LayerId = layer.Id;
+        DynamicHistoryEntry entry = new()
+        {
+            LayerId = layer.Id
+        };
 
         var targetColor = layer.GetPixel(x, y);
 

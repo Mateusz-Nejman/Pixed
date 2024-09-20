@@ -198,7 +198,7 @@ namespace Pixed
 
             if (fileStream != null)
             {
-                PixedProjectSerializer serializer = new PixedProjectSerializer();
+                PixedProjectSerializer serializer = new();
                 serializer.Serialize(fileStream, Global.CurrentModel, true);
             }
         }
@@ -207,15 +207,15 @@ namespace Pixed
         {
             var file = await IODialogs.SaveFileDialog("PNG image (*.png)|*.png", Global.CurrentModel.FileName ?? "pixed.png");
 
-            if(file == null)
+            if (file == null)
             {
                 return;
             }
 
-            PngProjectSerializer serializer = new PngProjectSerializer();
+            PngProjectSerializer serializer = new();
 
             int columnsCount = 1;
-            if(Global.CurrentModel.Frames.Count > 1)
+            if (Global.CurrentModel.Frames.Count > 1)
             {
                 ExportPNGWindow window = new();
                 bool success = await window.ShowDialog<bool>(MainWindow.Handle);

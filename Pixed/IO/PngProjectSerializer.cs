@@ -61,7 +61,7 @@ namespace Pixed.IO
 
                 frameColumn++;
 
-                if(frameColumn == ColumnsCount)
+                if (frameColumn == ColumnsCount)
                 {
                     frameColumn = 0;
                     frameRow++;
@@ -70,7 +70,7 @@ namespace Pixed.IO
 
             builder.Save(stream);
 
-            if(close)
+            if (close)
             {
                 stream.Dispose();
             }

@@ -20,10 +20,10 @@ internal class LayersSectionViewModel : PropertyChangedBase, IPixedViewModel, ID
     private bool _canLayerRemove = false;
     private bool _disposedValue;
 
-    private IDisposable _frameChanged;
-    private IDisposable _layerModified;
-    private IDisposable _layerAdded;
-    private IDisposable _layerRemoved;
+    private readonly IDisposable _frameChanged;
+    private readonly IDisposable _layerModified;
+    private readonly IDisposable _layerAdded;
+    private readonly IDisposable _layerRemoved;
 
     public static Frame Frame => Global.CurrentFrame;
     public static ObservableCollection<Layer> Layers => Frame.Layers;

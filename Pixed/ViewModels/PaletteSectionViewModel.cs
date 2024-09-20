@@ -16,13 +16,13 @@ internal class PaletteSectionViewModel : PropertyChangedBase, IPixedViewModel, I
     private UniColor _secondaryColor = UniColor.White;
     private bool _disposedValue;
 
-    private IDisposable _layerModified;
-    private IDisposable _projectChanged;
-    private IDisposable _primaryProjectChanged;
-    private IDisposable _secondaryProjectChanged;
-    private IDisposable _primaryProjectChange;
-    private IDisposable _secondaryProjectChange;
-    private IDisposable _paletteSelected;
+    private readonly IDisposable _layerModified;
+    private readonly IDisposable _projectChanged;
+    private readonly IDisposable _primaryProjectChanged;
+    private readonly IDisposable _secondaryProjectChanged;
+    private readonly IDisposable _primaryProjectChange;
+    private readonly IDisposable _secondaryProjectChange;
+    private readonly IDisposable _paletteSelected;
 
     public Color PrimaryColor
     {

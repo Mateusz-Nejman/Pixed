@@ -19,14 +19,14 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
     private Point _lastWindowSize;
     private bool _disposedValue;
 
-    private IDisposable _projectModified;
-    private IDisposable _projectChanged;
-    private IDisposable _frameChanged;
-    private IDisposable _frameModified;
-    private IDisposable _layerRemoved;
-    private IDisposable _layerAdded;
-    private IDisposable _layerChanged;
-    private IDisposable _layerModified;
+    private readonly IDisposable _projectModified;
+    private readonly IDisposable _projectChanged;
+    private readonly IDisposable _frameChanged;
+    private readonly IDisposable _frameModified;
+    private readonly IDisposable _layerRemoved;
+    private readonly IDisposable _layerAdded;
+    private readonly IDisposable _layerChanged;
+    private readonly IDisposable _layerModified;
 
     public ActionCommand<Point> LeftMouseDown { get; set; }
     public ActionCommand<Point> LeftMouseUp { get; set; }
