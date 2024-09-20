@@ -1,22 +1,22 @@
-﻿using Pixed.Utils;
+﻿using Pixed.IO;
+using Pixed.Utils;
 using System;
 using System.Collections.ObjectModel;
 using System.Drawing;
+using System.IO;
 using Bitmap = Avalonia.Media.Imaging.Bitmap;
 
 namespace Pixed.Models;
 
-internal class Frame : PropertyChangedBase
+internal class Frame : PropertyChangedBase, IPixedSerializer
 {
     private readonly ObservableCollection<Layer> _layers;
-    private readonly int _width;
-    private readonly int _height;
     private int _selectedLayer = 0;
     private readonly string _id;
     private Bitmap _renderSource;
 
-    public int Width => _width;
-    public int Height => _height;
+    public int Width => Layers[0].Width;
+    public int Height => Layers[0].Height;
     public Layer CurrentLayer => Layers[SelectedLayer];
     public int SelectedLayer
     {
@@ -45,8 +45,6 @@ internal class Frame : PropertyChangedBase
     {
         _id = Guid.NewGuid().ToString();
         _layers = [];
-        _width = width;
-        _height = height;
         AddLayer(new Layer(width, height));
     }
 
@@ -203,5 +201,29 @@ internal class Frame : PropertyChangedBase
         SelectedLayer = index;
         Subjects.LayerRemoved.OnNext(layer2);
         Subjects.LayerModified.OnNext(layer);
+    }
+
+    public void Serialize(Stream stream)
+    {
+        stream.WriteInt(_selectedLayer);
+        stream.WriteInt(_layers.Count);
+        foreach (var layer in _layers)
+        {
+            layer.Serialize(stream);
+        }
+    }
+
+    public void Deserialize(Stream stream)
+    {
+        _selectedLayer = stream.ReadInt();
+        _layers.Clear();
+        int layersCount = stream.ReadInt();
+
+        for (int i = 0; i < layersCount; i++)
+        {
+            Layer layer = new(1, 1);
+            layer.Deserialize(stream);
+            _layers.Add(layer);
+        }
     }
 }

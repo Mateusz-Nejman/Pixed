@@ -11,9 +11,9 @@ internal class FramesSectionViewModel : PropertyChangedBase, IPixedViewModel, ID
     private int _selectedFrame = 0;
     private bool _removeFrameEnabled = false;
     private bool _disposedValue;
-    private IDisposable _projectChanged;
-    private IDisposable _frameAdded;
-    private IDisposable _frameRemoved;
+    private readonly IDisposable _projectChanged;
+    private readonly IDisposable _frameAdded;
+    private readonly IDisposable _frameRemoved;
 
     public static ObservableCollection<Frame> Frames => Global.CurrentModel.Frames;
 

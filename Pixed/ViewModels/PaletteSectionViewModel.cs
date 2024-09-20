@@ -16,13 +16,13 @@ internal class PaletteSectionViewModel : PropertyChangedBase, IPixedViewModel, I
     private UniColor _secondaryColor = UniColor.White;
     private bool _disposedValue;
 
-    private IDisposable _layerModified;
-    private IDisposable _projectChanged;
-    private IDisposable _primaryProjectChanged;
-    private IDisposable _secondaryProjectChanged;
-    private IDisposable _primaryProjectChange;
-    private IDisposable _secondaryProjectChange;
-    private IDisposable _paletteSelected;
+    private readonly IDisposable _layerModified;
+    private readonly IDisposable _projectChanged;
+    private readonly IDisposable _primaryProjectChanged;
+    private readonly IDisposable _secondaryProjectChanged;
+    private readonly IDisposable _primaryProjectChange;
+    private readonly IDisposable _secondaryProjectChange;
+    private readonly IDisposable _paletteSelected;
 
     public Color PrimaryColor
     {
@@ -168,7 +168,7 @@ internal class PaletteSectionViewModel : PropertyChangedBase, IPixedViewModel, I
 
     private async Task PaletteOpenAction()
     {
-        var files = await IODialogs.OpenFileDialog("Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl|All Supported (.json;.gpl)|*.json;*.gpl", Global.PaletteService.SelectedPalette.Name);
+        var files = await IODialogs.OpenFileDialog("All Supported (.json;.gpl)|*.json;*.gpl|Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl", Global.PaletteService.SelectedPalette.Name);
 
         if (files.Count == 0)
         {
@@ -186,7 +186,7 @@ internal class PaletteSectionViewModel : PropertyChangedBase, IPixedViewModel, I
             return;
         }
 
-        var file = await IODialogs.SaveFileDialog("Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl|All Supported (.json;.gpl)|*.json;*.gpl", Global.PaletteService.SelectedPalette.Name);
+        var file = await IODialogs.SaveFileDialog("All Supported (.json;.gpl)|*.json;*.gpl|Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl", Global.PaletteService.SelectedPalette.Name);
 
         if (file != null)
         {

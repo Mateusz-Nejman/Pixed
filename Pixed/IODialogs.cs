@@ -7,12 +7,12 @@ namespace Pixed;
 
 internal static class IODialogs
 {
-    public static async Task<IReadOnlyList<IStorageFile>> OpenFileDialog(string filter, string filename)
+    public static async Task<IReadOnlyList<IStorageFile>> OpenFileDialog(string filter, string filename, bool allowMultiple = false)
     {
         var storage = MainWindow.Handle.StorageProvider;
         return await storage.OpenFilePickerAsync(new FilePickerOpenOptions()
         {
-            AllowMultiple = false,
+            AllowMultiple = allowMultiple,
             SuggestedFileName = filename,
             Title = "Open file",
             FileTypeFilter = GetFileFilter(filter)

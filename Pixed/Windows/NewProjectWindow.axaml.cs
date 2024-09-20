@@ -19,8 +19,8 @@ public partial class NewProjectWindow : Window
         set => SetValue(HeightValueProperty, value);
     }
 
-    public static readonly StyledProperty<int> WidthValueProperty = AvaloniaProperty.Register<Prompt, int>("WidthValue", Global.UserSettings.UserWidth);
-    public static readonly StyledProperty<int> HeightValueProperty = AvaloniaProperty.Register<Prompt, int>("HeightValue", Global.UserSettings.UserHeight);
+    public static readonly StyledProperty<int> WidthValueProperty = AvaloniaProperty.Register<NewProjectWindow, int>("WidthValue", Global.UserSettings.UserWidth);
+    public static readonly StyledProperty<int> HeightValueProperty = AvaloniaProperty.Register<NewProjectWindow, int>("HeightValue", Global.UserSettings.UserHeight);
     public NewProjectWindow()
     {
         InitializeComponent();

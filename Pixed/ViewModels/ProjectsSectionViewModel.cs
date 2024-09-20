@@ -8,13 +8,12 @@ namespace Pixed.ViewModels
     {
         private int _selectedProject = 0;
         private bool _disposedValue;
-        private IDisposable _frameModified;
-        private IDisposable _frameRemoved;
-        private IDisposable _layerModified;
-        private IDisposable _layerRemoved;
-        private IDisposable _projectAdded;
-        private IDisposable _projectRemoved;
-        private IDisposable _projectModified;
+        private readonly IDisposable _frameModified;
+        private readonly IDisposable _frameRemoved;
+        private readonly IDisposable _layerModified;
+        private readonly IDisposable _layerRemoved;
+        private readonly IDisposable _projectAdded;
+        private readonly IDisposable _projectRemoved;
 
         public static ObservableCollection<PixedModel> Projects => Global.Models;
 
@@ -29,6 +28,15 @@ namespace Pixed.ViewModels
                 Subjects.ProjectChanged.OnNext(Global.CurrentModel);
                 Subjects.FrameChanged.OnNext(Global.CurrentFrame);
                 Subjects.LayerChanged.OnNext(Global.CurrentLayer);
+
+                foreach (var frame in Global.CurrentModel.Frames)
+                {
+                    foreach (var layer in frame.Layers)
+                    {
+                        Subjects.LayerModified.OnNext(layer);
+                    }
+                    Subjects.FrameModified.OnNext(frame);
+                }
             }
         }
 
