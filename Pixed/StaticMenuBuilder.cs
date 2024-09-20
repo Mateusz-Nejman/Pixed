@@ -107,6 +107,7 @@ namespace Pixed
                     }
 
                     PixedModel model = serializer.Deserialize(stream);
+                    stream?.Dispose();
                     model.FileName = item.Name.Replace(".png", ".pixed");
 
                     if (item.Name.EndsWith(".pixed"))
@@ -137,13 +138,17 @@ namespace Pixed
                 Command = new AsyncCommand<bool>(SaveAction),
                 CommandParameter = true
             };
+            NativeMenuItem fileExport = new("Export to PNG")
+            {
+                Command = new AsyncCommand(ExportAction)
+            };
             NativeMenuItem fileRecent = new("Recent"); //TODO
             NativeMenuItem fileQuit = new("Quit")
             {
                 Command = MainWindow.QuitCommand
             };
 
-            fileMenu.Menu = [fileNew, fileOpen, fileSave, fileSaveAs];
+            fileMenu.Menu = [fileNew, fileOpen, fileSave, fileSaveAs, fileExport];
             AddToMenu(ref fileMenu, GetEntries(BaseMenuItem.File));
 
             fileMenu.Menu.Add(fileRecent);
@@ -196,6 +201,36 @@ namespace Pixed
                 PixedProjectSerializer serializer = new PixedProjectSerializer();
                 serializer.Serialize(fileStream, Global.CurrentModel, true);
             }
+        }
+
+        private async static Task ExportAction()
+        {
+            var file = await IODialogs.SaveFileDialog("PNG image (*.png)|*.png", Global.CurrentModel.FileName ?? "pixed.png");
+
+            if(file == null)
+            {
+                return;
+            }
+
+            PngProjectSerializer serializer = new PngProjectSerializer();
+
+            int columnsCount = 1;
+            if(Global.CurrentModel.Frames.Count > 1)
+            {
+                ExportPNGWindow window = new();
+                bool success = await window.ShowDialog<bool>(MainWindow.Handle);
+
+                if (!success)
+                {
+                    return;
+                }
+
+                columnsCount = window.ColumnsCount;
+            }
+
+            serializer.ColumnsCount = columnsCount;
+            var stream = await file.OpenWriteAsync();
+            serializer.Serialize(stream, Global.CurrentModel, true);
         }
     }
 }

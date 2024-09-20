@@ -26,6 +26,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
     private IDisposable _layerRemoved;
     private IDisposable _layerAdded;
     private IDisposable _layerChanged;
+    private IDisposable _layerModified;
 
     public ActionCommand<Point> LeftMouseDown { get; set; }
     public ActionCommand<Point> LeftMouseUp { get; set; }
@@ -138,6 +139,11 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
         {
             AvaloniaImageBitmap = _frame.RenderTransparent().ToAvaloniaBitmap();
         });
+
+        _layerModified = Subjects.LayerModified.Subscribe(l =>
+        {
+            AvaloniaImageBitmap = _frame.RenderTransparent().ToAvaloniaBitmap();
+        });
     }
     public void RecalculateFactor(Point windowSize)
     {
@@ -167,7 +173,8 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
                 _frameModified?.Dispose();
                 _layerAdded?.Dispose();
                 _layerChanged?.Dispose();
-                _layerRemoved.Dispose();
+                _layerRemoved?.Dispose();
+                _layerModified?.Dispose();
             }
 
             _disposedValue = true;

@@ -92,6 +92,8 @@ internal class SelectionManager
         Subjects.FrameModified.OnNext(frame);
 
         Global.CurrentModel.AddHistory(entry.ToEntry());
+        Subjects.LayerModified.OnNext(frame.CurrentLayer);
+        Subjects.FrameModified.OnNext(frame);
     }
 
     private void Copy()
@@ -121,6 +123,7 @@ internal class SelectionManager
 
     private async Task Paste()
     {
+        Global.ToolSelected = Global.ToolSelector.GetTool("tool_rectangle_select");
         Bitmap? source = await BitmapUtils.CreateFromClipboard();
 
         if (source == null)
@@ -158,6 +161,9 @@ internal class SelectionManager
                 }
             }
         }
+
+        Subjects.LayerModified.OnNext(frame.CurrentLayer);
+        Subjects.FrameModified.OnNext(frame);
     }
 
     private static bool IsSelectToolActive()

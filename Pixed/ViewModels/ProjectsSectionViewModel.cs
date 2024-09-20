@@ -27,9 +27,16 @@ namespace Pixed.ViewModels
                 OnPropertyChanged();
                 Subjects.ProjectChanged.OnNext(Global.CurrentModel);
                 Subjects.FrameChanged.OnNext(Global.CurrentFrame);
-                Subjects.FrameModified.OnNext(Global.CurrentFrame);
                 Subjects.LayerChanged.OnNext(Global.CurrentLayer);
-                Subjects.LayerModified.OnNext(Global.CurrentLayer);
+
+                foreach(var frame in Global.CurrentModel.Frames)
+                {
+                    foreach(var layer in frame.Layers)
+                    {
+                        Subjects.LayerModified.OnNext(layer);
+                    }
+                    Subjects.FrameModified.OnNext(frame);
+                }
             }
         }
 

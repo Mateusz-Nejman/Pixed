@@ -57,12 +57,11 @@ namespace Pixed.IO
 
         public void Serialize(Stream stream, PixedModel model, bool close = false)
         {
-            MemoryStream memoryStream = new();
+            MemoryStream memoryStream = new MemoryStream();
             model.Serialize(memoryStream);
-
+            memoryStream.Position = 0;
             Compress(memoryStream, stream);
-            memoryStream.Close();
-
+            memoryStream.Dispose();
             if (close)
             {
                 stream.Dispose();
@@ -73,9 +72,9 @@ namespace Pixed.IO
             PixedModel model = new();
             MemoryStream memoryStream = new MemoryStream();
             Decompress(stream, memoryStream);
+            memoryStream.Position = 0;
             model.Deserialize(memoryStream);
-            memoryStream.Close();
-
+            memoryStream.Dispose();
             return model;
         }
 
