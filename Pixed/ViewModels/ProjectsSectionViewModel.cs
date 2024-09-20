@@ -55,6 +55,21 @@ namespace Pixed.ViewModels
             {
                 SelectedProject = Math.Clamp(SelectedProject, 0, Global.Models.Count - 1);
             });
+            _projectModified = Subjects.ProjectModified.Subscribe(p =>
+            {
+                foreach (var frame in p.Frames)
+                {
+                    Subjects.FrameModified.OnNext(frame);
+
+                    foreach (var layer in frame.Layers)
+                    {
+                        Subjects.LayerModified.OnNext(layer);
+                    }
+                }
+
+                Subjects.FrameChanged.OnNext(p.CurrentFrame);
+                Subjects.LayerChanged.OnNext(p.CurrentFrame.CurrentLayer);
+            });
         }
 
         protected virtual void Dispose(bool disposing)
@@ -69,6 +84,7 @@ namespace Pixed.ViewModels
                     _layerRemoved?.Dispose();
                     _projectAdded?.Dispose();
                     _projectRemoved?.Dispose();
+                    _projectModified?.Dispose();
                 }
 
                 _disposedValue = true;

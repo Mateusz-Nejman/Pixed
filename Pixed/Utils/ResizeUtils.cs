@@ -29,19 +29,23 @@ internal static class ResizeUtils
             frames.Add(ResizeFrame(frame, width, height, resizeContent, origin));
         }
 
-        return PixedModel.FromFrames(frames);
+        var resizedModel = PixedModel.FromFrames(frames);
+        resizedModel.CurrentFrameIndex = model.CurrentFrameIndex;
+        return resizedModel;
     }
 
-    public static Frame ResizeFrame(Frame frame, int width, int height, bool resuzeContent, Origin origin)
+    public static Frame ResizeFrame(Frame frame, int width, int height, bool resizeContent, Origin origin)
     {
         ObservableCollection<Layer> layers = [];
 
         foreach (var layer in frame.Layers)
         {
-            layers.Add(ResizeLayer(layer, width, height, resuzeContent, origin));
+            layers.Add(ResizeLayer(layer, width, height, resizeContent, origin));
         }
 
-        return Frame.FromLayers(layers);
+        var resizedFrame = Frame.FromLayers(layers);
+        resizedFrame.SelectedLayer = frame.SelectedLayer;
+        return resizedFrame;
     }
 
     public static Layer ResizeLayer(Layer layer, int width, int height, bool resizeContent, Origin origin)
