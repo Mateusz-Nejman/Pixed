@@ -16,8 +16,9 @@
       </ResourceDictionary>
     </Application.Resources>
   <Application.Styles>
+	  <SimpleTheme/>
+	  <templates:PixiPerfectColorPickerTheme />
     <FluentTheme />
-    <templates:PixiPerfectColorPickerTheme />
 	  <StyleInclude Source="/Styles.axaml"/>
   </Application.Styles>
 </Application>
