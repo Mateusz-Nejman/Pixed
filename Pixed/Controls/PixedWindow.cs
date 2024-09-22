@@ -1,11 +1,15 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
 using System;
-using System.Windows.Input;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using static Pixed.StaticMenuBuilder;
+using System.Windows.Input;
 
 namespace Pixed.Controls;
-internal abstract class PixedUserControl : UserControl
+internal class PixedWindow : Window
 {
     public virtual void RegisterMenuItems()
     {
@@ -24,6 +28,21 @@ internal abstract class PixedUserControl : UserControl
         base.OnInitialized();
         RegisterMenuItems();
         Unloaded += PixedUserControl_Unloaded;
+        Loaded += PixedWindow_Loaded;
+
+        if (DataContext is PixedViewModel model)
+        {
+            model.OnInitialized();
+        }
+    }
+
+    private void PixedWindow_Loaded(object? sender, RoutedEventArgs e)
+    {
+        OnLoaded();
+        if (DataContext is PixedViewModel model)
+        {
+            model.OnLoaded();
+        }
     }
 
     private void PixedUserControl_Unloaded(object? sender, RoutedEventArgs e)

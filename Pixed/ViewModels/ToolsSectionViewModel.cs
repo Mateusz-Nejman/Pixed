@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace Pixed.ViewModels
 {
-    internal class ToolsSectionViewModel : PropertyChangedBase, IPixedViewModel
+    internal class ToolsSectionViewModel : PixedViewModel
     {
         public ICommand ToolSelectAction { get; }
 
@@ -11,14 +11,11 @@ namespace Pixed.ViewModels
         {
             ToolSelectAction = new ActionCommand<string>(name =>
             {
-                if (Global.ToolSelector != null)
-                {
-                    Global.ToolSelector.SelectTool(name);
-                }
+                Global.ToolSelector?.SelectTool(name);
             });
         }
 
-        public void RegisterMenuItems()
+        public override void RegisterMenuItems()
         {
             PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Tools, "Pen tool", ToolSelectAction, "tool_pen");
             PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Tools, "Vertical mirror pen", ToolSelectAction, "tool_mirror_pen");

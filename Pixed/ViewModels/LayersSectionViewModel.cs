@@ -10,7 +10,7 @@ using System.Windows.Input;
 
 namespace Pixed.ViewModels;
 
-internal class LayersSectionViewModel : PropertyChangedBase, IPixedViewModel, IDisposable
+internal class LayersSectionViewModel : PixedViewModel, IDisposable
 {
     private int _selectedLayer = 0;
 
@@ -127,7 +127,7 @@ internal class LayersSectionViewModel : PropertyChangedBase, IPixedViewModel, ID
         });
     }
 
-    public void RegisterMenuItems()
+    public override void RegisterMenuItems()
     {
         PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Project, "Add Layer to current frame", AddLayerCommand);
         PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Project, "Edit layer name", EditLayerNameCommand);

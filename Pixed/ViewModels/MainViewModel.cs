@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Pixed.Controls;
 using Pixed.Models;
 using Pixed.Services.Keyboard;
 using Pixed.Services.Palette;
@@ -9,9 +10,11 @@ using System.Windows.Input;
 
 namespace Pixed.ViewModels;
 
-internal class MainViewModel : PropertyChangedBase
+internal class MainViewModel : PixedViewModel, IDisposable
 {
+    private readonly IDisposable _onMenuBuilt;
     private NativeMenu? _menu;
+    private bool _disposedValue;
 
     public NativeMenu? Menu
     {
@@ -25,6 +28,14 @@ internal class MainViewModel : PropertyChangedBase
 
     public ICommand QuitCommand => MainWindow.QuitCommand;
     public MainViewModel()
+    {
+        _onMenuBuilt = StaticMenuBuilder.OnMenuBuilt.Subscribe(menu =>
+        {
+            Menu = menu;
+        });
+    }
+
+    public override void OnInitialized()
     {
         if (!Directory.Exists(Global.DataFolder))
         {
@@ -41,9 +52,24 @@ internal class MainViewModel : PropertyChangedBase
         Global.RecentFilesService = new Services.RecentFilesService();
         Global.RecentFilesService.Load();
         Global.PaletteService.LoadAll();
-        StaticMenuBuilder.OnMenuBuilt.Subscribe(menu =>
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposedValue)
         {
-            Menu = menu;
-        });
+            if (disposing)
+            {
+                _onMenuBuilt?.Dispose();
+            }
+
+            _disposedValue = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
     }
 }

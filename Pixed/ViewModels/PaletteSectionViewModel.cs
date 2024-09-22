@@ -11,7 +11,7 @@ using System.Windows.Input;
 
 namespace Pixed.ViewModels;
 
-internal class PaletteSectionViewModel : PropertyChangedBase, IPixedViewModel, IDisposable
+internal class PaletteSectionViewModel : PixedViewModel, IDisposable
 {
     private UniColor _primaryColor = UniColor.Black;
     private UniColor _secondaryColor = UniColor.White;
@@ -139,7 +139,7 @@ internal class PaletteSectionViewModel : PropertyChangedBase, IPixedViewModel, I
         GC.SuppressFinalize(this);
     }
 
-    public void RegisterMenuItems()
+    public override void RegisterMenuItems()
     {
         PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Palette, "Add Primary color to palette", PaletteAddPrimaryCommand);
         PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Palette, "Merge palette with current colors", PaletteAddCurrentCommand);
