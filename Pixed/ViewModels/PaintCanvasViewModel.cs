@@ -1,4 +1,6 @@
-﻿using Pixed.Utils;
+﻿using Avalonia.Controls;
+using Avalonia.Media;
+using Pixed.Utils;
 using System;
 using System.Drawing;
 using Frame = Pixed.Models.Frame;
@@ -13,6 +15,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
     private Bitmap _overlayBitmap;
     private Avalonia.Media.Imaging.Bitmap _avaloniaImageBitmap;
     private Avalonia.Media.Imaging.Bitmap _avaloniaOverlayBitmap;
+    private DrawingBrush? _gridBrush;
     private bool _leftPressed;
     private bool _rightPressed;
     private Frame _frame;
@@ -27,6 +30,8 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
     private readonly IDisposable _layerAdded;
     private readonly IDisposable _layerChanged;
     private readonly IDisposable _layerModified;
+    private readonly IDisposable _mouseWheel;
+    private readonly IDisposable _gridChanged;
 
     public ActionCommand<Point> LeftMouseDown { get; set; }
     public ActionCommand<Point> LeftMouseUp { get; set; }
@@ -71,6 +76,16 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
         }
     }
 
+    public DrawingBrush? GridBrush
+    {
+        get => _gridBrush;
+        set
+        {
+            _gridBrush = value;
+            OnPropertyChanged();
+        }
+    }
+
     public double GridWidth
     {
         get => _gridWidth;
@@ -110,6 +125,8 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
         _projectChanged = Subjects.ProjectChanged.Subscribe(p =>
         {
             RecalculateFactor(_lastWindowSize);
+            GridBrush = GetGridBrush();
+            //AvaloniaGridBitmap = GetGrid().ToAvaloniaBitmap();
         });
 
         _frameChanged = Subjects.FrameChanged.Subscribe(f =>
@@ -144,13 +161,32 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
         {
             AvaloniaImageBitmap = _frame.RenderTransparent().ToAvaloniaBitmap();
         });
+
+        _mouseWheel = Subjects.MouseWheel.Subscribe(d =>
+        {
+            int distX = (int)(GridWidth / Global.CurrentFrame.Width);
+            int distY = (int)(GridHeight / Global.CurrentFrame.Height);
+
+            if(distX == 0 || distY == 0)
+            {
+                return;
+            }
+
+            GridBrush = GetGridBrush();
+        });
+
+        _gridChanged = Subjects.GridChanged.Subscribe(enabled =>
+        {
+            GridBrush = GetGridBrush();
+        });
     }
     public void RecalculateFactor(Point windowSize)
     {
         var factor = Math.Min(windowSize.X, windowSize.Y) / Math.Min(_frame.Width, _frame.Height);
-        _imageFactor = factor;
+        _imageFactor = Math.Clamp(factor, 1, 300);
         GridWidth = _frame.Width * factor;
         GridHeight = _frame.Height * factor;
+        GridBrush = GetGridBrush();
         _lastWindowSize = windowSize;
         ResetOverlay();
     }
@@ -175,6 +211,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
                 _layerChanged?.Dispose();
                 _layerRemoved?.Dispose();
                 _layerModified?.Dispose();
+                _mouseWheel?.Dispose();
             }
 
             _disposedValue = true;
@@ -280,8 +317,10 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
         double multiplier = delta;
         var step = multiplier * Math.Max(0.1, Math.Abs(_imageFactor) / 15);
         _imageFactor = Math.Max(0.1, _imageFactor + step);
+        _imageFactor = Math.Clamp(_imageFactor, 1, 300);
         GridWidth = _frame.Width * _imageFactor;
         GridHeight = _frame.Height * _imageFactor;
+        Subjects.MouseWheel.OnNext(delta);
     }
 
     private void MouseLeaveAction()
@@ -297,5 +336,46 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
     private void RefreshOverlay()
     {
         AvaloniaOverlayBitmap = Overlay.ToAvaloniaBitmap();
+    }
+
+    private DrawingBrush? GetGridBrush()
+    {
+        if(!Global.UserSettings.GridEnabled)
+        {
+            return null;
+        }
+        double distX = (GridWidth / (double)Global.CurrentFrame.Width) * Global.UserSettings.GridWidth;
+        double distY = (GridHeight / (double)Global.CurrentFrame.Height) * Global.UserSettings.GridHeight;
+
+        LineGeometry horizontalLine = new()
+        {
+            StartPoint = new Avalonia.Point(0, distY),
+            EndPoint = new Avalonia.Point(distX, distY)
+        };
+
+        LineGeometry verticalLine = new()
+        {
+            StartPoint = new Avalonia.Point(distX, 0),
+            EndPoint = new Avalonia.Point(distX, distY)
+        };
+
+        GeometryGroup group = new();
+        group.Children.Add(horizontalLine);
+        group.Children.Add(verticalLine);
+
+        Avalonia.Media.Pen pen = new(new SolidColorBrush(Global.UserSettings.GridColor, 0.5));
+        GeometryDrawing geometry = new()
+        {
+            Pen = pen,
+            Geometry = group
+        };
+
+        DrawingBrush brush = new()
+        {
+            TileMode = TileMode.Tile,
+            DestinationRect = new Avalonia.RelativeRect(0, 0, distX, distY, Avalonia.RelativeUnit.Absolute),
+            Drawing = geometry
+        };
+        return brush;
     }
 }

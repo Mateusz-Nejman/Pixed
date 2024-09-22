@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Pixed.Models;
 using Pixed.Services.Keyboard;
 using Pixed.Services.Palette;
 using Pixed.Windows;
@@ -25,8 +26,6 @@ internal class MainViewModel : PropertyChangedBase
     public ICommand QuitCommand => MainWindow.QuitCommand;
     public MainViewModel()
     {
-        Global.DataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Pixed");
-
         if (!Directory.Exists(Global.DataFolder))
         {
             Directory.CreateDirectory(Global.DataFolder);

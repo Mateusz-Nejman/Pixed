@@ -3,6 +3,8 @@ using Avalonia.Input;
 using Pixed.Input;
 using Pixed.Models;
 using Pixed.Services.Keyboard;
+using System;
+using System.IO;
 using System.Windows.Input;
 
 namespace Pixed.Windows;
@@ -15,6 +17,8 @@ public partial class MainWindow : Window
     {
         Handle = this;
         QuitCommand = new ActionCommand(() => Handle.Close());
+        Global.DataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Pixed");
+        Global.UserSettings = Settings.Load();
         InitializeBeforeUI();
         InitializeComponent();
 

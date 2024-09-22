@@ -18,10 +18,10 @@ internal struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatab
     public readonly static UniColor White = new(255, 255);
     public readonly static UniColor CornflowerBlue = new(100, 149, 237);
 
-    public byte A { get; private set; } = alpha;
-    public byte R { get; private set; } = red;
-    public byte B { get; private set; } = blue;
-    public byte G { get; private set; } = green;
+    public byte A { get; set; } = alpha;
+    public byte R { get; set; } = red;
+    public byte B { get; set; } = blue;
+    public byte G { get; set; } = green;
     public UniColor() : this(0, 0, 0, 0)
     { }
 

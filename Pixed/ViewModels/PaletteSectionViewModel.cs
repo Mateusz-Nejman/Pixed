@@ -1,4 +1,5 @@
-﻿using Avalonia.Media;
+﻿using Avalonia.Controls;
+using Avalonia.Media;
 using Pixed.Controls;
 using Pixed.Models;
 using Pixed.Windows;
