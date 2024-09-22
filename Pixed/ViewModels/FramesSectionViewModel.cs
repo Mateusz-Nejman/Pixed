@@ -6,7 +6,7 @@ using System.Windows.Input;
 
 namespace Pixed.ViewModels;
 
-internal class FramesSectionViewModel : PropertyChangedBase, IPixedViewModel, IDisposable
+internal class FramesSectionViewModel : PixedViewModel, IDisposable
 {
     private int _selectedFrame = 0;
     private bool _removeFrameEnabled = false;
@@ -70,7 +70,7 @@ internal class FramesSectionViewModel : PropertyChangedBase, IPixedViewModel, ID
         });
     }
 
-    public void RegisterMenuItems()
+    public override void RegisterMenuItems()
     {
         PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Project, "New Frame", NewFrameCommand);
         PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Project, "Duplicate Frame", DuplicateFrameCommand);

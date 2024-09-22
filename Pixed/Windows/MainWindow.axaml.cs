@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
+using Pixed.Controls;
 using Pixed.Input;
 using Pixed.Models;
 using Pixed.Services.Keyboard;
@@ -9,19 +10,18 @@ using System.Windows.Input;
 
 namespace Pixed.Windows;
 
-public partial class MainWindow : Window
+internal partial class MainWindow : PixedWindow
 {
     public static Window? Handle { get; private set; }
     public static ICommand? QuitCommand { get; private set; }
     public MainWindow()
     {
-        Handle = this;
-        QuitCommand = new ActionCommand(() => Handle.Close());
-        Global.DataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Pixed");
-        Global.UserSettings = Settings.Load();
         InitializeBeforeUI();
         InitializeComponent();
+    }
 
+    public override void OnLoaded()
+    {
         Global.ToolSelector.SelectTool("tool_pen");
         toolsSection.PaintCanvas = paintCanvas.ViewModel;
 
@@ -41,8 +41,12 @@ public partial class MainWindow : Window
         StaticMenuBuilder.Build();
     }
 
-    private static void InitializeBeforeUI()
+    private void InitializeBeforeUI()
     {
+        Handle = this;
+        QuitCommand = new ActionCommand(() => Handle.Close());
+        Global.DataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Pixed");
+        Global.UserSettings = Settings.Load();
         Global.Models.Add(new PixedModel(Global.UserSettings.UserWidth, Global.UserSettings.UserHeight));
     }
 

@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 namespace Pixed.ViewModels;
 
-internal class TransformSectionViewModel : PropertyChangedBase, IPixedViewModel
+internal class TransformSectionViewModel : PixedViewModel
 {
     public ICommand ToolCommand { get; }
 
@@ -19,7 +19,7 @@ internal class TransformSectionViewModel : PropertyChangedBase, IPixedViewModel
         ToolCommand = new ActionCommand<AbstractTransformTool>(ToolAction);
     }
 
-    public void RegisterMenuItems()
+    public override void RegisterMenuItems()
     {
         NativeMenuItem transformMenu = new("Transform")
         {
