@@ -3,17 +3,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-			 xmlns:converters="clr-namespace:ColorPicker.Converters;assembly=ColorPicker.AvaloniaUI"
-			 xmlns:convertersLocal="clr-namespace:Pixed.Converters;assembly=Pixed"
 			 xmlns:colorPicker="clr-namespace:ColorPicker;assembly=ColorPicker.AvaloniaUI"
 			 xmlns:local="clr-namespace:Pixed.Controls;assembly=Pixed"
              x:Class="Pixed.Controls.FixedPortableColorPicker">
 	<Grid>
-		<Grid.Resources>
-			<ResourceDictionary>
-				<convertersLocal:ColorToBrushConverter x:Key="ColorToBrushConverter" />
-			</ResourceDictionary>
-		</Grid.Resources>
 		<Border BorderThickness="1" BorderBrush="Black" ZIndex="0"
                             CornerRadius="5"
                             Padding="0" Margin="0" RenderOptions.BitmapInterpolationMode="None">
