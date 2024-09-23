@@ -78,7 +78,10 @@ internal static class StaticMenuBuilder
 
             if (success)
             {
-                PixedModel model = new(window.WidthValue, window.HeightValue);
+                PixedModel model = new(window.WidthValue, window.HeightValue)
+                {
+                    FileName = Global.NamingService.GenerateName()
+                };
                 Global.Models.Add(model);
                 Subjects.ProjectAdded.OnNext(model);
             }

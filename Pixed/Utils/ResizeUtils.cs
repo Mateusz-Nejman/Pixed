@@ -29,7 +29,7 @@ internal static class ResizeUtils
             frames.Add(ResizeFrame(frame, width, height, resizeContent, origin));
         }
 
-        var resizedModel = PixedModel.FromFrames(frames);
+        var resizedModel = PixedModel.FromFrames(frames, model.FileName);
         resizedModel.CurrentFrameIndex = model.CurrentFrameIndex;
         return resizedModel;
     }

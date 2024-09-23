@@ -20,14 +20,11 @@ internal static class PixedProjectMethods
 
         if (saveAs)
         {
-            string name;
-            if (string.IsNullOrEmpty(model.FileName))
+            FileInfo info = new(model.FileName);
+            string name = info.Name;
+
+            if(!string.IsNullOrEmpty(info.Extension))
             {
-                name = "project.pixed";
-            }
-            else
-            {
-                FileInfo info = new(model.FileName ?? string.Empty);
                 name = info.Name.Replace(info.Extension, string.Empty);
             }
             var file = await IODialogs.SaveFileDialog("Pixed project (*.pixed)|*.pixed", name);
@@ -117,14 +114,11 @@ internal static class PixedProjectMethods
 
     public async static Task ExportToPng(PixedModel model)
     {
-        string name;
-        if (string.IsNullOrEmpty(model.FileName))
+        FileInfo info = new(model.FileName);
+        string name = info.Name;
+
+        if (!string.IsNullOrEmpty(info.Extension))
         {
-            name = "pixed.png";
-        }
-        else
-        {
-            FileInfo info = new(model.FileName ?? string.Empty);
             name = info.Name.Replace(info.Extension, string.Empty);
         }
         var file = await IODialogs.SaveFileDialog("PNG image (*.png)|*.png", name);
