@@ -5,8 +5,9 @@ using System.Windows.Input;
 using static Pixed.StaticMenuBuilder;
 
 namespace Pixed.Controls;
-internal class PixedWindow : Window
+internal class PixedWindow<T> : Window
 {
+    public T ViewModel => (T)DataContext;
     public virtual void RegisterMenuItems()
     {
         if (DataContext is PixedViewModel model)

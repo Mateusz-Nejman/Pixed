@@ -5,13 +5,14 @@ using Pixed.Input;
 using Pixed.IO;
 using Pixed.Models;
 using Pixed.Services.Keyboard;
+using Pixed.ViewModels;
 using System;
 using System.IO;
 using System.Windows.Input;
 
 namespace Pixed.Windows;
 
-internal partial class MainWindow : PixedWindow
+internal partial class MainWindow : PixedWindow<MainViewModel>
 {
     public static Window? Handle { get; private set; }
     public static ICommand? QuitCommand { get; private set; }
@@ -25,6 +26,7 @@ internal partial class MainWindow : PixedWindow
     {
         Global.ToolSelector.SelectTool("tool_pen");
         toolsSection.PaintCanvas = paintCanvas.ViewModel;
+        ViewModel.PaintCanvasMouseWheelCommand = paintCanvas.ViewModel.MouseWheel;
 
         Subjects.ProjectAdded.OnNext(Global.CurrentModel);
         Subjects.ProjectChanged.OnNext(Global.CurrentModel);

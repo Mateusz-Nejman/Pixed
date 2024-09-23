@@ -26,12 +26,18 @@ internal class MainViewModel : PixedViewModel, IDisposable
     }
 
     public ICommand QuitCommand => MainWindow.QuitCommand;
+    public ICommand PaintCanvasMouseWheelCommand { get; set; }
+    public ICommand ZoomInCommand { get; }
+    public ICommand ZoomOutCommand { get; }
     public MainViewModel()
     {
         _onMenuBuilt = StaticMenuBuilder.OnMenuBuilt.Subscribe(menu =>
         {
             Menu = menu;
         });
+
+        ZoomInCommand = new ActionCommand(ZoomInAction);
+        ZoomOutCommand = new ActionCommand(ZoomOutAction);
     }
 
     public override void OnInitialized()
@@ -70,5 +76,15 @@ internal class MainViewModel : PixedViewModel, IDisposable
     {
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
+    }
+
+    private void ZoomInAction()
+    {
+        PaintCanvasMouseWheelCommand?.Execute(1.0);
+    }
+
+    private void ZoomOutAction()
+    {
+        PaintCanvasMouseWheelCommand?.Execute(-1.0);
     }
 }

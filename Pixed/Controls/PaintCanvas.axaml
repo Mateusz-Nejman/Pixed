@@ -11,11 +11,12 @@
     <UserControl.DataContext>
         <viewmodels:PaintCanvasViewModel/>
     </UserControl.DataContext>
-    <controls:NoGesturesScrollViewer 
+    <ScrollViewer
     x:Name="scrollView"
-    VerticalScrollBarVisibility="Auto"
-	Theme="{StaticResource PaintCanvasScrollViewer}"
-    HorizontalScrollBarVisibility="Auto">
+    VerticalScrollBarVisibility="Visible"
+	HorizontalScrollBarVisibility="Visible"
+	AllowAutoHide="False"
+	Theme="{StaticResource NoGesturesScrollViewer}">
         <Grid Name="imageGrid" Width="{Binding GridWidth, Mode=TwoWay}" Height="{Binding GridHeight, Mode=TwoWay}">
             <Grid.Background>
 				<ImageBrush Source="avares://Pixed/Resources/transparentBackground.png" TileMode="Tile" Stretch="Uniform" AlignmentY="Top" DestinationRect="0 0 32 32"/>
@@ -23,12 +24,12 @@
             <Image Name="image" RenderOptions.BitmapInterpolationMode="None" Source="{Binding AvaloniaImageBitmap}"/>
             <Image Name="overlay" RenderOptions.BitmapInterpolationMode="None" Source="{Binding AvaloniaOverlayBitmap}"/>
 			<Canvas Background="{Binding GridBrush}"/>
-			<Border Background="Transparent" 
+			<Border Name="interactionBorder" Background="Transparent"
 					PointerExited="Border_PointerExited"
 					PointerMoved="Border_PointerMoved"
-					PointerPressed="Border_PointerPressed" 
+					PointerPressed="Border_PointerPressed"
 					PointerReleased="Border_PointerReleased"
 					PointerWheelChanged="Border_PointerWheelChanged"/>
         </Grid>
-    </controls:NoGesturesScrollViewer>
+    </ScrollViewer>
 </UserControl>
