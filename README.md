@@ -1,4 +1,4 @@
-![Pixed logo](../Pixed/Pixed/Resources/icon.png "Pixed logo")
+![Pixed logo](/Pixed/Resources/icon.png "Pixed logo")
 Pixed
 ======
 Pixed is a pixel-art editor highly inspired by [Mateusz-Nejman/piskel_touch](https://github.com/Mateusz-Nejman/piskel_touch) (it's my fork of Piskel app)
