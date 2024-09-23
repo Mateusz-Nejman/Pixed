@@ -27,7 +27,7 @@ namespace Pixed.IO
 
             Layer layer = Layer.FromColors(pixels, width, height, "Layer 0");
             Frame frame = Frame.FromLayers([layer]);
-            return PixedModel.FromFrames([frame]);
+            return PixedModel.FromFrames([frame], Global.NamingService.GenerateName());
         }
 
         public void Serialize(Stream stream, PixedModel model, bool close)

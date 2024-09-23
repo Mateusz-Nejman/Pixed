@@ -14,6 +14,7 @@ internal static class Global
     public static ShortcutService? ShortcutService { get; set; }
     public static PaletteService? PaletteService { get; set; }
     public static SelectionManager? SelectionManager { get; set; }
+    public static NamingService NamingService { get; set; } = new();
     public static Settings UserSettings { get; set; }
     public static BaseTool? ToolSelected { get; set; }
     public static ObservableCollection<PixedModel> Models { get; } = [];

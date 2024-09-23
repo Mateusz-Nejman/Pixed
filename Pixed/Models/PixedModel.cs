@@ -22,7 +22,7 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
     private bool _isEmpty = true;
 
     public string? FilePath { get; set; }
-    public string? FileName { get; set; }
+    public string FileName { get; set; } = string.Empty;
 
     public ObservableCollection<Frame> Frames => _frames;
     public int Width => Frames[0].Width;
@@ -75,7 +75,8 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
         PixedModel model = new()
         {
             _isEmpty = _isEmpty,
-            _currentFrameIndex = _currentFrameIndex
+            _currentFrameIndex = _currentFrameIndex,
+            FileName = FileName,
         };
 
         foreach (Frame frame in Frames)
@@ -114,11 +115,12 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
         return [.. _frames.SelectMany(f => f.Layers).Select(l => l.GetPixels()).SelectMany(p => p).Where(p => p != UniColor.Transparent).Distinct().Order()];
     }
 
-    public static PixedModel FromFrames(ObservableCollection<Frame> frames)
+    public static PixedModel FromFrames(ObservableCollection<Frame> frames, string name)
     {
         PixedModel model = new();
         model.Frames.Clear();
         model._isEmpty = false;
+        model.FileName = name;
 
         foreach (var frame in frames)
         {
