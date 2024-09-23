@@ -1,6 +1,5 @@
 ﻿using Pixed.Input;
 using Pixed.Models;
-using Pixed.Services.History;
 using Pixed.Utils;
 using System;
 using System.Drawing;
@@ -39,8 +38,7 @@ namespace Pixed.Tools
             bool isShift = Keyboard.Modifiers.HasFlag(Avalonia.Input.KeyModifiers.Shift);
             var color = GetToolColor();
 
-            var historyEntry = Draw(x, y, color, isShift, frame);
-            Global.CurrentModel.AddHistory(historyEntry);
+            Draw(x, y, color, isShift, frame);
 
             overlay.Clear();
         }
@@ -56,23 +54,14 @@ namespace Pixed.Tools
             overlay = bitmap;
         }
 
-        protected HistoryEntry Draw(int x, int y, int color, bool isShift, Frame frame)
+        protected void Draw(int x, int y, int color, bool isShift, Frame frame)
         {
-            DynamicHistoryEntry entry = new()
-            {
-                FrameId = frame.Id,
-                LayerId = frame.CurrentLayer.Id
-            };
             Draw(x, y, color, isShift, (x1, y1, _) =>
             {
-                int oldColor = frame.GetPixel(x1, y1);
-                entry.Add(x1, y1, oldColor, color);
                 frame.SetPixel(x1, y1, color);
             });
 
             Subjects.FrameModified.OnNext(frame);
-
-            return entry.ToEntry();
         }
         protected abstract void Draw(int x, int y, int color, bool isShift, Action<int, int, int> setPixelAction);
     }

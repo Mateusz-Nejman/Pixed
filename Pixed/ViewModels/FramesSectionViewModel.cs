@@ -102,6 +102,8 @@ internal class FramesSectionViewModel : PixedViewModel, IDisposable
     {
         Frames.Add(new Frame(Frames[0].Width, Frames[0].Height));
         SelectedFrame = Frames.Count - 1;
+        Global.CurrentModel.AddHistory();
+        Subjects.FrameAdded.OnNext(Frames[^1]);
     }
 
     private void RemoveFrameAction()
@@ -112,13 +114,18 @@ internal class FramesSectionViewModel : PixedViewModel, IDisposable
         }
 
         int index = SelectedFrame;
+        var frame = Frames[index];
         Frames.RemoveAt(index);
+        Subjects.FrameRemoved.OnNext(frame);
         SelectedFrame = Math.Clamp(index, 0, Frames.Count - 1);
+        Global.CurrentModel.AddHistory();
     }
 
     private void DuplicateFrameAction()
     {
         Frames.Add(Frames[SelectedFrame].Clone());
+        Subjects.FrameAdded.OnNext(Frames[^1]);
         SelectedFrame = Frames.Count - 1;
+        Global.CurrentModel.AddHistory();
     }
 }

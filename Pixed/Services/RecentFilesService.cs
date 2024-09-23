@@ -73,26 +73,14 @@ namespace Pixed.Services
         private void OpenProject(string path)
         {
             RecentFiles.Remove(path);
-            RecentFiles.Insert(0, path);
+
+            if (File.Exists(path))
+            {
+                RecentFiles.Insert(0, path);
+                PixedProjectMethods.Open(path);
+            }
+            
             Save();
-            FileInfo info = new FileInfo(path);
-            PixedProjectSerializer serializer = new();
-            Stream stream = File.OpenRead(path);
-            PixedModel model = serializer.Deserialize(stream);
-            stream?.Dispose();
-
-            model.FileName = info.Name;
-            model.FilePath = path;
-
-            if (Global.CurrentModel.IsEmpty)
-            {
-                Global.Models[Global.CurrentModelIndex] = model;
-            }
-            else
-            {
-                Global.Models.Add(model);
-            }
-            Subjects.ProjectAdded.OnNext(model);
         }
     }
 }

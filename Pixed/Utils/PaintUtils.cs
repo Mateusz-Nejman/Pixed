@@ -1,5 +1,4 @@
 ﻿using Pixed.Models;
-using Pixed.Services.History;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -31,19 +30,15 @@ internal static class PaintUtils
         });
     }
 
-    public static DynamicHistoryEntry PaintSimiliarConnected(Layer layer, int x, int y, int replacementColor)
+    public static void PaintSimiliarConnected(Layer layer, int x, int y, int replacementColor)
     {
         int targetColor = layer.GetPixel(x, y);
 
         if (targetColor == replacementColor)
         {
-            return new DynamicHistoryEntry();
+            return;
         }
 
-        DynamicHistoryEntry entry = new()
-        {
-            LayerId = layer.Id
-        };
         var pixels = VisitConnectedPixels(layer, x, y, pixel =>
         {
             var sourceColor = layer.GetPixel(pixel.X, pixel.Y);
@@ -58,12 +53,9 @@ internal static class PaintUtils
         foreach (var pixel in pixels)
         {
             layer.SetPixel(pixel.X, pixel.Y, replacementColor);
-            entry.Add(pixel.X, pixel.Y, pixel.Color, replacementColor);
         }
 
         Subjects.LayerModified.OnNext(layer);
-
-        return entry;
     }
 
     public static List<Pixel> VisitConnectedPixels(Layer layer, int x, int y, Func<Pixel, bool> visitor) //TODO optimize
@@ -130,14 +122,10 @@ internal static class PaintUtils
         return Global.PrimaryColor.Blend(Global.SecondaryColor, color);
     }
 
-    public static DynamicHistoryEntry PaintNoiseSimiliarConnected(Layer layer, int x, int y)
+    public static void PaintNoiseSimiliarConnected(Layer layer, int x, int y)
     {
         int targetColor = layer.GetPixel(x, y);
 
-        DynamicHistoryEntry entry = new()
-        {
-            LayerId = layer.Id
-        };
         var pixels = VisitConnectedPixels(layer, x, y, pixel =>
         {
             var sourceColor = layer.GetPixel(pixel.X, pixel.Y);
@@ -153,26 +141,18 @@ internal static class PaintUtils
         {
             var color = GetNoiseColor();
             layer.SetPixel(pixel.X, pixel.Y, color);
-            entry.Add(pixel.X, pixel.Y, pixel.Color, color);
         }
 
         Subjects.LayerModified.OnNext(layer);
-
-        return entry;
     }
 
-    public static DynamicHistoryEntry OutlineSimiliarConnectedPixels(Layer layer, int x, int y, int replacementColor, bool fillCorners)
+    public static void OutlineSimiliarConnectedPixels(Layer layer, int x, int y, int replacementColor, bool fillCorners)
     {
-        DynamicHistoryEntry entry = new()
-        {
-            LayerId = layer.Id
-        };
-
         var targetColor = layer.GetPixel(x, y);
 
         if (targetColor == replacementColor)
         {
-            return entry;
+            return;
         }
 
         bool neighbourCheck(Pixel pixel)
@@ -206,13 +186,9 @@ internal static class PaintUtils
 
         foreach (var pixel in pixels)
         {
-            int oldColor = layer.GetPixel(pixel.X, pixel.Y);
             layer.SetPixel(pixel.X, pixel.Y, replacementColor);
-            entry.Add(pixel.X, pixel.Y, oldColor, replacementColor);
         }
 
         Subjects.LayerModified.OnNext(layer);
-
-        return entry;
     }
 }

@@ -85,6 +85,7 @@ internal partial class MainWindow : PixedWindow
         Global.DataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Pixed");
         Global.UserSettings = Settings.Load();
         Global.Models.Add(new PixedModel(Global.UserSettings.UserWidth, Global.UserSettings.UserHeight));
+        Global.CurrentModel.AddHistory(false);
     }
 
     private void Window_KeyUp(object? sender, KeyEventArgs e)

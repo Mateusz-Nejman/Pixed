@@ -1,6 +1,5 @@
 ﻿using Pixed.Input;
 using Pixed.Models;
-using Pixed.Services.History;
 using System.Drawing;
 
 namespace Pixed.Tools
@@ -25,17 +24,11 @@ namespace Pixed.Tools
         {
             Global.CurrentModel.Process(allFrames, allLayers, (frame, layer) =>
             {
-                DynamicHistoryEntry entry = new()
-                {
-                    FrameId = frame.Id,
-                    LayerId = layer.Id
-                };
-                ApplyToolOnLayer(layer, oldColor, newColor, ref entry);
-                return entry.ToEntry();
+                ApplyToolOnLayer(layer, oldColor, newColor);
             });
         }
 
-        private void ApplyToolOnLayer(Layer layer, int oldColor, int newColor, ref DynamicHistoryEntry historyEntry)
+        private void ApplyToolOnLayer(Layer layer, int oldColor, int newColor)
         {
             for (int x = 0; x < layer.Width; x++)
             {
@@ -44,7 +37,6 @@ namespace Pixed.Tools
                     if (layer.GetPixel(x, y) == oldColor)
                     {
                         layer.SetPixel(x, y, newColor);
-                        historyEntry.Add(x, y, oldColor, newColor);
                     }
                 }
             }

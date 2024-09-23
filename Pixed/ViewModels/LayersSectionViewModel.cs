@@ -165,6 +165,7 @@ internal class LayersSectionViewModel : PixedViewModel, IDisposable
         OnPropertyChanged(nameof(Layers));
         Subjects.LayerAdded.OnNext(layer);
         Subjects.FrameModified.OnNext(Frame);
+        Global.CurrentModel.AddHistory();
     }
     private void MoveLayerUpAction()
     {
@@ -176,6 +177,7 @@ internal class LayersSectionViewModel : PixedViewModel, IDisposable
         Frame.MoveLayerUp(Keyboard.Modifiers.HasFlag(KeyModifiers.Shift));
         OnPropertyChanged(nameof(Layers));
         Subjects.FrameModified.OnNext(Frame);
+        Global.CurrentModel.AddHistory();
     }
 
     private void MoveLayerDownAction()
@@ -188,6 +190,7 @@ internal class LayersSectionViewModel : PixedViewModel, IDisposable
         Frame.MoveLayerDown(Keyboard.Modifiers.HasFlag(KeyModifiers.Shift));
         OnPropertyChanged(nameof(Layers));
         Subjects.FrameModified.OnNext(Frame);
+        Global.CurrentModel.AddHistory();
     }
 
     private async Task EditLayerNameAction()
@@ -205,6 +208,8 @@ internal class LayersSectionViewModel : PixedViewModel, IDisposable
         {
             Layers[_selectedLayer].Name = window.Value;
         }
+
+        Global.CurrentModel.AddHistory();
     }
 
     private void MergeLayerAction()
@@ -212,6 +217,7 @@ internal class LayersSectionViewModel : PixedViewModel, IDisposable
         Frame.MergeLayerBelow();
         OnPropertyChanged(nameof(Layers));
         Subjects.FrameModified.OnNext(Frame);
+        Global.CurrentModel.AddHistory();
     }
 
     private void RemoveLayerAction()
@@ -226,5 +232,6 @@ internal class LayersSectionViewModel : PixedViewModel, IDisposable
         Layers.RemoveAt(index);
         SelectedLayer = Math.Clamp(index, 0, Layers.Count - 1);
         Subjects.LayerRemoved.OnNext(layer);
+        Global.CurrentModel.AddHistory();
     }
 }

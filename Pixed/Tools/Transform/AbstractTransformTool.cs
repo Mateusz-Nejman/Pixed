@@ -12,13 +12,13 @@ internal abstract class AbstractTransformTool
         bool allLayers = Keyboard.Modifiers.HasFlag(KeyModifiers.Control);
 
         ApplyTool(Keyboard.Modifiers.HasFlag(KeyModifiers.Alt), allFrames, allLayers);
+        Global.CurrentModel.AddHistory();
     }
     public virtual void ApplyTool(bool altKey, bool allFrames, bool allLayers)
     {
         Global.CurrentModel.Process(allFrames, allLayers, (frame, layer) =>
         {
             ApplyToolOnLayer(layer, altKey);
-            return null;
         });
     }
 

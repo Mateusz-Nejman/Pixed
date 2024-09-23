@@ -10,6 +10,8 @@ internal abstract class BaseTool
     protected int highlightedX = 0;
     protected int highlightedY = 0;
 
+    public bool AddToHistory { get; protected set; } = true;
+
     public virtual UniColor GetToolColor()
     {
         if (Mouse.RightButton == MouseButtonState.Pressed)
