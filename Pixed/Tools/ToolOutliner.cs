@@ -11,9 +11,7 @@ namespace Pixed.Tools
         {
             bool fillCorners = Keyboard.Modifiers.HasFlag(Avalonia.Input.KeyModifiers.Control);
             var color = GetToolColor();
-            var entry = PaintUtils.OutlineSimiliarConnectedPixels(frame.CurrentLayer, x, y, color, fillCorners);
-            entry.FrameId = frame.Id;
-            Global.CurrentModel.AddHistory(entry.ToEntry());
+            PaintUtils.OutlineSimiliarConnectedPixels(frame.CurrentLayer, x, y, color, fillCorners);
         }
     }
 }

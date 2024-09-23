@@ -1,6 +1,5 @@
 ﻿using Avalonia.Input;
 using Pixed.Models;
-using Pixed.Services.History;
 using Pixed.Tools.Selection;
 using Pixed.Utils;
 using System;
@@ -73,27 +72,19 @@ internal class SelectionManager
 
         var pixels = _currentSelection.Pixels;
         var frame = Global.CurrentFrame;
-        DynamicHistoryEntry entry = new()
-        {
-            FrameId = Global.CurrentFrame.Id,
-            LayerId = Global.CurrentLayer.Id
-        };
 
         for (int a = 0; a < pixels.Count; a++)
         {
             var p = pixels[a];
-            int oldColor = frame.GetPixel(p.X, p.Y);
             int newColor = UniColor.Transparent;
 
-            entry.Add(p.X, p.Y, oldColor, newColor);
             frame.SetPixel(p.X, p.Y, newColor);
         }
 
         Subjects.FrameModified.OnNext(frame);
-
-        Global.CurrentModel.AddHistory(entry.ToEntry());
         Subjects.LayerModified.OnNext(frame.CurrentLayer);
         Subjects.FrameModified.OnNext(frame);
+        Global.CurrentModel.AddHistory();
     }
 
     private void Copy()
@@ -142,12 +133,6 @@ internal class SelectionManager
 
         Frame frame = Global.CurrentFrame;
 
-        DynamicHistoryEntry entry = new()
-        {
-            FrameId = Global.CurrentFrame.Id,
-            LayerId = Global.CurrentLayer.Id
-        };
-
         for (int x = 0; x < source.Width; x++)
         {
             for (int y = 0; y < source.Height; y++)
@@ -155,8 +140,6 @@ internal class SelectionManager
                 if (frame.ContainsPixel(startPosition.X + x, startPosition.Y + y))
                 {
                     var color = source.GetPixel(x, y);
-                    var oldColor = frame.GetPixel(startPosition.X + x, startPosition.Y + y);
-                    entry.Add(startPosition.X + x, startPosition.Y + y, oldColor, color.ToArgb());
                     frame.SetPixel(startPosition.X + x, startPosition.Y + y, color.ToArgb());
                 }
             }
@@ -164,6 +147,7 @@ internal class SelectionManager
 
         Subjects.LayerModified.OnNext(frame.CurrentLayer);
         Subjects.FrameModified.OnNext(frame);
+        Global.CurrentModel.AddHistory();
     }
 
     private static bool IsSelectToolActive()

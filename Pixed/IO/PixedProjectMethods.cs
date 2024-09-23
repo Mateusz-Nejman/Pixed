@@ -72,13 +72,14 @@ internal static class PixedProjectMethods
             PixedModel model = serializer.Deserialize(stream);
             stream?.Dispose();
             model.FileName = item.Name.Replace(".png", ".pixed");
+            model.AddHistory();
 
             if (item.Name.EndsWith(".pixed"))
             {
                 model.FilePath = item.Path.AbsolutePath;
             }
 
-            if (model.IsEmpty)
+            if (Global.CurrentModel.IsEmpty)
             {
                 Global.Models[Global.CurrentModelIndex] = model;
             }
@@ -89,6 +90,29 @@ internal static class PixedProjectMethods
 
             Subjects.ProjectAdded.OnNext(model);
         }
+    }
+
+    public static void Open(string path)
+    {
+        FileInfo info = new(path);
+        PixedProjectSerializer serializer = new();
+        Stream stream = File.OpenRead(path);
+        PixedModel model = serializer.Deserialize(stream);
+        stream?.Dispose();
+
+        model.FileName = info.Name;
+        model.FilePath = path;
+        model.AddHistory();
+
+        if (Global.CurrentModel.IsEmpty)
+        {
+            Global.Models[Global.CurrentModelIndex] = model;
+        }
+        else
+        {
+            Global.Models.Add(model);
+        }
+        Subjects.ProjectAdded.OnNext(model);
     }
 
     public async static Task ExportToPng(PixedModel model)

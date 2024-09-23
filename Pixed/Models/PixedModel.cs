@@ -1,6 +1,5 @@
 ﻿using Avalonia.Media.Imaging;
 using Pixed.IO;
-using Pixed.Services.History;
 using Pixed.Utils;
 using Pixed.Windows;
 using System;
@@ -14,9 +13,10 @@ namespace Pixed.Models;
 
 internal class PixedModel : PropertyChangedBase, IPixedSerializer
 {
+    private const int MAX_HISTORY_ENTRIES = 500;
     private readonly ObservableCollection<Frame> _frames;
-    private readonly ObservableCollection<HistoryEntry> _history;
-    private int _historyIndex = -1;
+    private readonly ObservableCollection<byte[]> _history;
+    private int _historyIndex = 0;
     private Bitmap _renderSource;
     private int _currentFrameIndex = 0;
     private bool _isEmpty = true;
@@ -51,7 +51,7 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
     }
 
     public bool IsEmpty => _isEmpty;
-    public bool HistoryEmpty => _history.Count == 0;
+    public bool HistoryEmpty => _history.Count <= 1;
 
     public ICommand CloseCommand { get; }
 
@@ -91,7 +91,7 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
         RenderSource = Frames.First().Render().ToAvaloniaBitmap();
     }
 
-    public void Process(bool allFrames, bool allLayers, Func<Frame, Layer, HistoryEntry?> action)
+    public void Process(bool allFrames, bool allLayers, Action<Frame, Layer> action)
     {
         Frame[] frames = allFrames ? [.. Frames] : [Global.CurrentFrame];
 
@@ -101,13 +101,7 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
 
             foreach (Layer layer in layers)
             {
-                var entry = action?.Invoke(frame, layer);
-
-                if (entry.HasValue && entry.Value.OldColor.Length > 0)
-                {
-                    AddHistory(entry.Value);
-                }
-
+                action.Invoke(frame, layer);
                 Subjects.LayerModified.OnNext(layer);
             }
 
@@ -134,57 +128,65 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
         return model;
     }
 
-    public void AddHistory(HistoryEntry entry)
+    public void AddHistory(bool setIsEmpty = true)
     {
-        _history.Add(entry);
+        _historyIndex = Math.Clamp(_historyIndex, 0, _history.Count);
+        MemoryStream stream = new();
+        Serialize(stream);
+        byte[] data = stream.ToArray();
+        stream.Dispose();
+
+        ObservableCollection<byte[]> newHistory = [];
+
+        if(_history.Count > 0)
+        {
+            for (int a = 0; a <= _historyIndex; a++)
+            {
+                newHistory.Add(_history[a]);
+            }
+        }
+
+        newHistory.Add(data);
+
+        _history.Clear();
+        
+        foreach(var historyData in newHistory)
+        {
+            _history.Add(historyData);
+        }
+
+        if(_history.Count == MAX_HISTORY_ENTRIES + 1)
+        {
+            _history.RemoveAt(0);
+        }
         _historyIndex = _history.Count - 1;
-        _isEmpty = false;
+        
+        if(setIsEmpty)
+        {
+            _isEmpty = false;
+        }
     }
 
     public void Undo()
     {
-        if (_history.Count == 0 || _historyIndex < 0)
-        {
-            return;
-        }
-
-        HistoryEntry currentEntry = _history[_historyIndex];
-        Frame? frame = Frames.FirstOrDefault(f => f.Id == currentEntry.FrameId, null);
-
-        if (frame == null)
-        {
-            _history.RemoveAt(_historyIndex);
-            _historyIndex--;
-            return;
-        }
-
-        Layer? layer = frame.Layers.FirstOrDefault(l => l.Id == currentEntry.LayerId, null);
-
-        if ((layer == null))
-        {
-            _history.RemoveAt(_historyIndex);
-            _historyIndex--;
-            return;
-        }
-
-        for (int a = 0; a < currentEntry.PixelX.Length; a++)
-        {
-            int pixelX = currentEntry.PixelX[a];
-            int pixelY = currentEntry.PixelY[a];
-            int oldcolor = currentEntry.OldColor[a];
-            int newColor = currentEntry.NewColor[a];
-
-            if (layer.GetPixel(pixelX, pixelY) == newColor)
-            {
-                layer.SetPixel(pixelX, pixelY, oldcolor);
-            }
-        }
-
         _historyIndex--;
+        if (_history.Count == 1 || _historyIndex < 0)
+        {
+            return;
+        }
+
+        _historyIndex = Math.Clamp(_historyIndex, 0, _history.Count - 1);
+
+        byte[] data = _history[_historyIndex];
+        MemoryStream stream = new(data);
+        Deserialize(stream);
+        stream.Dispose();
+        Subjects.ProjectModified.OnNext(this);
     }
 
     public void Redo()
     {
+        _historyIndex++;
         if (_history.Count == 0 || _historyIndex >= _history.Count)
         {
             return;
@@ -194,40 +196,12 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
         {
             _historyIndex = 0;
         }
-
-        HistoryEntry currentEntry = _history[_historyIndex];
-        Frame? frame = Frames.FirstOrDefault(f => f.Id == currentEntry.FrameId, null);
-
-        if (frame == null)
-        {
-            _history.RemoveAt(_historyIndex);
-            Redo();
-            return;
-        }
-
-        Layer? layer = frame.Layers.FirstOrDefault(l => l.Id == currentEntry.LayerId, null);
-
-        if ((layer == null))
-        {
-            _history.RemoveAt(_historyIndex);
-            Redo();
-            return;
-        }
-
-        for (int a = 0; a < currentEntry.PixelX.Length; a++)
-        {
-            int pixelX = currentEntry.PixelX[a];
-            int pixelY = currentEntry.PixelY[a];
-            int oldcolor = currentEntry.OldColor[a];
-            int newColor = currentEntry.NewColor[a];
-
-            if (layer.GetPixel(pixelX, pixelY) == oldcolor)
-            {
-                layer.SetPixel(pixelX, pixelY, newColor);
-            }
-        }
-
-        _historyIndex++;
+        
+        byte[] data = _history[_historyIndex];
+        MemoryStream stream = new(data);
+        Deserialize(stream);
+        stream.Dispose();
+        Subjects.ProjectModified.OnNext(this);
     }
 
     public void Serialize(Stream stream)

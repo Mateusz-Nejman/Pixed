@@ -32,6 +32,7 @@ internal class BaseSelect : BaseTool
 
     public BaseSelect() : base()
     {
+        AddToHistory = false;
     }
 
     public void SelectAll(Action<Bitmap> overlayAction)

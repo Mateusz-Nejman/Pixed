@@ -211,6 +211,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
                 _layerRemoved?.Dispose();
                 _layerModified?.Dispose();
                 _mouseWheel?.Dispose();
+                _gridChanged?.Dispose();
             }
 
             _disposedValue = true;
@@ -250,6 +251,11 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
 
         _leftPressed = false;
         Global.ToolSelected?.ReleaseTool(imageX, imageY, _frame, ref _overlayBitmap);
+
+        if (Global.ToolSelected != null && Global.ToolSelected.AddToHistory)
+        {
+            Global.CurrentModel.AddHistory();
+        }
         RefreshOverlay();
         AvaloniaImageBitmap = _frame.RenderTransparent().ToAvaloniaBitmap();
         Subjects.LayerModified.OnNext(_frame.CurrentLayer);
@@ -283,6 +289,11 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
 
         _rightPressed = false;
         Global.ToolSelected?.ReleaseTool(imageX, imageY, _frame, ref _overlayBitmap);
+
+        if(Global.ToolSelected != null && Global.ToolSelected.AddToHistory)
+        {
+            Global.CurrentModel.AddHistory();
+        }
         RefreshOverlay();
         AvaloniaImageBitmap = _frame.RenderTransparent().ToAvaloniaBitmap();
         Subjects.LayerModified.OnNext(_frame.CurrentLayer);
