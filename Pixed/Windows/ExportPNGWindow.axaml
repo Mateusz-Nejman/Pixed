@@ -8,7 +8,8 @@
         Title="Export tileset to PNG" MinWidth="200"
         MinHeight="150"
         ShowInTaskbar="False" SizeToContent="WidthAndHeight"
-        WindowStartupLocation="CenterOwner">
+        WindowStartupLocation="CenterOwner"
+        Icon="avares://Pixed/Resources/icon.ico">
   <StackPanel>
     <TextBlock Text="Columns count:" Margin="10"/>
     <NumericUpDown Margin="10" Value="{Binding ColumnsCount, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ExportPNGWindow}, Mode=TwoWay}" Minimum="1"/>

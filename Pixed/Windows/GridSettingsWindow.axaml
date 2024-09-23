@@ -9,7 +9,8 @@
         Title="Grid settings"
 		Width="200" Height="300"
 		ShowInTaskbar="False" SizeToContent="WidthAndHeight"
-        WindowStartupLocation="CenterOwner">
+        WindowStartupLocation="CenterOwner"
+        Icon="avares://Pixed/Resources/icon.ico">
 	<StackPanel>
 		<TextBlock Text="Grid color:" Margin="10"/>
 		<controls:FixedPortableColorPicker Width="100" Height="32" SelectedColor="{Binding GridColor, RelativeSource={RelativeSource FindAncestor, AncestorType=local:GridSettingsWindow}, Mode=TwoWay}" x:Name="colorPicker"/>

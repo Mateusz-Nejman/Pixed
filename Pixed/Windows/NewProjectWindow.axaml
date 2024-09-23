@@ -8,7 +8,8 @@
         Title="New Project" MinWidth="200"
         MinHeight="230"
         ShowInTaskbar="False" SizeToContent="WidthAndHeight"
-        WindowStartupLocation="CenterOwner">
+        WindowStartupLocation="CenterOwner"
+        Icon="avares://Pixed/Resources/icon.ico">
   <StackPanel>
     <TextBlock Text="Width:" Margin="10"/>
     <NumericUpDown Margin="10" Value="{Binding WidthValue, RelativeSource={RelativeSource FindAncestor, AncestorType=local:NewProjectWindow}, Mode=TwoWay}" Minimum="1"/>
