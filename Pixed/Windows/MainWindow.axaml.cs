@@ -2,6 +2,7 @@
 using Avalonia.Input;
 using Pixed.Controls;
 using Pixed.Input;
+using Pixed.IO;
 using Pixed.Models;
 using Pixed.Services.Keyboard;
 using System;
@@ -44,7 +45,43 @@ internal partial class MainWindow : PixedWindow
     private void InitializeBeforeUI()
     {
         Handle = this;
-        QuitCommand = new ActionCommand(() => Handle.Close());
+        QuitCommand = new ActionCommand(async () =>
+        {
+            int untitledIndex = 0;
+
+            foreach (var model in Global.Models)
+            {
+                if (!model.HistoryEmpty)
+                {
+                    var name = model.FileName;
+
+                    if (string.IsNullOrEmpty(name))
+                    {
+                        name = "Untitled-" + untitledIndex;
+                        untitledIndex++;
+                    }
+
+                    YesNoCancelWindow window = new()
+                    {
+                        Title = "Unsaved changes",
+                        Text = "Project " + name + " has unsaved changes. Save it now?"
+                    };
+
+                    var result = await window.ShowDialog<ButtonResult>(this);
+
+                    if (result == ButtonResult.Cancel)
+                    {
+                        return;
+                    }
+                    else if (result == ButtonResult.Yes)
+                    {
+                        await PixedProjectMethods.Save(model, model.FilePath == null);
+                    }
+                }
+            }
+
+            Handle.Close();
+        });
         Global.DataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Pixed");
         Global.UserSettings = Settings.Load();
         Global.Models.Add(new PixedModel(Global.UserSettings.UserWidth, Global.UserSettings.UserHeight));

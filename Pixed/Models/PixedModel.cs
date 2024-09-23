@@ -51,6 +51,7 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
     }
 
     public bool IsEmpty => _isEmpty;
+    public bool HistoryEmpty => _history.Count == 0;
 
     public ICommand CloseCommand { get; }
 
