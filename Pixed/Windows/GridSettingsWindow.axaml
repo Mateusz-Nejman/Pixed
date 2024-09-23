@@ -7,7 +7,9 @@
 		xmlns:controls="clr-namespace:Pixed.Controls;assembly=Pixed"
 		xmlns:local="clr-namespace:Pixed.Windows;assembly=Pixed"
         Title="Grid settings"
-		Width="200" Height="300">
+		Width="200" Height="300"
+		ShowInTaskbar="False" SizeToContent="WidthAndHeight"
+        WindowStartupLocation="CenterOwner">
 	<StackPanel>
 		<TextBlock Text="Grid color:" Margin="10"/>
 		<controls:FixedPortableColorPicker Width="100" Height="32" SelectedColor="{Binding GridColor, RelativeSource={RelativeSource FindAncestor, AncestorType=local:GridSettingsWindow}, Mode=TwoWay}" x:Name="colorPicker"/>

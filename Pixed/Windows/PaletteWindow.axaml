@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pixed" xmlns:viewmodels="clr-namespace:Pixed.ViewModels" xmlns:controls="clr-namespace:Pixed.Controls"
         mc:Ignorable="d"
-        Title="PaletteWindow" Height="600" Width="800" Background="{StaticResource BaseBackground}">
+        Title="PaletteWindow" Height="600" Width="800" Background="{StaticResource BaseBackground}" WindowStartupLocation="CenterOwner">
     <Window.DataContext>
         <viewmodels:PaletteWindowViewModel/>
     </Window.DataContext>

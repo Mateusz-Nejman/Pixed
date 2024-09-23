@@ -4,7 +4,6 @@ using Pixed.Models;
 using Pixed.Utils;
 using Pixed.Windows;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
@@ -89,44 +88,7 @@ internal static class StaticMenuBuilder
         {
             Command = new ActionCommand(async () =>
         {
-            var files = await IODialogs.OpenFileDialog("All supported (*.pixed;*.png)|*.pixed;*.png|Pixed project (*.pixed)|*.pixed|PNG images (*.png)|*.png", "Open file", true);
-
-            foreach (var item in files)
-            {
-                var stream = await item.OpenReadAsync();
-
-                IPixedProjectSerializer serializer;
-                if (item.Name.EndsWith(".pixed"))
-                {
-                    serializer = new PixedProjectSerializer();
-
-                    Global.RecentFilesService.AddRecent(item.Path.AbsolutePath);
-                }
-                else
-                {
-                    serializer = new PngProjectSerializer();
-                }
-
-                PixedModel model = serializer.Deserialize(stream);
-                stream?.Dispose();
-                model.FileName = item.Name.Replace(".png", ".pixed");
-
-                if (item.Name.EndsWith(".pixed"))
-                {
-                    model.FilePath = item.Path.AbsolutePath;
-                }
-
-                if (Global.CurrentModel.IsEmpty)
-                {
-                    Global.Models[Global.CurrentModelIndex] = model;
-                }
-                else
-                {
-                    Global.Models.Add(model);
-                }
-
-                Subjects.ProjectAdded.OnNext(model);
-            }
+            await PixedProjectMethods.Open();
         })
         };
         NativeMenuItem fileSave = new("Save")
@@ -237,66 +199,11 @@ internal static class StaticMenuBuilder
 
     private async static Task SaveAction(bool saveAs = false)
     {
-        Stream fileStream = null;
-        if (Global.CurrentModel.FilePath == null)
-        {
-            saveAs = true;
-        }
-        else
-        {
-            fileStream = File.OpenWrite(Global.CurrentModel.FilePath);
-        }
-
-        if (saveAs)
-        {
-            FileInfo info = new FileInfo(Global.CurrentModel.FileName);
-            var file = await IODialogs.SaveFileDialog("Pixed project (*.pixed)|*.pixed", info.Name.Replace(info.Extension, string.Empty) ?? "project.pixed");
-
-            if (file == null)
-            {
-                return;
-            }
-
-            Global.CurrentModel.FilePath = file.Path.AbsolutePath;
-            fileStream = await file.OpenWriteAsync();
-        }
-
-        if (fileStream != null)
-        {
-            PixedProjectSerializer serializer = new();
-            serializer.Serialize(fileStream, Global.CurrentModel, true);
-            Global.RecentFilesService.AddRecent(Global.CurrentModel.FilePath);
-        }
+        await PixedProjectMethods.Save(Global.CurrentModel, saveAs);
     }
 
     private async static Task ExportAction()
     {
-        FileInfo info = new FileInfo(Global.CurrentModel.FileName);
-        var file = await IODialogs.SaveFileDialog("PNG image (*.png)|*.png", info.Name.Replace(info.Extension, string.Empty) ?? "pixed.png");
-
-        if (file == null)
-        {
-            return;
-        }
-
-        PngProjectSerializer serializer = new();
-
-        int columnsCount = 1;
-        if (Global.CurrentModel.Frames.Count > 1)
-        {
-            ExportPNGWindow window = new();
-            bool success = await window.ShowDialog<bool>(MainWindow.Handle);
-
-            if (!success)
-            {
-                return;
-            }
-
-            columnsCount = window.ColumnsCount;
-        }
-
-        serializer.ColumnsCount = columnsCount;
-        var stream = await file.OpenWriteAsync();
-        serializer.Serialize(stream, Global.CurrentModel, true);
+        await PixedProjectMethods.ExportToPng(Global.CurrentModel);
     }
 }
