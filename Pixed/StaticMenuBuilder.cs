@@ -177,6 +177,7 @@ internal static class StaticMenuBuilder
                 var model = ResizeUtils.ResizeModel(Global.CurrentModel, result.Width, result.Height, result.ResizeCanvasContent, result.Anchor);
                 Global.Models[Global.CurrentModelIndex] = model;
                 Subjects.ProjectModified.OnNext(model);
+                Subjects.ProjectChanged.OnNext(model);
             }
         });
 
