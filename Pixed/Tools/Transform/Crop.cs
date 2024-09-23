@@ -1,6 +1,7 @@
 ﻿using Pixed.Models;
 using Pixed.Utils;
 using System;
+using System.Reflection;
 
 namespace Pixed.Tools.Transform;
 
@@ -22,7 +23,8 @@ internal class Crop : AbstractTransformTool
 
         if (applied)
         {
-            //TODO undo/redo
+            Subjects.ProjectModified.OnNext(Global.CurrentModel);
+            Subjects.ProjectChanged.OnNext(Global.CurrentModel);
         }
     }
     public override void ApplyTool(bool altKey, bool allFrames, bool allLayers)
