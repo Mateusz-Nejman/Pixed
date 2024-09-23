@@ -7,7 +7,8 @@
         Title="Resize Project" MinWidth="200"
         xmlns:vm="clr-namespace:Pixed.ViewModels"
         MinHeight="230" ShowInTaskbar="False" SizeToContent="WidthAndHeight"
-        WindowStartupLocation="CenterOwner">
+        WindowStartupLocation="CenterOwner"
+        Icon="avares://Pixed/Resources/icon.ico">
   <Window.DataContext>
     <vm:ResizeProjectWindowViewModel/>
   </Window.DataContext>
