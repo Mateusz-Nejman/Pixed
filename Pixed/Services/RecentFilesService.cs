@@ -2,13 +2,8 @@
 using Newtonsoft.Json;
 using Pixed.IO;
 using Pixed.Models;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pixed.Services
 {
@@ -25,7 +20,7 @@ namespace Pixed.Services
 
         public void Load()
         {
-            if(File.Exists(_filePath))
+            if (File.Exists(_filePath))
             {
                 RecentFiles = JsonConvert.DeserializeObject<List<string>>(File.ReadAllText(_filePath));
             }
@@ -33,11 +28,11 @@ namespace Pixed.Services
 
         public void AddRecent(string file)
         {
-            if(!RecentFiles.Contains(file))
+            if (!RecentFiles.Contains(file))
             {
                 RecentFiles.Insert(0, file);
 
-                if(RecentFiles.Count == 10)
+                if (RecentFiles.Count == 10)
                 {
                     RecentFiles.RemoveAt(RecentFiles.Count - 1);
                 }
@@ -48,16 +43,16 @@ namespace Pixed.Services
 
         public NativeMenu? BuildMenu()
         {
-            if(RecentFiles.Count == 0)
+            if (RecentFiles.Count == 0)
             {
                 return null;
             }
 
             NativeMenu menu = [];
 
-            foreach(var file in RecentFiles)
+            foreach (var file in RecentFiles)
             {
-                if(File.Exists(file))
+                if (File.Exists(file))
                 {
                     menu.Add(new NativeMenuItem(file)
                     {

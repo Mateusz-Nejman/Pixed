@@ -1,13 +1,9 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
-using Avalonia.Markup.Xaml;
-using ColorPicker.Models;
-using ColorPicker;
-using Avalonia.Interactivity;
 using Avalonia.Media;
+using ColorPicker.Models;
 using System;
-using Avalonia.Reactive;
 
 namespace Pixed.Controls;
 
@@ -17,7 +13,7 @@ public partial class FixedPortableColorPicker : UserControl
         AvaloniaProperty.Register<FixedPortableColorPicker, Color>(
             nameof(SelectedColor), Colors.Transparent, coerce: (o, color) =>
             {
-                if(o is FixedPortableColorPicker picker)
+                if (o is FixedPortableColorPicker picker)
                 {
                     picker.standardColorPicker.SelectedColor = color;
                     picker.toggleBorder.Background = new SolidColorBrush(color);
@@ -59,7 +55,7 @@ public partial class FixedPortableColorPicker : UserControl
 
     private void Color_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-        if(sender is NotifyableColor notifyableColor)
+        if (sender is NotifyableColor notifyableColor)
         {
             var color = Color.FromArgb(
                 (byte)Math.Round(notifyableColor.A),

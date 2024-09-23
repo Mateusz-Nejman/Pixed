@@ -1,12 +1,8 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Pixed.StaticMenuBuilder;
 using System.Windows.Input;
+using static Pixed.StaticMenuBuilder;
 
 namespace Pixed.Controls;
 internal class PixedWindow : Window

@@ -21,8 +21,8 @@ internal class Settings
     public static Settings Load()
     {
         string path = Path.Combine(Global.DataFolder, "settings.json");
-        
-        if(File.Exists(path))
+
+        if (File.Exists(path))
         {
             return JsonConvert.DeserializeObject<Settings>(File.ReadAllText(path));
         }

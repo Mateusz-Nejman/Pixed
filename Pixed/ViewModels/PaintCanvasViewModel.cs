@@ -1,5 +1,4 @@
-﻿using Avalonia.Controls;
-using Avalonia.Media;
+﻿using Avalonia.Media;
 using Pixed.Utils;
 using System;
 using System.Drawing;
@@ -167,7 +166,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
             int distX = (int)(GridWidth / Global.CurrentFrame.Width);
             int distY = (int)(GridHeight / Global.CurrentFrame.Height);
 
-            if(distX == 0 || distY == 0)
+            if (distX == 0 || distY == 0)
             {
                 return;
             }
@@ -340,7 +339,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
 
     private DrawingBrush? GetGridBrush()
     {
-        if(!Global.UserSettings.GridEnabled)
+        if (!Global.UserSettings.GridEnabled)
         {
             return null;
         }
