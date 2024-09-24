@@ -5,7 +5,7 @@ using Avalonia.Metadata;
 
 namespace Pixed.Controls;
 
-internal class ToolButton : Button
+internal class ToolButton : TouchButton
 {
     [Content]
     public IImage? Source

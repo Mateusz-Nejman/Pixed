@@ -31,5 +31,29 @@ internal class ToolRadioButton : RadioButton
     public ToolRadioButton()
     {
         GroupName = "Tool";
+        this.Holding += ToolRadioButton_Holding;
+        this.PointerExited += ToolRadioButton_PointerExited;
+    }
+
+    private void ToolRadioButton_PointerExited(object? sender, Avalonia.Input.PointerEventArgs e)
+    {
+        if (sender is Control control)
+        {
+            if (ToolTip.GetTip(control) != null)
+            {
+                ToolTip.SetIsOpen(control, false);
+            }
+        }
+    }
+
+    private void ToolRadioButton_Holding(object? sender, Avalonia.Input.HoldingRoutedEventArgs e)
+    {
+        if (sender is Control control)
+        {
+            if (ToolTip.GetTip(control) != null)
+            {
+                ToolTip.SetIsOpen(control, true);
+            }
+        }
     }
 }
