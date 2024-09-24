@@ -60,18 +60,9 @@
             <Grid.RowDefinitions>
               <RowDefinition Height="70"/>
               <RowDefinition Height="*"/>
-				<RowDefinition Height="32"/>
             </Grid.RowDefinitions>
             <mainsections:ProjectsSection/>
             <controls:PaintCanvas Grid.Row="1" x:Name="paintCanvas"/>
-			  <StackPanel Grid.Row="2" Orientation="Horizontal">
-				  <Button Width="32" Height="32" Command="{Binding ZoomOutCommand}">
-					  <Image Source="/Resources/Icons/zoom-out.png"/>
-				  </Button>
-				  <Button Width="32" Height="32" Command="{Binding ZoomInCommand}">
-					  <Image Source="/Resources/Icons/zoom-in.png"/>
-				  </Button>
-			  </StackPanel>
           </Grid>
 
           <ScrollViewer Grid.Column="4" Width="242" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">

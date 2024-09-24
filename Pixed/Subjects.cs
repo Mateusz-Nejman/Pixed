@@ -1,6 +1,7 @@
 ﻿using Pixed.Models;
 using Pixed.Selection;
 using Pixed.Services.Keyboard;
+using Pixed.Tools;
 using System.Reactive.Subjects;
 
 namespace Pixed;
@@ -12,6 +13,7 @@ internal static class Subjects
     public static Subject<BaseSelection> SelectionDismissed { get; } = new Subject<BaseSelection>();
     public static Subject<double> MouseWheel { get; } = new Subject<double>();
     public static Subject<bool> GridChanged { get; } = new Subject<bool>();
+    public static Subject<BaseTool> ToolChanged { get; } = new Subject<BaseTool>();
 
     public static Subject<BaseSelection> ClipboardCopy { get; } = new Subject<BaseSelection>();
     public static Subject<BaseSelection> ClipboardCut { get; } = new Subject<BaseSelection>();

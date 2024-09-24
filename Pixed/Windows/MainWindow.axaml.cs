@@ -12,7 +12,7 @@ using System.Windows.Input;
 
 namespace Pixed.Windows;
 
-internal partial class MainWindow : PixedWindow<MainViewModel>
+internal partial class MainWindow : PixedWindow
 {
     public static Window? Handle { get; private set; }
     public static ICommand? QuitCommand { get; private set; }
@@ -26,7 +26,6 @@ internal partial class MainWindow : PixedWindow<MainViewModel>
     {
         Global.ToolSelector.SelectTool("tool_pen");
         toolsSection.PaintCanvas = paintCanvas.ViewModel;
-        ViewModel.PaintCanvasMouseWheelCommand = paintCanvas.ViewModel.MouseWheel;
 
         Subjects.ProjectAdded.OnNext(Global.CurrentModel);
         Subjects.ProjectChanged.OnNext(Global.CurrentModel);

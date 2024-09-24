@@ -6,29 +6,28 @@ namespace Pixed.Tools
 {
     internal class ToolColorSwap : BaseTool
     {
-        public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay)
+        public override bool ShiftHandle { get; protected set; } = true;
+        public override bool ControlHandle { get; protected set; } = true;
+        public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
         {
             if (frame.ContainsPixel(x, y))
             {
                 var oldColor = frame.GetPixel(x, y);
                 var newColor = GetToolColor();
 
-                bool allLayers = Keyboard.Modifiers.HasFlag(Avalonia.Input.KeyModifiers.Control);
-                bool allFrames = Keyboard.Modifiers.HasFlag(Avalonia.Input.KeyModifiers.Shift);
-
-                SwapColors(oldColor, newColor, allLayers, allFrames);
+                SwapColors(oldColor, newColor, shiftPressed, controlPressed);
             }
         }
 
-        private void SwapColors(int oldColor, int newColor, bool allLayers, bool allFrames)
+        private static void SwapColors(int oldColor, int newColor, bool shiftPressed, bool controlPressed)
         {
-            Global.CurrentModel.Process(allFrames, allLayers, (frame, layer) =>
+            Global.CurrentModel.Process(shiftPressed, controlPressed, (frame, layer) =>
             {
                 ApplyToolOnLayer(layer, oldColor, newColor);
             });
         }
 
-        private void ApplyToolOnLayer(Layer layer, int oldColor, int newColor)
+        private static void ApplyToolOnLayer(Layer layer, int oldColor, int newColor)
         {
             for (int x = 0; x < layer.Width; x++)
             {

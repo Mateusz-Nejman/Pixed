@@ -98,7 +98,7 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
 
         foreach (Frame frame in frames)
         {
-            Layer[] layers = allLayers ? frame.Layers.ToArray() : [Global.CurrentLayer];
+            Layer[] layers = allLayers ? frame.Layers.ToArray() : [frame.CurrentLayer];
 
             foreach (Layer layer in layers)
             {

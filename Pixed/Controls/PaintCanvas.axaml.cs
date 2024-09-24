@@ -89,4 +89,9 @@ internal partial class PaintCanvas : PixedUserControl
             _viewModel?.MouseMove?.Execute(pos.ToSystemPoint());
         }
     }
+
+    private void Border_KeyProcess(object? sender, KeyEventArgs e)
+    {
+        _viewModel.ProcessModifiers(e.KeyModifiers);
+    }
 }

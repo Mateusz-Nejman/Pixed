@@ -12,7 +12,11 @@ namespace Pixed.Tools
         private Layer _currentLayer;
         private Layer _currentLayerClone;
 
-        public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay)
+        public override bool ShiftHandle { get; protected set; } = true;
+        public override bool ControlHandle { get; protected set; } = true;
+        public override bool AltHandle { get; protected set; } = true;
+
+        public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
         {
             _startX = x;
             _startY = y;
@@ -20,33 +24,30 @@ namespace Pixed.Tools
             _currentLayerClone = _currentLayer.Clone();
         }
 
-        public override void MoveTool(int x, int y, Frame frame, ref Bitmap overlay)
+        public override void MoveTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
         {
             int diffX = x - _startX;
             int diffY = y - _startY;
 
-            ShiftLayer(frame.CurrentLayer, _currentLayerClone, diffX, diffY);
+            ShiftLayer(frame.CurrentLayer, _currentLayerClone, diffX, diffY, altPressed);
             Subjects.LayerModified.OnNext(frame.CurrentLayer);
         }
 
-        public override void ReleaseTool(int x, int y, Frame _, ref Bitmap overlay)
+        public override void ReleaseTool(int x, int y, Frame _, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
         {
             int diffX = x - _startX;
             int diffY = y - _startY;
 
-            bool ctrlKey = Keyboard.Modifiers.HasFlag(Avalonia.Input.KeyModifiers.Control);
-            bool shiftKey = Keyboard.Modifiers.HasFlag(Avalonia.Input.KeyModifiers.Control);
-
-            Frame[] frames = shiftKey ? Global.CurrentModel.Frames.ToArray() : [Global.CurrentFrame];
+            Frame[] frames = shiftPressed ? Global.CurrentModel.Frames.ToArray() : [Global.CurrentFrame];
 
             foreach (Frame frame in frames)
             {
-                Layer[] layers = ctrlKey ? frame.Layers.ToArray() : [Global.CurrentLayer];
+                Layer[] layers = controlPressed ? frame.Layers.ToArray() : [frame.CurrentLayer];
 
                 foreach (Layer layer in layers)
                 {
                     var reference = this._currentLayer == layer ? this._currentLayerClone : layer.Clone();
-                    ShiftLayer(layer, reference, diffX, diffY);
+                    ShiftLayer(layer, reference, diffX, diffY, altPressed);
                     Subjects.LayerModified.OnNext(layer);
                 }
 
@@ -54,7 +55,7 @@ namespace Pixed.Tools
             }
         }
 
-        private static void ShiftLayer(Layer layer, Layer reference, int diffX, int diffY)
+        private static void ShiftLayer(Layer layer, Layer reference, int diffX, int diffY, bool altPressed)
         {
             int color;
             for (int x = 0; x < layer.Width; x++)
@@ -64,7 +65,7 @@ namespace Pixed.Tools
                     int x1 = x - diffX;
                     int y1 = y - diffY;
 
-                    if (Keyboard.Modifiers.HasFlag(Avalonia.Input.KeyModifiers.Alt))
+                    if (altPressed)
                     {
                         x1 = (x1 + layer.Width) % layer.Width;
                         y1 = (y1 + layer.Height) % layer.Height;
