@@ -11,6 +11,9 @@ internal abstract class BaseTool
     protected int highlightedY = 0;
 
     public bool AddToHistory { get; protected set; } = true;
+    public virtual bool ShiftHandle { get; protected set; } = false;
+    public virtual bool ControlHandle { get; protected set; } = false;
+    public virtual bool AltHandle { get; protected set; } = false;
 
     public virtual UniColor GetToolColor()
     {
@@ -22,17 +25,17 @@ internal abstract class BaseTool
         return Global.PrimaryColor;
     }
 
-    public virtual void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay)
+    public virtual void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
 
     }
 
-    public virtual void MoveTool(int x, int y, Frame frame, ref Bitmap overlay)
+    public virtual void MoveTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
 
     }
 
-    public virtual void ReleaseTool(int x, int y, Frame frame, ref Bitmap overlay)
+    public virtual void ReleaseTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
 
     }

@@ -6,7 +6,7 @@ namespace Pixed.Tools
 {
     internal class ToolDithering : ToolPen
     {
-        public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay)
+        public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
         {
             _prevX = x;
             _prevY = y;

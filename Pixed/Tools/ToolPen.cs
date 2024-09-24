@@ -11,7 +11,7 @@ internal class ToolPen : BaseTool
     protected int _prevX = -1;
     protected int _prevY = -1;
     protected List<Pixel> _pixels = [];
-    public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay)
+    public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
         _prevX = x;
         _prevY = y;
@@ -20,7 +20,7 @@ internal class ToolPen : BaseTool
         DrawOnOverlay(color, x, y, frame, ref overlay);
     }
 
-    public override void MoveTool(int x, int y, Frame frame, ref Bitmap overlay)
+    public override void MoveTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
         if ((Math.Abs(x - _prevX) > 1) || (Math.Abs(y - _prevY) > 1))
         {
@@ -28,19 +28,19 @@ internal class ToolPen : BaseTool
 
             foreach (var pixel in interpolatedPixels)
             {
-                ApplyTool(pixel.X, pixel.Y, frame, ref overlay);
+                ApplyTool(pixel.X, pixel.Y, frame, ref overlay, shiftPressed, controlPressed, altPressed);
             }
         }
         else
         {
-            ApplyTool(x, y, frame, ref overlay);
+            ApplyTool(x, y, frame, ref overlay, shiftPressed, controlPressed, altPressed);
         }
 
         _prevX = x;
         _prevY = y;
     }
 
-    public override void ReleaseTool(int x, int y, Frame frame, ref Bitmap overlay)
+    public override void ReleaseTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
         SetPixelsToFrame(frame);
         _pixels.Clear();

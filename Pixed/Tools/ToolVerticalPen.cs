@@ -6,7 +6,9 @@ namespace Pixed.Tools
 {
     internal class ToolVerticalPen : ToolPen
     {
-        public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay)
+        public override bool ShiftHandle { get; protected set; } = true;
+        public override bool ControlHandle { get; protected set; } = true;
+        public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
         {
             var color = GetToolColor();
             DrawOnOverlay(color, x, y, frame, ref overlay);
@@ -14,20 +16,17 @@ namespace Pixed.Tools
             int symX = GetSymmetricX(x, frame);
             int symY = GetSymmetricY(y, frame);
 
-            bool ctrlClicked = Keyboard.Modifiers.HasFlag(Avalonia.Input.KeyModifiers.Control);
-            bool shiftClicked = Keyboard.Modifiers.HasFlag(Avalonia.Input.KeyModifiers.Shift);
-
-            if (!ctrlClicked)
+            if (!controlPressed)
             {
                 DrawOnOverlay(color, symX, y, frame, ref overlay);
             }
 
-            if (shiftClicked || ctrlClicked)
+            if (shiftPressed || controlPressed)
             {
                 DrawOnOverlay(color, x, symY, frame, ref overlay);
             }
 
-            if (shiftClicked)
+            if (shiftPressed)
             {
                 DrawOnOverlay(color, symX, symY, frame, ref overlay);
             }

@@ -29,6 +29,9 @@
           </Grid>
         </DataTemplate>
       </TabControl.ItemTemplate>
+		<TabControl.ContentTemplate>
+			<DataTemplate></DataTemplate>
+		</TabControl.ContentTemplate>
     </TabControl>
   </ScrollViewer>
 </UserControl>

@@ -7,11 +7,11 @@ namespace Pixed.Tools
 {
     internal class ToolOutliner : BaseTool
     {
-        public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay)
+        public override bool ControlHandle { get; protected set; } = true;
+        public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
         {
-            bool fillCorners = Keyboard.Modifiers.HasFlag(Avalonia.Input.KeyModifiers.Control);
             var color = GetToolColor();
-            PaintUtils.OutlineSimiliarConnectedPixels(frame.CurrentLayer, x, y, color, fillCorners);
+            PaintUtils.OutlineSimiliarConnectedPixels(frame.CurrentLayer, x, y, color, controlPressed);
         }
     }
 }

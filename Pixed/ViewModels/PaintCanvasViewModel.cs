@@ -1,4 +1,5 @@
-﻿using Avalonia.Media;
+﻿using Avalonia.Input;
+using Avalonia.Media;
 using Pixed.Utils;
 using System;
 using System.Drawing;
@@ -20,6 +21,15 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
     private Frame _frame;
     private Point _lastWindowSize;
     private bool _disposedValue;
+    private bool _shiftPressed;
+    private bool _controlPressed;
+    private bool _altPressed;
+    private bool _shiftChecked;
+    private bool _controlChecked;
+    private bool _altChecked;
+    private bool _shiftEnabled;
+    private bool _controlEnabled;
+    private bool _altEnabled;
 
     private readonly IDisposable _projectModified;
     private readonly IDisposable _projectChanged;
@@ -31,18 +41,19 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
     private readonly IDisposable _layerModified;
     private readonly IDisposable _mouseWheel;
     private readonly IDisposable _gridChanged;
+    private readonly IDisposable _toolChanged;
 
-    public ActionCommand<Point> LeftMouseDown { get; set; }
-    public ActionCommand<Point> LeftMouseUp { get; set; }
-    public ActionCommand<Point> MouseMove { get; set; }
-    public ActionCommand<Point> RightMouseDown { get; set; }
-    public ActionCommand<Point> RightMouseUp { get; set; }
-    public ActionCommand<Point> MiddleMouseDown { get; set; }
-    public ActionCommand<Point> MiddleMouseUp { get; set; }
-    public ActionCommand<double> MouseWheel { get; set; }
-    public ActionCommand MouseLeave { get; set; }
-    public double Zoom { get; set; } = 1.0;
-
+    public ActionCommand<Point> LeftMouseDown { get; }
+    public ActionCommand<Point> LeftMouseUp { get; }
+    public ActionCommand<Point> MouseMove { get; }
+    public ActionCommand<Point> RightMouseDown { get; }
+    public ActionCommand<Point> RightMouseUp { get; }
+    public ActionCommand<Point> MiddleMouseDown { get; }
+    public ActionCommand<Point> MiddleMouseUp { get; }
+    public ActionCommand<double> MouseWheel { get; }
+    public ActionCommand MouseLeave { get; }
+    public ActionCommand ZoomInCommand { get; }
+    public ActionCommand ZoomOutCommand { get; }
 
     public Bitmap Overlay
     {
@@ -105,6 +116,69 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
         }
     }
 
+    public bool ShiftChecked
+    {
+        get => _shiftChecked;
+        set
+        {
+            _shiftChecked = value;
+            OnPropertyChanged();
+            _shiftPressed = value;
+        }
+    }
+
+    public bool ControlChecked
+    {
+        get => _controlChecked;
+        set
+        {
+            _controlChecked = value;
+            OnPropertyChanged();
+            _controlPressed = value;
+        }
+    }
+
+    public bool AltChecked
+    {
+        get => _altChecked;
+        set
+        {
+            _altChecked = value;
+            OnPropertyChanged();
+            _controlPressed = value;
+        }
+    }
+
+    public bool ShiftEnabled
+    {
+        get => _shiftEnabled;
+        set
+        {
+            _shiftEnabled = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool ControlEnabled
+    {
+        get => _controlEnabled;
+        set
+        {
+            _controlEnabled = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool AltEnabled
+    {
+        get => _altEnabled;
+        set
+        {
+            _altEnabled = value;
+            OnPropertyChanged();
+        }
+    }
+
     public PaintCanvasViewModel()
     {
         _frame = new Frame(32, 32);
@@ -115,6 +189,8 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
         MouseMove = new ActionCommand<Point>(MouseMoveAction);
         MouseWheel = new ActionCommand<double>(MouseWheelAction);
         MouseLeave = new ActionCommand(MouseLeaveAction);
+        ZoomInCommand = new ActionCommand(ZoomInAction);
+        ZoomOutCommand = new ActionCommand(ZoomOutAction);
 
         _projectModified = Subjects.ProjectModified.Subscribe(p =>
         {
@@ -178,6 +254,25 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
         {
             GridBrush = GetGridBrush();
         });
+
+        _toolChanged = Subjects.ToolChanged.Subscribe(tool =>
+        {
+            ShiftEnabled = tool.ShiftHandle;
+            ControlEnabled = tool.ControlHandle;
+            AltEnabled = tool.AltHandle;
+
+            if(!ShiftEnabled)
+            {
+                _shiftChecked = false;
+                OnPropertyChanged(nameof(ShiftChecked));
+            }
+
+            if(!ControlEnabled)
+            {
+                _controlChecked = false;
+                OnPropertyChanged(nameof(ControlChecked));
+            }
+        });
     }
     public void RecalculateFactor(Point windowSize)
     {
@@ -196,6 +291,24 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
         Overlay = new Bitmap(_frame.Width, _frame.Height);
     }
 
+    public void ProcessModifiers(KeyModifiers modifiers)
+    {
+        if(!ShiftChecked)
+        {
+            _shiftPressed = modifiers.HasFlag(KeyModifiers.Shift);
+        }
+        
+        if(!ControlChecked)
+        {
+            _controlPressed = modifiers.HasFlag(KeyModifiers.Control);
+        }
+
+        if (!AltChecked)
+        {
+            _altChecked = modifiers.HasFlag(KeyModifiers.Alt);
+        }
+    }
+
     protected virtual void Dispose(bool disposing)
     {
         if (!_disposedValue)
@@ -212,6 +325,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
                 _layerModified?.Dispose();
                 _mouseWheel?.Dispose();
                 _gridChanged?.Dispose();
+                _toolChanged?.Dispose();
             }
 
             _disposedValue = true;
@@ -235,7 +349,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
         }
 
         _leftPressed = true;
-        Global.ToolSelected?.ApplyTool(imageX, imageY, _frame, ref _overlayBitmap);
+        Global.ToolSelected?.ApplyTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
         RefreshOverlay();
     }
 
@@ -250,7 +364,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
         }
 
         _leftPressed = false;
-        Global.ToolSelected?.ReleaseTool(imageX, imageY, _frame, ref _overlayBitmap);
+        Global.ToolSelected?.ReleaseTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
 
         if (Global.ToolSelected != null && Global.ToolSelected.AddToHistory)
         {
@@ -273,7 +387,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
         }
 
         _rightPressed = true;
-        Global.ToolSelected?.ApplyTool(imageX, imageY, _frame, ref _overlayBitmap);
+        Global.ToolSelected?.ApplyTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
         RefreshOverlay();
     }
 
@@ -288,7 +402,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
         }
 
         _rightPressed = false;
-        Global.ToolSelected?.ReleaseTool(imageX, imageY, _frame, ref _overlayBitmap);
+        Global.ToolSelected?.ReleaseTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
 
         if(Global.ToolSelected != null && Global.ToolSelected.AddToHistory)
         {
@@ -312,7 +426,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
 
         if (_leftPressed || _rightPressed)
         {
-            Global.ToolSelected?.MoveTool(imageX, imageY, _frame, ref _overlayBitmap);
+            Global.ToolSelected?.MoveTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
             RefreshOverlay();
         }
         else
@@ -320,6 +434,16 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
             Global.ToolSelected?.UpdateHighlightedPixel(imageX, imageY, _frame, ref _overlayBitmap);
             RefreshOverlay();
         }
+    }
+
+    private void ZoomInAction()
+    {
+        MouseWheelAction(1.0);
+    }
+
+    private void ZoomOutAction()
+    {
+        MouseWheelAction(-1.0);
     }
 
     private void MouseWheelAction(double delta)
@@ -337,7 +461,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
     {
         if (_rightPressed || _leftPressed)
         {
-            Global.ToolSelected?.ReleaseTool(0, 0, _frame, ref _overlayBitmap);
+            Global.ToolSelected?.ReleaseTool(0, 0, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
         }
         _rightPressed = false;
         _leftPressed = false;

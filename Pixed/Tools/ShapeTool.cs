@@ -11,7 +11,9 @@ namespace Pixed.Tools
         protected int _startX = -1;
         protected int _startY = -1;
 
-        public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay)
+        public override bool ShiftHandle { get; protected set; } = true;
+
+        public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
         {
             _startX = x;
             _startY = y;
@@ -19,10 +21,9 @@ namespace Pixed.Tools
             overlay.SetPixel(x, y, GetToolColor());
         }
 
-        public override void MoveTool(int x, int y, Frame frame, ref Bitmap overlay)
+        public override void MoveTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
         {
             overlay.Clear();
-            bool isShift = Keyboard.Modifiers.HasFlag(Avalonia.Input.KeyModifiers.Shift);
             var color = GetToolColor();
 
             if (color == UniColor.Transparent)
@@ -30,23 +31,22 @@ namespace Pixed.Tools
                 color = new UniColor(50, 160, 215, 240);
             }
 
-            Draw(x, y, color, isShift, ref overlay);
+            Draw(x, y, color, shiftPressed, ref overlay);
         }
 
-        public override void ReleaseTool(int x, int y, Frame frame, ref Bitmap overlay)
+        public override void ReleaseTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
         {
-            bool isShift = Keyboard.Modifiers.HasFlag(Avalonia.Input.KeyModifiers.Shift);
             var color = GetToolColor();
 
-            Draw(x, y, color, isShift, frame);
+            Draw(x, y, color, shiftPressed, frame);
 
             overlay.Clear();
         }
 
-        protected void Draw(int x, int y, int color, bool isShift, ref Bitmap overlay)
+        protected void Draw(int x, int y, int color, bool shiftPressed, ref Bitmap overlay)
         {
             Bitmap bitmap = overlay;
-            Draw(x, y, color, isShift, (x, y, color) =>
+            Draw(x, y, color, shiftPressed, (x, y, color) =>
             {
                 bitmap.SetPixel(x, y, (UniColor)color);
             });
@@ -54,15 +54,15 @@ namespace Pixed.Tools
             overlay = bitmap;
         }
 
-        protected void Draw(int x, int y, int color, bool isShift, Frame frame)
+        protected void Draw(int x, int y, int color, bool shiftPressed, Frame frame)
         {
-            Draw(x, y, color, isShift, (x1, y1, _) =>
+            Draw(x, y, color, shiftPressed, (x1, y1, _) =>
             {
                 frame.SetPixel(x1, y1, color);
             });
 
             Subjects.FrameModified.OnNext(frame);
         }
-        protected abstract void Draw(int x, int y, int color, bool isShift, Action<int, int, int> setPixelAction);
+        protected abstract void Draw(int x, int y, int color, bool shiftPressed, Action<int, int, int> setPixelAction);
     }
 }

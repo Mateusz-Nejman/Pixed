@@ -5,6 +5,7 @@ using Pixed.Input;
 using Pixed.IO;
 using Pixed.Models;
 using Pixed.Services.Keyboard;
+using Pixed.ViewModels;
 using System;
 using System.IO;
 using System.Windows.Input;

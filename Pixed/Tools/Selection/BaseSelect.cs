@@ -30,6 +30,8 @@ internal class BaseSelect : BaseTool
     protected bool _hasSelection = false;
     protected bool _isMovingContent = false;
 
+    public override bool ShiftHandle { get; protected set; } = true;
+
     public BaseSelect() : base()
     {
         AddToHistory = false;
@@ -45,9 +47,9 @@ internal class BaseSelect : BaseTool
         Subjects.SelectionCreated.OnNext(_selection);
     }
 
-    public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay)
+    public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
-        base.ApplyTool(x, y, frame, ref overlay);
+        base.ApplyTool(x, y, frame, ref overlay, shiftPressed, controlPressed, altPressed);
         _startX = x;
         _startY = y;
         _lastX = x;
@@ -62,7 +64,7 @@ internal class BaseSelect : BaseTool
         {
             _mode = SelectionMode.MoveSelection;
 
-            if (Keyboard.Modifiers.HasFlag(KeyModifiers.Shift))
+            if (shiftPressed)
             {
                 _isMovingContent = true;
                 Subjects.ClipboardCut.OnNext(_selection);
@@ -73,7 +75,7 @@ internal class BaseSelect : BaseTool
         }
     }
 
-    public override void MoveTool(int x, int y, Frame frame, ref Bitmap overlay)
+    public override void MoveTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
         if (_mode == SelectionMode.Select)
         {
@@ -85,7 +87,7 @@ internal class BaseSelect : BaseTool
         }
     }
 
-    public override void ReleaseTool(int x, int y, Frame frame, ref Bitmap overlay)
+    public override void ReleaseTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
         if (_mode == SelectionMode.Select)
         {
