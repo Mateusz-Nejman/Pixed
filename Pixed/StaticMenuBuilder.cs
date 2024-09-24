@@ -129,10 +129,13 @@ internal static class StaticMenuBuilder
     private static NativeMenuItem GetEditMenu()
     {
         NativeMenuItem editMenu = new("Edit");
+        NativeMenuItem undoMenu = new("Undo");
+        undoMenu.Command = new ActionCommand(Global.CurrentModel.Undo);
+        NativeMenuItem redoMenu = new("Redo");
+        redoMenu.Command = new ActionCommand(Global.CurrentModel.Redo);
         NativeMenuItem gridSettingsMenu = new("Grid settings");
         NativeMenuItem gridToggleMenu = new("Toggle grid");
 
-        editMenu.Menu = [];
         gridSettingsMenu.Command = new ActionCommand(async () =>
         {
             GridSettingsWindow window = new();
@@ -154,8 +157,8 @@ internal static class StaticMenuBuilder
             Subjects.GridChanged.OnNext(true);
         });
 
-        editMenu.Menu.Add(gridSettingsMenu);
-        editMenu.Menu.Add(gridToggleMenu);
+        editMenu.Menu = [undoMenu, redoMenu, gridSettingsMenu, gridToggleMenu];
+
         AddToMenu(ref editMenu, GetEntries(BaseMenuItem.Edit));
         return editMenu;
     }
