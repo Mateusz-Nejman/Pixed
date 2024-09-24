@@ -90,6 +90,7 @@ internal class LayersSectionViewModel : PixedViewModel, IDisposable
     }
 
     public ICommand AddLayerCommand { get; }
+    public ICommand DuplicateLayerCommand { get; }
     public ICommand MoveLayerUpCommand { get; }
     public ICommand MoveLayerDownCommand { get; }
     public ICommand EditLayerNameCommand { get; }
@@ -99,6 +100,7 @@ internal class LayersSectionViewModel : PixedViewModel, IDisposable
     public LayersSectionViewModel()
     {
         AddLayerCommand = new ActionCommand(AddLayerAction);
+        DuplicateLayerCommand = new ActionCommand(DuplicateLayerAction);
         MoveLayerUpCommand = new ActionCommand(MoveLayerUpAction);
         MoveLayerDownCommand = new ActionCommand(MoveLayerDownAction);
         EditLayerNameCommand = new AsyncCommand(EditLayerNameAction);
@@ -161,7 +163,16 @@ internal class LayersSectionViewModel : PixedViewModel, IDisposable
 
     private void AddLayerAction()
     {
-        Layer layer = Frame.AddLayer(Keyboard.Modifiers.HasFlag(KeyModifiers.Shift) ? Layers[_selectedLayer].Clone() : new Layer(Frame.Width, Frame.Height));
+        Layer layer = Frame.AddLayer(new Layer(Frame.Width, Frame.Height));
+        OnPropertyChanged(nameof(Layers));
+        Subjects.LayerAdded.OnNext(layer);
+        Subjects.FrameModified.OnNext(Frame);
+        Global.CurrentModel.AddHistory();
+    }
+
+    private void DuplicateLayerAction()
+    {
+        Layer layer = Frame.AddLayer(Layers[_selectedLayer].Clone());
         OnPropertyChanged(nameof(Layers));
         Subjects.LayerAdded.OnNext(layer);
         Subjects.FrameModified.OnNext(Frame);
@@ -174,7 +185,7 @@ internal class LayersSectionViewModel : PixedViewModel, IDisposable
             return;
         }
 
-        Frame.MoveLayerUp(Keyboard.Modifiers.HasFlag(KeyModifiers.Shift));
+        Frame.MoveLayerUp();
         OnPropertyChanged(nameof(Layers));
         Subjects.FrameModified.OnNext(Frame);
         Global.CurrentModel.AddHistory();
@@ -187,7 +198,7 @@ internal class LayersSectionViewModel : PixedViewModel, IDisposable
             return;
         }
 
-        Frame.MoveLayerDown(Keyboard.Modifiers.HasFlag(KeyModifiers.Shift));
+        Frame.MoveLayerDown();
         OnPropertyChanged(nameof(Layers));
         Subjects.FrameModified.OnNext(Frame);
         Global.CurrentModel.AddHistory();

@@ -144,7 +144,7 @@ internal class Frame : PropertyChangedBase, IPixedSerializer
         return CurrentLayer.ContainsPixel(x, y);
     }
 
-    public void MoveLayerUp(bool toTop)
+    public void MoveLayerUp()
     {
         if (_selectedLayer == 0)
         {
@@ -152,7 +152,7 @@ internal class Frame : PropertyChangedBase, IPixedSerializer
         }
 
         int oldIndex = _selectedLayer;
-        int newIndex = toTop ? 0 : oldIndex - 1;
+        int newIndex = oldIndex - 1;
         Layer layer = Layers[oldIndex];
         _layers.RemoveAt(oldIndex);
         _layers.Insert(newIndex, layer);
@@ -160,7 +160,7 @@ internal class Frame : PropertyChangedBase, IPixedSerializer
         OnPropertyChanged(nameof(Layers));
     }
 
-    public void MoveLayerDown(bool toBottom)
+    public void MoveLayerDown()
     {
         if (_selectedLayer == Layers.Count - 1)
         {
@@ -170,18 +170,9 @@ internal class Frame : PropertyChangedBase, IPixedSerializer
         int oldIndex = _selectedLayer;
         Layer layer = _layers[oldIndex];
 
-        if (toBottom)
-        {
-            _layers.Add(layer);
-            _layers.RemoveAt(oldIndex);
-            SelectedLayer = _layers.Count - 1;
-        }
-        else
-        {
-            _layers.Insert(oldIndex + 2, layer);
-            _layers.RemoveAt(oldIndex);
-            SelectedLayer = oldIndex + 1;
-        }
+        _layers.Insert(oldIndex + 2, layer);
+        _layers.RemoveAt(oldIndex);
+        SelectedLayer = oldIndex + 1;
         OnPropertyChanged(nameof(Layers));
     }
 

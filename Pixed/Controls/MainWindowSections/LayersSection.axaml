@@ -21,6 +21,7 @@
 					<ColumnDefinition Width="*"/>
 					<ColumnDefinition Width="*"/>
 					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="*"/>
 				</Grid.ColumnDefinitions>
 				<Grid.RowDefinitions>
 					<RowDefinition Height="32"/>
@@ -28,34 +29,40 @@
 				<controls:TouchButton Theme="{StaticResource BaseButton}" Command="{Binding AddLayerCommand}">
 					<Image Source="avares://Pixed/Resources/Icons/plus.png" Width="16" Height="16"/>
 					<ToolTip.Tip>
-						<controls:TooltipWithButton Title="Add Layer" ButtonText="Shift" ButtonTextHelper="Clone current layer"/>
+						<controls:SimpleTooltip Title="Add Layer"/>
 					</ToolTip.Tip>
 				</controls:TouchButton>
-				<controls:TouchButton Theme="{StaticResource BaseButton}" Grid.Column="1" Command="{Binding MoveLayerUpCommand}" IsEnabled="{Binding CanLayerMoveUp}">
+				<controls:TouchButton Theme="{StaticResource BaseButton}" Grid.Column="1" Command="{Binding DuplicateLayerCommand}">
+					<Image Source="avares://Pixed/Resources/Icons/files-empty.png" Width="16" Height="16"/>
+					<ToolTip.Tip>
+						<controls:SimpleTooltip Title="Duplicate layer"/>
+					</ToolTip.Tip>
+				</controls:TouchButton>
+				<controls:TouchButton Theme="{StaticResource BaseButton}" Grid.Column="2" Command="{Binding MoveLayerUpCommand}" IsEnabled="{Binding CanLayerMoveUp}">
 					<Image Source="avares://Pixed/Resources/Icons/arrow-up.png" Width="16" Height="16"/>
 					<ToolTip.Tip>
-						<controls:TooltipWithButton Title="Move layer up" ButtonText="Shift" ButtonTextHelper="Move to the top"/>
+						<controls:SimpleTooltip Title="Move layer up"/>
 					</ToolTip.Tip>
 				</controls:TouchButton>
-				<controls:TouchButton Theme="{StaticResource BaseButton}" Grid.Column="2" Command="{Binding MoveLayerDownCommand}" IsEnabled="{Binding CanLayerMoveDown}">
+				<controls:TouchButton Theme="{StaticResource BaseButton}" Grid.Column="3" Command="{Binding MoveLayerDownCommand}" IsEnabled="{Binding CanLayerMoveDown}">
 					<Image Source="avares://Pixed/Resources/Icons/arrow-down.png" Width="16" Height="16"/>
 					<ToolTip.Tip>
-						<controls:TooltipWithButton Title="Move layer down" ButtonText="Shift" ButtonTextHelper="Move to the bottom"/>
+						<controls:SimpleTooltip Title="Move layer down"/>
 					</ToolTip.Tip>
 				</controls:TouchButton>
-				<controls:TouchButton Theme="{StaticResource BaseButton}" Grid.Column="3" Command="{Binding EditLayerNameCommand}">
+				<controls:TouchButton Theme="{StaticResource BaseButton}" Grid.Column="4" Command="{Binding EditLayerNameCommand}">
 					<Image Source="avares://Pixed/Resources/Icons/pencil.png" Width="16" Height="16"/>
 					<ToolTip.Tip>
 						<controls:SimpleTooltip Title="Edit layer name"/>
 					</ToolTip.Tip>
 				</controls:TouchButton>
-				<controls:TouchButton Theme="{StaticResource BaseButton}" Grid.Column="4" Command="{Binding MergeLayerCommand}" IsEnabled="{Binding CanLayerMerge}">
+				<controls:TouchButton Theme="{StaticResource BaseButton}" Grid.Column="5" Command="{Binding MergeLayerCommand}" IsEnabled="{Binding CanLayerMerge}">
 					<Image Source="avares://Pixed/Resources/Icons/download2.png" Width="16" Height="16"/>
 					<ToolTip.Tip>
 						<controls:SimpleTooltip Title="Merge with layer below"/>
 					</ToolTip.Tip>
 				</controls:TouchButton>
-				<controls:TouchButton Theme="{StaticResource BaseButton}" Grid.Column="5" Command="{Binding RemoveLayerCommand}" IsEnabled="{Binding CanLayerRemove}">
+				<controls:TouchButton Theme="{StaticResource BaseButton}" Grid.Column="6" Command="{Binding RemoveLayerCommand}" IsEnabled="{Binding CanLayerRemove}">
 					<Image Source="avares://Pixed/Resources/Icons/bin.png" Width="16" Height="16"/>
 					<ToolTip.Tip>
 						<controls:SimpleTooltip Title="Delete selected layer"/>
