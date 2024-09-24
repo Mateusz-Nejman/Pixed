@@ -69,7 +69,6 @@
             <StackPanel Name="rightPanel" Grid.Column="4" Width="242" HorizontalAlignment="Stretch">
               <mainsections:PaletteSection/>
               <mainsections:LayersSection/>
-              <mainsections:TransformSection/>
             </StackPanel>
           </ScrollViewer>
         </Grid>

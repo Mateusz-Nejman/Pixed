@@ -1,13 +1,12 @@
 ﻿using Pixed.Models;
 using Pixed.Utils;
 using System;
-using System.Reflection;
 
 namespace Pixed.Tools.Transform;
 
 internal class Crop : AbstractTransformTool
 {
-    public override void ApplyTransformation()
+    public override void ApplyTransformation(bool shiftPressed, bool controlPressed, bool altPressed)
     {
         int[] boundaries;
         if (Global.SelectionManager.HasSelection)
