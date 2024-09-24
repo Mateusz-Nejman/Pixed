@@ -5,6 +5,7 @@ using Pixed.Input;
 using Pixed.IO;
 using Pixed.Models;
 using Pixed.Services.Keyboard;
+using Pixed.Tools.Transform;
 using Pixed.ViewModels;
 using System;
 using System.IO;
@@ -40,6 +41,7 @@ internal partial class MainWindow : PixedWindow
     protected override void OnInitialized()
     {
         base.OnInitialized();
+        TransformToolsMenuRegister.Register();
         StaticMenuBuilder.Build();
     }
 
