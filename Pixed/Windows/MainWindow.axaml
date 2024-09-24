@@ -40,7 +40,7 @@
           <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="58"/>
+          <ColumnDefinition Width="64"/>
           <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <mainsections:ToolsSection x:Name="toolsSection"/>
@@ -58,7 +58,7 @@
           <mainsections:FramesSection/>
           <Grid Name="centerPanel" Grid.Column="2">
             <Grid.RowDefinitions>
-              <RowDefinition Height="70"/>
+              <RowDefinition Height="76"/>
               <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <mainsections:ProjectsSection/>
