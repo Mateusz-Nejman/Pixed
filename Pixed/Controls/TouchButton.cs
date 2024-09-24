@@ -1,23 +1,32 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Threading;
+using System;
+using System.Reactive.Linq;
 
 namespace Pixed.Controls;
 internal class TouchButton : Button
 {
+    private bool _handled = false;
     public TouchButton()
     {
         this.Holding += TouchButton_Holding;
-        this.PointerExited += TouchButton_PointerExited;
+        Tapped += TouchButton_Tapped;
     }
 
-    private void TouchButton_PointerExited(object? sender, Avalonia.Input.PointerEventArgs e)
+    private void TouchButton_Tapped(object? sender, Avalonia.Input.TappedEventArgs e)
     {
-        if (sender is Control control)
+        if (_handled)
         {
-            if (ToolTip.GetTip(control) != null)
-            {
-                ToolTip.SetIsOpen(control, false);
-            }
+            _handled = false;
+            return;
         }
+
+        base.OnClick();
+    }
+
+    protected override void OnClick()
+    {
+        
     }
 
     private void TouchButton_Holding(object? sender, Avalonia.Input.HoldingRoutedEventArgs e)
@@ -26,7 +35,13 @@ internal class TouchButton : Button
         {
             if (ToolTip.GetTip(control) != null)
             {
-                ToolTip.SetIsOpen(control, true);
+                _handled = true;
+                ToolTip.SetIsOpen(control, _handled);
+                Observable.Timer(TimeSpan.FromSeconds(3)).Subscribe(x =>
+                {
+                    _handled = false;
+                    Dispatcher.UIThread.Invoke(() => ToolTip.SetIsOpen(control, false));
+                });
             }
         }
     }

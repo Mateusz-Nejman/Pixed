@@ -2,11 +2,16 @@
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Metadata;
+using System.Reactive.Linq;
+using System;
+using Avalonia.Threading;
 
 namespace Pixed.Controls;
 
 internal class ToolRadioButton : RadioButton
 {
+    private bool _handled = false;
+
     [Content]
     public IImage? Source
     {
@@ -32,18 +37,23 @@ internal class ToolRadioButton : RadioButton
     {
         GroupName = "Tool";
         this.Holding += ToolRadioButton_Holding;
-        this.PointerExited += ToolRadioButton_PointerExited;
+        Tapped += ToolRadioButton_Tapped;
     }
 
-    private void ToolRadioButton_PointerExited(object? sender, Avalonia.Input.PointerEventArgs e)
+    private void ToolRadioButton_Tapped(object? sender, Avalonia.Input.TappedEventArgs e)
     {
-        if (sender is Control control)
+        if (_handled)
         {
-            if (ToolTip.GetTip(control) != null)
-            {
-                ToolTip.SetIsOpen(control, false);
-            }
+            _handled = false;
+            return;
         }
+
+        base.OnClick();
+    }
+
+    protected override void OnClick()
+    {
+
     }
 
     private void ToolRadioButton_Holding(object? sender, Avalonia.Input.HoldingRoutedEventArgs e)
@@ -52,7 +62,13 @@ internal class ToolRadioButton : RadioButton
         {
             if (ToolTip.GetTip(control) != null)
             {
-                ToolTip.SetIsOpen(control, true);
+                _handled = true;
+                ToolTip.SetIsOpen(control, _handled);
+                Observable.Timer(TimeSpan.FromSeconds(3)).Subscribe(x =>
+                {
+                    _handled = false;
+                    Dispatcher.UIThread.Invoke(() => ToolTip.SetIsOpen(control, false));
+                });
             }
         }
     }
