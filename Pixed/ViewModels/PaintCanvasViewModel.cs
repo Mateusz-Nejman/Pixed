@@ -1,7 +1,10 @@
 ﻿using Avalonia.Input;
 using Avalonia.Media;
+using Pixed.Models;
+using Pixed.Tools;
 using Pixed.Utils;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using Frame = Pixed.Models.Frame;
 
@@ -230,7 +233,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
         {
             _frame = f;
             _frame.RefreshLayerRenderSources();
-            AvaloniaImageBitmap = _frame.RenderTransparent().ToAvaloniaBitmap();
+            RefreshRender();
         });
 
         _frameModified = Subjects.FrameModified.Subscribe(f =>
@@ -241,22 +244,22 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
 
         _layerAdded = Subjects.LayerAdded.Subscribe(l =>
         {
-            AvaloniaImageBitmap = _frame.RenderTransparent().ToAvaloniaBitmap();
+            RefreshRender();
         });
 
         _layerRemoved = Subjects.LayerRemoved.Subscribe(l =>
         {
-            AvaloniaImageBitmap = _frame.RenderTransparent().ToAvaloniaBitmap();
+            RefreshRender();
         });
 
         _layerChanged = Subjects.LayerChanged.Subscribe(l =>
         {
-            AvaloniaImageBitmap = _frame.RenderTransparent().ToAvaloniaBitmap();
+            RefreshRender();
         });
 
         _layerModified = Subjects.LayerModified.Subscribe(l =>
         {
-            AvaloniaImageBitmap = _frame.RenderTransparent().ToAvaloniaBitmap();
+            RefreshRender();
         });
 
         _mouseWheel = Subjects.MouseWheel.Subscribe(d =>
@@ -373,6 +376,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
         _leftPressed = true;
         Global.ToolSelected?.ApplyTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
         RefreshOverlay();
+        RefreshRender();
     }
 
     private void LeftMouseUpAction(Point point)
@@ -393,7 +397,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
             Global.CurrentModel.AddHistory();
         }
         RefreshOverlay();
-        AvaloniaImageBitmap = _frame.RenderTransparent().ToAvaloniaBitmap();
+        RefreshRender();
         Subjects.LayerModified.OnNext(_frame.CurrentLayer);
         Subjects.FrameModified.OnNext(_frame);
     }
@@ -411,6 +415,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
         _rightPressed = true;
         Global.ToolSelected?.ApplyTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
         RefreshOverlay();
+        RefreshRender();
     }
 
     private void RightMouseUpAction(Point point)
@@ -431,7 +436,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
             Global.CurrentModel.AddHistory();
         }
         RefreshOverlay();
-        AvaloniaImageBitmap = _frame.RenderTransparent().ToAvaloniaBitmap();
+        RefreshRender();
         Subjects.LayerModified.OnNext(_frame.CurrentLayer);
         Subjects.FrameModified.OnNext(_frame);
     }
@@ -452,6 +457,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
         {
             Global.ToolSelected?.MoveTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
             RefreshOverlay();
+            RefreshRender();
         }
         else
         {
@@ -535,5 +541,16 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
             Drawing = geometry
         };
         return brush;
+    }
+
+    private void RefreshRender()
+    {
+        List<Pixel>? pixels = null;
+
+        if(Global.ToolSelected is ToolPen pen)
+        {
+            pixels = pen.GetPixels();
+        }
+        AvaloniaImageBitmap = _frame.RenderTransparent(pixels).ToAvaloniaBitmap();
     }
 }

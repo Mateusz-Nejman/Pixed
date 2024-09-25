@@ -1,6 +1,7 @@
 ﻿using Pixed.IO;
 using Pixed.Utils;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -138,7 +139,7 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
         return _pixels[y * _width + x];
     }
 
-    public System.Drawing.Bitmap Render()
+    public System.Drawing.Bitmap Render(List<Pixel>? modifiedPixels = null)
     {
         if (!_needRerender)
         {
@@ -157,6 +158,11 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
                 int newColor = UniColor.WithAlpha((byte)(255 * _opacity), color);
                 pixels[i] = newColor;
             }
+        }
+
+        foreach(var pixel in modifiedPixels ?? [])
+        {
+            pixels[pixel.Y * _width + pixel.X] = pixel.Color;
         }
 
         System.Drawing.Bitmap bitmap = new(_width, _height);
