@@ -1,4 +1,5 @@
-﻿using Pixed.Tools.Selection;
+﻿using Pixed.Models;
+using Pixed.Tools.Selection;
 using System;
 using System.Collections.Generic;
 
@@ -7,37 +8,42 @@ namespace Pixed.Tools;
 internal class ToolSelector
 {
     private readonly Dictionary<string, BaseTool> _tools;
-    private readonly Action<string> _selectUIToolAction;
+    
+    public Action<string>? Action { get; set; } //TODO
 
-    public ToolSelector(Action<string> selectToolAction)
+    public ToolSelector(
+        ToolPen toolPen, ToolVerticalPen toolVerticalPen, ToolBucket toolBucket, ToolColorSwap toolColorSwap, ToolEraser toolEraser,
+        ToolStroke toolStroke, ToolRectangle toolRectangle, ToolCircle toolCircle, ToolMove toolMove, ToolLighten toolLighten, 
+        ToolDithering toolDithering, ToolColorPicker toolColorPicker, ToolNoise toolNoise, ToolNoiseFill toolNoiseFill, 
+        ToolOutliner toolOutliner, ApplicationData applicationData)
     {
-        _selectUIToolAction = selectToolAction;
-        _tools = [];
-        _tools.Add("tool_pen", new ToolPen());
-        _tools.Add("tool_mirror_pen", new ToolVerticalPen());
-        _tools.Add("tool_paint_bucket", new ToolBucket());
-        _tools.Add("tool_colorswap", new ToolColorSwap());
-        _tools.Add("tool_eraser", new ToolEraser());
-        _tools.Add("tool_stroke", new ToolStroke());
-        _tools.Add("tool_rectangle", new ToolRectangle());
-        _tools.Add("tool_circle", new ToolCircle());
-        _tools.Add("tool_move", new ToolMove());
-        _tools.Add("tool_shape_select", new ShapeSelect());
-        _tools.Add("tool_rectangle_select", new RectangleSelect());
-        _tools.Add("tool_lasso_select", new LassoSelect());
-        _tools.Add("tool_lighten", new ToolLighten());
-        _tools.Add("tool_dithering", new ToolDithering());
-        _tools.Add("tool_colorpicker", new ToolColorPicker());
-        _tools.Add("tool_noise", new ToolNoise());
-        _tools.Add("tool_noise_fill", new ToolNoiseFill());
-        _tools.Add("tool_outliner", new ToolOutliner());
+        _tools = new Dictionary<string, BaseTool>()
+            { 
+            { "tool_pen", toolPen},
+            { "tool_mirror_pen", toolVerticalPen},
+            { "tool_paint_bucket", toolBucket},
+            { "tool_colorswap", toolColorSwap},
+            { "tool_eraser", toolEraser},
+            { "tool_stroke", toolStroke},
+            { "tool_rectangle", toolRectangle},
+            { "tool_circle", toolCircle},{ "tool_move", toolMove},
+            { "tool_shape_select", new ShapeSelect(applicationData, this)},
+            { "tool_rectangle_select", new RectangleSelect(applicationData, this)}, //TODO find better way
+            { "tool_lasso_select", new LassoSelect(applicationData, this)},
+            { "tool_lighten", toolLighten},
+            { "tool_dithering", toolDithering},
+            { "tool_colorpicker", toolColorPicker},
+            { "tool_noise", toolNoise},
+            { "tool_noise_fill", toolNoiseFill},
+            { "tool_outliner", toolOutliner}
+        };
     }
 
     public void SelectTool(string name)
     {
         if (_tools.ContainsKey(name))
         {
-            _selectUIToolAction?.Invoke(name);
+            Action?.Invoke(name);
         }
     }
     public BaseTool? GetTool(string name)

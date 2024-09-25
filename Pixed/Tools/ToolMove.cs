@@ -16,6 +16,8 @@ namespace Pixed.Tools
         public override bool ControlHandle { get; protected set; } = true;
         public override bool AltHandle { get; protected set; } = true;
 
+        public ToolMove(ApplicationData applicationData) : base(applicationData) { }
+
         public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
         {
             _startX = x;
@@ -38,7 +40,7 @@ namespace Pixed.Tools
             int diffX = x - _startX;
             int diffY = y - _startY;
 
-            Frame[] frames = shiftPressed ? Global.CurrentModel.Frames.ToArray() : [Global.CurrentFrame];
+            Frame[] frames = shiftPressed ? _applicationData.CurrentModel.Frames.ToArray() : [_applicationData.CurrentFrame];
 
             foreach (Frame frame in frames)
             {

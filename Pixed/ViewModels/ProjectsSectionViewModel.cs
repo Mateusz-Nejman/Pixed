@@ -1,11 +1,13 @@
-﻿using Pixed.Models;
+﻿using Pixed.Controls;
+using Pixed.Models;
 using System;
 using System.Collections.ObjectModel;
 
 namespace Pixed.ViewModels
 {
-    internal class ProjectsSectionViewModel : PropertyChangedBase, IDisposable
+    internal class ProjectsSectionViewModel : PixedViewModel, IDisposable
     {
+        private readonly ApplicationData _applicationData;
         private int _selectedProject = 0;
         private bool _disposedValue;
         private readonly IDisposable _frameModified;
@@ -16,7 +18,7 @@ namespace Pixed.ViewModels
         private readonly IDisposable _projectRemoved;
         private readonly IDisposable _projectModified;
 
-        public static ObservableCollection<PixedModel> Projects => Global.Models;
+        public ObservableCollection<PixedModel> Projects => _applicationData.Models;
 
         public int SelectedProject
         {
@@ -24,13 +26,13 @@ namespace Pixed.ViewModels
             set
             {
                 _selectedProject = value;
-                Global.CurrentModelIndex = value;
+                _applicationData.CurrentModelIndex = value;
                 OnPropertyChanged();
-                Subjects.ProjectChanged.OnNext(Global.CurrentModel);
-                Subjects.FrameChanged.OnNext(Global.CurrentFrame);
-                Subjects.LayerChanged.OnNext(Global.CurrentLayer);
+                Subjects.ProjectChanged.OnNext(_applicationData.CurrentModel);
+                Subjects.FrameChanged.OnNext(_applicationData.CurrentFrame);
+                Subjects.LayerChanged.OnNext(_applicationData.CurrentLayer);
 
-                foreach (var frame in Global.CurrentModel.Frames)
+                foreach (var frame in _applicationData.CurrentModel.Frames)
                 {
                     foreach (var layer in frame.Layers)
                     {
@@ -41,20 +43,21 @@ namespace Pixed.ViewModels
             }
         }
 
-        public ProjectsSectionViewModel()
+        public ProjectsSectionViewModel(ApplicationData applicationData)
         {
-            _frameRemoved = Subjects.FrameRemoved.Subscribe(f => Global.CurrentModel.UpdatePreview());
-            _frameModified = Subjects.FrameModified.Subscribe(f => Global.CurrentModel.UpdatePreview());
-            _layerModified = Subjects.LayerModified.Subscribe(f => Global.CurrentModel.UpdatePreview());
-            _layerRemoved = Subjects.LayerRemoved.Subscribe(f => Global.CurrentModel.UpdatePreview());
+            _applicationData = applicationData;
+            _frameRemoved = Subjects.FrameRemoved.Subscribe(f => _applicationData.CurrentModel.UpdatePreview());
+            _frameModified = Subjects.FrameModified.Subscribe(f => _applicationData.CurrentModel.UpdatePreview());
+            _layerModified = Subjects.LayerModified.Subscribe(f => _applicationData.CurrentModel.UpdatePreview());
+            _layerRemoved = Subjects.LayerRemoved.Subscribe(f => _applicationData.CurrentModel.UpdatePreview());
             _projectAdded = Subjects.ProjectAdded.Subscribe(p =>
             {
-                int index = Global.Models.IndexOf(p);
+                int index = _applicationData.Models.IndexOf(p);
                 SelectedProject = index;
             });
             _projectRemoved = Subjects.ProjectRemoved.Subscribe(p =>
             {
-                SelectedProject = Math.Clamp(SelectedProject, 0, Global.Models.Count - 1);
+                SelectedProject = Math.Clamp(SelectedProject, 0, _applicationData.Models.Count - 1);
             });
             _projectModified = Subjects.ProjectModified.Subscribe(p =>
             {

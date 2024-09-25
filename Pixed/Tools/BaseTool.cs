@@ -7,6 +7,7 @@ namespace Pixed.Tools;
 
 internal abstract class BaseTool
 {
+    protected readonly ApplicationData _applicationData;
     protected int highlightedX = 0;
     protected int highlightedY = 0;
 
@@ -15,14 +16,19 @@ internal abstract class BaseTool
     public virtual bool ControlHandle { get; protected set; } = false;
     public virtual bool AltHandle { get; protected set; } = false;
 
+    public BaseTool(ApplicationData applicationData)
+    {
+        _applicationData = applicationData;
+    }
+
     public virtual UniColor GetToolColor()
     {
         if (Mouse.RightButton == MouseButtonState.Pressed)
         {
-            return Global.SecondaryColor;
+            return _applicationData.SecondaryColor;
         }
 
-        return Global.PrimaryColor;
+        return _applicationData.PrimaryColor;
     }
 
     public virtual void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)

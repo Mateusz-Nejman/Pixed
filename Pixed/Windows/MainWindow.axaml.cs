@@ -4,7 +4,10 @@ using Pixed.Controls;
 using Pixed.Input;
 using Pixed.IO;
 using Pixed.Models;
+using Pixed.Selection;
+using Pixed.Services;
 using Pixed.Services.Keyboard;
+using Pixed.Tools;
 using Pixed.Tools.Transform;
 using Pixed.ViewModels;
 using System;
@@ -15,34 +18,47 @@ namespace Pixed.Windows;
 
 internal partial class MainWindow : PixedWindow<MainViewModel>
 {
+    private readonly SelectionManager _selectionManager;
+    private readonly ApplicationData _applicationData;
+    private readonly PixedProjectMethods _pixedProjectMethods;
+    private readonly TransformToolsMenuRegister _menuRegister;
+    private readonly RecentFilesService _recentFilesService;
+    private readonly ToolSelector _toolSelector;
     public static Window? Handle { get; private set; }
     public static ICommand? QuitCommand { get; private set; }
-    public MainWindow()
+    public MainWindow(SelectionManager selectionManager, ApplicationData applicationData, PixedProjectMethods pixedProjectMethods, MenuBuilder builder,
+        TransformToolsMenuRegister transformToolsMenuRegister, RecentFilesService recentFilesService, ToolSelector toolSelector) : base(builder)
     {
+        _selectionManager = selectionManager;
+        _pixedProjectMethods = pixedProjectMethods;
+        _applicationData = applicationData;
+        _menuRegister = transformToolsMenuRegister;
+        _recentFilesService = recentFilesService;
+        _toolSelector = toolSelector;
+
         InitializeBeforeUI();
         InitializeComponent();
     }
 
     public override void OnLoaded()
     {
-        Global.ToolSelector.SelectTool("tool_pen");
-        toolsSection.PaintCanvas = paintCanvas.ViewModel;
+        _toolSelector.SelectTool("tool_pen");
 
-        Subjects.ProjectAdded.OnNext(Global.CurrentModel);
-        Subjects.ProjectChanged.OnNext(Global.CurrentModel);
-        Subjects.FrameChanged.OnNext(Global.CurrentFrame);
+        Subjects.ProjectAdded.OnNext(_applicationData.CurrentModel);
+        Subjects.ProjectChanged.OnNext(_applicationData.CurrentModel);
+        Subjects.FrameChanged.OnNext(_applicationData.CurrentFrame);
 
-        Global.SelectionManager = new Selection.SelectionManager(ov =>
+        _selectionManager.Action = ov =>
         {
             paintCanvas.ViewModel.Overlay = ov;
-        });
+        }; //TODO
     }
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        TransformToolsMenuRegister.Register();
-        StaticMenuBuilder.Build();
+        _menuRegister.Register();
+        _menuBuilder.Build();
     }
 
     private void InitializeBeforeUI()
@@ -52,7 +68,7 @@ internal partial class MainWindow : PixedWindow<MainViewModel>
         {
             int untitledIndex = 0;
 
-            foreach (var model in Global.Models)
+            foreach (var model in _applicationData.Models)
             {
                 if (!model.HistoryEmpty)
                 {
@@ -78,7 +94,7 @@ internal partial class MainWindow : PixedWindow<MainViewModel>
                     }
                     else if (result == ButtonResult.Yes)
                     {
-                        await PixedProjectMethods.Save(model, model.FilePath == null);
+                        await _pixedProjectMethods.Save(model, model.FilePath == null, _recentFilesService);
                     }
                 }
             }

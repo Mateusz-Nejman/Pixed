@@ -14,6 +14,7 @@ namespace Pixed;
 
 public partial class App : Application
 {
+    public static IServiceProvider ServiceProvider { get; private set; }
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -27,23 +28,14 @@ public partial class App : Application
         DIRegister.RegisterAll(ref collection);
         ServiceProvider provider = collection.BuildServiceProvider();
         this.Resources[typeof(IServiceProvider)] = provider;
+        ServiceProvider = provider;
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            InitializeBaseVariables();
             PixedWindow<MainViewModel> window = provider.GetService<PixedWindow<MainViewModel>>();
             desktop.MainWindow = window;
         }
 
         base.OnFrameworkInitializationCompleted();
-    }
-
-    private void InitializeBaseVariables()
-    {
-        Global.DataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Pixed");
-        Global.UserSettings = Settings.Load();
-        Global.Models.Add(new PixedModel(Global.UserSettings.UserWidth, Global.UserSettings.UserHeight));
-        Global.CurrentModel.FileName = Global.NamingService.GenerateName();
-        Global.CurrentModel.AddHistory(false);
     }
 }

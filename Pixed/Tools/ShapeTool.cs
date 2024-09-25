@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace Pixed.Tools
 {
-    internal abstract class ShapeTool : BaseTool
+    internal abstract class ShapeTool(ApplicationData applicationData) : BaseTool(applicationData)
     {
         protected int _startX = -1;
         protected int _startY = -1;

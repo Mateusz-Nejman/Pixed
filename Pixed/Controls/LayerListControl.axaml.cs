@@ -1,8 +1,8 @@
 ﻿namespace Pixed.Controls;
 
-internal partial class LayerListControl : PixedUserControl
+internal partial class LayerListControl : EmptyPixedUserControl
 {
-    public LayerListControl()
+    public LayerListControl() : base()
     {
         InitializeComponent();
     }

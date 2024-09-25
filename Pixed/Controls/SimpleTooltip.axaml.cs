@@ -2,7 +2,7 @@
 
 namespace Pixed.Controls;
 
-internal partial class SimpleTooltip : PixedUserControl
+internal partial class SimpleTooltip : EmptyPixedUserControl
 {
     public string Title
     {
@@ -11,7 +11,7 @@ internal partial class SimpleTooltip : PixedUserControl
     }
 
     public static readonly StyledProperty<string> TitleProperty = AvaloniaProperty.Register<SimpleTooltip, string>("Title", "Title");
-    public SimpleTooltip()
+    public SimpleTooltip() : base()
     {
         InitializeComponent();
     }

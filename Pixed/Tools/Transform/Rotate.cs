@@ -2,7 +2,7 @@
 
 namespace Pixed.Tools.Transform;
 
-internal class Rotate : AbstractTransformTool
+internal class Rotate(ApplicationData applicationData) : AbstractTransformTool(applicationData)
 {
     public override void ApplyToolOnLayer(Layer layer, bool altKey)
     {

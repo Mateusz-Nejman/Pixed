@@ -1,17 +1,21 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Microsoft.Extensions.DependencyInjection;
 using Pixed.Tools;
 using Pixed.ViewModels;
 
 namespace Pixed.Controls.MainWindowSections;
 
-internal partial class ToolsSection : PixedUserControl
+internal partial class ToolsSection : PixedUserControl<ToolsSectionViewModel>
 {
-    public PaintCanvasViewModel? PaintCanvas { get; set; }
-    public ToolsSection()
+    private readonly ToolSelector _toolSelector;
+    private readonly PaintCanvasViewModel _paintCanvas;
+    public ToolsSection() : base()
     {
         InitializeComponent();
-        Global.ToolSelector = new ToolSelector(SelectTool);
+        _toolSelector = ServiceProvider.GetService<ToolSelector>();
+        _toolSelector.Action = SelectTool; //TODO find better way
+        _paintCanvas = ServiceProvider.GetService<PaintCanvasViewModel>();
     }
 
     private void ToolRadioButton_IsCheckedChanged(object sender, RoutedEventArgs e)
@@ -24,9 +28,9 @@ internal partial class ToolsSection : PixedUserControl
             }
             string name = radio.Name;
 
-            Global.ToolSelected = Global.ToolSelector.GetTool(name);
+            Global.ToolSelected = _toolSelector.GetTool(name);
             Subjects.ToolChanged.OnNext(Global.ToolSelected);
-            PaintCanvas?.ResetOverlay();
+            _paintCanvas.ResetOverlay();
         }
     }
 

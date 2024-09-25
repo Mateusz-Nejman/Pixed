@@ -1,40 +1,56 @@
-﻿using Pixed.Controls;
+﻿using Avalonia.Controls;
+using Pixed.Controls;
+using Pixed.Tools;
+using System;
 using System.Windows.Input;
+using static Pixed.MenuBuilder;
 
 namespace Pixed.ViewModels
 {
     internal class ToolsSectionViewModel : PixedViewModel
     {
+        private readonly MenuBuilder _menuBuilder;
         public ICommand ToolSelectAction { get; }
 
-        public ToolsSectionViewModel()
+        public ToolsSectionViewModel(MenuBuilder menuBuilder, ToolSelector toolSelector)
         {
+            _menuBuilder = menuBuilder;
             ToolSelectAction = new ActionCommand<string>(name =>
             {
-                Global.ToolSelector?.SelectTool(name);
+                toolSelector.SelectTool(name);
             });
         }
 
         public override void RegisterMenuItems()
         {
-            PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Tools, "Pen tool", ToolSelectAction, "tool_pen");
-            PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Tools, "Vertical mirror pen", ToolSelectAction, "tool_mirror_pen");
-            PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Tools, "Paint bucket tool", ToolSelectAction, "tool_paint_bucket");
-            PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Tools, "Paint all pixels of the same color", ToolSelectAction, "tool_colorswap");
-            PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Tools, "Eraser tool", ToolSelectAction, "tool_eraser");
-            PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Tools, "Stroke tool", ToolSelectAction, "tool_stroke");
-            PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Tools, "Rectangle tool", ToolSelectAction, "tool_rectangle");
-            PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Tools, "Circle tool", ToolSelectAction, "tool_circle");
-            PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Tools, "Move tool", ToolSelectAction, "tool_move");
-            PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Tools, "Shape selection", ToolSelectAction, "tool_shape_select");
-            PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Tools, "Rectangle selection", ToolSelectAction, "tool_rectangle_select");
-            PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Tools, "Lasso selection", ToolSelectAction, "tool_lasso_select");
-            PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Tools, "Lighten", ToolSelectAction, "tool_lighten");
-            PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Tools, "Dithering tool", ToolSelectAction, "tool_dithering");
-            PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Tools, "Colorpicker", ToolSelectAction, "tool_colorpicker");
-            PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Tools, "Pixelart noise tool", ToolSelectAction, "tool_noise");
-            PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Tools, "Pixelart noise fill tool", ToolSelectAction, "tool_noise_fill");
-            PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Tools, "Outliner tool", ToolSelectAction, "tool_outliner_tool");
+            RegisterMenuItem(BaseMenuItem.Tools, "Pen tool", ToolSelectAction, "tool_pen");
+            RegisterMenuItem(BaseMenuItem.Tools, "Vertical mirror pen", ToolSelectAction, "tool_mirror_pen");
+            RegisterMenuItem(BaseMenuItem.Tools, "Paint bucket tool", ToolSelectAction, "tool_paint_bucket");
+            RegisterMenuItem(BaseMenuItem.Tools, "Paint all pixels of the same color", ToolSelectAction, "tool_colorswap");
+            RegisterMenuItem(BaseMenuItem.Tools, "Eraser tool", ToolSelectAction, "tool_eraser");
+            RegisterMenuItem(BaseMenuItem.Tools, "Stroke tool", ToolSelectAction, "tool_stroke");
+            RegisterMenuItem(BaseMenuItem.Tools, "Rectangle tool", ToolSelectAction, "tool_rectangle");
+            RegisterMenuItem(BaseMenuItem.Tools, "Circle tool", ToolSelectAction, "tool_circle");
+            RegisterMenuItem(BaseMenuItem.Tools, "Move tool", ToolSelectAction, "tool_move");
+            RegisterMenuItem(BaseMenuItem.Tools, "Shape selection", ToolSelectAction, "tool_shape_select");
+            RegisterMenuItem(BaseMenuItem.Tools, "Rectangle selection", ToolSelectAction, "tool_rectangle_select");
+            RegisterMenuItem(BaseMenuItem.Tools, "Lasso selection", ToolSelectAction, "tool_lasso_select");
+            RegisterMenuItem(BaseMenuItem.Tools, "Lighten", ToolSelectAction, "tool_lighten");
+            RegisterMenuItem(BaseMenuItem.Tools, "Dithering tool", ToolSelectAction, "tool_dithering");
+            RegisterMenuItem(BaseMenuItem.Tools, "Colorpicker", ToolSelectAction, "tool_colorpicker");
+            RegisterMenuItem(BaseMenuItem.Tools, "Pixelart noise tool", ToolSelectAction, "tool_noise");
+            RegisterMenuItem(BaseMenuItem.Tools, "Pixelart noise fill tool", ToolSelectAction, "tool_noise_fill");
+            RegisterMenuItem(BaseMenuItem.Tools, "Outliner tool", ToolSelectAction, "tool_outliner_tool");
+        }
+
+        private void RegisterMenuItem(BaseMenuItem baseMenu, string text, ICommand command, object? commandParameter = null)
+        {
+            RegisterMenuItem(baseMenu, new NativeMenuItem(text) { Command = command, CommandParameter = commandParameter });
+        }
+
+        private void RegisterMenuItem(BaseMenuItem baseMenu, NativeMenuItem menuItem)
+        {
+            _menuBuilder.AddEntry(baseMenu, menuItem);
         }
     }
 }

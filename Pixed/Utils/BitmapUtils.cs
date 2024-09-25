@@ -70,7 +70,7 @@ internal static class BitmapUtils
 
             if (data is byte[] array)
             {
-                return (Bitmap?)Bitmap.FromStream(new MemoryStream(array));
+                return (Bitmap?)Image.FromStream(new MemoryStream(array));
             }
         }
 

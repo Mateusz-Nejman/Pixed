@@ -1,6 +1,7 @@
 ﻿using Avalonia.Controls;
 using Pixed.IO;
 using Pixed.Models;
+using Pixed.Services;
 using Pixed.Utils;
 using Pixed.Windows;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Pixed;
 
-internal static class StaticMenuBuilder
+internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods pixedProjectMethods, RecentFilesService recentFilesService)
 {
     public enum BaseMenuItem
     {
@@ -28,16 +29,19 @@ internal static class StaticMenuBuilder
         public NativeMenuItem MenuItem { get; } = menuItem;
     }
 
-    private static readonly List<MenuEntry> _entries = [];
+    private readonly ApplicationData _applicationData = applicationData;
+    private readonly PixedProjectMethods _projectMethods = pixedProjectMethods;
+    private readonly RecentFilesService _recentFilesService = recentFilesService;
+    private readonly List<MenuEntry> _entries = [];
 
-    public static Subject<NativeMenu> OnMenuBuilt { get; } = new Subject<NativeMenu>();
+    public Subject<NativeMenu> OnMenuBuilt { get; } = new Subject<NativeMenu>();
 
-    public static void AddEntry(BaseMenuItem baseMenu, NativeMenuItem menuItem)
+    public void AddEntry(BaseMenuItem baseMenu, NativeMenuItem menuItem)
     {
         _entries.Add(new MenuEntry(baseMenu, menuItem));
     }
 
-    public static void Build(bool clear = true)
+    public void Build(bool clear = true)
     {
         NativeMenuItem fileMenu = GetFileMenu();
         NativeMenuItem editMenu = GetEditMenu();
@@ -77,23 +81,23 @@ internal static class StaticMenuBuilder
         OnMenuBuilt.OnNext(menu);
     }
 
-    private static NativeMenuItem GetFileMenu()
+    private NativeMenuItem GetFileMenu()
     {
         NativeMenuItem fileMenu = new("File");
         NativeMenuItem fileNew = new("New")
         {
             Command = new ActionCommand(async () =>
         {
-            NewProjectWindow window = new();
+            NewProjectWindow window = new(_applicationData);
             var success = await window.ShowDialog<bool>(MainWindow.Handle);
 
             if (success)
             {
-                PixedModel model = new(window.WidthValue, window.HeightValue)
+                PixedModel model = new(_applicationData, window.WidthValue, window.HeightValue)
                 {
-                    FileName = Global.NamingService.GenerateName()
+                    FileName = _applicationData.GenerateName()
                 };
-                Global.Models.Add(model);
+                _applicationData.Models.Add(model);
                 Subjects.ProjectAdded.OnNext(model);
             }
         })
@@ -102,7 +106,7 @@ internal static class StaticMenuBuilder
         {
             Command = new ActionCommand(async () =>
         {
-            await PixedProjectMethods.Open();
+            await _projectMethods.Open(_recentFilesService);
         })
         };
         NativeMenuItem fileSave = new("Save")
@@ -121,7 +125,7 @@ internal static class StaticMenuBuilder
         };
         NativeMenuItem fileRecent = new("Recent")
         {
-            Menu = Global.RecentFilesService.BuildMenu()
+            Menu = _recentFilesService.BuildMenu()
         };
 
         NativeMenuItem fileQuit = new("Quit")
@@ -137,38 +141,38 @@ internal static class StaticMenuBuilder
         return fileMenu;
     }
 
-    private static NativeMenuItem GetEditMenu()
+    private NativeMenuItem GetEditMenu()
     {
         NativeMenuItem editMenu = new("Edit");
         NativeMenuItem undoMenu = new("Undo")
         {
-            Command = new ActionCommand(Global.CurrentModel.Undo)
+            Command = new ActionCommand(_applicationData.CurrentModel.Undo)
         };
         NativeMenuItem redoMenu = new("Redo")
         {
-            Command = new ActionCommand(Global.CurrentModel.Redo)
+            Command = new ActionCommand(_applicationData.CurrentModel.Redo)
         };
         NativeMenuItem gridSettingsMenu = new("Grid settings");
         NativeMenuItem gridToggleMenu = new("Toggle grid");
 
         gridSettingsMenu.Command = new ActionCommand(async () =>
         {
-            GridSettingsWindow window = new();
+            GridSettingsWindow window = new(_applicationData);
             var success = await window.ShowDialog<bool>(MainWindow.Handle);
             if (success)
             {
-                Global.UserSettings.GridWidth = window.WidthValue;
-                Global.UserSettings.GridHeight = window.HeightValue;
-                Global.UserSettings.GridColor = window.GridColor;
-                Global.UserSettings.GridEnabled = true;
-                Global.UserSettings.Save();
+                _applicationData.UserSettings.GridWidth = window.WidthValue;
+                _applicationData.UserSettings.GridHeight = window.HeightValue;
+                _applicationData.UserSettings.GridColor = window.GridColor;
+                _applicationData.UserSettings.GridEnabled = true;
+                _applicationData.UserSettings.Save(_applicationData.DataFolder);
                 Subjects.GridChanged.OnNext(true);
             }
         });
         gridToggleMenu.Command = new ActionCommand(() =>
         {
-            Global.UserSettings.GridEnabled = !Global.UserSettings.GridEnabled;
-            Global.UserSettings.Save();
+            _applicationData.UserSettings.GridEnabled = !_applicationData.UserSettings.GridEnabled;
+            _applicationData.UserSettings.Save(_applicationData.DataFolder);
             Subjects.GridChanged.OnNext(true);
         });
 
@@ -178,7 +182,7 @@ internal static class StaticMenuBuilder
         return editMenu;
     }
 
-    private static NativeMenuItem GetProjectMenu()
+    private NativeMenuItem GetProjectMenu()
     {
         NativeMenuItem projectMenu = new("Project");
         NativeMenuItem projectResize = new("Resize project");
@@ -186,14 +190,14 @@ internal static class StaticMenuBuilder
         projectMenu.Menu = [];
         projectResize.Command = new ActionCommand(async () =>
         {
-            ResizeProjectWindow window = new(Global.CurrentModel);
+            ResizeProjectWindow window = new(_applicationData.CurrentModel);
             bool success = await window.ShowDialog<bool>(MainWindow.Handle);
 
             if (success)
             {
                 var result = window.Result;
-                var model = ResizeUtils.ResizeModel(Global.CurrentModel, result.Width, result.Height, result.ResizeCanvasContent, result.Anchor);
-                Global.Models[Global.CurrentModelIndex] = model;
+                var model = ResizeUtils.ResizeModel(_applicationData, _applicationData.CurrentModel, result.Width, result.Height, result.ResizeCanvasContent, result.Anchor);
+                _applicationData.Models[_applicationData.CurrentModelIndex] = model;
                 Subjects.ProjectModified.OnNext(model);
                 Subjects.ProjectChanged.OnNext(model);
             }
@@ -204,12 +208,12 @@ internal static class StaticMenuBuilder
         return projectMenu;
     }
 
-    private static List<NativeMenuItem> GetEntries(BaseMenuItem baseMenu)
+    private List<NativeMenuItem> GetEntries(BaseMenuItem baseMenu)
     {
         return _entries.Where(e => e.BaseMenu == baseMenu).Select(e => e.MenuItem).ToList();
     }
 
-    private static void AddToMenu(ref NativeMenuItem menuItem, List<NativeMenuItem> items)
+    private void AddToMenu(ref NativeMenuItem menuItem, List<NativeMenuItem> items)
     {
         menuItem.Menu ??= [];
 
@@ -219,13 +223,13 @@ internal static class StaticMenuBuilder
         }
     }
 
-    private async static Task SaveAction(bool saveAs = false)
+    private async Task SaveAction(bool saveAs = false)
     {
-        await PixedProjectMethods.Save(Global.CurrentModel, saveAs);
+        await _projectMethods.Save(_applicationData.CurrentModel, saveAs, _recentFilesService);
     }
 
-    private async static Task ExportAction()
+    private async Task ExportAction()
     {
-        await PixedProjectMethods.ExportToPng(Global.CurrentModel);
+        await _projectMethods.ExportToPng(_applicationData.CurrentModel);
     }
 }

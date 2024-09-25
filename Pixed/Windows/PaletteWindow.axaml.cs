@@ -1,30 +1,33 @@
 ﻿using Avalonia.Controls;
+using Pixed.Services.Palette;
 using Pixed.ViewModels;
 
 namespace Pixed.Windows;
 
-public partial class PaletteWindow : Window
+internal partial class PaletteWindow : Window
 {
+    private readonly PaletteService _paletteService;
     private readonly PaletteWindowViewModel _viewModel;
-    public PaletteWindow()
+    public PaletteWindow(PaletteService paletteService)
     {
         InitializeComponent();
+        _paletteService = paletteService;
         _viewModel = (PaletteWindowViewModel)DataContext;
         _viewModel.PaletteAction = (select, model) =>
         {
             if (select)
             {
-                Global.PaletteService.Select(model);
+                _paletteService.Select(model);
                 Close(true);
             }
             else
             {
-                Global.PaletteService.Remove(model);
+                _paletteService.Remove(model);
             }
         };
         _viewModel.PaletteRenameAction = (model, newName) =>
         {
-            Global.PaletteService.Rename(model, newName);
+            _paletteService.Rename(model, newName);
         };
     }
 }

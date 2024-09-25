@@ -12,15 +12,15 @@ internal class Settings
     public int GridHeight { get; set; } = 1;
     public bool GridEnabled { get; set; } = true;
 
-    public void Save()
+    public void Save(string dataFolder)
     {
-        string path = Path.Combine(Global.DataFolder, "settings.json");
+        string path = Path.Combine(dataFolder, "settings.json");
         File.WriteAllText(path, JsonConvert.SerializeObject(this));
     }
 
-    public static Settings Load()
+    public static Settings Load(string dataFolder)
     {
-        string path = Path.Combine(Global.DataFolder, "settings.json");
+        string path = Path.Combine(dataFolder, "settings.json");
 
         if (File.Exists(path))
         {

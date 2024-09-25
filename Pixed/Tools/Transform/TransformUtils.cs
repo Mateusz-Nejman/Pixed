@@ -74,8 +74,8 @@ internal static class TransformUtils
                     newX = max - 1.0 - tempY;
                 }
 
-                newX = newX - deltaX;
-                newY = newY - deltaY;
+                newX -= deltaX;
+                newY -= deltaY;
 
                 if (clone.ContainsPixel((int)newX, (int)newY))
                 {

@@ -2,21 +2,23 @@
 
 namespace Pixed.Tools.Transform;
 
-internal abstract class AbstractTransformTool
+internal abstract class AbstractTransformTool(ApplicationData applicationData)
 {
+    protected ApplicationData _applicationData = applicationData;
+
     public virtual void ApplyTransformation(bool shiftPressed, bool controlPressed, bool altPressed)
     {
         ApplyTool(altPressed, shiftPressed, controlPressed);
-        Global.CurrentModel.AddHistory();
+        _applicationData.CurrentModel.AddHistory();
     }
     public virtual void ApplyTool(bool altKey, bool allFrames, bool allLayers)
     {
-        Global.CurrentModel.Process(allFrames, allLayers, (frame, layer) =>
+        _applicationData.CurrentModel.Process(allFrames, allLayers, (frame, layer) =>
         {
             ApplyToolOnLayer(layer, altKey);
-        });
+        }, _applicationData);
 
-        Global.CurrentModel.AddHistory();
+        _applicationData.CurrentModel.AddHistory();
     }
 
     public abstract void ApplyToolOnLayer(Layer layer, bool altKey);

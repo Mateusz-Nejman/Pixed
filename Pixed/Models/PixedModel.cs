@@ -13,6 +13,7 @@ namespace Pixed.Models;
 
 internal class PixedModel : PropertyChangedBase, IPixedSerializer
 {
+    private readonly ApplicationData _applicationData;
     private const int MAX_HISTORY_ENTRIES = 500;
     private readonly ObservableCollection<Frame> _frames;
     private readonly ObservableCollection<byte[]> _history;
@@ -55,13 +56,14 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
 
     public ICommand CloseCommand { get; }
 
-    public PixedModel() : this(Global.UserSettings.UserWidth, Global.UserSettings.UserHeight)
+    public PixedModel(ApplicationData applicationData) : this(applicationData, applicationData.UserSettings.UserWidth, applicationData.UserSettings.UserHeight)
     {
 
     }
 
-    public PixedModel(int width, int height)
+    public PixedModel(ApplicationData applicationData, int width, int height)
     {
+        _applicationData = applicationData;
         _frames = [];
         _history = [];
 
@@ -72,7 +74,7 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
 
     public PixedModel Clone()
     {
-        PixedModel model = new()
+        PixedModel model = new(_applicationData)
         {
             _isEmpty = _isEmpty,
             _currentFrameIndex = _currentFrameIndex,
@@ -92,9 +94,9 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
         RenderSource = Frames.First().Render().ToAvaloniaBitmap();
     }
 
-    public void Process(bool allFrames, bool allLayers, Action<Frame, Layer> action)
+    public void Process(bool allFrames, bool allLayers, Action<Frame, Layer> action, ApplicationData applicationData)
     {
-        Frame[] frames = allFrames ? [.. Frames] : [Global.CurrentFrame];
+        Frame[] frames = allFrames ? [.. Frames] : [applicationData.CurrentFrame];
 
         foreach (Frame frame in frames)
         {
@@ -113,21 +115,6 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
     public List<int> GetAllColors()
     {
         return [.. _frames.SelectMany(f => f.Layers).Select(l => l.GetPixels()).SelectMany(p => p).Where(p => p != UniColor.Transparent).Distinct().Order()];
-    }
-
-    public static PixedModel FromFrames(ObservableCollection<Frame> frames, string name)
-    {
-        PixedModel model = new();
-        model.Frames.Clear();
-        model._isEmpty = false;
-        model.FileName = name;
-
-        foreach (var frame in frames)
-        {
-            model.Frames.Add(frame);
-        }
-
-        return model;
     }
 
     public void AddHistory(bool setIsEmpty = true)
@@ -231,17 +218,32 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
         }
     }
 
+    public static PixedModel FromFrames(ObservableCollection<Frame> frames, string name, ApplicationData applicationData)
+    {
+        PixedModel model = new(applicationData);
+        model.Frames.Clear();
+        model._isEmpty = false;
+        model.FileName = name;
+
+        foreach (var frame in frames)
+        {
+            model.Frames.Add(frame);
+        }
+
+        return model;
+    }
+
     private void CloseCommandAction()
     {
-        if (Global.Models.Count == 1)
+        if (_applicationData.Models.Count == 1)
         {
             MainWindow.QuitCommand.Execute(null);
         }
         else
         {
-            Global.Models.Remove(this);
+            _applicationData.Models.Remove(this);
             Subjects.ProjectRemoved.OnNext(this);
-            Global.CurrentModelIndex = Math.Clamp(Global.CurrentModelIndex, 0, Global.Models.Count - 1);
+            _applicationData.CurrentModelIndex = Math.Clamp(_applicationData.CurrentModelIndex, 0, _applicationData.Models.Count - 1);
         }
     }
 }

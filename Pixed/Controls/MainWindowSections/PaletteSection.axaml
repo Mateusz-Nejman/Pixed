@@ -8,9 +8,6 @@
              xmlns:controls="clr-namespace:Pixed.Controls"
              xmlns:colorpicker="clr-namespace:ColorPicker;assembly=ColorPicker.AvaloniaUI"
              x:Class="Pixed.Controls.MainWindowSections.PaletteSection">
-	<UserControl.DataContext>
-		<vm:PaletteSectionViewModel/>
-	</UserControl.DataContext>
 	<local:Section>
 		<StackPanel>
 			<colorpicker:StandardColorPicker Width="186" Height="400" SelectedColor="{Binding PrimaryColor, Mode=TwoWay}" SecondaryColor="{Binding SecondaryColor, Mode=TwoWay}"/>

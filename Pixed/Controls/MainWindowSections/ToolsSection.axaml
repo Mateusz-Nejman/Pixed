@@ -6,9 +6,6 @@
              xmlns:controls="clr-namespace:Pixed.Controls"
 			 xmlns:vm="clr-namespace:Pixed.ViewModels"
              x:Class="Pixed.Controls.MainWindowSections.ToolsSection">
-	<UserControl.DataContext>
-		<vm:ToolsSectionViewModel/>
-	</UserControl.DataContext>
 	<ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
 		<StackPanel Margin="8">
 			<controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed.Core/Resources/Icons/tools/tool-pen.png" Name="tool_pen" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">

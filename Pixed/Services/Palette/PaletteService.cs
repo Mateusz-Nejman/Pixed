@@ -10,13 +10,15 @@ namespace Pixed.Services.Palette;
 
 internal class PaletteService
 {
+    private readonly ApplicationData _applicationData;
     public List<PaletteModel> Palettes { get; }
     public PaletteModel CurrentColorsPalette => Palettes[0];
-    public PaletteModel SelectedPalette => Palettes[PaletteIndex];
-    public static int PaletteIndex => 1;
+    public PaletteModel SelectedPalette => Palettes[_paletteIndex];
+    private int _paletteIndex => 1;
 
-    public PaletteService()
+    public PaletteService(ApplicationData applicationData)
     {
+        _applicationData = applicationData;
         Palettes = [];
         Palettes.Add(new PaletteModel("default") { Name = "Current colors" });
         Palettes.Add(new PaletteModel("palette") { Name = "Palette" });
@@ -50,12 +52,12 @@ internal class PaletteService
 
     public void SetCurrentColors()
     {
-        Palettes[0].Colors = Global.CurrentModel.GetAllColors();
+        Palettes[0].Colors = _applicationData.CurrentModel.GetAllColors();
     }
 
     public void ReplaceSecondPalette(PaletteModel palette)
     {
-        Palettes[PaletteIndex] = palette;
+        Palettes[_paletteIndex] = palette;
     }
 
     public void AddColorsFromPalette(PaletteModel palette)
@@ -66,9 +68,9 @@ internal class PaletteService
 
     public void AddPrimaryColor()
     {
-        if (!SelectedPalette.Colors.Contains(Global.PrimaryColor))
+        if (!SelectedPalette.Colors.Contains(_applicationData.PrimaryColor))
         {
-            SelectedPalette.Colors.Add(Global.PrimaryColor);
+            SelectedPalette.Colors.Add(_applicationData.PrimaryColor);
             SelectedPalette.Colors.Sort();
         }
     }
@@ -92,7 +94,7 @@ internal class PaletteService
     {
         FileInfo fileInfo = new(filename);
 
-        string paletteFileName = Path.Combine(Global.DataFolder, "Palettes", fileInfo.Name);
+        string paletteFileName = Path.Combine(_applicationData.DataFolder, "Palettes", fileInfo.Name);
         File.Copy(filename, paletteFileName, true);
 
         AbstractPaletteReader reader;
@@ -123,7 +125,7 @@ internal class PaletteService
 
     public void Save(string filename)
     {
-        var model = Palettes[PaletteIndex].ToCurrentPalette();
+        var model = Palettes[_paletteIndex].ToCurrentPalette();
         model.Path = filename;
         Save(model, true);
         Save(model, false);
@@ -131,7 +133,7 @@ internal class PaletteService
 
     public void LoadAll()
     {
-        var files = Directory.GetFiles(Path.Combine(Global.DataFolder, "Palettes"));
+        var files = Directory.GetFiles(Path.Combine(_applicationData.DataFolder, "Palettes"));
 
         foreach (var file in files)
         {
@@ -158,7 +160,7 @@ internal class PaletteService
         }
     }
 
-    private static void Save(PaletteModel model, bool appData = false)
+    private void Save(PaletteModel model, bool appData = false)
     {
         FileInfo fileInfo = new(model.Path);
 
@@ -175,7 +177,7 @@ internal class PaletteService
 
         if (appData)
         {
-            writer.Write(model, Path.Combine(Global.DataFolder, "Palettes", fileInfo.Name));
+            writer.Write(model, Path.Combine(_applicationData.DataFolder, "Palettes", fileInfo.Name));
         }
         else
         {

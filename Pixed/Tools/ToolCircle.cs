@@ -1,9 +1,10 @@
-﻿using Pixed.Utils;
+﻿using Pixed.Models;
+using Pixed.Utils;
 using System;
 
 namespace Pixed.Tools
 {
-    internal class ToolCircle : ShapeTool
+    internal class ToolCircle(ApplicationData applicationData) : ShapeTool(applicationData)
     {
         protected override void Draw(int x, int y, int color, bool isShift, Action<int, int, int> setPixelAction)
         {

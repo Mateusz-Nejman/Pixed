@@ -1,4 +1,6 @@
-﻿using Pixed.Models;
+﻿using Pixed.Controls;
+using Pixed.Models;
+using Pixed.Services.Palette;
 using Pixed.Utils;
 using Pixed.Windows;
 using System;
@@ -9,7 +11,7 @@ using Bitmap = Avalonia.Media.Imaging.Bitmap;
 
 namespace Pixed.ViewModels;
 
-internal class PaletteWindowViewModel : PropertyChangedBase
+internal class PaletteWindowViewModel : PixedViewModel
 {
     public struct PaletteData
     {
@@ -23,6 +25,7 @@ internal class PaletteWindowViewModel : PropertyChangedBase
     }
 
     private ObservableCollection<PaletteData> _palettes;
+    private readonly PaletteService _paletteService;
 
     public ObservableCollection<PaletteData> Palettes
     {
@@ -37,8 +40,9 @@ internal class PaletteWindowViewModel : PropertyChangedBase
     public Action<bool, PaletteModel> PaletteAction { get; set; }
     public Action<PaletteModel, string> PaletteRenameAction { get; set; }
 
-    public PaletteWindowViewModel()
+    public PaletteWindowViewModel(PaletteService paletteService)
     {
+        _paletteService = paletteService;
         _palettes = [];
         Initialize();
     }
@@ -47,9 +51,9 @@ internal class PaletteWindowViewModel : PropertyChangedBase
     {
         Palettes.Clear();
 
-        for (int a = 2; a < Global.PaletteService.Palettes.Count; a++)
+        for (int a = 2; a < _paletteService.Palettes.Count; a++)
         {
-            PaletteModel model = Global.PaletteService.Palettes[a];
+            PaletteModel model = _paletteService.Palettes[a];
 
             if (model.Colors.Count == 0)
             {

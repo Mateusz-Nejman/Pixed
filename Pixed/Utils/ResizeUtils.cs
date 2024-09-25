@@ -20,7 +20,7 @@ internal static class ResizeUtils
         BottomRight
     };
 
-    public static PixedModel ResizeModel(PixedModel model, int width, int height, bool resizeContent, Origin origin)
+    public static PixedModel ResizeModel(ApplicationData applicationData, PixedModel model, int width, int height, bool resizeContent, Origin origin)
     {
         ObservableCollection<Frame> frames = [];
 
@@ -29,7 +29,7 @@ internal static class ResizeUtils
             frames.Add(ResizeFrame(frame, width, height, resizeContent, origin));
         }
 
-        var resizedModel = PixedModel.FromFrames(frames, model.FileName);
+        var resizedModel = PixedModel.FromFrames(frames, model.FileName, applicationData);
         resizedModel.CurrentFrameIndex = model.CurrentFrameIndex;
         return resizedModel;
     }

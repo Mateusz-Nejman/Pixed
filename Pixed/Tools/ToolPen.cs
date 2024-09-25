@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace Pixed.Tools;
 
-internal class ToolPen : BaseTool
+internal class ToolPen(ApplicationData applicationData) : BaseTool(applicationData)
 {
     protected int _prevX = -1;
     protected int _prevY = -1;

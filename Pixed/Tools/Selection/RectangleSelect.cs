@@ -5,7 +5,7 @@ using System.Drawing;
 
 namespace Pixed.Tools.Selection;
 
-internal class RectangleSelect : AbstractDragSelect
+internal class RectangleSelect(ApplicationData applicationData, ToolSelector toolSelector) : AbstractDragSelect(applicationData, toolSelector)
 {
     public override void OnDragSelectStart(int x, int y, Frame frame, ref Bitmap overlay)
     {

@@ -4,7 +4,7 @@ using System.Drawing;
 
 namespace Pixed.Tools
 {
-    internal class ToolNoise : ToolPen
+    internal class ToolNoise(ApplicationData applicationData) : ToolPen(applicationData)
     {
         public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
         {
@@ -16,7 +16,7 @@ namespace Pixed.Tools
             _prevX = x;
             _prevY = y;
 
-            DrawOnOverlay(PaintUtils.GetNoiseColor(), x, y, frame, ref overlay);
+            DrawOnOverlay(PaintUtils.GetNoiseColor(_applicationData.PrimaryColor, _applicationData.SecondaryColor), x, y, frame, ref overlay);
         }
     }
 }

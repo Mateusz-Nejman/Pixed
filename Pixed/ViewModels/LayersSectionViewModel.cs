@@ -1,4 +1,5 @@
-﻿using Avalonia.Input;
+﻿using Avalonia.Controls;
+using Avalonia.Input;
 using Pixed.Controls;
 using Pixed.Input;
 using Pixed.Models;
@@ -7,11 +8,14 @@ using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using static Pixed.MenuBuilder;
 
 namespace Pixed.ViewModels;
 
 internal class LayersSectionViewModel : PixedViewModel, IDisposable
 {
+    private readonly ApplicationData _applicationData;
+    private readonly MenuBuilder _menuBuilder;
     private int _selectedLayer = 0;
 
     private bool _canLayerMoveUp = false;
@@ -25,8 +29,8 @@ internal class LayersSectionViewModel : PixedViewModel, IDisposable
     private readonly IDisposable _layerAdded;
     private readonly IDisposable _layerRemoved;
 
-    public static Frame Frame => Global.CurrentFrame;
-    public static ObservableCollection<Layer> Layers => Frame.Layers;
+    public Frame Frame => _applicationData.CurrentFrame;
+    public ObservableCollection<Layer> Layers => Frame.Layers;
     public int SelectedLayer
     {
         get => _selectedLayer;
@@ -44,8 +48,8 @@ internal class LayersSectionViewModel : PixedViewModel, IDisposable
             CanLayerMoveDown = _selectedLayer < Layers.Count - 1;
             CanLayerMerge = CanLayerMoveDown;
             CanLayerRemove = Layers.Count > 1;
-            Global.CurrentFrame.SelectedLayer = val;
-            Subjects.LayerChanged.OnNext(Global.CurrentLayer);
+            _applicationData.CurrentFrame.SelectedLayer = val;
+            Subjects.LayerChanged.OnNext(_applicationData.CurrentLayer);
         }
     }
 
@@ -97,8 +101,10 @@ internal class LayersSectionViewModel : PixedViewModel, IDisposable
     public ICommand MergeLayerCommand { get; }
     public ICommand RemoveLayerCommand { get; }
 
-    public LayersSectionViewModel()
+    public LayersSectionViewModel(ApplicationData applicationData, MenuBuilder menuBuilder)
     {
+        _applicationData = applicationData;
+        _menuBuilder = menuBuilder;
         AddLayerCommand = new ActionCommand(AddLayerAction);
         DuplicateLayerCommand = new ActionCommand(DuplicateLayerAction);
         MoveLayerUpCommand = new ActionCommand(MoveLayerUpAction);
@@ -120,23 +126,23 @@ internal class LayersSectionViewModel : PixedViewModel, IDisposable
 
         _layerAdded = Subjects.LayerAdded.Subscribe(l =>
         {
-            SelectedLayer = Global.CurrentFrame.Layers.IndexOf(l);
+            SelectedLayer = _applicationData.CurrentFrame.Layers.IndexOf(l);
         });
 
         _layerRemoved = Subjects.LayerRemoved.Subscribe(l =>
         {
-            Subjects.FrameModified.OnNext(Global.CurrentFrame);
+            Subjects.FrameModified.OnNext(_applicationData.CurrentFrame);
         });
     }
 
     public override void RegisterMenuItems()
     {
-        PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Project, "Add Layer to current frame", AddLayerCommand);
-        PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Project, "Edit layer name", EditLayerNameCommand);
-        PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Project, "Merge with layer below", MergeLayerCommand);
-        PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Project, "Move layer up", MoveLayerUpCommand);
-        PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Project, "Move layer down", MoveLayerDownCommand);
-        PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Project, "Remove current layer", RemoveLayerCommand);
+        RegisterMenuItem(BaseMenuItem.Project, "Add Layer to current frame", AddLayerCommand);
+        RegisterMenuItem(BaseMenuItem.Project, "Edit layer name", EditLayerNameCommand);
+        RegisterMenuItem(BaseMenuItem.Project, "Merge with layer below", MergeLayerCommand);
+        RegisterMenuItem(BaseMenuItem.Project, "Move layer up", MoveLayerUpCommand);
+        RegisterMenuItem(BaseMenuItem.Project, "Move layer down", MoveLayerDownCommand);
+        RegisterMenuItem(BaseMenuItem.Project, "Remove current layer", RemoveLayerCommand);
     }
 
     protected virtual void Dispose(bool disposing)
@@ -167,7 +173,7 @@ internal class LayersSectionViewModel : PixedViewModel, IDisposable
         OnPropertyChanged(nameof(Layers));
         Subjects.LayerAdded.OnNext(layer);
         Subjects.FrameModified.OnNext(Frame);
-        Global.CurrentModel.AddHistory();
+        _applicationData.CurrentModel.AddHistory();
     }
 
     private void DuplicateLayerAction()
@@ -176,7 +182,7 @@ internal class LayersSectionViewModel : PixedViewModel, IDisposable
         OnPropertyChanged(nameof(Layers));
         Subjects.LayerAdded.OnNext(layer);
         Subjects.FrameModified.OnNext(Frame);
-        Global.CurrentModel.AddHistory();
+        _applicationData.CurrentModel.AddHistory();
     }
     private void MoveLayerUpAction()
     {
@@ -188,7 +194,7 @@ internal class LayersSectionViewModel : PixedViewModel, IDisposable
         Frame.MoveLayerUp();
         OnPropertyChanged(nameof(Layers));
         Subjects.FrameModified.OnNext(Frame);
-        Global.CurrentModel.AddHistory();
+        _applicationData.CurrentModel.AddHistory();
     }
 
     private void MoveLayerDownAction()
@@ -201,7 +207,7 @@ internal class LayersSectionViewModel : PixedViewModel, IDisposable
         Frame.MoveLayerDown();
         OnPropertyChanged(nameof(Layers));
         Subjects.FrameModified.OnNext(Frame);
-        Global.CurrentModel.AddHistory();
+        _applicationData.CurrentModel.AddHistory();
     }
 
     private async Task EditLayerNameAction()
@@ -220,7 +226,7 @@ internal class LayersSectionViewModel : PixedViewModel, IDisposable
             Layers[_selectedLayer].Name = window.Value;
         }
 
-        Global.CurrentModel.AddHistory();
+        _applicationData.CurrentModel.AddHistory();
     }
 
     private void MergeLayerAction()
@@ -228,7 +234,7 @@ internal class LayersSectionViewModel : PixedViewModel, IDisposable
         Frame.MergeLayerBelow();
         OnPropertyChanged(nameof(Layers));
         Subjects.FrameModified.OnNext(Frame);
-        Global.CurrentModel.AddHistory();
+        _applicationData.CurrentModel.AddHistory();
     }
 
     private void RemoveLayerAction()
@@ -243,6 +249,16 @@ internal class LayersSectionViewModel : PixedViewModel, IDisposable
         Layers.RemoveAt(index);
         SelectedLayer = Math.Clamp(index, 0, Layers.Count - 1);
         Subjects.LayerRemoved.OnNext(layer);
-        Global.CurrentModel.AddHistory();
+        _applicationData.CurrentModel.AddHistory();
+    }
+
+    private void RegisterMenuItem(BaseMenuItem baseMenu, string text, ICommand command, object? commandParameter = null)
+    {
+        RegisterMenuItem(baseMenu, new NativeMenuItem(text) { Command = command, CommandParameter = commandParameter });
+    }
+
+    private void RegisterMenuItem(BaseMenuItem baseMenu, NativeMenuItem menuItem)
+    {
+        _menuBuilder.AddEntry(baseMenu, menuItem);
     }
 }

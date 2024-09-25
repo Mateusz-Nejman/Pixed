@@ -2,10 +2,11 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Pixed.Models;
 
 namespace Pixed.Windows;
 
-public partial class GridSettingsWindow : Window
+internal partial class GridSettingsWindow : Window
 {
     public int WidthValue
     {
@@ -25,15 +26,15 @@ public partial class GridSettingsWindow : Window
         set => SetValue(GridColorProperty, value);
     }
 
-    public static readonly StyledProperty<int> WidthValueProperty = AvaloniaProperty.Register<GridSettingsWindow, int>("WidthValue", Global.UserSettings.GridWidth);
-    public static readonly StyledProperty<int> HeightValueProperty = AvaloniaProperty.Register<GridSettingsWindow, int>("HeightValue", Global.UserSettings.GridHeight);
-    public static readonly StyledProperty<Color> GridColorProperty = AvaloniaProperty.Register<GridSettingsWindow, Color>("GridColor", Global.UserSettings.GridColor);
-    public GridSettingsWindow()
+    public static readonly StyledProperty<int> WidthValueProperty = AvaloniaProperty.Register<GridSettingsWindow, int>("WidthValue");
+    public static readonly StyledProperty<int> HeightValueProperty = AvaloniaProperty.Register<GridSettingsWindow, int>("HeightValue");
+    public static readonly StyledProperty<Color> GridColorProperty = AvaloniaProperty.Register<GridSettingsWindow, Color>("GridColor");
+    public GridSettingsWindow(ApplicationData applicationData)
     {
         InitializeComponent();
-        GridColor = Global.UserSettings.GridColor;
-        WidthValue = Global.UserSettings.GridWidth;
-        HeightValue = Global.UserSettings.GridHeight;
+        GridColor = applicationData.UserSettings.GridColor;
+        WidthValue = applicationData.UserSettings.GridWidth;
+        HeightValue = applicationData.UserSettings.GridHeight;
     }
 
     private void Button_Click(object sender, RoutedEventArgs e)

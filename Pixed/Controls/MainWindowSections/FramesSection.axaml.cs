@@ -1,8 +1,10 @@
+using Pixed.ViewModels;
+
 namespace Pixed.Controls.MainWindowSections;
 
-internal partial class FramesSection : PixedUserControl
+internal partial class FramesSection : PixedUserControl<FramesSectionViewModel>
 {
-    public FramesSection()
+    public FramesSection() : base()
     {
         InitializeComponent();
     }

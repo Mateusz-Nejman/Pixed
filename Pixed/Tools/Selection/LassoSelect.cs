@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace Pixed.Tools.Selection;
 
-internal class LassoSelect : AbstractDragSelect
+internal class LassoSelect(ApplicationData applicationData, ToolSelector toolSelector) : AbstractDragSelect(applicationData, toolSelector)
 {
     private int _prevX;
     private int _prevY;

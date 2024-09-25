@@ -1,5 +1,6 @@
 ﻿using BigGustave;
 using Pixed.Models;
+using Pixed.Services;
 using System;
 using System.IO;
 
@@ -8,7 +9,7 @@ namespace Pixed.IO
     internal class PngProjectSerializer : IPixedProjectSerializer
     {
         public int ColumnsCount { get; set; } = 1;
-        public PixedModel Deserialize(Stream stream)
+        public PixedModel Deserialize(Stream stream, ApplicationData applicationData)
         {
             Png image = Png.Open(stream);
             int width = image.Width;
@@ -27,7 +28,7 @@ namespace Pixed.IO
 
             Layer layer = Layer.FromColors(pixels, width, height, "Layer 0");
             Frame frame = Frame.FromLayers([layer]);
-            return PixedModel.FromFrames([frame], Global.NamingService.GenerateName());
+            return PixedModel.FromFrames([frame], applicationData.GenerateName(), applicationData);
         }
 
         public void Serialize(Stream stream, PixedModel model, bool close)
