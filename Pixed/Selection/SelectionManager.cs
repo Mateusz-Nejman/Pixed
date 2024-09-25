@@ -4,6 +4,7 @@ using Pixed.Services.Keyboard;
 using Pixed.Tools;
 using Pixed.Tools.Selection;
 using Pixed.Utils;
+using Pixed.ViewModels;
 using System;
 using System.Drawing;
 using System.Linq;
@@ -16,17 +17,17 @@ internal class SelectionManager
 {
     private readonly ApplicationData _applicationData;
     private readonly ToolSelector _toolSelector;
+    private readonly PaintCanvasViewModel _paintCanvas;
     private BaseSelection? _currentSelection;
 
     public bool HasSelection => _currentSelection != null;
     public BaseSelection? Selection => _currentSelection;
 
-    public Action<Bitmap>? Action { get; set; }
-
-    public SelectionManager(ApplicationData applicationData, ShortcutService shortcutService, ToolSelector toolSelector)
+    public SelectionManager(ApplicationData applicationData, ShortcutService shortcutService, ToolSelector toolSelector, PaintCanvasViewModel paintCanvas)
     {
         _applicationData = applicationData;
         _toolSelector = toolSelector;
+        _paintCanvas = paintCanvas;
         _currentSelection = null;
 
         Subjects.ClipboardCopy.Subscribe(_ => Copy());
@@ -52,9 +53,9 @@ internal class SelectionManager
 
     private void SelectAll()
     {
-        Global.ToolSelected = _toolSelector.GetTool("tool_rectangle_select");
-        Subjects.ToolChanged.OnNext(Global.ToolSelected);
-        ((RectangleSelect)Global.ToolSelected).SelectAll(Action);
+        _toolSelector.ToolSelected = _toolSelector.GetTool("tool_rectangle_select");
+        Subjects.ToolChanged.OnNext(_toolSelector.ToolSelected);
+        ((RectangleSelect)_toolSelector.ToolSelected).SelectAll(overlay => _paintCanvas.Overlay = overlay);
     }
 
     private void OnSelectionCreated(BaseSelection? selection)
@@ -121,8 +122,8 @@ internal class SelectionManager
 
     private async Task Paste()
     {
-        Global.ToolSelected = _toolSelector.GetTool("tool_rectangle_select");
-        Subjects.ToolChanged.OnNext(Global.ToolSelected);
+        _toolSelector.ToolSelected = _toolSelector.GetTool("tool_rectangle_select");
+        Subjects.ToolChanged.OnNext(_toolSelector.ToolSelected);
         Bitmap? source = await BitmapUtils.CreateFromClipboard();
 
         if (source == null)
@@ -158,8 +159,8 @@ internal class SelectionManager
         _applicationData.CurrentModel.AddHistory();
     }
 
-    private static bool IsSelectToolActive()
+    private bool IsSelectToolActive()
     {
-        return Global.ToolSelected is BaseSelect;
+        return _toolSelector.ToolSelected is BaseSelect;
     }
 }

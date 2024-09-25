@@ -14,6 +14,7 @@ namespace Pixed.ViewModels;
 internal class PaintCanvasViewModel : PixedViewModel, IDisposable
 {
     private readonly ApplicationData _applicationData;
+    private readonly ToolSelector _toolSelector;
     private double _gridWidth;
     private double _gridHeight;
     private double _imageFactor;
@@ -206,9 +207,10 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         }
     }
 
-    public PaintCanvasViewModel(ApplicationData applicationData)
+    public PaintCanvasViewModel(ApplicationData applicationData, ToolSelector toolSelector)
     {
         _applicationData = applicationData;
+        _toolSelector = toolSelector;
         _frame = new Frame(32, 32);
         LeftMouseDown = new ActionCommand<Point>(LeftMouseDownAction);
         LeftMouseUp = new ActionCommand<Point>(LeftMouseUpAction);
@@ -377,7 +379,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         }
 
         _leftPressed = true;
-        Global.ToolSelected?.ApplyTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
+        _toolSelector.ToolSelected?.ApplyTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
         RefreshOverlay();
         RefreshRender();
     }
@@ -393,9 +395,9 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         }
 
         _leftPressed = false;
-        Global.ToolSelected?.ReleaseTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
+        _toolSelector.ToolSelected?.ReleaseTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
 
-        if (Global.ToolSelected != null && Global.ToolSelected.AddToHistory)
+        if (_toolSelector.ToolSelected != null && _toolSelector.ToolSelected.AddToHistory)
         {
             _applicationData.CurrentModel.AddHistory();
         }
@@ -416,7 +418,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         }
 
         _rightPressed = true;
-        Global.ToolSelected?.ApplyTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
+        _toolSelector.ToolSelected?.ApplyTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
         RefreshOverlay();
         RefreshRender();
     }
@@ -432,9 +434,9 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         }
 
         _rightPressed = false;
-        Global.ToolSelected?.ReleaseTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
+        _toolSelector.ToolSelected?.ReleaseTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
 
-        if(Global.ToolSelected != null && Global.ToolSelected.AddToHistory)
+        if(_toolSelector.ToolSelected != null && _toolSelector.ToolSelected.AddToHistory)
         {
             _applicationData.CurrentModel.AddHistory();
         }
@@ -458,13 +460,13 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
 
         if (_leftPressed || _rightPressed)
         {
-            Global.ToolSelected?.MoveTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
+            _toolSelector.ToolSelected?.MoveTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
             RefreshOverlay();
             RefreshRender();
         }
         else
         {
-            Global.ToolSelected?.UpdateHighlightedPixel(imageX, imageY, _frame, ref _overlayBitmap);
+            _toolSelector.ToolSelected?.UpdateHighlightedPixel(imageX, imageY, _frame, ref _overlayBitmap);
             RefreshOverlay();
         }
     }
@@ -494,7 +496,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     {
         if (_rightPressed || _leftPressed)
         {
-            Global.ToolSelected?.ReleaseTool(0, 0, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
+            _toolSelector.ToolSelected?.ReleaseTool(0, 0, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
         }
         _rightPressed = false;
         _leftPressed = false;
@@ -550,7 +552,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     {
         List<Pixel>? pixels = null;
 
-        if(Global.ToolSelected is ToolPen pen)
+        if(_toolSelector.ToolSelected is ToolPen pen)
         {
             pixels = pen.GetPixels();
         }

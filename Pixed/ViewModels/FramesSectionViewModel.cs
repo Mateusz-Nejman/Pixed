@@ -1,17 +1,18 @@
 ﻿using Avalonia.Controls;
 using Pixed.Controls;
+using Pixed.Menu;
 using Pixed.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using static Pixed.MenuBuilder;
+using static Pixed.Menu.MenuBuilder;
 
 namespace Pixed.ViewModels;
 
 internal class FramesSectionViewModel : PixedViewModel, IDisposable
 {
     private readonly ApplicationData _applicationData;
-    private readonly MenuBuilder _menuBuilder;
+    private readonly MenuItemRegistry _menuItemRegistry;
     private int _selectedFrame = 0;
     private bool _removeFrameEnabled = false;
     private bool _disposedValue;
@@ -51,10 +52,10 @@ internal class FramesSectionViewModel : PixedViewModel, IDisposable
     public ICommand RemoveFrameCommand { get; }
     public ICommand DuplicateFrameCommand { get; }
 
-    public FramesSectionViewModel(ApplicationData applicationData, MenuBuilder menuBuilder)
+    public FramesSectionViewModel(ApplicationData applicationData, MenuItemRegistry menuItemRegistry)
     {
         _applicationData = applicationData;
-        _menuBuilder = menuBuilder;
+        _menuItemRegistry = menuItemRegistry;
         NewFrameCommand = new ActionCommand(NewFrameAction);
         RemoveFrameCommand = new ActionCommand(RemoveFrameAction);
         DuplicateFrameCommand = new ActionCommand(DuplicateFrameAction);
@@ -78,9 +79,9 @@ internal class FramesSectionViewModel : PixedViewModel, IDisposable
 
     public override void RegisterMenuItems()
     {
-        RegisterMenuItem(BaseMenuItem.Project, "New Frame", NewFrameCommand);
-        RegisterMenuItem(BaseMenuItem.Project, "Duplicate Frame", DuplicateFrameCommand);
-        RegisterMenuItem(BaseMenuItem.Project, "Remove Frame", RemoveFrameCommand);
+        _menuItemRegistry.Register(BaseMenuItem.Project, "New Frame", NewFrameCommand);
+        _menuItemRegistry.Register(BaseMenuItem.Project, "Duplicate Frame", DuplicateFrameCommand);
+        _menuItemRegistry.Register(BaseMenuItem.Project, "Remove Frame", RemoveFrameCommand);
     }
 
     protected virtual void Dispose(bool disposing)
@@ -133,15 +134,5 @@ internal class FramesSectionViewModel : PixedViewModel, IDisposable
         Subjects.FrameAdded.OnNext(Frames[^1]);
         SelectedFrame = Frames.Count - 1;
         _applicationData.CurrentModel.AddHistory();
-    }
-
-    private void RegisterMenuItem(BaseMenuItem baseMenu, string text, ICommand command, object? commandParameter = null)
-    {
-        RegisterMenuItem(baseMenu, new NativeMenuItem(text) { Command = command, CommandParameter = commandParameter });
-    }
-
-    private void RegisterMenuItem(BaseMenuItem baseMenu, NativeMenuItem menuItem)
-    {
-        _menuBuilder.AddEntry(baseMenu, menuItem);
     }
 }

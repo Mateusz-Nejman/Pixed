@@ -1,18 +1,18 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Microsoft.Extensions.DependencyInjection;
+using Pixed.Menu;
 using System;
 using System.Windows.Input;
-using static Pixed.MenuBuilder;
 
 namespace Pixed.Controls;
 internal abstract class PixedWindow<T> : Window
 {
-    protected readonly MenuBuilder _menuBuilder;
-    public PixedWindow(MenuBuilder menuBuilder)
+    protected readonly MenuItemRegistry _menuItemRegistry;
+    public PixedWindow(MenuItemRegistry menuItemRegistry)
     {
         this.DataContext = this.CreateInstance<T>();
-        _menuBuilder = menuBuilder;
+        _menuItemRegistry = menuItemRegistry;
     }
     public virtual void RegisterMenuItems()
     {
@@ -53,20 +53,5 @@ internal abstract class PixedWindow<T> : Window
         if (DataContext is not IDisposable viewModel) return;
         DataContext = null;
         viewModel.Dispose();
-    }
-
-    public void RegisterMenuItem(BaseMenuItem baseMenu, string text, Action action)
-    {
-        RegisterMenuItem(baseMenu, text, new ActionCommand(action));
-    }
-
-    public void RegisterMenuItem(BaseMenuItem baseMenu, string text, ICommand command, object? commandParameter = null)
-    {
-        RegisterMenuItem(baseMenu, new NativeMenuItem(text) { Command = command, CommandParameter = commandParameter });
-    }
-
-    public void RegisterMenuItem(BaseMenuItem baseMenu, NativeMenuItem menuItem)
-    {
-        _menuBuilder.AddEntry(baseMenu, menuItem);
     }
 }

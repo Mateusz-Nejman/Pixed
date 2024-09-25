@@ -9,7 +9,8 @@ internal class ToolSelector
 {
     private readonly Dictionary<string, BaseTool> _tools;
     
-    public Action<string>? Action { get; set; } //TODO
+    public Action<string>? SelectToolAction { get; set; } //TODO
+    public BaseTool? ToolSelected { get; set; }
 
     public ToolSelector(
         ToolPen toolPen, ToolVerticalPen toolVerticalPen, ToolBucket toolBucket, ToolColorSwap toolColorSwap, ToolEraser toolEraser,
@@ -43,7 +44,7 @@ internal class ToolSelector
     {
         if (_tools.ContainsKey(name))
         {
-            Action?.Invoke(name);
+            SelectToolAction?.Invoke(name);
         }
     }
     public BaseTool? GetTool(string name)

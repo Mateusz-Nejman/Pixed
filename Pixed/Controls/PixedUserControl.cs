@@ -1,14 +1,13 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Microsoft.Extensions.DependencyInjection;
+using Pixed.Menu;
 using System;
-using System.Windows.Input;
-using static Pixed.MenuBuilder;
 
 namespace Pixed.Controls;
 internal abstract class PixedUserControl<T> : UserControl
 {
-    protected readonly MenuBuilder _menuBuilder;
+    protected readonly MenuItemRegistry _menuItemRegistry;
 
     protected IServiceProvider ServiceProvider => App.ServiceProvider;
 
@@ -16,7 +15,7 @@ internal abstract class PixedUserControl<T> : UserControl
 
     public PixedUserControl()
     {
-        _menuBuilder = ServiceProvider.GetService<MenuBuilder>();
+        _menuItemRegistry = ServiceProvider.GetService<MenuItemRegistry>();
         this.DataContext = this.CreateInstance<T>();
     }
 
@@ -44,21 +43,6 @@ internal abstract class PixedUserControl<T> : UserControl
         if (DataContext is not IDisposable viewModel) return;
         DataContext = null;
         viewModel.Dispose();
-    }
-
-    public void RegisterMenuItem(BaseMenuItem baseMenu, string text, Action action)
-    {
-        RegisterMenuItem(baseMenu, text, new ActionCommand(action));
-    }
-
-    public void RegisterMenuItem(BaseMenuItem baseMenu, string text, ICommand command, object? commandParameter = null)
-    {
-        RegisterMenuItem(baseMenu, new NativeMenuItem(text) { Command = command, CommandParameter = commandParameter });
-    }
-
-    public void RegisterMenuItem(BaseMenuItem baseMenu, NativeMenuItem menuItem)
-    {
-        _menuBuilder.AddEntry(baseMenu, menuItem);
     }
 }
 

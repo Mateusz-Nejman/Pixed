@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Pixed.Controls;
 using Pixed.IO;
+using Pixed.Menu;
 using Pixed.Models;
 using Pixed.Selection;
 using Pixed.Services;
@@ -24,6 +25,7 @@ internal static class DIRegister
         collection.AddSingleton<SelectionManager>();
         collection.AddSingleton<ToolSelector>();
         collection.AddSingleton<MenuBuilder>();
+        collection.AddSingleton<MenuItemRegistry>();
         collection.AddSingleton<RecentFilesService>();
         collection.AddSingleton<ShortcutService>();
         collection.AddSingleton<PaletteService>();

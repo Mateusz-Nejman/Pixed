@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using Pixed.Controls;
+using Pixed.Menu;
 using Pixed.Models;
 using Pixed.Services;
 using Pixed.Services.Keyboard;

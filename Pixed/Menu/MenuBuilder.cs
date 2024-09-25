@@ -9,7 +9,7 @@ using System.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 
-namespace Pixed;
+namespace Pixed.Menu;
 
 internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods pixedProjectMethods, RecentFilesService recentFilesService)
 {

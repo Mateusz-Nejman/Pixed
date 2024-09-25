@@ -3,15 +3,15 @@ using Pixed.Controls;
 using Pixed.Models;
 using Pixed.Windows;
 using System;
-using static Pixed.MenuBuilder;
-using System.Windows.Input;
 using Pixed.Selection;
+using Pixed.Menu;
+using static Pixed.Menu.MenuBuilder;
 
 namespace Pixed.Tools.Transform
 {
-    internal class TransformToolsMenuRegister(MenuBuilder menuBuilder, SelectionManager selectionManager, ApplicationData applicationData)
+    internal class TransformToolsMenuRegister(MenuItemRegistry menuItemRegistry, SelectionManager selectionManager, ApplicationData applicationData)
     {
-        private readonly MenuBuilder _menuBuilder = menuBuilder;
+        private readonly MenuItemRegistry _menuItemRegistry = menuItemRegistry;
         private readonly SelectionManager _selectionManager = selectionManager;
         private readonly ApplicationData _applicationData = applicationData;
 
@@ -26,7 +26,7 @@ namespace Pixed.Tools.Transform
             AddToMenu(ref transformMenu, "Align image to the center", () => new TransformAlignWindow(_applicationData));
             AddToMenu(ref transformMenu, "Crop to fit the content or the selection", new Crop(_applicationData, _selectionManager));
 
-            RegisterMenuItem(BaseMenuItem.Tools, transformMenu);
+            _menuItemRegistry.Register(BaseMenuItem.Tools, transformMenu);
         }
 
         private static void AddToMenu(ref NativeMenuItem menuItem, string text, Func<Window> windowCreator)
@@ -62,21 +62,6 @@ namespace Pixed.Tools.Transform
         private static void ToolAction(AbstractTransformTool tool)
         {
             tool.ApplyTransformation(false, false, false);
-        }
-
-        private void RegisterMenuItem(BaseMenuItem baseMenu, string text, Action action)
-        {
-            RegisterMenuItem(baseMenu, text, new ActionCommand(action));
-        }
-
-        private void RegisterMenuItem(BaseMenuItem baseMenu, string text, ICommand command, object? commandParameter = null)
-        {
-            RegisterMenuItem(baseMenu, new NativeMenuItem(text) { Command = command, CommandParameter = commandParameter });
-        }
-
-        private void RegisterMenuItem(BaseMenuItem baseMenu, NativeMenuItem menuItem)
-        {
-            _menuBuilder.AddEntry(baseMenu, menuItem); //TODO move to separate class
         }
     }
 }

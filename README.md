@@ -12,6 +12,7 @@ Pixed is a pixel-art editor highly inspired by [Mateusz-Nejman/piskel_touch](htt
 
 ## Stack
 - Avalonia [AvaloniaUI/avalonia](https://github.com/avaloniaui/avalonia)
+- Microsoft.Extensions.DependencyInjection [NuGet](https://www.nuget.org/packages/Microsoft.Extensions.DependencyInjection)
 - Newtonsoft.JSON [JamesNK/Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json)
 - PixiEditor.ColorPicker [PixiEditor/ColorPicker] (https://github.com/PixiEditor/ColorPicker)
 - System.Reactive (RX) [dotnet/reactive] (https://github.com/dotnet/reactive)

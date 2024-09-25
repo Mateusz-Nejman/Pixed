@@ -3,6 +3,7 @@ using Avalonia.Input;
 using Pixed.Controls;
 using Pixed.Input;
 using Pixed.IO;
+using Pixed.Menu;
 using Pixed.Models;
 using Pixed.Selection;
 using Pixed.Services;
@@ -24,10 +25,11 @@ internal partial class MainWindow : PixedWindow<MainViewModel>
     private readonly TransformToolsMenuRegister _menuRegister;
     private readonly RecentFilesService _recentFilesService;
     private readonly ToolSelector _toolSelector;
+    private readonly MenuBuilder _menuBuilder;
     public static Window? Handle { get; private set; }
     public static ICommand? QuitCommand { get; private set; }
-    public MainWindow(SelectionManager selectionManager, ApplicationData applicationData, PixedProjectMethods pixedProjectMethods, MenuBuilder builder,
-        TransformToolsMenuRegister transformToolsMenuRegister, RecentFilesService recentFilesService, ToolSelector toolSelector) : base(builder)
+    public MainWindow(SelectionManager selectionManager, ApplicationData applicationData, PixedProjectMethods pixedProjectMethods, MenuBuilder builder, MenuItemRegistry menuItemRegistry,
+        TransformToolsMenuRegister transformToolsMenuRegister, RecentFilesService recentFilesService, ToolSelector toolSelector) : base(menuItemRegistry)
     {
         _selectionManager = selectionManager;
         _pixedProjectMethods = pixedProjectMethods;
@@ -35,6 +37,7 @@ internal partial class MainWindow : PixedWindow<MainViewModel>
         _menuRegister = transformToolsMenuRegister;
         _recentFilesService = recentFilesService;
         _toolSelector = toolSelector;
+        _menuBuilder = builder;
 
         InitializeBeforeUI();
         InitializeComponent();
@@ -47,11 +50,6 @@ internal partial class MainWindow : PixedWindow<MainViewModel>
         Subjects.ProjectAdded.OnNext(_applicationData.CurrentModel);
         Subjects.ProjectChanged.OnNext(_applicationData.CurrentModel);
         Subjects.FrameChanged.OnNext(_applicationData.CurrentFrame);
-
-        _selectionManager.Action = ov =>
-        {
-            paintCanvas.ViewModel.Overlay = ov;
-        }; //TODO
     }
 
     protected override void OnInitialized()

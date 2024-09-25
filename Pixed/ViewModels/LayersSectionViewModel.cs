@@ -2,20 +2,21 @@
 using Avalonia.Input;
 using Pixed.Controls;
 using Pixed.Input;
+using Pixed.Menu;
 using Pixed.Models;
 using Pixed.Windows;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using static Pixed.MenuBuilder;
+using static Pixed.Menu.MenuBuilder;
 
 namespace Pixed.ViewModels;
 
 internal class LayersSectionViewModel : PixedViewModel, IDisposable
 {
     private readonly ApplicationData _applicationData;
-    private readonly MenuBuilder _menuBuilder;
+    private readonly MenuItemRegistry _menuItemRegistry;
     private int _selectedLayer = 0;
 
     private bool _canLayerMoveUp = false;
@@ -101,10 +102,10 @@ internal class LayersSectionViewModel : PixedViewModel, IDisposable
     public ICommand MergeLayerCommand { get; }
     public ICommand RemoveLayerCommand { get; }
 
-    public LayersSectionViewModel(ApplicationData applicationData, MenuBuilder menuBuilder)
+    public LayersSectionViewModel(ApplicationData applicationData, MenuItemRegistry menuItemRegistry)
     {
         _applicationData = applicationData;
-        _menuBuilder = menuBuilder;
+        _menuItemRegistry = menuItemRegistry;
         AddLayerCommand = new ActionCommand(AddLayerAction);
         DuplicateLayerCommand = new ActionCommand(DuplicateLayerAction);
         MoveLayerUpCommand = new ActionCommand(MoveLayerUpAction);
@@ -137,12 +138,12 @@ internal class LayersSectionViewModel : PixedViewModel, IDisposable
 
     public override void RegisterMenuItems()
     {
-        RegisterMenuItem(BaseMenuItem.Project, "Add Layer to current frame", AddLayerCommand);
-        RegisterMenuItem(BaseMenuItem.Project, "Edit layer name", EditLayerNameCommand);
-        RegisterMenuItem(BaseMenuItem.Project, "Merge with layer below", MergeLayerCommand);
-        RegisterMenuItem(BaseMenuItem.Project, "Move layer up", MoveLayerUpCommand);
-        RegisterMenuItem(BaseMenuItem.Project, "Move layer down", MoveLayerDownCommand);
-        RegisterMenuItem(BaseMenuItem.Project, "Remove current layer", RemoveLayerCommand);
+        _menuItemRegistry.Register(BaseMenuItem.Project, "Add Layer to current frame", AddLayerCommand);
+        _menuItemRegistry.Register(BaseMenuItem.Project, "Edit layer name", EditLayerNameCommand);
+        _menuItemRegistry.Register(BaseMenuItem.Project, "Merge with layer below", MergeLayerCommand);
+        _menuItemRegistry.Register(BaseMenuItem.Project, "Move layer up", MoveLayerUpCommand);
+        _menuItemRegistry.Register(BaseMenuItem.Project, "Move layer down", MoveLayerDownCommand);
+        _menuItemRegistry.Register(BaseMenuItem.Project, "Remove current layer", RemoveLayerCommand);
     }
 
     protected virtual void Dispose(bool disposing)
@@ -250,15 +251,5 @@ internal class LayersSectionViewModel : PixedViewModel, IDisposable
         SelectedLayer = Math.Clamp(index, 0, Layers.Count - 1);
         Subjects.LayerRemoved.OnNext(layer);
         _applicationData.CurrentModel.AddHistory();
-    }
-
-    private void RegisterMenuItem(BaseMenuItem baseMenu, string text, ICommand command, object? commandParameter = null)
-    {
-        RegisterMenuItem(baseMenu, new NativeMenuItem(text) { Command = command, CommandParameter = commandParameter });
-    }
-
-    private void RegisterMenuItem(BaseMenuItem baseMenu, NativeMenuItem menuItem)
-    {
-        _menuBuilder.AddEntry(baseMenu, menuItem);
     }
 }

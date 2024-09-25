@@ -1,6 +1,7 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Media;
 using Pixed.Controls;
+using Pixed.Menu;
 using Pixed.Models;
 using Pixed.Services.Palette;
 using Pixed.Windows;
@@ -9,14 +10,14 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using static Pixed.MenuBuilder;
+using static Pixed.Menu.MenuBuilder;
 
 namespace Pixed.ViewModels;
 
 internal class PaletteSectionViewModel : PixedViewModel, IDisposable
 {
     private readonly ApplicationData _applicationData;
-    private readonly MenuBuilder _menuBuilder;
+    private readonly MenuItemRegistry _menuItemRegistry;
     private readonly PaletteService _paletteService;
 
     private UniColor _primaryColor = UniColor.Black;
@@ -76,10 +77,10 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
     public ICommand PaletteSaveCommand { get; }
     public ICommand PaletteClearCommand { get; }
 
-    public PaletteSectionViewModel(ApplicationData applicationData, MenuBuilder menuBuilder, PaletteService paletteService)
+    public PaletteSectionViewModel(ApplicationData applicationData, MenuItemRegistry menuItemRegistry, PaletteService paletteService)
     {
         _applicationData = applicationData;
-        _menuBuilder = menuBuilder;
+        _menuItemRegistry = menuItemRegistry;
         _paletteService = paletteService;
         _primaryProjectChanged = Subjects.PrimaryColorChanged.Subscribe(c => _applicationData.PrimaryColor = c);
         _secondaryProjectChanged = Subjects.SecondaryColorChanged.Subscribe(c => _applicationData.SecondaryColor = c);
@@ -141,12 +142,12 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
 
     public override void RegisterMenuItems()
     {
-        RegisterMenuItem(BaseMenuItem.Palette, "Add Primary color to palette", PaletteAddPrimaryCommand);
-        RegisterMenuItem(BaseMenuItem.Palette, "Merge palette with current colors", PaletteAddCurrentCommand);
-        RegisterMenuItem(BaseMenuItem.Palette, "Clear palette", PaletteClearCommand);
-        RegisterMenuItem(BaseMenuItem.Palette, "Open palette from file", PaletteOpenCommand);
-        RegisterMenuItem(BaseMenuItem.Palette, "Save palette to file", PaletteSaveCommand);
-        RegisterMenuItem(BaseMenuItem.Palette, "Palettes list", PaletteListCommand);
+        _menuItemRegistry.Register(BaseMenuItem.Palette, "Add Primary color to palette", PaletteAddPrimaryCommand);
+        _menuItemRegistry.Register(BaseMenuItem.Palette, "Merge palette with current colors", PaletteAddCurrentCommand);
+        _menuItemRegistry.Register(BaseMenuItem.Palette, "Clear palette", PaletteClearCommand);
+        _menuItemRegistry.Register(BaseMenuItem.Palette, "Open palette from file", PaletteOpenCommand);
+        _menuItemRegistry.Register(BaseMenuItem.Palette, "Save palette to file", PaletteSaveCommand);
+        _menuItemRegistry.Register(BaseMenuItem.Palette, "Palettes list", PaletteListCommand);
     }
 
     private void PaletteAddPrimaryAction()
@@ -199,15 +200,5 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
     {
         PaletteWindow window = new(_paletteService);
         window.ShowDialog(MainWindow.Handle);
-    }
-
-    private void RegisterMenuItem(BaseMenuItem baseMenu, string text, ICommand command, object? commandParameter = null)
-    {
-        RegisterMenuItem(baseMenu, new NativeMenuItem(text) { Command = command, CommandParameter = commandParameter });
-    }
-
-    private void RegisterMenuItem(BaseMenuItem baseMenu, NativeMenuItem menuItem)
-    {
-        _menuBuilder.AddEntry(baseMenu, menuItem);
     }
 }
