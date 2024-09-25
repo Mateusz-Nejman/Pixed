@@ -8,18 +8,18 @@ namespace Pixed.Tools;
 internal class ToolSelector
 {
     private readonly Dictionary<string, BaseTool> _tools;
-    
+
     public Action<string>? SelectToolAction { get; set; } //TODO
     public BaseTool? ToolSelected { get; set; }
 
     public ToolSelector(
         ToolPen toolPen, ToolVerticalPen toolVerticalPen, ToolBucket toolBucket, ToolColorSwap toolColorSwap, ToolEraser toolEraser,
-        ToolStroke toolStroke, ToolRectangle toolRectangle, ToolCircle toolCircle, ToolMove toolMove, ToolLighten toolLighten, 
-        ToolDithering toolDithering, ToolColorPicker toolColorPicker, ToolNoise toolNoise, ToolNoiseFill toolNoiseFill, 
+        ToolStroke toolStroke, ToolRectangle toolRectangle, ToolCircle toolCircle, ToolMove toolMove, ToolLighten toolLighten,
+        ToolDithering toolDithering, ToolColorPicker toolColorPicker, ToolNoise toolNoise, ToolNoiseFill toolNoiseFill,
         ToolOutliner toolOutliner, ApplicationData applicationData)
     {
         _tools = new Dictionary<string, BaseTool>()
-            { 
+            {
             { "tool_pen", toolPen},
             { "tool_mirror_pen", toolVerticalPen},
             { "tool_paint_bucket", toolBucket},

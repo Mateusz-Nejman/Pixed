@@ -1,6 +1,4 @@
-﻿using Avalonia.Input;
-using Pixed.Input;
-using Pixed.Models;
+﻿using Pixed.Models;
 using Pixed.Selection;
 using Pixed.Utils;
 using System;

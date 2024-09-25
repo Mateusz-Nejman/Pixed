@@ -1,5 +1,6 @@
 ﻿using Pixed.Models;
 using Pixed.Services;
+using Pixed.Utils;
 using Pixed.Windows;
 using System.IO;
 using System.Threading.Tasks;
@@ -26,11 +27,11 @@ internal class PixedProjectMethods(ApplicationData applicationData)
             FileInfo info = new(model.FileName);
             string name = info.Name;
 
-            if(!string.IsNullOrEmpty(info.Extension))
+            if (!string.IsNullOrEmpty(info.Extension))
             {
                 name = info.Name.Replace(info.Extension, string.Empty);
             }
-            var file = await IODialogs.SaveFileDialog("Pixed project (*.pixed)|*.pixed", name);
+            var file = await DialogUtils.SaveFileDialog("Pixed project (*.pixed)|*.pixed", name);
 
             if (file == null)
             {
@@ -51,7 +52,7 @@ internal class PixedProjectMethods(ApplicationData applicationData)
 
     public async Task Open(RecentFilesService recentFilesService)
     {
-        var files = await IODialogs.OpenFileDialog("All supported (*.pixed;*.png)|*.pixed;*.png|Pixed project (*.pixed)|*.pixed|PNG images (*.png)|*.png", "Open file", true);
+        var files = await DialogUtils.OpenFileDialog("All supported (*.pixed;*.png)|*.pixed;*.png|Pixed project (*.pixed)|*.pixed|PNG images (*.png)|*.png", "Open file", true);
 
         foreach (var item in files)
         {
@@ -124,7 +125,7 @@ internal class PixedProjectMethods(ApplicationData applicationData)
         {
             name = info.Name.Replace(info.Extension, string.Empty);
         }
-        var file = await IODialogs.SaveFileDialog("PNG image (*.png)|*.png", name);
+        var file = await DialogUtils.SaveFileDialog("PNG image (*.png)|*.png", name);
 
         if (file == null)
         {

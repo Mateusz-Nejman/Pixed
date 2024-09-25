@@ -9,10 +9,7 @@ using Pixed.Selection;
 using Pixed.Services;
 using Pixed.Services.Keyboard;
 using Pixed.Tools;
-using Pixed.Tools.Transform;
 using Pixed.ViewModels;
-using System;
-using System.IO;
 using System.Windows.Input;
 
 namespace Pixed.Windows;
@@ -22,14 +19,14 @@ internal partial class MainWindow : PixedWindow<MainViewModel>
     private readonly SelectionManager _selectionManager;
     private readonly ApplicationData _applicationData;
     private readonly PixedProjectMethods _pixedProjectMethods;
-    private readonly TransformToolsMenuRegister _menuRegister;
+    private readonly TransformMenuRegister _menuRegister;
     private readonly RecentFilesService _recentFilesService;
     private readonly ToolSelector _toolSelector;
     private readonly MenuBuilder _menuBuilder;
     public static Window? Handle { get; private set; }
     public static ICommand? QuitCommand { get; private set; }
     public MainWindow(SelectionManager selectionManager, ApplicationData applicationData, PixedProjectMethods pixedProjectMethods, MenuBuilder builder, MenuItemRegistry menuItemRegistry,
-        TransformToolsMenuRegister transformToolsMenuRegister, RecentFilesService recentFilesService, ToolSelector toolSelector) : base(menuItemRegistry)
+        TransformMenuRegister transformToolsMenuRegister, RecentFilesService recentFilesService, ToolSelector toolSelector) : base(menuItemRegistry)
     {
         _selectionManager = selectionManager;
         _pixedProjectMethods = pixedProjectMethods;

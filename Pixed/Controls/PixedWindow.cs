@@ -1,9 +1,8 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Microsoft.Extensions.DependencyInjection;
+using Pixed.DependencyInjection;
 using Pixed.Menu;
 using System;
-using System.Windows.Input;
 
 namespace Pixed.Controls;
 internal abstract class PixedWindow<T> : Window

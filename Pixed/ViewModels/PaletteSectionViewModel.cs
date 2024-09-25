@@ -1,9 +1,9 @@
-﻿using Avalonia.Controls;
-using Avalonia.Media;
+﻿using Avalonia.Media;
 using Pixed.Controls;
 using Pixed.Menu;
 using Pixed.Models;
 using Pixed.Services.Palette;
+using Pixed.Utils;
 using Pixed.Windows;
 using System;
 using System.Collections.ObjectModel;
@@ -170,7 +170,7 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
 
     private async Task PaletteOpenAction()
     {
-        var files = await IODialogs.OpenFileDialog("All Supported (.json;.gpl)|*.json;*.gpl|Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl", _paletteService.SelectedPalette.Name);
+        var files = await DialogUtils.OpenFileDialog("All Supported (.json;.gpl)|*.json;*.gpl|Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl", _paletteService.SelectedPalette.Name);
 
         if (files.Count == 0)
         {
@@ -188,7 +188,7 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
             return;
         }
 
-        var file = await IODialogs.SaveFileDialog("All Supported (.json;.gpl)|*.json;*.gpl|Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl", _paletteService.SelectedPalette.Name);
+        var file = await DialogUtils.SaveFileDialog("All Supported (.json;.gpl)|*.json;*.gpl|Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl", _paletteService.SelectedPalette.Name);
 
         if (file != null)
         {

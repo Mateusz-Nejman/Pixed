@@ -81,7 +81,7 @@ namespace Pixed.Services
                 RecentFiles.Insert(0, path);
                 _projectMethods.Open(path);
             }
-            
+
             Save();
         }
     }

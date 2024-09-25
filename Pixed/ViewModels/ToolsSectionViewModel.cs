@@ -1,8 +1,6 @@
-﻿using Avalonia.Controls;
-using Pixed.Controls;
+﻿using Pixed.Controls;
 using Pixed.Menu;
 using Pixed.Tools;
-using System;
 using System.Windows.Input;
 using static Pixed.Menu.MenuBuilder;
 

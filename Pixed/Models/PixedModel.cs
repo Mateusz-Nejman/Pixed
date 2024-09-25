@@ -127,7 +127,7 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
 
         ObservableCollection<byte[]> newHistory = [];
 
-        if(_history.Count > 0)
+        if (_history.Count > 0)
         {
             for (int a = 0; a <= _historyIndex; a++)
             {
@@ -138,19 +138,19 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
         newHistory.Add(data);
 
         _history.Clear();
-        
-        foreach(var historyData in newHistory)
+
+        foreach (var historyData in newHistory)
         {
             _history.Add(historyData);
         }
 
-        if(_history.Count == MAX_HISTORY_ENTRIES + 1)
+        if (_history.Count == MAX_HISTORY_ENTRIES + 1)
         {
             _history.RemoveAt(0);
         }
         _historyIndex = _history.Count - 1;
-        
-        if(setIsEmpty)
+
+        if (setIsEmpty)
         {
             _isEmpty = false;
         }
@@ -185,7 +185,7 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
         {
             _historyIndex = 0;
         }
-        
+
         byte[] data = _history[_historyIndex];
         MemoryStream stream = new(data);
         Deserialize(stream);

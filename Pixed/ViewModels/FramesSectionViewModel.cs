@@ -1,5 +1,4 @@
-﻿using Avalonia.Controls;
-using Pixed.Controls;
+﻿using Pixed.Controls;
 using Pixed.Menu;
 using Pixed.Models;
 using System;

@@ -1,15 +1,14 @@
 ﻿using Avalonia.Controls;
-using Pixed.Controls;
 using Pixed.Models;
+using Pixed.Selection;
+using Pixed.Tools.Transform;
 using Pixed.Windows;
 using System;
-using Pixed.Selection;
-using Pixed.Menu;
 using static Pixed.Menu.MenuBuilder;
 
-namespace Pixed.Tools.Transform
+namespace Pixed.Menu
 {
-    internal class TransformToolsMenuRegister(MenuItemRegistry menuItemRegistry, SelectionManager selectionManager, ApplicationData applicationData)
+    internal class TransformMenuRegister(MenuItemRegistry menuItemRegistry, SelectionManager selectionManager, ApplicationData applicationData)
     {
         private readonly MenuItemRegistry _menuItemRegistry = menuItemRegistry;
         private readonly SelectionManager _selectionManager = selectionManager;

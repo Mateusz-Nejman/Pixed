@@ -323,12 +323,12 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
 
     public void ProcessModifiers(KeyModifiers modifiers)
     {
-        if(!ShiftChecked)
+        if (!ShiftChecked)
         {
             _shiftPressed = modifiers.HasFlag(KeyModifiers.Shift);
         }
-        
-        if(!ControlChecked)
+
+        if (!ControlChecked)
         {
             _controlPressed = modifiers.HasFlag(KeyModifiers.Control);
         }
@@ -436,7 +436,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         _rightPressed = false;
         _toolSelector.ToolSelected?.ReleaseTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
 
-        if(_toolSelector.ToolSelected != null && _toolSelector.ToolSelected.AddToHistory)
+        if (_toolSelector.ToolSelected != null && _toolSelector.ToolSelected.AddToHistory)
         {
             _applicationData.CurrentModel.AddHistory();
         }
@@ -552,7 +552,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     {
         List<Pixel>? pixels = null;
 
-        if(_toolSelector.ToolSelected is ToolPen pen)
+        if (_toolSelector.ToolSelected is ToolPen pen)
         {
             pixels = pen.GetPixels();
         }

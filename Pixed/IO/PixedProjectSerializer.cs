@@ -1,5 +1,4 @@
 ﻿using Pixed.Models;
-using Pixed.Services;
 using SevenZip;
 using System;
 using System.IO;

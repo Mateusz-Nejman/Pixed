@@ -4,17 +4,14 @@ using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
 using Pixed.Controls;
-using Pixed.Models;
+using Pixed.DependencyInjection;
 using Pixed.ViewModels;
-using Pixed.Windows;
-using System;
-using System.IO;
 
 namespace Pixed;
 
 public partial class App : Application
 {
-    public static IServiceProvider ServiceProvider { get; private set; }
+    internal static IPixedServiceProvider ServiceProvider { get; private set; }
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -25,14 +22,14 @@ public partial class App : Application
         BindingPlugins.DataValidators.RemoveAt(0);
 
         IServiceCollection collection = new ServiceCollection();
-        DIRegister.RegisterAll(ref collection);
-        ServiceProvider provider = collection.BuildServiceProvider();
-        this.Resources[typeof(IServiceProvider)] = provider;
+        DependencyInjectionRegister.Register(ref collection);
+        IPixedServiceProvider provider = new DependencyInjection.ServiceProvider(collection.BuildServiceProvider());
+        this.Resources[typeof(IPixedServiceProvider)] = provider;
         ServiceProvider = provider;
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            PixedWindow<MainViewModel> window = provider.GetService<PixedWindow<MainViewModel>>();
+            PixedWindow<MainViewModel> window = provider.Get<PixedWindow<MainViewModel>>();
             desktop.MainWindow = window;
         }
 

@@ -26,7 +26,7 @@ internal class TouchButton : Button
 
     protected override void OnClick()
     {
-        
+
     }
 
     private void TouchButton_Holding(object? sender, Avalonia.Input.HoldingRoutedEventArgs e)

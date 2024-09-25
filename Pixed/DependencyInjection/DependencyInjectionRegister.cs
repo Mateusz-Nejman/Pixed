@@ -11,15 +11,13 @@ using Pixed.Services.Keyboard;
 using Pixed.Services.Palette;
 using Pixed.Tools;
 using Pixed.Tools.Selection;
-using Pixed.Tools.Transform;
 using Pixed.ViewModels;
 using Pixed.Windows;
-using System;
 
-namespace Pixed;
-internal static class DIRegister
+namespace Pixed.DependencyInjection;
+internal static class DependencyInjectionRegister
 {
-    public static void RegisterAll(ref IServiceCollection collection)
+    public static void Register(ref IServiceCollection collection)
     {
         collection.AddSingleton<ApplicationData>();
         collection.AddSingleton<SelectionManager>();
@@ -61,23 +59,23 @@ internal static class DIRegister
         collection.AddScoped<ShapeSelect>();
 
         collection.AddScoped<PixedProjectMethods>();
-        collection.AddSingleton<TransformToolsMenuRegister>();
+        collection.AddSingleton<TransformMenuRegister>();
     }
 
-    public static IServiceProvider GetServiceProvider(this IResourceHost control)
+    public static IPixedServiceProvider GetServiceProvider(this IResourceHost control)
     {
-        var resource = control.FindResource(typeof(IServiceProvider));
+        var resource = control.FindResource(typeof(IPixedServiceProvider));
 
         if (resource is UnsetValueType unset)
         {
             return App.ServiceProvider;
         }
 
-        return (IServiceProvider)resource;
+        return (IPixedServiceProvider)resource;
     }
 
     public static T CreateInstance<T>(this IResourceHost control)
     {
-        return ActivatorUtilities.CreateInstance<T>(control.GetServiceProvider());
+        return ActivatorUtilities.CreateInstance<T>(control.GetServiceProvider().GetNativeProvider());
     }
 }
