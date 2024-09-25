@@ -8,6 +8,7 @@
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>../Pixed/Resources/icon.ico</ApplicationIcon>
+    <AssemblyName>Pixed</AssemblyName>
   </PropertyGroup>
   
   <ItemGroup>

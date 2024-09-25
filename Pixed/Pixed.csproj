@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
     <AvaloniaUseCompiledBindingsByDefault>False</AvaloniaUseCompiledBindingsByDefault>
+    <AssemblyName>Pixed.Core</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

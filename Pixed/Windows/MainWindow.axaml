@@ -20,7 +20,7 @@
 		ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaChromeHints="NoChrome"
         ExtendClientAreaTitleBarHeightHint="-1"
-        Icon="avares://Pixed/Resources/icon.ico"
+        Icon="avares://Pixed.Core/Resources/icon.ico"
 		NativeMenu.Menu="{Binding Menu}">
   <Window.DataContext>
     <viewmodels:MainViewModel/>
