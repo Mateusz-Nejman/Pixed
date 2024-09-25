@@ -30,6 +30,8 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
     private bool _shiftEnabled;
     private bool _controlEnabled;
     private bool _altEnabled;
+    private string _projectSizeText;
+    private string _mouseCoordinatesText;
 
     private readonly IDisposable _projectModified;
     private readonly IDisposable _projectChanged;
@@ -179,6 +181,26 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
         }
     }
 
+    public string ProjectSizeText
+    {
+        get => _projectSizeText;
+        set
+        {
+            _projectSizeText = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public string MouseCoordinatesText
+    {
+        get => _mouseCoordinatesText;
+        set
+        {
+            _mouseCoordinatesText = value;
+            OnPropertyChanged();
+        }
+    }
+
     public PaintCanvasViewModel()
     {
         _frame = new Frame(32, 32);
@@ -201,7 +223,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
         {
             RecalculateFactor(_lastWindowSize);
             GridBrush = GetGridBrush();
-            //AvaloniaGridBitmap = GetGrid().ToAvaloniaBitmap();
+            ProjectSizeText = "[" + p.Width + "x" + p.Height + "]";
         });
 
         _frameChanged = Subjects.FrameChanged.Subscribe(f =>
@@ -418,6 +440,8 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
     {
         int imageX = (int)(point.X / _imageFactor);
         int imageY = (int)(point.Y / _imageFactor);
+
+        MouseCoordinatesText = "[" + imageX + "x" + imageY + "]";
 
         if (!_frame.ContainsPixel(imageX, imageY))
         {
