@@ -1,12 +1,17 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Windows.Input;
 using static Pixed.StaticMenuBuilder;
 
 namespace Pixed.Controls;
-internal class PixedWindow : Window
+internal abstract class PixedWindow<T> : Window
 {
+    public PixedWindow()
+    {
+        this.DataContext = this.CreateInstance<T>();
+    }
     public virtual void RegisterMenuItems()
     {
         if (DataContext is PixedViewModel model)

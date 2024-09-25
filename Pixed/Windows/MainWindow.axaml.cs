@@ -13,7 +13,7 @@ using System.Windows.Input;
 
 namespace Pixed.Windows;
 
-internal partial class MainWindow : PixedWindow
+internal partial class MainWindow : PixedWindow<MainViewModel>
 {
     public static Window? Handle { get; private set; }
     public static ICommand? QuitCommand { get; private set; }
@@ -85,11 +85,6 @@ internal partial class MainWindow : PixedWindow
 
             Handle.Close();
         });
-        Global.DataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Pixed");
-        Global.UserSettings = Settings.Load();
-        Global.Models.Add(new PixedModel(Global.UserSettings.UserWidth, Global.UserSettings.UserHeight));
-        Global.CurrentModel.FileName = Global.NamingService.GenerateName();
-        Global.CurrentModel.AddHistory(false);
     }
 
     private void Window_KeyUp(object? sender, KeyEventArgs e)
