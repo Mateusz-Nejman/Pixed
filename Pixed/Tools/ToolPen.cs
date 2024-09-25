@@ -48,6 +48,11 @@ internal class ToolPen : BaseTool
         _prevY = -1;
     }
 
+    public List<Pixel> GetPixels()
+    {
+        return _pixels;
+    }
+
     protected void DrawOnOverlay(UniColor color, int x, int y, Frame frame, ref Bitmap overlay)
     {
         overlay.SetPixel(x, y, color);

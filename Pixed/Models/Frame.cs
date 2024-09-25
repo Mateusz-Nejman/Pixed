@@ -1,6 +1,7 @@
 ﻿using Pixed.IO;
 using Pixed.Utils;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
@@ -107,7 +108,7 @@ internal class Frame : PropertyChangedBase, IPixedSerializer
         RenderSource = Render().ToAvaloniaBitmap();
     }
 
-    public System.Drawing.Bitmap RenderTransparent()
+    public System.Drawing.Bitmap RenderTransparent(List<Pixel>? pixels = null)
     {
         System.Drawing.Bitmap render = new(Width, Height);
         Graphics g = Graphics.FromImage(render);
@@ -121,7 +122,7 @@ internal class Frame : PropertyChangedBase, IPixedSerializer
             g.DrawImage(_layers[a].Render().OpacityImage(0.5f), 0, 0);
         }
 
-        var rendered = CurrentLayer.Render();
+        var rendered = CurrentLayer.Render(pixels);
         g.DrawImage(rendered, 0, 0);
 
         return render;
