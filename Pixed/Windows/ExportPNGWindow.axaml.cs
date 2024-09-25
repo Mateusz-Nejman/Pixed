@@ -1,10 +1,11 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Pixed.Models;
 
 namespace Pixed.Windows;
 
-public partial class ExportPNGWindow : Window
+internal partial class ExportPNGWindow : Window
 {
     public int ColumnsCount
     {
@@ -12,10 +13,11 @@ public partial class ExportPNGWindow : Window
         set => SetValue(ColumnsCountProperty, value);
     }
 
-    public static readonly StyledProperty<int> ColumnsCountProperty = AvaloniaProperty.Register<ExportPNGWindow, int>("ColumnsCount", Global.CurrentModel.Frames.Count);
-    public ExportPNGWindow()
+    public static readonly StyledProperty<int> ColumnsCountProperty = AvaloniaProperty.Register<ExportPNGWindow, int>("ColumnsCount", 1);
+    public ExportPNGWindow(ApplicationData applicationData)
     {
         InitializeComponent();
+        ColumnsCount = applicationData.CurrentModel.Frames.Count;
     }
 
     private void Button_Click(object sender, RoutedEventArgs e)

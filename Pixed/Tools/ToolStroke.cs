@@ -1,11 +1,12 @@
-﻿using Pixed.Utils;
+﻿using Pixed.Models;
+using Pixed.Utils;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 
 namespace Pixed.Tools
 {
-    internal class ToolStroke : ShapeTool
+    internal class ToolStroke(ApplicationData applicationData) : ShapeTool(applicationData)
     {
         protected override void Draw(int x, int y, int color, bool isShift, Action<int, int, int> setPixelAction)
         {

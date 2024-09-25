@@ -1,5 +1,4 @@
-﻿using Avalonia.Input;
-using Pixed.Input;
+﻿using Pixed.Models;
 using Pixed.Selection;
 using Pixed.Utils;
 using System;
@@ -18,6 +17,7 @@ internal class BaseSelect : BaseTool
         MoveSelection
     }
 
+    private readonly ToolSelector _toolSelector;
     protected int _startX = 0;
     protected int _startY = 0;
 
@@ -32,17 +32,18 @@ internal class BaseSelect : BaseTool
 
     public override bool ShiftHandle { get; protected set; } = true;
 
-    public BaseSelect() : base()
+    public BaseSelect(ApplicationData applicationData, ToolSelector toolSelector) : base(applicationData)
     {
+        _toolSelector = toolSelector;
         AddToHistory = false;
     }
 
     public void SelectAll(Action<Bitmap> overlayAction)
     {
-        Global.ToolSelector.SelectTool("tool_rectangle_select");
+        _toolSelector.SelectTool("tool_rectangle_select");
         _hasSelection = true;
         _mode = SelectionMode.Select;
-        _selection = new RectangularSelection(0, 0, Global.CurrentFrame.Width - 1, Global.CurrentFrame.Height - 1);
+        _selection = new RectangularSelection(0, 0, _applicationData.CurrentFrame.Width - 1, _applicationData.CurrentFrame.Height - 1);
         overlayAction?.Invoke(CreateOverlayFromCurrentFrame());
         Subjects.SelectionCreated.OnNext(_selection);
     }
@@ -154,7 +155,7 @@ internal class BaseSelect : BaseTool
 
     private Bitmap CreateOverlayFromCurrentFrame()
     {
-        Bitmap newOverlay = new(Global.CurrentFrame.Width, Global.CurrentFrame.Height);
+        Bitmap newOverlay = new(_applicationData.CurrentFrame.Width, _applicationData.CurrentFrame.Height);
         DrawSelectionOnOverlay(ref newOverlay);
         return newOverlay;
     }

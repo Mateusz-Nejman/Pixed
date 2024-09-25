@@ -1,12 +1,24 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Pixed.DependencyInjection;
+using Pixed.Menu;
 using System;
-using System.Windows.Input;
-using static Pixed.StaticMenuBuilder;
 
 namespace Pixed.Controls;
-internal abstract class PixedUserControl : UserControl
+internal abstract class PixedUserControl<T> : UserControl
 {
+    protected readonly MenuItemRegistry _menuItemRegistry;
+
+    protected static IPixedServiceProvider Provider => App.ServiceProvider;
+
+    public T ViewModel => (T)DataContext;
+
+    public PixedUserControl()
+    {
+        _menuItemRegistry = Provider.Get<MenuItemRegistry>();
+        this.DataContext = this.CreateInstance<T>();
+    }
+
     public virtual void RegisterMenuItems()
     {
         if (DataContext is PixedViewModel model)
@@ -32,19 +44,20 @@ internal abstract class PixedUserControl : UserControl
         DataContext = null;
         viewModel.Dispose();
     }
+}
 
-    public static void RegisterMenuItem(BaseMenuItem baseMenu, string text, Action action)
+internal abstract class EmptyPixedUserControl() : UserControl
+{
+    protected override void OnInitialized()
     {
-        RegisterMenuItem(baseMenu, text, new ActionCommand(action));
+        base.OnInitialized();
+        Unloaded += EmptyPixedUserControl_Unloaded;
     }
 
-    public static void RegisterMenuItem(BaseMenuItem baseMenu, string text, ICommand command, object? commandParameter = null)
+    private void EmptyPixedUserControl_Unloaded(object? sender, RoutedEventArgs e)
     {
-        RegisterMenuItem(baseMenu, new NativeMenuItem(text) { Command = command, CommandParameter = commandParameter });
-    }
-
-    public static void RegisterMenuItem(BaseMenuItem baseMenu, NativeMenuItem menuItem)
-    {
-        StaticMenuBuilder.AddEntry(baseMenu, menuItem);
+        if (DataContext is not IDisposable viewModel) return;
+        DataContext = null;
+        viewModel.Dispose();
     }
 }

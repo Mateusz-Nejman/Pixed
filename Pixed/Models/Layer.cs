@@ -160,7 +160,7 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
             }
         }
 
-        foreach(var pixel in modifiedPixels ?? [])
+        foreach (var pixel in modifiedPixels ?? [])
         {
             pixels[pixel.Y * _width + pixel.X] = pixel.Color;
         }

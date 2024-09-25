@@ -1,24 +1,31 @@
 ﻿using Avalonia.Controls;
-using Pixed.Controls;
+using Pixed.Models;
+using Pixed.Selection;
+using Pixed.Tools.Transform;
 using Pixed.Windows;
 using System;
+using static Pixed.Menu.MenuBuilder;
 
-namespace Pixed.Tools.Transform
+namespace Pixed.Menu
 {
-    internal static class TransformToolsMenuRegister
+    internal class TransformMenuRegister(MenuItemRegistry menuItemRegistry, SelectionManager selectionManager, ApplicationData applicationData)
     {
-        public static void Register()
+        private readonly MenuItemRegistry _menuItemRegistry = menuItemRegistry;
+        private readonly SelectionManager _selectionManager = selectionManager;
+        private readonly ApplicationData _applicationData = applicationData;
+
+        public void Register()
         {
             NativeMenuItem transformMenu = new("Transform")
             {
                 Menu = []
             };
-            AddToMenu(ref transformMenu, "Flip", () => new TransformFlipWindow());
-            AddToMenu(ref transformMenu, "Rotation", () => new TransformRotateWindow());
-            AddToMenu(ref transformMenu, "Align image to the center", () => new TransformAlignWindow());
-            AddToMenu(ref transformMenu, "Crop to fit the content or the selection", new Crop());
+            AddToMenu(ref transformMenu, "Flip", () => new TransformFlipWindow(_applicationData));
+            AddToMenu(ref transformMenu, "Rotation", () => new TransformRotateWindow(_applicationData));
+            AddToMenu(ref transformMenu, "Align image to the center", () => new TransformAlignWindow(_applicationData));
+            AddToMenu(ref transformMenu, "Crop to fit the content or the selection", new Crop(_applicationData, _selectionManager));
 
-            PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Tools, transformMenu);
+            _menuItemRegistry.Register(BaseMenuItem.Tools, transformMenu);
         }
 
         private static void AddToMenu(ref NativeMenuItem menuItem, string text, Func<Window> windowCreator)

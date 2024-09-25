@@ -1,4 +1,5 @@
 ﻿using Avalonia.Input;
+using Pixed.Models;
 using System;
 using System.Collections.Generic;
 
@@ -6,6 +7,7 @@ namespace Pixed.Services.Keyboard;
 
 internal class ShortcutService
 {
+    private readonly ApplicationData _applicationData;
     private readonly struct ShortcutEntry(KeyState state, Action action)
     {
         public KeyState State { get; } = state;
@@ -15,8 +17,9 @@ internal class ShortcutService
     private readonly List<ShortcutEntry> _shortcuts;
     private readonly IDisposable _shortcutSubject;
 
-    public ShortcutService()
+    public ShortcutService(ApplicationData applicationData)
     {
+        _applicationData = applicationData;
         _shortcuts = [];
         _shortcutSubject = Subjects.KeyState.Subscribe(state =>
         {
@@ -29,8 +32,8 @@ internal class ShortcutService
             }
         });
 
-        Add(new KeyState(Key.Z, false, true, false), () => Global.CurrentModel.Undo());
-        Add(new KeyState(Key.Y, false, true, false), () => Global.CurrentModel.Redo());
+        Add(new KeyState(Key.Z, false, true, false), () => _applicationData.CurrentModel.Undo());
+        Add(new KeyState(Key.Y, false, true, false), () => _applicationData.CurrentModel.Redo());
     }
 
     public void Add(KeyState shortcut, Action action)

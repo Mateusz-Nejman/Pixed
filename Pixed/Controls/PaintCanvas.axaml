@@ -8,9 +8,6 @@
              xmlns:viewmodels="clr-namespace:Pixed.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <UserControl.DataContext>
-        <viewmodels:PaintCanvasViewModel/>
-    </UserControl.DataContext>
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*"/>

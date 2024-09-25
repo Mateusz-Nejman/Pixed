@@ -2,7 +2,7 @@
 
 namespace Pixed.Controls;
 
-internal partial class TooltipWith2Buttons : PixedUserControl
+internal partial class TooltipWith2Buttons : EmptyPixedUserControl
 {
     public string Title
     {
@@ -39,7 +39,7 @@ internal partial class TooltipWith2Buttons : PixedUserControl
     public static readonly StyledProperty<string> ButtonTextHelper1Property = AvaloniaProperty.Register<TooltipWith2Buttons, string>("ButtonTextHelper1", "ButtonTextHelper1");
     public static readonly StyledProperty<string> ButtonText2Property = AvaloniaProperty.Register<TooltipWith2Buttons, string>("ButtonText2", "ButtonText2");
     public static readonly StyledProperty<string> ButtonTextHelper2Property = AvaloniaProperty.Register<TooltipWith2Buttons, string>("ButtonTextHelper2", "ButtonTextHelper2");
-    public TooltipWith2Buttons()
+    public TooltipWith2Buttons() : base()
     {
         InitializeComponent();
     }

@@ -67,9 +67,9 @@ namespace Pixed.IO
                 stream.Dispose();
             }
         }
-        public PixedModel Deserialize(Stream stream)
+        public PixedModel Deserialize(Stream stream, ApplicationData applicationData)
         {
-            PixedModel model = new();
+            PixedModel model = new(applicationData);
             MemoryStream memoryStream = new();
             Decompress(stream, memoryStream);
             memoryStream.Position = 0;

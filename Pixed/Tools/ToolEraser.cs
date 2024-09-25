@@ -1,6 +1,8 @@
-﻿namespace Pixed.Tools;
+﻿using Pixed.Models;
 
-internal class ToolEraser : ToolPen
+namespace Pixed.Tools;
+
+internal class ToolEraser(ApplicationData applicationData) : ToolPen(applicationData)
 {
     public override UniColor GetToolColor()
     {

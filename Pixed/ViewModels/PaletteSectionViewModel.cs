@@ -1,17 +1,25 @@
 ﻿using Avalonia.Media;
 using Pixed.Controls;
+using Pixed.Menu;
 using Pixed.Models;
+using Pixed.Services.Palette;
+using Pixed.Utils;
 using Pixed.Windows;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using static Pixed.Menu.MenuBuilder;
 
 namespace Pixed.ViewModels;
 
 internal class PaletteSectionViewModel : PixedViewModel, IDisposable
 {
+    private readonly ApplicationData _applicationData;
+    private readonly MenuItemRegistry _menuItemRegistry;
+    private readonly PaletteService _paletteService;
+
     private UniColor _primaryColor = UniColor.Black;
     private UniColor _secondaryColor = UniColor.White;
     private bool _disposedValue;
@@ -46,28 +54,19 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
         }
     }
 
-    public static PaletteModel SelectedPalette => Global.PaletteService == null ? null : Global.PaletteService.SelectedPalette;
-    public static ObservableCollection<UniColor> SelectedPaletteColors
+    public PaletteModel SelectedPalette => _paletteService.SelectedPalette;
+    public ObservableCollection<UniColor> SelectedPaletteColors
     {
         get
         {
-            if (SelectedPalette == null)
-            {
-                return null;
-            }
-
             return new ObservableCollection<UniColor>(SelectedPalette.Colors.Select(s => (UniColor)s));
         }
     }
-    public static ObservableCollection<UniColor> CurrentPaletteColors
+    public ObservableCollection<UniColor> CurrentPaletteColors
     {
         get
         {
-            if (Global.PaletteService == null)
-            {
-                return null;
-            }
-            return new ObservableCollection<UniColor>(Global.PaletteService.CurrentColorsPalette.Colors.Select(s => (UniColor)s));
+            return new ObservableCollection<UniColor>(_paletteService.CurrentColorsPalette.Colors.Select(s => (UniColor)s));
         }
     }
 
@@ -78,22 +77,25 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
     public ICommand PaletteSaveCommand { get; }
     public ICommand PaletteClearCommand { get; }
 
-    public PaletteSectionViewModel()
+    public PaletteSectionViewModel(ApplicationData applicationData, MenuItemRegistry menuItemRegistry, PaletteService paletteService)
     {
-        _primaryProjectChanged = Subjects.PrimaryColorChanged.Subscribe(c => Global.PrimaryColor = c);
-        _secondaryProjectChanged = Subjects.SecondaryColorChanged.Subscribe(c => Global.SecondaryColor = c);
+        _applicationData = applicationData;
+        _menuItemRegistry = menuItemRegistry;
+        _paletteService = paletteService;
+        _primaryProjectChanged = Subjects.PrimaryColorChanged.Subscribe(c => _applicationData.PrimaryColor = c);
+        _secondaryProjectChanged = Subjects.SecondaryColorChanged.Subscribe(c => _applicationData.SecondaryColor = c);
         _primaryProjectChange = Subjects.PrimaryColorChange.Subscribe(c => PrimaryColor = c);
         _secondaryProjectChange = Subjects.SecondaryColorChange.Subscribe(c => SecondaryColor = c);
 
         _projectChanged = Subjects.ProjectChanged.Subscribe(p =>
         {
-            Global.PaletteService?.SetCurrentColors();
+            _paletteService.SetCurrentColors();
             OnPropertyChanged(nameof(CurrentPaletteColors));
         });
 
         _layerModified = Subjects.LayerModified.Subscribe(l =>
         {
-            Global.PaletteService?.SetCurrentColors();
+            _paletteService.SetCurrentColors();
             OnPropertyChanged(nameof(CurrentPaletteColors));
         });
 
@@ -140,35 +142,35 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
 
     public override void RegisterMenuItems()
     {
-        PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Palette, "Add Primary color to palette", PaletteAddPrimaryCommand);
-        PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Palette, "Merge palette with current colors", PaletteAddCurrentCommand);
-        PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Palette, "Clear palette", PaletteClearCommand);
-        PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Palette, "Open palette from file", PaletteOpenCommand);
-        PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Palette, "Save palette to file", PaletteSaveCommand);
-        PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Palette, "Palettes list", PaletteListCommand);
+        _menuItemRegistry.Register(BaseMenuItem.Palette, "Add Primary color to palette", PaletteAddPrimaryCommand);
+        _menuItemRegistry.Register(BaseMenuItem.Palette, "Merge palette with current colors", PaletteAddCurrentCommand);
+        _menuItemRegistry.Register(BaseMenuItem.Palette, "Clear palette", PaletteClearCommand);
+        _menuItemRegistry.Register(BaseMenuItem.Palette, "Open palette from file", PaletteOpenCommand);
+        _menuItemRegistry.Register(BaseMenuItem.Palette, "Save palette to file", PaletteSaveCommand);
+        _menuItemRegistry.Register(BaseMenuItem.Palette, "Palettes list", PaletteListCommand);
     }
 
     private void PaletteAddPrimaryAction()
     {
-        Global.PaletteService.AddPrimaryColor();
+        _paletteService.AddPrimaryColor();
         OnPropertyChanged(nameof(SelectedPaletteColors));
     }
 
     private void PaletteAddCurrentAction()
     {
-        Global.PaletteService.AddColorsFromPalette(Global.PaletteService.CurrentColorsPalette);
+        _paletteService.AddColorsFromPalette(_paletteService.CurrentColorsPalette);
         OnPropertyChanged(nameof(SelectedPaletteColors));
     }
 
     private void PaletteClearAction()
     {
-        Global.PaletteService.ClearPalette();
+        _paletteService.ClearPalette();
         OnPropertyChanged(nameof(SelectedPaletteColors));
     }
 
     private async Task PaletteOpenAction()
     {
-        var files = await IODialogs.OpenFileDialog("All Supported (.json;.gpl)|*.json;*.gpl|Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl", Global.PaletteService.SelectedPalette.Name);
+        var files = await DialogUtils.OpenFileDialog("All Supported (.json;.gpl)|*.json;*.gpl|Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl", _paletteService.SelectedPalette.Name);
 
         if (files.Count == 0)
         {
@@ -176,27 +178,27 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
         }
 
         var file = files[0];
-        Global.PaletteService.Load(file.Path.AbsolutePath);
+        _paletteService.Load(file.Path.AbsolutePath);
     }
 
     private async Task PaletteSaveAction()
     {
-        if (Global.PaletteService.SelectedPalette.Colors.Count == 0)
+        if (_paletteService.SelectedPalette.Colors.Count == 0)
         {
             return;
         }
 
-        var file = await IODialogs.SaveFileDialog("All Supported (.json;.gpl)|*.json;*.gpl|Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl", Global.PaletteService.SelectedPalette.Name);
+        var file = await DialogUtils.SaveFileDialog("All Supported (.json;.gpl)|*.json;*.gpl|Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl", _paletteService.SelectedPalette.Name);
 
         if (file != null)
         {
-            Global.PaletteService.Save(file.Path.AbsolutePath);
+            _paletteService.Save(file.Path.AbsolutePath);
         }
     }
 
     private void PaletteListAction()
     {
-        PaletteWindow window = new();
+        PaletteWindow window = new(_paletteService);
         window.ShowDialog(MainWindow.Handle);
     }
 }

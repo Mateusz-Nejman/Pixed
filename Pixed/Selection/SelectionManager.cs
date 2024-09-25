@@ -1,7 +1,10 @@
 ﻿using Avalonia.Input;
 using Pixed.Models;
+using Pixed.Services.Keyboard;
+using Pixed.Tools;
 using Pixed.Tools.Selection;
 using Pixed.Utils;
+using Pixed.ViewModels;
 using System;
 using System.Drawing;
 using System.Linq;
@@ -12,15 +15,19 @@ namespace Pixed.Selection;
 
 internal class SelectionManager
 {
+    private readonly ApplicationData _applicationData;
+    private readonly ToolSelector _toolSelector;
+    private readonly PaintCanvasViewModel _paintCanvas;
     private BaseSelection? _currentSelection;
-    private readonly Action<Bitmap> _setOverlayAction;
 
     public bool HasSelection => _currentSelection != null;
     public BaseSelection? Selection => _currentSelection;
 
-    public SelectionManager(Action<Bitmap> overlayAction)
+    public SelectionManager(ApplicationData applicationData, ShortcutService shortcutService, ToolSelector toolSelector, PaintCanvasViewModel paintCanvas)
     {
-        _setOverlayAction = overlayAction;
+        _applicationData = applicationData;
+        _toolSelector = toolSelector;
+        _paintCanvas = paintCanvas;
         _currentSelection = null;
 
         Subjects.ClipboardCopy.Subscribe(_ => Copy());
@@ -28,11 +35,11 @@ internal class SelectionManager
         Subjects.ClipboardPaste.Subscribe(_ => Paste());
         Subjects.SelectionCreated.Subscribe(OnSelectionCreated);
         Subjects.SelectionDismissed.Subscribe(OnSelectionDismissed);
-        Global.ShortcutService?.Add(new Services.Keyboard.KeyState(Key.C, false, true, false), Copy);
-        Global.ShortcutService?.Add(new Services.Keyboard.KeyState(Key.X, false, true, false), Cut);
-        Global.ShortcutService?.Add(new Services.Keyboard.KeyState(Key.V, false, true, false), () => Paste());
-        Global.ShortcutService?.Add(new Services.Keyboard.KeyState(Key.A, false, true, false), SelectAll);
-        Global.ShortcutService?.Add(new Services.Keyboard.KeyState(Key.Delete, false, false, false), Erase);
+        shortcutService.Add(new Services.Keyboard.KeyState(Key.C, false, true, false), Copy);
+        shortcutService.Add(new Services.Keyboard.KeyState(Key.X, false, true, false), Cut);
+        shortcutService.Add(new Services.Keyboard.KeyState(Key.V, false, true, false), () => Paste());
+        shortcutService.Add(new Services.Keyboard.KeyState(Key.A, false, true, false), SelectAll);
+        shortcutService.Add(new Services.Keyboard.KeyState(Key.Delete, false, false, false), Erase);
     }
 
     private void Clear()
@@ -46,9 +53,9 @@ internal class SelectionManager
 
     private void SelectAll()
     {
-        Global.ToolSelected = Global.ToolSelector.GetTool("tool_rectangle_select");
-        Subjects.ToolChanged.OnNext(Global.ToolSelected);
-        ((RectangleSelect)Global.ToolSelected).SelectAll(_setOverlayAction);
+        _toolSelector.ToolSelected = _toolSelector.GetTool("tool_rectangle_select");
+        Subjects.ToolChanged.OnNext(_toolSelector.ToolSelected);
+        ((RectangleSelect)_toolSelector.ToolSelected).SelectAll(overlay => _paintCanvas.Overlay = overlay);
     }
 
     private void OnSelectionCreated(BaseSelection? selection)
@@ -72,7 +79,7 @@ internal class SelectionManager
         }
 
         var pixels = _currentSelection.Pixels;
-        var frame = Global.CurrentFrame;
+        var frame = _applicationData.CurrentFrame;
 
         for (int a = 0; a < pixels.Count; a++)
         {
@@ -85,7 +92,7 @@ internal class SelectionManager
         Subjects.FrameModified.OnNext(frame);
         Subjects.LayerModified.OnNext(frame.CurrentLayer);
         Subjects.FrameModified.OnNext(frame);
-        Global.CurrentModel.AddHistory();
+        _applicationData.CurrentModel.AddHistory();
     }
 
     private void Copy()
@@ -95,9 +102,9 @@ internal class SelectionManager
             return;
         }
 
-        if (_currentSelection != null && Global.CurrentFrame != null)
+        if (_currentSelection != null && _applicationData.CurrentFrame != null)
         {
-            _currentSelection.FillSelectionFromFrame(Global.CurrentFrame);
+            _currentSelection.FillSelectionFromFrame(_applicationData.CurrentFrame);
             Bitmap selectionBitmap = _currentSelection.ToBitmap();
             selectionBitmap?.CopyToClipboard();
         }
@@ -115,8 +122,8 @@ internal class SelectionManager
 
     private async Task Paste()
     {
-        Global.ToolSelected = Global.ToolSelector.GetTool("tool_rectangle_select");
-        Subjects.ToolChanged.OnNext(Global.ToolSelected);
+        _toolSelector.ToolSelected = _toolSelector.GetTool("tool_rectangle_select");
+        Subjects.ToolChanged.OnNext(_toolSelector.ToolSelected);
         Bitmap? source = await BitmapUtils.CreateFromClipboard();
 
         if (source == null)
@@ -133,7 +140,7 @@ internal class SelectionManager
             startPosition = new Point(selectionX, selectionY);
         }
 
-        Frame frame = Global.CurrentFrame;
+        Frame frame = _applicationData.CurrentFrame;
 
         for (int x = 0; x < source.Width; x++)
         {
@@ -149,11 +156,11 @@ internal class SelectionManager
 
         Subjects.LayerModified.OnNext(frame.CurrentLayer);
         Subjects.FrameModified.OnNext(frame);
-        Global.CurrentModel.AddHistory();
+        _applicationData.CurrentModel.AddHistory();
     }
 
-    private static bool IsSelectToolActive()
+    private bool IsSelectToolActive()
     {
-        return Global.ToolSelected is BaseSelect;
+        return _toolSelector.ToolSelected is BaseSelect;
     }
 }

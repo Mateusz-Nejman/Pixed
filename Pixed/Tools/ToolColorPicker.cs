@@ -4,7 +4,7 @@ using System.Drawing;
 
 namespace Pixed.Tools
 {
-    internal class ToolColorPicker : BaseTool
+    internal class ToolColorPicker(ApplicationData applicationData) : BaseTool(applicationData)
     {
         public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
         {

@@ -7,22 +7,18 @@ using System.Drawing;
 
 namespace Pixed.Controls;
 
-internal partial class PaintCanvas : PixedUserControl
+internal partial class PaintCanvas : PixedUserControl<PaintCanvasViewModel>
 {
-    private readonly PaintCanvasViewModel _viewModel;
     private readonly int _scrollBarSize = 18;
-
-    internal PaintCanvasViewModel ViewModel => _viewModel;
-    public PaintCanvas()
+    public PaintCanvas() : base()
     {
         InitializeComponent();
-        _viewModel = DataContext as PaintCanvasViewModel;
         SizeChanged += PaintCanvas_SizeChanged;
     }
 
     private void PaintCanvas_SizeChanged(object? sender, SizeChangedEventArgs e)
     {
-        _viewModel.RecalculateFactor(new Point((int)(e.NewSize.Width - _scrollBarSize), (int)(e.NewSize.Height - _scrollBarSize)));
+        ViewModel.RecalculateFactor(new Point((int)(e.NewSize.Width - _scrollBarSize), (int)(e.NewSize.Height - _scrollBarSize)));
     }
 
     private void Border_PointerPressed(object? sender, PointerPressedEventArgs e)
@@ -34,15 +30,15 @@ internal partial class PaintCanvas : PixedUserControl
 
             if (mapper.ChangedButton == MouseButton.Left && mapper.ButtonState == MouseButtonState.Pressed)
             {
-                _viewModel.LeftMouseDown?.Execute(pos.ToSystemPoint());
+                ViewModel.LeftMouseDown?.Execute(pos.ToSystemPoint());
             }
             else if (mapper.ChangedButton == MouseButton.Right && mapper.ButtonState == MouseButtonState.Pressed)
             {
-                _viewModel.RightMouseDown?.Execute(pos.ToSystemPoint());
+                ViewModel.RightMouseDown?.Execute(pos.ToSystemPoint());
             }
             else if (mapper.ChangedButton == MouseButton.Middle && mapper.ButtonState == MouseButtonState.Pressed)
             {
-                _viewModel.MiddleMouseDown?.Execute(pos.ToSystemPoint());
+                ViewModel.MiddleMouseDown?.Execute(pos.ToSystemPoint());
             }
         }
     }
@@ -56,28 +52,28 @@ internal partial class PaintCanvas : PixedUserControl
 
             if (mapper.ChangedButton == MouseButton.Left && mapper.ButtonState == MouseButtonState.Released)
             {
-                _viewModel.LeftMouseUp?.Execute(pos.ToSystemPoint());
+                ViewModel.LeftMouseUp?.Execute(pos.ToSystemPoint());
             }
             else if (mapper.ChangedButton == MouseButton.Right && mapper.ButtonState == MouseButtonState.Released)
             {
-                _viewModel.RightMouseUp?.Execute(pos.ToSystemPoint());
+                ViewModel.RightMouseUp?.Execute(pos.ToSystemPoint());
             }
             else if (mapper.ChangedButton == MouseButton.Middle && mapper.ButtonState == MouseButtonState.Released)
             {
-                _viewModel.MiddleMouseUp?.Execute(pos.ToSystemPoint());
+                ViewModel.MiddleMouseUp?.Execute(pos.ToSystemPoint());
             }
         }
     }
 
     private void Border_PointerWheelChanged(object? sender, PointerWheelEventArgs e)
     {
-        _viewModel?.MouseWheel?.Execute(e.Delta.Y);
+        ViewModel?.MouseWheel?.Execute(e.Delta.Y);
         e.Handled = true;
     }
 
     private void Border_PointerExited(object? sender, PointerEventArgs e)
     {
-        _viewModel?.MouseLeave?.Execute();
+        ViewModel?.MouseLeave?.Execute();
     }
 
     private void Border_PointerMoved(object? sender, PointerEventArgs e)
@@ -86,12 +82,12 @@ internal partial class PaintCanvas : PixedUserControl
         {
             var pos = e.GetPosition(border);
 
-            _viewModel?.MouseMove?.Execute(pos.ToSystemPoint());
+            ViewModel?.MouseMove?.Execute(pos.ToSystemPoint());
         }
     }
 
     private void Border_KeyProcess(object? sender, KeyEventArgs e)
     {
-        _viewModel.ProcessModifiers(e.KeyModifiers);
+        ViewModel.ProcessModifiers(e.KeyModifiers);
     }
 }

@@ -1,12 +1,16 @@
 ﻿using Pixed.Models;
+using Pixed.Services;
+using Pixed.Utils;
 using Pixed.Windows;
 using System.IO;
 using System.Threading.Tasks;
 
 namespace Pixed.IO;
-internal static class PixedProjectMethods
+internal class PixedProjectMethods(ApplicationData applicationData)
 {
-    public async static Task Save(PixedModel model, bool saveAs)
+    private readonly ApplicationData _applicationData = applicationData;
+
+    public async Task Save(PixedModel model, bool saveAs, RecentFilesService recentFilesService)
     {
         Stream fileStream = null;
         if (model.FilePath == null)
@@ -23,11 +27,11 @@ internal static class PixedProjectMethods
             FileInfo info = new(model.FileName);
             string name = info.Name;
 
-            if(!string.IsNullOrEmpty(info.Extension))
+            if (!string.IsNullOrEmpty(info.Extension))
             {
                 name = info.Name.Replace(info.Extension, string.Empty);
             }
-            var file = await IODialogs.SaveFileDialog("Pixed project (*.pixed)|*.pixed", name);
+            var file = await DialogUtils.SaveFileDialog("Pixed project (*.pixed)|*.pixed", name);
 
             if (file == null)
             {
@@ -42,13 +46,13 @@ internal static class PixedProjectMethods
         {
             PixedProjectSerializer serializer = new();
             serializer.Serialize(fileStream, model, true);
-            Global.RecentFilesService.AddRecent(model.FilePath);
+            recentFilesService.AddRecent(model.FilePath);
         }
     }
 
-    public async static Task Open()
+    public async Task Open(RecentFilesService recentFilesService)
     {
-        var files = await IODialogs.OpenFileDialog("All supported (*.pixed;*.png)|*.pixed;*.png|Pixed project (*.pixed)|*.pixed|PNG images (*.png)|*.png", "Open file", true);
+        var files = await DialogUtils.OpenFileDialog("All supported (*.pixed;*.png)|*.pixed;*.png|Pixed project (*.pixed)|*.pixed|PNG images (*.png)|*.png", "Open file", true);
 
         foreach (var item in files)
         {
@@ -59,14 +63,14 @@ internal static class PixedProjectMethods
             {
                 serializer = new PixedProjectSerializer();
 
-                Global.RecentFilesService.AddRecent(item.Path.AbsolutePath);
+                recentFilesService.AddRecent(item.Path.AbsolutePath);
             }
             else
             {
                 serializer = new PngProjectSerializer();
             }
 
-            PixedModel model = serializer.Deserialize(stream);
+            PixedModel model = serializer.Deserialize(stream, _applicationData);
             stream?.Dispose();
             model.FileName = item.Name.Replace(".png", ".pixed");
             model.AddHistory();
@@ -76,43 +80,43 @@ internal static class PixedProjectMethods
                 model.FilePath = item.Path.AbsolutePath;
             }
 
-            if (Global.CurrentModel.IsEmpty)
+            if (_applicationData.CurrentModel.IsEmpty)
             {
-                Global.Models[Global.CurrentModelIndex] = model;
+                _applicationData.Models[_applicationData.CurrentModelIndex] = model;
             }
             else
             {
-                Global.Models.Add(model);
+                _applicationData.Models.Add(model);
             }
 
             Subjects.ProjectAdded.OnNext(model);
         }
     }
 
-    public static void Open(string path)
+    public void Open(string path)
     {
         FileInfo info = new(path);
         PixedProjectSerializer serializer = new();
         Stream stream = File.OpenRead(path);
-        PixedModel model = serializer.Deserialize(stream);
+        PixedModel model = serializer.Deserialize(stream, _applicationData);
         stream?.Dispose();
 
         model.FileName = info.Name;
         model.FilePath = path;
         model.AddHistory();
 
-        if (Global.CurrentModel.IsEmpty)
+        if (_applicationData.CurrentModel.IsEmpty)
         {
-            Global.Models[Global.CurrentModelIndex] = model;
+            _applicationData.Models[_applicationData.CurrentModelIndex] = model;
         }
         else
         {
-            Global.Models.Add(model);
+            _applicationData.Models.Add(model);
         }
         Subjects.ProjectAdded.OnNext(model);
     }
 
-    public async static Task ExportToPng(PixedModel model)
+    public async Task ExportToPng(PixedModel model)
     {
         FileInfo info = new(model.FileName);
         string name = info.Name;
@@ -121,7 +125,7 @@ internal static class PixedProjectMethods
         {
             name = info.Name.Replace(info.Extension, string.Empty);
         }
-        var file = await IODialogs.SaveFileDialog("PNG image (*.png)|*.png", name);
+        var file = await DialogUtils.SaveFileDialog("PNG image (*.png)|*.png", name);
 
         if (file == null)
         {
@@ -133,7 +137,7 @@ internal static class PixedProjectMethods
         int columnsCount = 1;
         if (model.Frames.Count > 1)
         {
-            ExportPNGWindow window = new();
+            ExportPNGWindow window = new(_applicationData);
             bool success = await window.ShowDialog<bool>(MainWindow.Handle);
 
             if (!success)

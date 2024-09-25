@@ -1,10 +1,9 @@
-﻿using Pixed.Input;
-using Pixed.Models;
+﻿using Pixed.Models;
 using System.Drawing;
 
 namespace Pixed.Tools
 {
-    internal class ToolColorSwap : BaseTool
+    internal class ToolColorSwap(ApplicationData applicationData) : BaseTool(applicationData)
     {
         public override bool ShiftHandle { get; protected set; } = true;
         public override bool ControlHandle { get; protected set; } = true;
@@ -19,12 +18,12 @@ namespace Pixed.Tools
             }
         }
 
-        private static void SwapColors(int oldColor, int newColor, bool shiftPressed, bool controlPressed)
+        private void SwapColors(int oldColor, int newColor, bool shiftPressed, bool controlPressed)
         {
-            Global.CurrentModel.Process(shiftPressed, controlPressed, (frame, layer) =>
+            _applicationData.CurrentModel.Process(shiftPressed, controlPressed, (frame, layer) =>
             {
                 ApplyToolOnLayer(layer, oldColor, newColor);
-            });
+            }, _applicationData);
         }
 
         private static void ApplyToolOnLayer(Layer layer, int oldColor, int newColor)

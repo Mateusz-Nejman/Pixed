@@ -2,9 +2,9 @@
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Metadata;
-using System.Reactive.Linq;
-using System;
 using Avalonia.Threading;
+using System;
+using System.Reactive.Linq;
 
 namespace Pixed.Controls;
 

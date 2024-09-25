@@ -114,15 +114,15 @@ internal static class PaintUtils
         return pixels;
     }
 
-    public static UniColor GetNoiseColor()
+    public static UniColor GetNoiseColor(UniColor primary, UniColor secondary)
     {
         Random random = new(Guid.NewGuid().GetHashCode());
         double[] colors = [0, 0.25, 0.5, 0.75, 1];
         double color = colors[(int)Math.Floor(random.NextDouble() * colors.Length)];
-        return Global.PrimaryColor.Blend(Global.SecondaryColor, color);
+        return primary.Blend(secondary, color);
     }
 
-    public static void PaintNoiseSimiliarConnected(Layer layer, int x, int y)
+    public static void PaintNoiseSimiliarConnected(Layer layer, int x, int y, UniColor primaryColor, UniColor secondaryColor)
     {
         int targetColor = layer.GetPixel(x, y);
 
@@ -139,7 +139,7 @@ internal static class PaintUtils
 
         foreach (var pixel in pixels)
         {
-            var color = GetNoiseColor();
+            var color = GetNoiseColor(primaryColor, secondaryColor);
             layer.SetPixel(pixel.X, pixel.Y, color);
         }
 

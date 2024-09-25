@@ -1,29 +1,32 @@
 ﻿using Pixed.Models;
+using Pixed.Selection;
 using Pixed.Utils;
 using System;
 
 namespace Pixed.Tools.Transform;
 
-internal class Crop : AbstractTransformTool
+internal class Crop(ApplicationData applicationData, SelectionManager selectionManager) : AbstractTransformTool(applicationData)
 {
+    private readonly SelectionManager _selectionManager = selectionManager;
+
     public override void ApplyTransformation(bool shiftPressed, bool controlPressed, bool altPressed)
     {
         int[] boundaries;
-        if (Global.SelectionManager.HasSelection)
+        if (_selectionManager.HasSelection)
         {
-            boundaries = TransformUtils.GetBoundariesFromSelection(Global.SelectionManager.Selection);
+            boundaries = TransformUtils.GetBoundariesFromSelection(_selectionManager.Selection);
         }
         else
         {
-            boundaries = TransformUtils.GetBoundaries([.. Global.CurrentFrame.Layers]);
+            boundaries = TransformUtils.GetBoundaries([.. _applicationData.CurrentFrame.Layers]);
         }
 
         bool applied = ApplyTool(boundaries);
 
         if (applied)
         {
-            Subjects.ProjectModified.OnNext(Global.CurrentModel);
-            Subjects.ProjectChanged.OnNext(Global.CurrentModel);
+            Subjects.ProjectModified.OnNext(_applicationData.CurrentModel);
+            Subjects.ProjectChanged.OnNext(_applicationData.CurrentModel);
         }
     }
     public override void ApplyTool(bool altKey, bool allFrames, bool allLayers)
@@ -35,7 +38,7 @@ internal class Crop : AbstractTransformTool
         throw new NotImplementedException();
     }
 
-    private static bool ApplyTool(int[] boundaries)
+    private bool ApplyTool(int[] boundaries)
     {
         //return [minx, miny, maxx, maxy];
 
@@ -44,7 +47,7 @@ internal class Crop : AbstractTransformTool
             return false;
         }
 
-        var model = Global.CurrentModel;
+        var model = _applicationData.CurrentModel;
         int width = 1 + boundaries[2] - boundaries[0];
         int height = 1 + boundaries[3] - boundaries[1];
 
@@ -53,7 +56,7 @@ internal class Crop : AbstractTransformTool
             return false;
         }
 
-        foreach (var frame in Global.CurrentModel.Frames)
+        foreach (var frame in _applicationData.CurrentModel.Frames)
         {
             foreach (var layer in frame.Layers)
             {
@@ -64,12 +67,12 @@ internal class Crop : AbstractTransformTool
             Subjects.FrameModified.OnNext(frame);
         }
 
-        var newModel = ResizeUtils.ResizeModel(model, 1 + boundaries[2] - boundaries[0], 1 + boundaries[3] - boundaries[1], false, ResizeUtils.Origin.TopLeft);
+        var newModel = ResizeUtils.ResizeModel(applicationData, model, 1 + boundaries[2] - boundaries[0], 1 + boundaries[3] - boundaries[1], false, ResizeUtils.Origin.TopLeft);
         Subjects.SelectionDismissed.OnNext(null);
-        Global.Models[Global.CurrentModelIndex] = newModel;
+        _applicationData.Models[_applicationData.CurrentModelIndex] = newModel;
         Subjects.ProjectModified.OnNext(newModel);
 
-        foreach (var frame in Global.CurrentModel.Frames)
+        foreach (var frame in _applicationData.CurrentModel.Frames)
         {
             frame.RefreshLayerRenderSources();
             frame.RefreshRenderSource();

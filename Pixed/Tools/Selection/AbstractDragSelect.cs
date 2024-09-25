@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace Pixed.Tools.Selection;
 
-internal abstract class AbstractDragSelect : BaseSelect
+internal abstract class AbstractDragSelect(ApplicationData applicationData, ToolSelector toolSelector) : BaseSelect(applicationData, toolSelector)
 {
     public override void OnSelect(int x, int y, Frame frame, ref Bitmap overlay)
     {

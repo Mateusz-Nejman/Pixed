@@ -2,7 +2,7 @@
 
 namespace Pixed.Tools.Transform;
 
-internal class Flip : AbstractTransformTool
+internal class Flip(ApplicationData applicationData) : AbstractTransformTool(applicationData)
 {
     public override void ApplyToolOnLayer(Layer layer, bool altKey)
     {

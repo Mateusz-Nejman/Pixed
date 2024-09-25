@@ -4,7 +4,7 @@ using System.Drawing;
 
 namespace Pixed.Tools
 {
-    internal class ToolDithering : ToolPen
+    internal class ToolDithering(ApplicationData applicationData) : ToolPen(applicationData)
     {
         public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
         {
@@ -18,7 +18,7 @@ namespace Pixed.Tools
                 usePrimary = !usePrimary;
             }
 
-            var color = usePrimary ? Global.PrimaryColor : Global.SecondaryColor;
+            var color = usePrimary ? _applicationData.PrimaryColor : _applicationData.SecondaryColor;
 
             DrawOnOverlay(color, x, y, frame, ref overlay);
         }

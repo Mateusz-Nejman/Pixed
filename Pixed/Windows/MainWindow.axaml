@@ -22,9 +22,6 @@
         ExtendClientAreaTitleBarHeightHint="-1"
         Icon="avares://Pixed.Core/Resources/icon.ico"
 		NativeMenu.Menu="{Binding Menu}">
-  <Window.DataContext>
-    <viewmodels:MainViewModel/>
-  </Window.DataContext>
   <Window.KeyBindings>
     <KeyBinding Gesture="CTRL+Q"
 					Command="{Binding QuitCommand}"></KeyBinding>

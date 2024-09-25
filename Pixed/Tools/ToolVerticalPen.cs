@@ -1,10 +1,9 @@
-﻿using Pixed.Input;
-using Pixed.Models;
+﻿using Pixed.Models;
 using System.Drawing;
 
 namespace Pixed.Tools
 {
-    internal class ToolVerticalPen : ToolPen
+    internal class ToolVerticalPen(ApplicationData applicationData) : ToolPen(applicationData)
     {
         public override bool ShiftHandle { get; protected set; } = true;
         public override bool ControlHandle { get; protected set; } = true;

@@ -29,14 +29,14 @@ internal class FramesDragDropHandler : DropHandlerBase
     private static bool Validate<T>(ListBox listBox, DragEventArgs e, object? sourceContext, object? targetContext, bool bExecute) where T : Frame
     {
         if (sourceContext is not T sourceItem
-            || targetContext is not FramesSectionViewModel
+            || targetContext is not FramesSectionViewModel vm
             || listBox.GetVisualAt(e.GetPosition(listBox)) is not Control targetControl
             || targetControl.DataContext is not T targetItem)
         {
             return false;
         }
 
-        var items = FramesSectionViewModel.Frames;
+        var items = vm.Frames;
         var sourceIndex = items.IndexOf(sourceItem);
         var targetIndex = items.IndexOf(targetItem);
 

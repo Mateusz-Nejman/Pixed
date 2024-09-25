@@ -3,9 +3,9 @@ using Pixed.Windows;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Pixed;
+namespace Pixed.Utils;
 
-internal static class IODialogs
+internal static class DialogUtils
 {
     public static async Task<IReadOnlyList<IStorageFile>> OpenFileDialog(string filter, string filename, bool allowMultiple = false)
     {

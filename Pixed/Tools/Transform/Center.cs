@@ -2,7 +2,7 @@
 
 namespace Pixed.Tools.Transform;
 
-internal class Center : AbstractTransformTool
+internal class Center(ApplicationData applicationData) : AbstractTransformTool(applicationData)
 {
     public override void ApplyToolOnLayer(Layer layer, bool altKey)
     {

@@ -1,5 +1,6 @@
 ﻿using Avalonia.Input;
 using Avalonia.Media;
+using Pixed.Controls;
 using Pixed.Models;
 using Pixed.Tools;
 using Pixed.Utils;
@@ -10,8 +11,10 @@ using Frame = Pixed.Models.Frame;
 
 namespace Pixed.ViewModels;
 
-internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
+internal class PaintCanvasViewModel : PixedViewModel, IDisposable
 {
+    private readonly ApplicationData _applicationData;
+    private readonly ToolSelector _toolSelector;
     private double _gridWidth;
     private double _gridHeight;
     private double _imageFactor;
@@ -204,8 +207,10 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
         }
     }
 
-    public PaintCanvasViewModel()
+    public PaintCanvasViewModel(ApplicationData applicationData, ToolSelector toolSelector)
     {
+        _applicationData = applicationData;
+        _toolSelector = toolSelector;
         _frame = new Frame(32, 32);
         LeftMouseDown = new ActionCommand<Point>(LeftMouseDownAction);
         LeftMouseUp = new ActionCommand<Point>(LeftMouseUpAction);
@@ -264,8 +269,8 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
 
         _mouseWheel = Subjects.MouseWheel.Subscribe(d =>
         {
-            int distX = (int)(GridWidth / Global.CurrentFrame.Width);
-            int distY = (int)(GridHeight / Global.CurrentFrame.Height);
+            int distX = (int)(GridWidth / _applicationData.CurrentFrame.Width);
+            int distY = (int)(GridHeight / _applicationData.CurrentFrame.Height);
 
             if (distX == 0 || distY == 0)
             {
@@ -286,13 +291,13 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
             ControlEnabled = tool.ControlHandle;
             AltEnabled = tool.AltHandle;
 
-            if(!ShiftEnabled)
+            if (!ShiftEnabled)
             {
                 _shiftChecked = false;
                 OnPropertyChanged(nameof(ShiftChecked));
             }
 
-            if(!ControlEnabled)
+            if (!ControlEnabled)
             {
                 _controlChecked = false;
                 OnPropertyChanged(nameof(ControlChecked));
@@ -318,12 +323,12 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
 
     public void ProcessModifiers(KeyModifiers modifiers)
     {
-        if(!ShiftChecked)
+        if (!ShiftChecked)
         {
             _shiftPressed = modifiers.HasFlag(KeyModifiers.Shift);
         }
-        
-        if(!ControlChecked)
+
+        if (!ControlChecked)
         {
             _controlPressed = modifiers.HasFlag(KeyModifiers.Control);
         }
@@ -374,7 +379,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
         }
 
         _leftPressed = true;
-        Global.ToolSelected?.ApplyTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
+        _toolSelector.ToolSelected?.ApplyTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
         RefreshOverlay();
         RefreshRender();
     }
@@ -390,11 +395,11 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
         }
 
         _leftPressed = false;
-        Global.ToolSelected?.ReleaseTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
+        _toolSelector.ToolSelected?.ReleaseTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
 
-        if (Global.ToolSelected != null && Global.ToolSelected.AddToHistory)
+        if (_toolSelector.ToolSelected != null && _toolSelector.ToolSelected.AddToHistory)
         {
-            Global.CurrentModel.AddHistory();
+            _applicationData.CurrentModel.AddHistory();
         }
         RefreshOverlay();
         RefreshRender();
@@ -413,7 +418,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
         }
 
         _rightPressed = true;
-        Global.ToolSelected?.ApplyTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
+        _toolSelector.ToolSelected?.ApplyTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
         RefreshOverlay();
         RefreshRender();
     }
@@ -429,11 +434,11 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
         }
 
         _rightPressed = false;
-        Global.ToolSelected?.ReleaseTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
+        _toolSelector.ToolSelected?.ReleaseTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
 
-        if(Global.ToolSelected != null && Global.ToolSelected.AddToHistory)
+        if (_toolSelector.ToolSelected != null && _toolSelector.ToolSelected.AddToHistory)
         {
-            Global.CurrentModel.AddHistory();
+            _applicationData.CurrentModel.AddHistory();
         }
         RefreshOverlay();
         RefreshRender();
@@ -455,13 +460,13 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
 
         if (_leftPressed || _rightPressed)
         {
-            Global.ToolSelected?.MoveTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
+            _toolSelector.ToolSelected?.MoveTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
             RefreshOverlay();
             RefreshRender();
         }
         else
         {
-            Global.ToolSelected?.UpdateHighlightedPixel(imageX, imageY, _frame, ref _overlayBitmap);
+            _toolSelector.ToolSelected?.UpdateHighlightedPixel(imageX, imageY, _frame, ref _overlayBitmap);
             RefreshOverlay();
         }
     }
@@ -491,7 +496,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
     {
         if (_rightPressed || _leftPressed)
         {
-            Global.ToolSelected?.ReleaseTool(0, 0, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
+            _toolSelector.ToolSelected?.ReleaseTool(0, 0, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
         }
         _rightPressed = false;
         _leftPressed = false;
@@ -504,12 +509,12 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
 
     private DrawingBrush? GetGridBrush()
     {
-        if (!Global.UserSettings.GridEnabled)
+        if (!_applicationData.UserSettings.GridEnabled)
         {
             return null;
         }
-        double distX = (GridWidth / (double)Global.CurrentFrame.Width) * Global.UserSettings.GridWidth;
-        double distY = (GridHeight / (double)Global.CurrentFrame.Height) * Global.UserSettings.GridHeight;
+        double distX = (GridWidth / (double)_applicationData.CurrentFrame.Width) * _applicationData.UserSettings.GridWidth;
+        double distY = (GridHeight / (double)_applicationData.CurrentFrame.Height) * _applicationData.UserSettings.GridHeight;
 
         LineGeometry horizontalLine = new()
         {
@@ -527,7 +532,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
         group.Children.Add(horizontalLine);
         group.Children.Add(verticalLine);
 
-        Avalonia.Media.Pen pen = new(new SolidColorBrush(Global.UserSettings.GridColor, 0.5));
+        Avalonia.Media.Pen pen = new(new SolidColorBrush(_applicationData.UserSettings.GridColor, 0.5));
         GeometryDrawing geometry = new()
         {
             Pen = pen,
@@ -547,7 +552,7 @@ internal class PaintCanvasViewModel : PropertyChangedBase, IDisposable
     {
         List<Pixel>? pixels = null;
 
-        if(Global.ToolSelected is ToolPen pen)
+        if (_toolSelector.ToolSelected is ToolPen pen)
         {
             pixels = pen.GetPixels();
         }

@@ -1,6 +1,8 @@
 ﻿using Avalonia.Controls;
 using Pixed.Controls;
-using Pixed.Services.Keyboard;
+using Pixed.Menu;
+using Pixed.Models;
+using Pixed.Services;
 using Pixed.Services.Palette;
 using Pixed.Windows;
 using System;
@@ -11,6 +13,9 @@ namespace Pixed.ViewModels;
 
 internal class MainViewModel : PixedViewModel, IDisposable
 {
+    private readonly ApplicationData _applicationData;
+    private readonly RecentFilesService _recentFilesService;
+    private readonly PaletteService _paletteService;
     private readonly IDisposable _onMenuBuilt;
     private NativeMenu? _menu;
     private bool _disposedValue;
@@ -26,9 +31,12 @@ internal class MainViewModel : PixedViewModel, IDisposable
     }
 
     public ICommand QuitCommand => MainWindow.QuitCommand;
-    public MainViewModel()
+    public MainViewModel(ApplicationData data, RecentFilesService recentFilesService, PaletteService paletteService, MenuBuilder menuBuilder)
     {
-        _onMenuBuilt = StaticMenuBuilder.OnMenuBuilt.Subscribe(menu =>
+        _applicationData = data;
+        _recentFilesService = recentFilesService;
+        _paletteService = paletteService;
+        _onMenuBuilt = menuBuilder.OnMenuBuilt.Subscribe(menu =>
         {
             Menu = menu;
         });
@@ -36,21 +44,18 @@ internal class MainViewModel : PixedViewModel, IDisposable
 
     public override void OnInitialized()
     {
-        if (!Directory.Exists(Global.DataFolder))
+        if (!Directory.Exists(_applicationData.DataFolder))
         {
-            Directory.CreateDirectory(Global.DataFolder);
+            Directory.CreateDirectory(_applicationData.DataFolder);
         }
 
-        if (!Directory.Exists(Path.Combine(Global.DataFolder, "Palettes")))
+        if (!Directory.Exists(Path.Combine(_applicationData.DataFolder, "Palettes")))
         {
-            Directory.CreateDirectory(Path.Combine(Global.DataFolder, "Palettes"));
+            Directory.CreateDirectory(Path.Combine(_applicationData.DataFolder, "Palettes"));
         }
 
-        Global.ShortcutService = new ShortcutService();
-        Global.PaletteService = new PaletteService();
-        Global.RecentFilesService = new Services.RecentFilesService();
-        Global.RecentFilesService.Load();
-        Global.PaletteService.LoadAll();
+        _recentFilesService.Load();
+        _paletteService.LoadAll();
     }
 
     protected virtual void Dispose(bool disposing)

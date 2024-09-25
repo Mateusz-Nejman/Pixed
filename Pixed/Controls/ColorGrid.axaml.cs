@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 
 namespace Pixed.Controls;
 
-internal partial class ColorGrid : PixedUserControl
+internal partial class ColorGrid : EmptyPixedUserControl
 {
     public int Columns
     {
@@ -22,7 +22,7 @@ internal partial class ColorGrid : PixedUserControl
 
     public static readonly StyledProperty<int> ColumnsProperty = AvaloniaProperty.Register<ColorGrid, int>("Columns", 1);
     public static readonly StyledProperty<ObservableCollection<UniColor>> ColorsProperty = AvaloniaProperty.Register<ColorGrid, ObservableCollection<UniColor>>("Colors", [], coerce: OnColorsChanged);
-    public ColorGrid()
+    public ColorGrid() : base()
     {
         InitializeComponent();
     }

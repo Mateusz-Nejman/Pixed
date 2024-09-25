@@ -1,8 +1,10 @@
+using Pixed.ViewModels;
+
 namespace Pixed.Controls.MainWindowSections;
 
-internal partial class ProjectsSection : PixedUserControl
+internal partial class ProjectsSection : PixedUserControl<ProjectsSectionViewModel>
 {
-    public ProjectsSection()
+    public ProjectsSection() : base()
     {
         InitializeComponent();
     }

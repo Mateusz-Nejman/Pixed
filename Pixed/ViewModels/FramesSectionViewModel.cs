@@ -1,13 +1,17 @@
 ﻿using Pixed.Controls;
+using Pixed.Menu;
 using Pixed.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using static Pixed.Menu.MenuBuilder;
 
 namespace Pixed.ViewModels;
 
 internal class FramesSectionViewModel : PixedViewModel, IDisposable
 {
+    private readonly ApplicationData _applicationData;
+    private readonly MenuItemRegistry _menuItemRegistry;
     private int _selectedFrame = 0;
     private bool _removeFrameEnabled = false;
     private bool _disposedValue;
@@ -15,7 +19,7 @@ internal class FramesSectionViewModel : PixedViewModel, IDisposable
     private readonly IDisposable _frameAdded;
     private readonly IDisposable _frameRemoved;
 
-    public static ObservableCollection<Frame> Frames => Global.CurrentModel.Frames;
+    public ObservableCollection<Frame> Frames => _applicationData.CurrentModel.Frames;
 
     public bool RemoveFrameEnabled
     {
@@ -37,9 +41,9 @@ internal class FramesSectionViewModel : PixedViewModel, IDisposable
                 return;
             }
             _selectedFrame = Math.Clamp(value, 0, Frames.Count);
-            Global.CurrentModel.CurrentFrameIndex = _selectedFrame;
+            _applicationData.CurrentModel.CurrentFrameIndex = _selectedFrame;
             OnPropertyChanged();
-            Subjects.FrameChanged.OnNext(Global.CurrentFrame);
+            Subjects.FrameChanged.OnNext(_applicationData.CurrentFrame);
         }
     }
 
@@ -47,8 +51,10 @@ internal class FramesSectionViewModel : PixedViewModel, IDisposable
     public ICommand RemoveFrameCommand { get; }
     public ICommand DuplicateFrameCommand { get; }
 
-    public FramesSectionViewModel()
+    public FramesSectionViewModel(ApplicationData applicationData, MenuItemRegistry menuItemRegistry)
     {
+        _applicationData = applicationData;
+        _menuItemRegistry = menuItemRegistry;
         NewFrameCommand = new ActionCommand(NewFrameAction);
         RemoveFrameCommand = new ActionCommand(RemoveFrameAction);
         DuplicateFrameCommand = new ActionCommand(DuplicateFrameAction);
@@ -56,25 +62,25 @@ internal class FramesSectionViewModel : PixedViewModel, IDisposable
         {
             OnPropertyChanged(nameof(Frames));
             SelectedFrame = p.CurrentFrameIndex;
-            RemoveFrameEnabled = Global.CurrentModel.Frames.Count > 1;
+            RemoveFrameEnabled = _applicationData.CurrentModel.Frames.Count > 1;
         });
 
         _frameAdded = Subjects.FrameAdded.Subscribe(f =>
         {
-            RemoveFrameEnabled = Global.CurrentModel.Frames.Count > 1;
+            RemoveFrameEnabled = _applicationData.CurrentModel.Frames.Count > 1;
         });
 
         _frameRemoved = Subjects.FrameRemoved.Subscribe(f =>
         {
-            RemoveFrameEnabled = Global.CurrentModel.Frames.Count > 1;
+            RemoveFrameEnabled = _applicationData.CurrentModel.Frames.Count > 1;
         });
     }
 
     public override void RegisterMenuItems()
     {
-        PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Project, "New Frame", NewFrameCommand);
-        PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Project, "Duplicate Frame", DuplicateFrameCommand);
-        PixedUserControl.RegisterMenuItem(StaticMenuBuilder.BaseMenuItem.Project, "Remove Frame", RemoveFrameCommand);
+        _menuItemRegistry.Register(BaseMenuItem.Project, "New Frame", NewFrameCommand);
+        _menuItemRegistry.Register(BaseMenuItem.Project, "Duplicate Frame", DuplicateFrameCommand);
+        _menuItemRegistry.Register(BaseMenuItem.Project, "Remove Frame", RemoveFrameCommand);
     }
 
     protected virtual void Dispose(bool disposing)
@@ -102,7 +108,7 @@ internal class FramesSectionViewModel : PixedViewModel, IDisposable
     {
         Frames.Add(new Frame(Frames[0].Width, Frames[0].Height));
         SelectedFrame = Frames.Count - 1;
-        Global.CurrentModel.AddHistory();
+        _applicationData.CurrentModel.AddHistory();
         Subjects.FrameAdded.OnNext(Frames[^1]);
     }
 
@@ -118,7 +124,7 @@ internal class FramesSectionViewModel : PixedViewModel, IDisposable
         Frames.RemoveAt(index);
         Subjects.FrameRemoved.OnNext(frame);
         SelectedFrame = Math.Clamp(index, 0, Frames.Count - 1);
-        Global.CurrentModel.AddHistory();
+        _applicationData.CurrentModel.AddHistory();
     }
 
     private void DuplicateFrameAction()
@@ -126,6 +132,6 @@ internal class FramesSectionViewModel : PixedViewModel, IDisposable
         Frames.Add(Frames[SelectedFrame].Clone());
         Subjects.FrameAdded.OnNext(Frames[^1]);
         SelectedFrame = Frames.Count - 1;
-        Global.CurrentModel.AddHistory();
+        _applicationData.CurrentModel.AddHistory();
     }
 }

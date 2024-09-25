@@ -1,18 +1,21 @@
 using Avalonia.Controls;
+using Pixed.Models;
 using Pixed.Tools.Transform;
 
 namespace Pixed.Windows;
 
-public partial class TransformAlignWindow : Window
+internal partial class TransformAlignWindow : Window
 {
-    public TransformAlignWindow()
+    private readonly ApplicationData _applicationData;
+    public TransformAlignWindow(ApplicationData applicationData)
     {
         InitializeComponent();
+        _applicationData = applicationData;
     }
 
     private void Button_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        AbstractTransformTool transform = new Center();
+        AbstractTransformTool transform = new Center(_applicationData);
         transform.ApplyTransformation(applyToAllFrames.IsChecked == true, applyToAllLayers.IsChecked == true, false);
         Close(true);
     }
