@@ -46,6 +46,17 @@ internal static class StaticMenuBuilder
         NativeMenuItem projectMenu = GetProjectMenu();
         NativeMenuItem helpMenu = new("Help");
 
+        NativeMenuItem aboutMenu = new("About")
+        {
+            Command = new ActionCommand(() =>
+        {
+            AboutWindow window = new AboutWindow();
+            window.ShowDialog(MainWindow.Handle);
+        })
+        };
+
+        helpMenu.Menu = [aboutMenu];
+
         AddToMenu(ref toolsMenu, GetEntries(BaseMenuItem.Tools));
         AddToMenu(ref paletteMenu, GetEntries(BaseMenuItem.Palette));
         AddToMenu(ref helpMenu, GetEntries(BaseMenuItem.Help));
@@ -129,10 +140,14 @@ internal static class StaticMenuBuilder
     private static NativeMenuItem GetEditMenu()
     {
         NativeMenuItem editMenu = new("Edit");
-        NativeMenuItem undoMenu = new("Undo");
-        undoMenu.Command = new ActionCommand(Global.CurrentModel.Undo);
-        NativeMenuItem redoMenu = new("Redo");
-        redoMenu.Command = new ActionCommand(Global.CurrentModel.Redo);
+        NativeMenuItem undoMenu = new("Undo")
+        {
+            Command = new ActionCommand(Global.CurrentModel.Undo)
+        };
+        NativeMenuItem redoMenu = new("Redo")
+        {
+            Command = new ActionCommand(Global.CurrentModel.Redo)
+        };
         NativeMenuItem gridSettingsMenu = new("Grid settings");
         NativeMenuItem gridToggleMenu = new("Toggle grid");
 
