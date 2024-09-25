@@ -15,7 +15,7 @@
 				<StackPanel Orientation="Horizontal"
 							DockPanel.Dock="Left"
 							Spacing="0">
-					<Image Source="avares://Pixed/Resources/icon.png"
+					<Image Source="avares://Pixed.Core/Resources/icon.png"
 						   Height="20"
 						   Width="20"
 						   VerticalAlignment="Center"

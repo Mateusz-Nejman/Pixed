@@ -29,19 +29,19 @@
         <RowDefinition Height="32"/>
       </Grid.RowDefinitions>
       <controls:TouchButton Command="{Binding NewFrameCommand}" Theme="{StaticResource BaseButton}">
-        <Image Source="avares://Pixed/Resources/Icons/plus.png" Width="16" Height="16"/>
+        <Image Source="avares://Pixed.Core/Resources/Icons/plus.png" Width="16" Height="16"/>
         <ToolTip.Tip>
           <controls:SimpleTooltip Title="New frame"/>
         </ToolTip.Tip>
       </controls:TouchButton>
 		<controls:TouchButton Grid.Column="1" Command="{Binding DuplicateFrameCommand}" Theme="{StaticResource BaseButton}">
-        <Image Source="avares://Pixed/Resources/Icons/files-empty.png" Width="16" Height="16"/>
+        <Image Source="avares://Pixed.Core/Resources/Icons/files-empty.png" Width="16" Height="16"/>
         <ToolTip.Tip>
           <controls:SimpleTooltip Title="Duplicate frame"/>
         </ToolTip.Tip>
       </controls:TouchButton>
 		<controls:TouchButton Grid.Column="2" Command="{Binding RemoveFrameCommand}" IsEnabled="{Binding RemoveFrameEnabled}" Theme="{StaticResource BaseButton}">
-			<Image Source="avares://Pixed/Resources/Icons/bin.png" Width="16" Height="16"/>
+			<Image Source="avares://Pixed.Core/Resources/Icons/bin.png" Width="16" Height="16"/>
 			<ToolTip.Tip>
 				<controls:SimpleTooltip Title="Remove frame"/>
 			</ToolTip.Tip>

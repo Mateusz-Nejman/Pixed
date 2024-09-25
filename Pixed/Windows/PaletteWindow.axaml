@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Pixed" xmlns:viewmodels="clr-namespace:Pixed.ViewModels" xmlns:controls="clr-namespace:Pixed.Controls"
         mc:Ignorable="d"
         Title="PaletteWindow" Height="600" Width="800" Background="{StaticResource BaseBackground}" WindowStartupLocation="CenterOwner"
-        Icon="avares://Pixed/Resources/icon.ico">
+        Icon="avares://Pixed.Core/Resources/icon.ico">
     <Window.DataContext>
         <viewmodels:PaletteWindowViewModel/>
     </Window.DataContext>
@@ -37,15 +37,15 @@
                   <Image Source="{Binding BitmapImage}" Grid.Row="2"/>
                   <Button Grid.Column="1" Grid.Row="2" BorderThickness="0" Background="Transparent" Command="{Binding SelectCommand}" CommandParameter="{Binding Model}">
 
-                    <Image Source="avares://Pixed/Resources/Icons/checkmark.png"/>
+                    <Image Source="avares://Pixed.Core/Resources/Icons/checkmark.png"/>
                   </Button>
                   <Button Grid.Column="2" Grid.Row="2" BorderThickness="0" Background="Transparent" Command="{Binding RenameCommand}" CommandParameter="{Binding Model}">
 
-                    <Image Source="avares://Pixed/Resources/Icons/pencil.png"/>
+                    <Image Source="avares://Pixed.Core/Resources/Icons/pencil.png"/>
                   </Button>
                   <Button Grid.Column="3" Grid.Row="2" BorderThickness="0" Background="Transparent" Command="{Binding RemoveCommand}" CommandParameter="{Binding Model}">
 
-                    <Image Source="avares://Pixed/Resources/Icons/bin.png"/>
+                    <Image Source="avares://Pixed.Core/Resources/Icons/bin.png"/>
                   </Button>
                 </Grid>
               </DataTemplate>
