@@ -18,19 +18,19 @@ internal static class MathUtils
 
         var error = dx - dy;
 
-        while(true)
+        while (true)
         {
             points.Add(new Point(x0, y0));
 
-            if(x0 == x1 && y0 == y1) break;
+            if (x0 == x1 && y0 == y1) break;
 
             var error2 = error * 2;
-            if(error2 > -dy)
+            if (error2 > -dy)
             {
                 error -= dy;
                 x0 += stepX;
             }
-            if(error2 < dx)
+            if (error2 < dx)
             {
                 error += dx;
                 y0 += stepY;
