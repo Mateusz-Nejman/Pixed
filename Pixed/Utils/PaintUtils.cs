@@ -8,6 +8,19 @@ namespace Pixed.Utils;
 
 internal static class PaintUtils
 {
+    public static List<Point> GetToolPoints(int x, int y, int toolSize)
+    {
+        List<Point> points = [];
+        for (int y1 = 0; y1 < toolSize; y1++)
+        {
+            for (int x1 = 0; x1 < toolSize; x1++)
+            {
+                points.Add(new(x - (int)Math.Floor((double)toolSize / 2.0d) + x1, y - (int)Math.Floor((double)toolSize / 2.0d) + y1));
+            }
+        }
+
+        return points;
+    }
     public static List<Pixel> GetSimiliarConnectedPixels(Frame frame, int x, int y)
     {
         return GetSimiliarConnectedPixels(frame.CurrentLayer, x, y);

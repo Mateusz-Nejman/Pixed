@@ -55,14 +55,23 @@ internal class ToolPen(ApplicationData applicationData) : BaseTool(applicationDa
 
     protected void DrawOnOverlay(UniColor color, int x, int y, Frame frame, ref Bitmap overlay)
     {
-        overlay.SetPixel(x, y, color);
+        var toolSize = _applicationData.ToolSize;
+        overlay.SetPixel(x, y, color, toolSize);
 
         if (color == UniColor.Transparent)
         {
-            frame.SetPixel(x, y, color);
+            frame.SetPixel(x, y, color, toolSize);
         }
 
-        this._pixels.Add(new Pixel(x, y, color));
+        var toolPoints = PaintUtils.GetToolPoints(x, y, toolSize);
+
+        foreach (var toolPoint in toolPoints)
+        {
+            if(frame.ContainsPixel(toolPoint.X, toolPoint.Y))
+            {
+                this._pixels.Add(new Pixel(toolPoint.X, toolPoint.Y, color));
+            }
+        }
     }
 
     private void SetPixelsToFrame(Frame frame)

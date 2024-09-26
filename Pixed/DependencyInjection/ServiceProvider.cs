@@ -8,14 +8,9 @@ namespace Pixed.DependencyInjection
         public T Get<T>();
         public IServiceProvider GetNativeProvider();
     }
-    internal class ServiceProvider : IPixedServiceProvider
+    internal class ServiceProvider(IServiceProvider serviceProvider) : IPixedServiceProvider
     {
-        private readonly IServiceProvider _serviceProvider;
-
-        public ServiceProvider(IServiceProvider serviceProvider)
-        {
-            _serviceProvider = serviceProvider;
-        }
+        private readonly IServiceProvider _serviceProvider = serviceProvider;
 
         public T Get<T>()
         {

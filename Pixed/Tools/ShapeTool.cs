@@ -17,7 +17,7 @@ namespace Pixed.Tools
             _startX = x;
             _startY = y;
 
-            overlay.SetPixel(x, y, GetToolColor());
+            overlay.SetPixel(x, y, GetToolColor(), _applicationData.ToolSize);
         }
 
         public override void MoveTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
@@ -27,37 +27,37 @@ namespace Pixed.Tools
 
             if (color == UniColor.Transparent)
             {
-                color = new UniColor(50, 160, 215, 240);
+                color = UniColor.WithAlpha(128, UniColor.GetFromResources("Accent"));
             }
 
-            Draw(x, y, color, shiftPressed, ref overlay);
+            Draw(x, y, color, shiftPressed, _applicationData.ToolSize, ref overlay);
         }
 
         public override void ReleaseTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
         {
             var color = GetToolColor();
 
-            Draw(x, y, color, shiftPressed, frame);
+            Draw(x, y, color, shiftPressed, _applicationData.ToolSize, frame);
 
             overlay.Clear();
         }
 
-        protected void Draw(int x, int y, int color, bool shiftPressed, ref Bitmap overlay)
+        protected void Draw(int x, int y, int color, bool shiftPressed, int toolSize, ref Bitmap overlay)
         {
             Bitmap bitmap = overlay;
             Draw(x, y, color, shiftPressed, (x, y, color) =>
             {
-                bitmap.SetPixel(x, y, (UniColor)color);
+                bitmap.SetPixel(x, y, color, toolSize);
             });
 
             overlay = bitmap;
         }
 
-        protected void Draw(int x, int y, int color, bool shiftPressed, Frame frame)
+        protected void Draw(int x, int y, int color, bool shiftPressed, int toolSize, Frame frame)
         {
             Draw(x, y, color, shiftPressed, (x1, y1, _) =>
             {
-                frame.SetPixel(x1, y1, color);
+                frame.SetPixel(x1, y1, color, toolSize);
             });
 
             Subjects.FrameModified.OnNext(frame);
