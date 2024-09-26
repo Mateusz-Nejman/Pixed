@@ -1,5 +1,6 @@
 ﻿using Pixed.Input;
 using Pixed.Models;
+using Pixed.Utils;
 using System.Drawing;
 
 namespace Pixed.Tools
@@ -10,17 +11,25 @@ namespace Pixed.Tools
         {
             _prevX = x;
             _prevY = y;
+            var toolPoints = PaintUtils.GetToolPoints(x, y, _applicationData.ToolSize);
 
-            bool usePrimary = (x + y) % 2 != 0;
-
-            if (Mouse.LeftButton == MouseButtonState.Pressed)
+            foreach (var toolPoint in toolPoints)
             {
-                usePrimary = !usePrimary;
+                if(!frame.ContainsPixel(toolPoint.X, toolPoint.Y))
+                {
+                    continue;
+                }
+
+                bool usePrimary = (toolPoint.X + toolPoint.Y) % 2 != 0;
+
+                if (Mouse.RightButton == MouseButtonState.Pressed)
+                {
+                    usePrimary = !usePrimary;
+                }
+
+                var color = usePrimary ? _applicationData.PrimaryColor : _applicationData.SecondaryColor;
+                this._pixels.Add(new Pixel(toolPoint.X, toolPoint.Y, color));
             }
-
-            var color = usePrimary ? _applicationData.PrimaryColor : _applicationData.SecondaryColor;
-
-            DrawOnOverlay(color, x, y, frame, ref overlay);
         }
     }
 }

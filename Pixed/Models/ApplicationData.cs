@@ -18,6 +18,7 @@ namespace Pixed.Models
         public UniColor PrimaryColor { get; set; }
         public UniColor SecondaryColor { get; set; }
         public Settings UserSettings { get; set; }
+        public int ToolSize { get; set; } = 1;
 
         public ApplicationData()
         {

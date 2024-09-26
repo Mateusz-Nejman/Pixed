@@ -38,6 +38,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     private bool _altEnabled;
     private string _projectSizeText;
     private string _mouseCoordinatesText;
+    private int _toolSize = 1;
 
     private readonly IDisposable _projectModified;
     private readonly IDisposable _projectChanged;
@@ -62,6 +63,17 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     public ActionCommand MouseLeave { get; }
     public ActionCommand ZoomInCommand { get; }
     public ActionCommand ZoomOutCommand { get; }
+
+    public int ToolSize
+    {
+        get => _toolSize;
+        set
+        {
+            _toolSize = value;
+            _applicationData.ToolSize = value;
+            OnPropertyChanged();
+        }
+    }
 
     public Bitmap Overlay
     {
@@ -153,7 +165,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         {
             _altChecked = value;
             OnPropertyChanged();
-            _controlPressed = value;
+            _altPressed = value;
         }
     }
 

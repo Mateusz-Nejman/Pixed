@@ -7,18 +7,11 @@ using System.IO;
 
 namespace Pixed.Services
 {
-    internal class RecentFilesService
+    internal class RecentFilesService(ApplicationData applicationData, PixedProjectMethods pixedProjectMethods)
     {
-        private readonly PixedProjectMethods _projectMethods;
-        private readonly string _filePath;
-        public List<string> RecentFiles { get; private set; }
-
-        public RecentFilesService(ApplicationData applicationData, PixedProjectMethods pixedProjectMethods)
-        {
-            _projectMethods = pixedProjectMethods;
-            RecentFiles = [];
-            _filePath = Path.Combine(applicationData.DataFolder, "recent.json");
-        }
+        private readonly PixedProjectMethods _projectMethods = pixedProjectMethods;
+        private readonly string _filePath = Path.Combine(applicationData.DataFolder, "recent.json");
+        public List<string> RecentFiles { get; private set; } = [];
 
         public void Load()
         {

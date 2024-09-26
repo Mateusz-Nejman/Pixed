@@ -43,6 +43,8 @@
 			<Button Width="32" Height="32" Command="{Binding ZoomInCommand}">
 				<Image Source="/Resources/Icons/zoom-in.png"/>
 			</Button>
+      <TextBlock Text="Tool size" VerticalAlignment="Center"/>
+      <NumericUpDown Minimum="1" Value="{Binding ToolSize, Mode=TwoWay}" Width="200"/>
 			<CheckBox Content="Shift" IsChecked="{Binding ShiftChecked, Mode=TwoWay}" IsEnabled="{Binding ShiftEnabled}"/>
 			<CheckBox Content="Control" IsChecked="{Binding ControlChecked, Mode=TwoWay}" IsEnabled="{Binding ControlEnabled}"/>
 			<CheckBox Content="Alt" IsChecked="{Binding AltChecked, Mode=TwoWay}" IsEnabled="{Binding AltEnabled}"/>

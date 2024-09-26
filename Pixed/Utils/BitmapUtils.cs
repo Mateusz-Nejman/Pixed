@@ -76,4 +76,27 @@ internal static class BitmapUtils
 
         return null;
     }
+
+    public static void SetPixel(this Bitmap bitmap, int x, int y, int color, int toolSize)
+    {
+        if (toolSize <= 1)
+        {
+            bitmap.SetPixel(x, y, (UniColor)color);
+            return;
+        }
+        for (int y1 = 0; y1 < toolSize; y1++)
+        {
+            for (int x1 = 0; x1 < toolSize; x1++)
+            {
+                Point point = new(x - (int)Math.Floor((double)toolSize / 2.0d) + x1, y -(int)Math.Floor((double)toolSize / 2.0d) + y1);
+
+                if(!bitmap.ContainsPixel(point.X, point.Y))
+                {
+                    continue;
+                }
+
+                bitmap.SetPixel(point.X, point.Y, (UniColor)color);
+            }
+        }
+    }
 }

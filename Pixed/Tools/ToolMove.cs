@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Pixed.Tools
 {
-    internal class ToolMove : BaseTool
+    internal class ToolMove(ApplicationData applicationData) : BaseTool(applicationData)
     {
         private int _startX = -1;
         private int _startY = -1;
@@ -14,8 +14,7 @@ namespace Pixed.Tools
         public override bool ShiftHandle { get; protected set; } = true;
         public override bool ControlHandle { get; protected set; } = true;
         public override bool AltHandle { get; protected set; } = true;
-
-        public ToolMove(ApplicationData applicationData) : base(applicationData) { }
+        public override bool SingleHighlightedPixel { get; protected set; } = true;
 
         public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
         {

@@ -6,6 +6,7 @@ namespace Pixed.Tools
 {
     internal class ToolColorPicker(ApplicationData applicationData) : BaseTool(applicationData)
     {
+        public override bool SingleHighlightedPixel { get; protected set; } = true;
         public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
         {
             if (frame.ContainsPixel(x, y))
