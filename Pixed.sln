@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pixed", "Pixed\Pixed.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pixed.Desktop", "Pixed.Desktop\Pixed.Desktop.csproj", "{A519001E-8F96-4F91-8A98-F5BC1ACD5D17}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Pixed.Installer", "Pixed.Installer\Pixed.Installer.vdproj", "{FBAACD2F-0EC9-4406-ABCC-AF795F78DC0A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,8 @@ Global
 		{A519001E-8F96-4F91-8A98-F5BC1ACD5D17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A519001E-8F96-4F91-8A98-F5BC1ACD5D17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A519001E-8F96-4F91-8A98-F5BC1ACD5D17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBAACD2F-0EC9-4406-ABCC-AF795F78DC0A}.Debug|Any CPU.ActiveCfg = Debug
+		{FBAACD2F-0EC9-4406-ABCC-AF795F78DC0A}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
