@@ -4,6 +4,7 @@ using Pixed.Utils;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace Pixed.Tools.Selection;
 
@@ -57,6 +58,7 @@ internal class LassoSelect(ApplicationData applicationData, ToolSelector toolSel
 
         var interpolated = MathUtils.GetBresenhamLine(x, y, _prevX, _prevY);
         _points = [.. _points, .. interpolated];
+        _points = _points.Distinct().ToList();
 
         _prevX = x;
         _prevY = y;

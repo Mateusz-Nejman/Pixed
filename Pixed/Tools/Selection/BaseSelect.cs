@@ -146,8 +146,7 @@ internal class BaseSelect : BaseTool
                 continue;
             }
 
-            var hasColor = UniColor.Transparent != pixel.Color;
-            var color = UniColor.WithAlpha(128, hasColor ? pixel.Color : UniColor.CornflowerBlue.ToInt());
+            var color = UniColor.WithAlpha(128, UniColor.GetFromResources("Accent"));
 
             bitmap.SetPixel(pixel.X, pixel.Y, color);
         }

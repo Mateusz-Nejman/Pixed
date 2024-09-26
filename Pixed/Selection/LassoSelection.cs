@@ -1,96 +1,45 @@
 ﻿using Pixed.Models;
-using Pixed.Utils;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace Pixed.Selection;
 
 internal class LassoSelection : BaseSelection
 {
-    private const int OUTSIDE = -1;
-    private const int INSIDE = 1;
-    private const int VISITED = 2;
-
-    private readonly int[,] _pixels;
 
     public LassoSelection(List<Point> pixels, Frame frame) : base()
     {
-        _pixels = new int[frame.Width, frame.Height];
-
-        foreach (var p in pixels)
-        {
-            SetPixel(p, INSIDE);
-        }
-
         Pixels.Clear();
-        Pixels.AddRange(GetLassoPixels(frame));
-    }
-
-    private List<Pixel> GetLassoPixels(Frame frame)
-    {
-        List<Pixel> pixels = [];
-
-        for (int x = 0; x < frame.Width; x++)
+        if (pixels.Count <= 4)
         {
-            for (int y = 0; y < frame.Height; y++)
-            {
-                if (IsInSelection(new Point(x, y), frame))
-                {
-                    pixels.Add(new Pixel(x, y, frame.GetPixel(x, y)));
-                }
-            }
+            Pixels.AddRange(pixels.Select(p => new Pixel(p.X, p.Y, frame.GetPixel(p.X, p.Y))));
         }
-
-        return pixels;
-    }
-
-    private bool IsInSelection(Point point, Frame frame)
-    {
-        bool visited = GetPixel(point) == VISITED;
-
-        if (!visited)
+        else
         {
-            VisitPixel(point, frame);
-        }
-
-        return GetPixel(point) == INSIDE;
-    }
-
-    private void VisitPixel(Point point, Frame frame)
-    {
-        bool frameBorderReached = false;
-        var visited = PaintUtils.VisitConnectedPixels(frame.CurrentLayer, point.X, point.Y, p =>
-        {
-            var alreadyVisited = GetPixel(point);
-
-            if (alreadyVisited == VISITED)
-            {
-                return false;
-            }
-
-            if (!frame.ContainsPixel(point.X, point.Y))
-            {
-                frameBorderReached = true;
-                return false;
-            }
-
-            SetPixel(point, VISITED);
-            return true;
-        });
-
-        foreach (var pixel in visited)
-        {
-            SetPixel(new Point(pixel.X, pixel.Y), frameBorderReached ? OUTSIDE : INSIDE);
+            var lasso = GetLassoPixels(pixels, frame);
+            Pixels.AddRange(lasso);
         }
     }
 
-    private void SetPixel(Point point, int value)
+    private List<Pixel> GetLassoPixels(List<Point> lassoPoints, Frame frame)
     {
-        _pixels[point.X, point.Y] = value;
-    }
+        Point maxTopPoint = lassoPoints.MinBy(p => p.Y);
+        Point maxBottomPoint = lassoPoints.MaxBy(p => p.Y);
 
-    private int GetPixel(Point point)
-    {
-        return _pixels[point.X, point.Y];
+        List<Pixel> lassoPixels = [];
+        for (int y = maxTopPoint.Y; y <= maxBottomPoint.Y; y++)
+        {
+            var row = lassoPoints.Where(p => p.Y == y);
+            int minX = row.Min(p => p.X);
+            int maxX = row.Max(p => p.X);
+
+            for (int x = minX; x <= maxX; x++)
+            {
+                lassoPixels.Add(new Pixel(x, y, frame.GetPixel(x, y)));
+            }
+        }
+
+        return lassoPixels;
     }
 }

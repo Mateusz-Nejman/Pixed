@@ -54,7 +54,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
         {
             Command = new ActionCommand(() =>
         {
-            AboutWindow window = new AboutWindow();
+            AboutWindow window = new();
             window.ShowDialog(MainWindow.Handle);
         })
         };
