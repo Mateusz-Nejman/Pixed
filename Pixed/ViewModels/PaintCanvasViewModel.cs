@@ -53,6 +53,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     private readonly IDisposable _mouseWheel;
     private readonly IDisposable _gridChanged;
     private readonly IDisposable _toolChanged;
+    private readonly IDisposable _keyState;
 
     public ActionCommand<Point> LeftMouseDown { get; }
     public ActionCommand<Point> LeftMouseUp { get; }
@@ -338,6 +339,24 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
             }
         });
 
+        _keyState = Subjects.KeyState.Subscribe(state =>
+        {
+            if (!ShiftChecked)
+            {
+                _shiftPressed = state.IsShift;
+            }
+
+            if (!ControlChecked)
+            {
+                _controlPressed = state.IsCtrl;
+            }
+
+            if (!AltChecked)
+            {
+                _altChecked = state.IsAlt;
+            }
+        });
+
         toolMoveCanvas.MoveAction = offset =>
         {
             _scrollViewerOffset = offset;
@@ -367,24 +386,6 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         Overlay = new Bitmap(_frame.Width, _frame.Height);
     }
 
-    public void ProcessModifiers(KeyModifiers modifiers)
-    {
-        if (!ShiftChecked)
-        {
-            _shiftPressed = modifiers.HasFlag(KeyModifiers.Shift);
-        }
-
-        if (!ControlChecked)
-        {
-            _controlPressed = modifiers.HasFlag(KeyModifiers.Control);
-        }
-
-        if (!AltChecked)
-        {
-            _altChecked = modifiers.HasFlag(KeyModifiers.Alt);
-        }
-    }
-
     protected virtual void Dispose(bool disposing)
     {
         if (!_disposedValue)
@@ -402,6 +403,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
                 _mouseWheel?.Dispose();
                 _gridChanged?.Dispose();
                 _toolChanged?.Dispose();
+                _keyState?.Dispose();
             }
 
             _disposedValue = true;

@@ -91,9 +91,4 @@ internal partial class PaintCanvas : PixedUserControl<PaintCanvasViewModel>
             ViewModel?.MouseMove?.Execute(pos.ToSystemPoint());
         }
     }
-
-    private void Border_KeyProcess(object? sender, KeyEventArgs e)
-    {
-        ViewModel.ProcessModifiers(e.KeyModifiers);
-    }
 }

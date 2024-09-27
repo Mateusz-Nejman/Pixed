@@ -36,9 +36,7 @@
 								PointerMoved="Border_PointerMoved"
 								PointerPressed="Border_PointerPressed"
 								PointerReleased="Border_PointerReleased"
-								PointerWheelChanged="Border_PointerWheelChanged"
-								KeyUp="Border_KeyProcess"
-								KeyDown="Border_KeyProcess"/>
+								PointerWheelChanged="Border_PointerWheelChanged"/>
 			</Grid>
 		</ScrollViewer>
 		<StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="5">
