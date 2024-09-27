@@ -7,8 +7,9 @@
 			 xmlns:controls="clr-namespace:Pixed.Controls"
 			 xmlns:gestures="clr-namespace:Pixed.Controls.Gestures"
              xmlns:viewmodels="clr-namespace:Pixed.ViewModels"
-             mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800">
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+			 x:DataType="viewmodels:PaintCanvasViewModel">
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*"/>

@@ -15,7 +15,7 @@ namespace Pixed.Tools
 
             foreach (var toolPoint in toolPoints)
             {
-                if(!frame.ContainsPixel(toolPoint.X, toolPoint.Y))
+                if (!frame.ContainsPixel(toolPoint.X, toolPoint.Y))
                 {
                     continue;
                 }

@@ -1,7 +1,5 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Shapes;
-using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Pixed.Windows;
 using System;
@@ -12,49 +10,16 @@ namespace Pixed.Controls;
 
 internal partial class CustomTitleBar : EmptyPixedUserControl
 {
-    private readonly Button _minimizeButton;
-    private readonly Button _maximizeButton;
-    private readonly Path _maximizeIcon;
-    private readonly ToolTip _maximizeToolTip;
-    private readonly Button _closeButton;
-    private readonly Image _windowIcon;
-
-    private readonly DockPanel _titleBar;
-    private readonly DockPanel _titleBarBackground;
-    private readonly TextBlock _systemChromeTitle;
-    private readonly NativeMenuBar _seamlessMenuBar;
-    private readonly NativeMenuBar _defaultMenuBar;
-
-    public static readonly StyledProperty<bool> IsSeamlessProperty =
-    AvaloniaProperty.Register<CustomTitleBar, bool>(nameof(IsSeamless));
-
-    public bool IsSeamless
+    public string Title
     {
-        get { return GetValue(IsSeamlessProperty); }
-        set
-        {
-            SetValue(IsSeamlessProperty, value);
-            if (_titleBarBackground != null &&
-                _systemChromeTitle != null &&
-                _seamlessMenuBar != null &&
-                _defaultMenuBar != null)
-            {
-                _titleBarBackground.IsVisible = !IsSeamless;
-                _systemChromeTitle.IsVisible = !IsSeamless;
-                _seamlessMenuBar.IsVisible = IsSeamless;
-                _defaultMenuBar.IsVisible = !IsSeamless;
-
-                if (!IsSeamless)
-                {
-                    _titleBar.Resources["SystemControlForegroundBaseHighBrush"] = new SolidColorBrush { Color = new Color(255, 0, 0, 0) };
-                }
-            }
-        }
+        get { return GetValue(TitleProperty); }
+        set { SetValue(TitleProperty, value); }
     }
 
+    public static readonly StyledProperty<string> TitleProperty = AvaloniaProperty.Register<CustomTitleBar, string>("Title", "Title");
     public CustomTitleBar() : base()
     {
-        this.InitializeComponent();
+        InitializeComponent();
 
         if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
@@ -62,23 +27,10 @@ internal partial class CustomTitleBar : EmptyPixedUserControl
         }
         else
         {
-            _minimizeButton = this.FindControl<Button>("MinimizeButton");
-            _maximizeButton = this.FindControl<Button>("MaximizeButton");
-            _maximizeIcon = this.FindControl<Path>("MaximizeIcon");
-            _maximizeToolTip = this.FindControl<ToolTip>("MaximizeToolTip");
-            _closeButton = this.FindControl<Button>("CloseButton");
-            _windowIcon = this.FindControl<Image>("WindowIcon");
-
-            _minimizeButton.Click += MinimizeWindow;
-            _maximizeButton.Click += MaximizeWindow;
-            _closeButton.Click += CloseWindow;
-            _windowIcon.DoubleTapped += CloseWindow;
-
-            _titleBar = this.FindControl<DockPanel>("TitleBar");
-            _titleBarBackground = this.FindControl<DockPanel>("TitleBarBackground");
-            _systemChromeTitle = this.FindControl<TextBlock>("SystemChromeTitle");
-            _seamlessMenuBar = this.FindControl<NativeMenuBar>("SeamlessMenuBar");
-            _defaultMenuBar = this.FindControl<NativeMenuBar>("DefaultMenuBar");
+            minimizeButton.Click += MinimizeWindow;
+            maximizeButton.Click += MaximizeWindow;
+            closeButton.Click += CloseWindow;
+            windowIcon.DoubleTapped += CloseWindow;
 
             SubscribeToWindowState();
         }
@@ -123,28 +75,16 @@ internal partial class CustomTitleBar : EmptyPixedUserControl
         {
             if (s != WindowState.Maximized)
             {
-                _maximizeIcon.Data = Geometry.Parse("M2048 2048v-2048h-2048v2048h2048zM1843 1843h-1638v-1638h1638v1638z");
+                maximizeIcon.Data = Geometry.Parse("M2048 2048v-2048h-2048v2048h2048zM1843 1843h-1638v-1638h1638v1638z");
                 hostWindow.Padding = new Thickness(0, 0, 0, 0);
-                _maximizeToolTip.Content = "Maximize";
+                maximizeToolTip.Content = "Maximize";
             }
             if (s == WindowState.Maximized)
             {
-                _maximizeIcon.Data = Geometry.Parse("M2048 1638h-410v410h-1638v-1638h410v-410h1638v1638zm-614-1024h-1229v1229h1229v-1229zm409-409h-1229v205h1024v1024h205v-1229z");
+                maximizeIcon.Data = Geometry.Parse("M2048 1638h-410v410h-1638v-1638h410v-410h1638v1638zm-614-1024h-1229v1229h1229v-1229zm409-409h-1229v205h1024v1024h205v-1229z");
                 hostWindow.Padding = new Thickness(7, 7, 7, 7);
-                _maximizeToolTip.Content = "Restore Down";
-
-                // This should be a more universal approach in both cases, but I found it to be less reliable, when for example double-clicking the title bar.
-                /*hostWindow.Padding = new Thickness(
-                        hostWindow.OffScreenMargin.Left,
-                        hostWindow.OffScreenMargin.Top,
-                        hostWindow.OffScreenMargin.Right,
-                        hostWindow.OffScreenMargin.Bottom);*/
+                maximizeToolTip.Content = "Restore Down";
             }
         });
-    }
-
-    private void InitializeComponent()
-    {
-        AvaloniaXamlLoader.Load(this);
     }
 }

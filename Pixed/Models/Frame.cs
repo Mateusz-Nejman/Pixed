@@ -82,14 +82,14 @@ internal class Frame : PropertyChangedBase, IPixedSerializer
 
     public void SetPixel(int x, int y, int color, int toolSize)
     {
-        if(toolSize <= 1)
+        if (toolSize <= 1)
         {
             SetPixel(x, y, color);
             return;
         }
-        for(int y1 = 0; y1 < toolSize; y1++)
+        for (int y1 = 0; y1 < toolSize; y1++)
         {
-            for(int x1 = 0; x1 < toolSize; x1++)
+            for (int x1 = 0; x1 < toolSize; x1++)
             {
                 Point point = new(x - (int)Math.Floor((double)toolSize / 2.0d) + x1, y - (int)Math.Floor((double)toolSize / 2.0d) + y1);
 

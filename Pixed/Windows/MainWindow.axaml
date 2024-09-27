@@ -21,16 +21,17 @@
         ExtendClientAreaChromeHints="NoChrome"
         ExtendClientAreaTitleBarHeightHint="-1"
         Icon="avares://Pixed.Core/Resources/icon.ico"
-		NativeMenu.Menu="{Binding Menu}">
+		NativeMenu.Menu="{Binding Menu}"
+		x:DataType="viewmodels:MainViewModel">
   <Window.KeyBindings>
     <KeyBinding Gesture="CTRL+Q"
-					Command="{Binding QuitCommand}"></KeyBinding>
+					Command="{Binding QuitCommand}"/>
   </Window.KeyBindings>
 
   <DockPanel HorizontalAlignment="Stretch"
 			   VerticalAlignment="Stretch"
 			   Name="ContentWrapper">
-    <controls:CustomTitleBar IsSeamless="True"/>
+    <controls:CustomTitleBar Title="{Binding Title}"/>
     <DockPanel Background="Transparent">
       <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid.RowDefinitions>
