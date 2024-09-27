@@ -10,6 +10,10 @@
     <ApplicationIcon>../Pixed/Resources/icon.ico</ApplicationIcon>
     <AssemblyName>Pixed</AssemblyName>
   </PropertyGroup>
+  <PropertyGroup Label="Avalonia">
+    <AvaloniaUseCompiledBindingsByDefault>True</AvaloniaUseCompiledBindingsByDefault>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
   
   <ItemGroup>
     <PackageReference Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
