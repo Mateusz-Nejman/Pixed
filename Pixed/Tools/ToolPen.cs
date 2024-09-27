@@ -67,7 +67,7 @@ internal class ToolPen(ApplicationData applicationData) : BaseTool(applicationDa
 
         foreach (var toolPoint in toolPoints)
         {
-            if(frame.ContainsPixel(toolPoint.X, toolPoint.Y))
+            if (frame.ContainsPixel(toolPoint.X, toolPoint.Y))
             {
                 this._pixels.Add(new Pixel(toolPoint.X, toolPoint.Y, color));
             }
