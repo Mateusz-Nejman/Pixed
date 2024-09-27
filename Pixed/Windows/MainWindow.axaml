@@ -24,13 +24,13 @@
 		NativeMenu.Menu="{Binding Menu}">
   <Window.KeyBindings>
     <KeyBinding Gesture="CTRL+Q"
-					Command="{Binding QuitCommand}"></KeyBinding>
+					Command="{Binding QuitCommand}"/>
   </Window.KeyBindings>
 
   <DockPanel HorizontalAlignment="Stretch"
 			   VerticalAlignment="Stretch"
 			   Name="ContentWrapper">
-    <controls:CustomTitleBar IsSeamless="True"/>
+    <controls:CustomTitleBar Title="{Binding Title}"/>
     <DockPanel Background="Transparent">
       <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid.RowDefinitions>
