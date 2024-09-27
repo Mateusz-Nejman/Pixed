@@ -7,7 +7,8 @@
 		xmlns:vm="clr-namespace:Pixed.ViewModels;assembly=Pixed.Core"
         Title="About"
         ShowInTaskbar="False" SizeToContent="WidthAndHeight"
-        WindowStartupLocation="CenterOwner" CanResize="False">
+        WindowStartupLocation="CenterOwner" CanResize="False"
+		x:DataType="vm:AboutViewModel">
 	<Window.DataContext>
 		<vm:AboutViewModel/>
 	</Window.DataContext>
