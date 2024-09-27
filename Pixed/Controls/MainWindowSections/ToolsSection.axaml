@@ -13,6 +13,11 @@
           <controls:SimpleTooltip Title="Move canvas"/>
         </ToolTip.Tip>
       </controls:ToolRadioButton>
+			<controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed.Core/Resources/Icons/tools/tool-zoom.png" Name="tool_zoom" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">
+				<ToolTip.Tip>
+					<controls:SimpleTooltip Title="Zoom"/>
+				</ToolTip.Tip>
+			</controls:ToolRadioButton>
 			<controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed.Core/Resources/Icons/tools/tool-pen.png" Name="tool_pen" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">
 				<ToolTip.Tip>
 					<controls:SimpleTooltip Title="Pen tool"/>

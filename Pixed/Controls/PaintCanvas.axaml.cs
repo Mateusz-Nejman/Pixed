@@ -14,6 +14,12 @@ internal partial class PaintCanvas : PixedUserControl<PaintCanvasViewModel>
     {
         InitializeComponent();
         SizeChanged += PaintCanvas_SizeChanged;
+        this.AddHandler(Avalonia.Input.Gestures.PinchEvent, PinchHandler);
+    }
+
+    private void PinchHandler(object? sender, PinchEventArgs e)
+    {
+        Subjects.ZoomChanged.OnNext(e.Scale);
     }
 
     private void PaintCanvas_SizeChanged(object? sender, SizeChangedEventArgs e)

@@ -40,6 +40,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     private string _mouseCoordinatesText;
     private int _toolSize = 1;
     private Avalonia.Vector _scrollViewerOffset;
+    private bool _isPinchEnabled = false;
 
     private readonly IDisposable _projectModified;
     private readonly IDisposable _projectChanged;
@@ -230,7 +231,17 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         }
     }
 
-    public PaintCanvasViewModel(ApplicationData applicationData, ToolSelector toolSelector, ToolMoveCanvas toolMoveCanvas)
+    public bool IsPinchEnabled
+    {
+        get => _isPinchEnabled;
+        set
+        {
+            _isPinchEnabled = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public PaintCanvasViewModel(ApplicationData applicationData, ToolSelector toolSelector, ToolMoveCanvas toolMoveCanvas, ToolZoom toolZoom)
     {
         _applicationData = applicationData;
         _toolSelector = toolSelector;
@@ -334,6 +345,10 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         };
 
         toolMoveCanvas.GetOffset = () => ScrollViewerOffset;
+
+        toolZoom.ZoomAction = Zoom;
+        toolZoom.SetEnabled = enabled => IsPinchEnabled = enabled;
+        toolZoom.GetZoom = () => _imageFactor;
     }
     public void RecalculateFactor(Point windowSize)
     {
@@ -414,6 +429,10 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         {
             toolMoveCanvas.ApplyTool(point.X, point.Y, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
         }
+        else if (_toolSelector.ToolSelected is ToolZoom toolZoom)
+        {
+            toolZoom.ApplyTool(point.X, point.Y, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
+        }
         else
         {
             _toolSelector.ToolSelected?.ApplyTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
@@ -459,6 +478,10 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         if (_toolSelector.ToolSelected is ToolMoveCanvas toolMoveCanvas)
         {
             toolMoveCanvas.ApplyTool(point.X, point.Y, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
+        }
+        else if (_toolSelector.ToolSelected is ToolZoom toolZoom)
+        {
+            toolZoom.ApplyTool(point.X, point.Y, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
         }
         else
         {
@@ -509,6 +532,10 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
             {
                 toolMoveCanvas.MoveTool(point.X, point.Y, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
             }
+            else if (_toolSelector.ToolSelected is ToolZoom toolZoom)
+            {
+                toolZoom.MoveTool(point.X, point.Y, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
+            }
             else
             {
                 _toolSelector.ToolSelected?.MoveTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
@@ -537,11 +564,16 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     {
         double multiplier = delta;
         var step = multiplier * Math.Max(0.1, Math.Abs(_imageFactor) / 15);
-        _imageFactor = Math.Max(0.1, _imageFactor + step);
-        _imageFactor = Math.Clamp(_imageFactor, 1, 300);
+        var factor = Math.Max(0.1, _imageFactor + step);
+        Zoom(factor);
+    }
+
+    private void Zoom(double factor)
+    {
+        _imageFactor = Math.Clamp(factor, 1, 300);
         GridWidth = _frame.Width * _imageFactor;
         GridHeight = _frame.Height * _imageFactor;
-        Subjects.MouseWheel.OnNext(delta);
+        Subjects.MouseWheel.OnNext(factor);
     }
 
     private void MouseLeaveAction()
