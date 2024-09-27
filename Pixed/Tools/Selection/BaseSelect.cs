@@ -31,11 +31,11 @@ internal class BaseSelect : BaseTool
     protected bool _isMovingContent = false;
 
     public override bool ShiftHandle { get; protected set; } = true;
+    public override bool AddToHistory { get; protected set; } = false;
 
     public BaseSelect(ApplicationData applicationData, ToolSelector toolSelector) : base(applicationData)
     {
         _toolSelector = toolSelector;
-        AddToHistory = false;
     }
 
     public void SelectAll(Action<Bitmap> overlayAction)

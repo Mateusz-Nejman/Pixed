@@ -8,6 +8,11 @@
              x:Class="Pixed.Controls.MainWindowSections.ToolsSection">
 	<ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
 		<StackPanel Margin="8">
+      <controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed.Core/Resources/Icons/tools/tool-move-canvas.png" Name="tool_move_canvas" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">
+        <ToolTip.Tip>
+          <controls:SimpleTooltip Title="Move canvas"/>
+        </ToolTip.Tip>
+      </controls:ToolRadioButton>
 			<controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed.Core/Resources/Icons/tools/tool-pen.png" Name="tool_pen" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">
 				<ToolTip.Tip>
 					<controls:SimpleTooltip Title="Pen tool"/>

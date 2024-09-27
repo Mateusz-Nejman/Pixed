@@ -46,6 +46,7 @@ internal static class DependencyInjectionRegister
         collection.AddScoped<ToolEraser>();
         collection.AddScoped<ToolLighten>();
         collection.AddScoped<ToolMove>();
+        collection.AddSingleton<ToolMoveCanvas>();
         collection.AddScoped<ToolNoise>();
         collection.AddScoped<ToolNoiseFill>();
         collection.AddScoped<ToolOutliner>();

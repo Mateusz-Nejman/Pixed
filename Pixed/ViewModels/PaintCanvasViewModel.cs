@@ -39,6 +39,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     private string _projectSizeText;
     private string _mouseCoordinatesText;
     private int _toolSize = 1;
+    private Avalonia.Vector _scrollViewerOffset;
 
     private readonly IDisposable _projectModified;
     private readonly IDisposable _projectChanged;
@@ -219,7 +220,17 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         }
     }
 
-    public PaintCanvasViewModel(ApplicationData applicationData, ToolSelector toolSelector)
+    public Avalonia.Vector ScrollViewerOffset
+    {
+        get => _scrollViewerOffset;
+        set
+        {
+            _scrollViewerOffset = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public PaintCanvasViewModel(ApplicationData applicationData, ToolSelector toolSelector, ToolMoveCanvas toolMoveCanvas)
     {
         _applicationData = applicationData;
         _toolSelector = toolSelector;
@@ -315,6 +326,14 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
                 OnPropertyChanged(nameof(ControlChecked));
             }
         });
+
+        toolMoveCanvas.MoveAction = offset =>
+        {
+            _scrollViewerOffset = offset;
+            OnPropertyChanged(nameof(ScrollViewerOffset));
+        };
+
+        toolMoveCanvas.GetOffset = () => ScrollViewerOffset;
     }
     public void RecalculateFactor(Point windowSize)
     {
@@ -391,7 +410,14 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         }
 
         _leftPressed = true;
-        _toolSelector.ToolSelected?.ApplyTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
+        if (_toolSelector.ToolSelected is ToolMoveCanvas toolMoveCanvas)
+        {
+            toolMoveCanvas.ApplyTool(point.X, point.Y, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
+        }
+        else
+        {
+            _toolSelector.ToolSelected?.ApplyTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
+        }
         RefreshOverlay();
         RefreshRender();
     }
@@ -430,7 +456,14 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         }
 
         _rightPressed = true;
-        _toolSelector.ToolSelected?.ApplyTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
+        if (_toolSelector.ToolSelected is ToolMoveCanvas toolMoveCanvas)
+        {
+            toolMoveCanvas.ApplyTool(point.X, point.Y, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
+        }
+        else
+        {
+            _toolSelector.ToolSelected?.ApplyTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
+        }
         RefreshOverlay();
         RefreshRender();
     }
@@ -472,7 +505,14 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
 
         if (_leftPressed || _rightPressed)
         {
-            _toolSelector.ToolSelected?.MoveTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
+            if (_toolSelector.ToolSelected is ToolMoveCanvas toolMoveCanvas)
+            {
+                toolMoveCanvas.MoveTool(point.X, point.Y, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
+            }
+            else
+            {
+                _toolSelector.ToolSelected?.MoveTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
+            }
             RefreshOverlay();
             RefreshRender();
         }
