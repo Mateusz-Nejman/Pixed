@@ -10,6 +10,9 @@
       <TabControl.ItemTemplate>
         <DataTemplate>
           <Grid Width="100" Height="72">
+            <ToolTip.Tip>
+              <TextBlock FontWeight="Bold" FontSize="14" Text="{Binding FileName}" Foreground="White"></TextBlock>
+            </ToolTip.Tip>
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="64"/>
               <ColumnDefinition Width="32"/>
