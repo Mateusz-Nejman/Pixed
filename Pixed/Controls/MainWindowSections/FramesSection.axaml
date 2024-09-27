@@ -6,7 +6,8 @@
              xmlns:local="clr-namespace:Pixed.Controls.MainWindowSections"
              xmlns:vm="clr-namespace:Pixed.ViewModels"
              xmlns:controls="clr-namespace:Pixed.Controls"
-             x:Class="Pixed.Controls.MainWindowSections.FramesSection">
+             x:Class="Pixed.Controls.MainWindowSections.FramesSection"
+			 x:DataType="vm:FramesSectionViewModel">
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="32"/>
