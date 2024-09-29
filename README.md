@@ -5,6 +5,7 @@ Pixed
 Create pixel art images with **Pixed**. Use it in a game or wherever you want. Pixed is developed also for touch screens. 
 
 ![Pixed screenshot1](/screenshot1.png "Screenshot 1")
+![Pixed screenshot2](/screenshot2.png "Screenshot 2")
 
 ## Features
 - Open/save PNG images and own project format
