@@ -28,7 +28,7 @@ namespace Pixed.Tools
                 }
 
                 var color = usePrimary ? _applicationData.PrimaryColor : _applicationData.SecondaryColor;
-                this._pixels.Add(new Pixel(toolPoint.X, toolPoint.Y, color));
+                AddPixel(toolPoint, color);
             }
         }
     }

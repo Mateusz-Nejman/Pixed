@@ -6,6 +6,7 @@ using Pixed.Tools.Selection;
 using Pixed.Utils;
 using Pixed.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
@@ -83,11 +84,10 @@ internal class SelectionManager
 
         for (int a = 0; a < pixels.Count; a++)
         {
-            var p = pixels[a];
-            int newColor = UniColor.Transparent;
-
-            frame.SetPixel(p.X, p.Y, newColor);
+            pixels[a].Color = UniColor.Transparent;
         }
+
+        frame.SetPixels(pixels);
 
         Subjects.FrameModified.OnNext(frame);
         Subjects.LayerModified.OnNext(frame.CurrentLayer);
@@ -141,6 +141,7 @@ internal class SelectionManager
         }
 
         Frame frame = _applicationData.CurrentFrame;
+        List<Pixel> pixels = [];
 
         for (int x = 0; x < source.Width; x++)
         {
@@ -149,10 +150,12 @@ internal class SelectionManager
                 if (frame.ContainsPixel(startPosition.X + x, startPosition.Y + y))
                 {
                     var color = source.GetPixel(x, y);
-                    frame.SetPixel(startPosition.X + x, startPosition.Y + y, color.ToArgb());
+                    pixels.Add(new Pixel(startPosition.X + x, startPosition.Y + y, color.ToArgb()));
                 }
             }
         }
+
+        frame.SetPixels(pixels);
 
         Subjects.LayerModified.OnNext(frame.CurrentLayer);
         Subjects.FrameModified.OnNext(frame);

@@ -63,10 +63,8 @@ internal static class PaintUtils
             return false;
         });
 
-        foreach (var pixel in pixels)
-        {
-            layer.SetPixel(pixel.X, pixel.Y, replacementColor);
-        }
+        pixels = pixels.Select(p => new Pixel(p.X, p.Y, replacementColor)).ToList();
+        layer.SetPixels(pixels);
 
         Subjects.LayerModified.OnNext(layer);
     }
@@ -150,11 +148,8 @@ internal static class PaintUtils
             return false;
         });
 
-        foreach (var pixel in pixels)
-        {
-            var color = GetNoiseColor(primaryColor, secondaryColor);
-            layer.SetPixel(pixel.X, pixel.Y, color);
-        }
+        pixels = pixels.Select(p => new Pixel(p.X, p.Y, GetNoiseColor(primaryColor, secondaryColor))).ToList();
+        layer.SetPixels(pixels);
 
         Subjects.LayerModified.OnNext(layer);
     }
@@ -195,13 +190,9 @@ internal static class PaintUtils
         }
 
         var pixels = GetSimiliarConnectedPixels(layer, x, y);
-        pixels = pixels.Where(neighbourCheck).ToList();
+        pixels = pixels.Where(neighbourCheck).Select(p => new Pixel(p.X, p.Y, replacementColor)).ToList();
 
-        foreach (var pixel in pixels)
-        {
-            layer.SetPixel(pixel.X, pixel.Y, replacementColor);
-        }
-
+        layer.SetPixels(pixels);
         Subjects.LayerModified.OnNext(layer);
     }
 }

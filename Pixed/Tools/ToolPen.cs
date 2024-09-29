@@ -2,7 +2,9 @@
 using Pixed.Utils;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 
 namespace Pixed.Tools;
 
@@ -10,7 +12,8 @@ internal class ToolPen(ApplicationData applicationData) : BaseTool(applicationDa
 {
     protected int _prevX = -1;
     protected int _prevY = -1;
-    protected List<Pixel> _pixels = [];
+    private readonly List<Pixel> _pixels = [];
+    private readonly List<Point> _modifiedPoints = [];
     public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
         _prevX = x;
@@ -22,7 +25,7 @@ internal class ToolPen(ApplicationData applicationData) : BaseTool(applicationDa
 
     public override void MoveTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
-        if ((Math.Abs(x - _prevX) > 1) || (Math.Abs(y - _prevY) > 1))
+        if (_prevX != x || _prevY != y)
         {
             var interpolatedPixels = MathUtils.GetBresenhamLine(x, y, _prevX, _prevY);
 
@@ -44,6 +47,7 @@ internal class ToolPen(ApplicationData applicationData) : BaseTool(applicationDa
     {
         SetPixelsToFrame(frame);
         _pixels.Clear();
+        _modifiedPoints.Clear();
         _prevX = -1;
         _prevY = -1;
     }
@@ -51,6 +55,27 @@ internal class ToolPen(ApplicationData applicationData) : BaseTool(applicationDa
     public List<Pixel> GetPixels()
     {
         return _pixels;
+    }
+
+    protected bool IsPixelModified(Point point)
+    {
+        return _modifiedPoints.Contains(point);
+    }
+
+    protected void AddPixel(int x, int y, int color)
+    {
+        AddPixel(new Point(x, y), color);
+    }
+
+    protected void AddPixel(Point point, int color)
+    {
+        if (IsPixelModified(point))
+        {
+            return;
+        }
+
+        _pixels.Add(new Pixel(point.X, point.Y, color));
+        _modifiedPoints.Add(point);
     }
 
     protected void DrawOnOverlay(UniColor color, int x, int y, Frame frame, ref Bitmap overlay)
@@ -69,18 +94,14 @@ internal class ToolPen(ApplicationData applicationData) : BaseTool(applicationDa
         {
             if (frame.ContainsPixel(toolPoint.X, toolPoint.Y))
             {
-                this._pixels.Add(new Pixel(toolPoint.X, toolPoint.Y, color));
+                AddPixel(toolPoint, color);
             }
         }
     }
 
     private void SetPixelsToFrame(Frame frame)
     {
-        foreach (var pixel in this._pixels)
-        {
-            frame.SetPixel(pixel.X, pixel.Y, pixel.Color);
-        }
-
-        Subjects.FrameModified.OnNext(frame);
+        frame.SetPixels(_pixels);
+        Subjects.LayerModified.OnNext(frame.CurrentLayer);
     }
 }
