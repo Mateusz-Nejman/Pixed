@@ -5,7 +5,6 @@ using Pixed.Input;
 using Pixed.IO;
 using Pixed.Menu;
 using Pixed.Models;
-using Pixed.Selection;
 using Pixed.Services;
 using Pixed.Services.Keyboard;
 using Pixed.Tools;

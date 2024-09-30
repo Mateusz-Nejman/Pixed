@@ -100,7 +100,7 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
 
     public void SetPixels(List<Pixel> pixels)
     {
-        foreach(Pixel pixel in pixels)
+        foreach (Pixel pixel in pixels)
         {
             SetPixelPrivate(pixel.X, pixel.Y, pixel.Color);
         }
