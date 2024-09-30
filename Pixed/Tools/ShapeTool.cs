@@ -59,8 +59,6 @@ namespace Pixed.Tools
             {
                 frame.SetPixel(x1, y1, color, toolSize);
             });
-
-            Subjects.FrameModified.OnNext(frame);
         }
         protected abstract void Draw(int x, int y, int color, bool shiftPressed, Action<int, int, int> setPixelAction);
     }

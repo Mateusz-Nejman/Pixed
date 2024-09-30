@@ -1,4 +1,5 @@
 ﻿using Pixed.Models;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
@@ -58,6 +59,8 @@ namespace Pixed.Tools
         private static void ShiftLayer(Layer layer, Layer reference, int diffX, int diffY, bool altPressed)
         {
             int color;
+
+            List<Pixel> pixels = [];
             for (int x = 0; x < layer.Width; x++)
             {
                 for (int y = 0; y < layer.Height; y++)
@@ -80,9 +83,11 @@ namespace Pixed.Tools
                         color = UniColor.Transparent;
                     }
 
-                    layer.SetPixel(x, y, color);
+                    pixels.Add(new Pixel(x, y, color));
                 }
             }
+
+            layer.SetPixels(pixels);
         }
     }
 }

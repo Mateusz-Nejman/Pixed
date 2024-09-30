@@ -38,6 +38,20 @@ namespace Pixed.Utils
             stream.Write(BitConverter.GetBytes(value));
         }
 
+        public static void WriteIntArray(this Stream stream, int[] value)
+        {
+            byte[] newValue = new byte[value.Length * sizeof(int)];
+
+            for(int i = 0; i < value.Length; i++)
+            {
+                int arrayIndex = i * sizeof(int);
+                byte[] byteValue = BitConverter.GetBytes(value[i]);
+                Array.Copy(byteValue, 0, newValue, arrayIndex, byteValue.Length);
+            }
+
+            stream.Write(newValue);
+        }
+
         public static void WriteDouble(this Stream stream, double value)
         {
             stream.Write(BitConverter.GetBytes(value));

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using Bitmap = Avalonia.Media.Imaging.Bitmap;
 
 namespace Pixed.Models;
@@ -80,6 +81,11 @@ internal class Frame : PropertyChangedBase, IPixedSerializer
         CurrentLayer.SetPixel(x, y, color);
     }
 
+    public void SetPixels(List<Pixel> pixels)
+    {
+        CurrentLayer.SetPixels(pixels);
+    }
+
     public void SetPixel(int x, int y, int color, int toolSize)
     {
         if (toolSize <= 1)
@@ -87,19 +93,10 @@ internal class Frame : PropertyChangedBase, IPixedSerializer
             SetPixel(x, y, color);
             return;
         }
-        for (int y1 = 0; y1 < toolSize; y1++)
-        {
-            for (int x1 = 0; x1 < toolSize; x1++)
-            {
-                Point point = new(x - (int)Math.Floor((double)toolSize / 2.0d) + x1, y - (int)Math.Floor((double)toolSize / 2.0d) + y1);
 
-                if (!ContainsPixel(point.X, point.Y))
-                {
-                    continue;
-                }
-                SetPixel(point.X, point.Y, color);
-            }
-        }
+        var toolPoints = PaintUtils.GetToolPoints(x, y, toolSize);
+        var pixels = toolPoints.Select(p => new Pixel(p.X, p.Y, color)).ToList();
+        SetPixels(pixels);
     }
 
     public int GetPixel(int x, int y)
