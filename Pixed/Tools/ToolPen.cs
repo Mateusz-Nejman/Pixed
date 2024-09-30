@@ -102,6 +102,5 @@ internal class ToolPen(ApplicationData applicationData) : BaseTool(applicationDa
     private void SetPixelsToFrame(Frame frame)
     {
         frame.SetPixels(_pixels);
-        Subjects.LayerModified.OnNext(frame.CurrentLayer);
     }
 }

@@ -72,6 +72,11 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
         Frames.Add(new Frame(width, height));
     }
 
+    public void CopyHistoryFrom(PixedModel model)
+    {
+        _history.AddRange(model._history);
+    }
+
     public PixedModel Clone()
     {
         PixedModel model = new(_applicationData)

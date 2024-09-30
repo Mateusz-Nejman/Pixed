@@ -31,6 +31,8 @@ internal static class ResizeUtils
         }
 
         var resizedModel = PixedModel.FromFrames(frames, model.FileName, applicationData);
+        resizedModel.CopyHistoryFrom(model);
+        resizedModel.AddHistory();
         resizedModel.CurrentFrameIndex = model.CurrentFrameIndex;
         return resizedModel;
     }

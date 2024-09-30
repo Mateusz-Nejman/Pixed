@@ -11,5 +11,13 @@ namespace Pixed.Utils
             list.Remove(last);
             return last;
         }
+
+        public static void AddRange<T>(this IList<T> collection, IEnumerable<T> values)
+        {
+            foreach (T value in values)
+            {
+                collection.Add(value);
+            }
+        }
     }
 }

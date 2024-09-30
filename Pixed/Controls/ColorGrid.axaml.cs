@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 
 namespace Pixed.Controls;
 
-internal partial class ColorGrid : EmptyPixedUserControl
+internal partial class ColorGrid : UserControl
 {
     public int Columns
     {

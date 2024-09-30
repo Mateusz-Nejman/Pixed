@@ -16,7 +16,6 @@ namespace Pixed.Windows;
 
 internal partial class MainWindow : PixedWindow<MainViewModel>
 {
-    private readonly SelectionManager _selectionManager;
     private readonly ApplicationData _applicationData;
     private readonly PixedProjectMethods _pixedProjectMethods;
     private readonly TransformMenuRegister _menuRegister;
@@ -25,10 +24,9 @@ internal partial class MainWindow : PixedWindow<MainViewModel>
     private readonly MenuBuilder _menuBuilder;
     public static Window? Handle { get; private set; }
     public static ICommand? QuitCommand { get; private set; }
-    public MainWindow(SelectionManager selectionManager, ApplicationData applicationData, PixedProjectMethods pixedProjectMethods, MenuBuilder builder, MenuItemRegistry menuItemRegistry,
+    public MainWindow(ApplicationData applicationData, PixedProjectMethods pixedProjectMethods, MenuBuilder builder, MenuItemRegistry menuItemRegistry,
         TransformMenuRegister transformToolsMenuRegister, RecentFilesService recentFilesService, ToolSelector toolSelector) : base(menuItemRegistry)
     {
-        _selectionManager = selectionManager;
         _pixedProjectMethods = pixedProjectMethods;
         _applicationData = applicationData;
         _menuRegister = transformToolsMenuRegister;
