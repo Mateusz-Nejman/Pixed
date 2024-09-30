@@ -1,5 +1,6 @@
 ﻿using Pixed.Models;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 
@@ -30,6 +31,8 @@ internal static class ResizeUtils
         }
 
         var resizedModel = PixedModel.FromFrames(frames, model.FileName, applicationData);
+        resizedModel.CopyHistoryFrom(model);
+        resizedModel.AddHistory();
         resizedModel.CurrentFrameIndex = model.CurrentFrameIndex;
         return resizedModel;
     }
@@ -56,6 +59,7 @@ internal static class ResizeUtils
         }
 
         Layer resizedLayer = new(width, height);
+        List<Pixel> pixels = [];
 
         for (int x = 0; x < layer.Width; x++)
         {
@@ -65,10 +69,12 @@ internal static class ResizeUtils
 
                 if (resizedLayer.ContainsPixel(translated.X, translated.Y))
                 {
-                    resizedLayer.SetPixel(translated.X, translated.Y, layer.GetPixel(x, y));
+                    pixels.Add(new Pixel(translated.X, translated.Y, layer.GetPixel(x, y)));
                 }
             }
         }
+
+        resizedLayer.SetPixels(pixels);
 
         return resizedLayer;
     }

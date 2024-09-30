@@ -94,12 +94,16 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
 
     public void SetPixel(int x, int y, int color)
     {
-        if (x < 0 || y < 0 || x >= _width || y >= _height)
+        SetPixelPrivate(x, y, color);
+        RefreshRenderSource(); //TODO performace issue
+    }
+
+    public void SetPixels(List<Pixel> pixels)
+    {
+        foreach (Pixel pixel in pixels)
         {
-            return;
+            SetPixelPrivate(pixel.X, pixel.Y, pixel.Color);
         }
-        _pixels[y * _width + x] = color;
-        _needRerender = true;
         RefreshRenderSource();
     }
 
@@ -186,11 +190,7 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
         stream.WriteInt(Height);
         stream.WriteString(Name);
         stream.WriteInt(_pixels.Length);
-
-        foreach (var pixel in _pixels)
-        {
-            stream.WriteInt(pixel);
-        }
+        stream.WriteIntArray(_pixels);
     }
 
     public void Deserialize(Stream stream)
@@ -228,5 +228,15 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
         }
 
         return first;
+    }
+
+    private void SetPixelPrivate(int x, int y, int color)
+    {
+        if (x < 0 || y < 0 || x >= _width || y >= _height)
+        {
+            return;
+        }
+        _pixels[y * _width + x] = color;
+        _needRerender = true;
     }
 }

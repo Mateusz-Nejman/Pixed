@@ -1,4 +1,5 @@
 ﻿using Pixed.Models;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace Pixed.Tools
@@ -29,16 +30,19 @@ namespace Pixed.Tools
 
         private static void ApplyToolOnLayer(Layer layer, int oldColor, int newColor)
         {
+            List<Pixel> pixels = [];
             for (int x = 0; x < layer.Width; x++)
             {
                 for (int y = 0; y < layer.Height; y++)
                 {
                     if (layer.GetPixel(x, y) == oldColor)
                     {
-                        layer.SetPixel(x, y, newColor);
+                        pixels.Add(new Pixel(x, y, newColor));
                     }
                 }
             }
+
+            layer.SetPixels(pixels);
         }
     }
 }

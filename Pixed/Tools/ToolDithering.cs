@@ -15,7 +15,7 @@ namespace Pixed.Tools
 
             foreach (var toolPoint in toolPoints)
             {
-                if(!frame.ContainsPixel(toolPoint.X, toolPoint.Y))
+                if (!frame.ContainsPixel(toolPoint.X, toolPoint.Y))
                 {
                     continue;
                 }
@@ -28,7 +28,7 @@ namespace Pixed.Tools
                 }
 
                 var color = usePrimary ? _applicationData.PrimaryColor : _applicationData.SecondaryColor;
-                this._pixels.Add(new Pixel(toolPoint.X, toolPoint.Y, color));
+                AddPixel(toolPoint, color);
             }
         }
     }

@@ -88,9 +88,9 @@ internal static class BitmapUtils
         {
             for (int x1 = 0; x1 < toolSize; x1++)
             {
-                Point point = new(x - (int)Math.Floor((double)toolSize / 2.0d) + x1, y -(int)Math.Floor((double)toolSize / 2.0d) + y1);
+                Point point = new(x - (int)Math.Floor((double)toolSize / 2.0d) + x1, y - (int)Math.Floor((double)toolSize / 2.0d) + y1);
 
-                if(!bitmap.ContainsPixel(point.X, point.Y))
+                if (!bitmap.ContainsPixel(point.X, point.Y))
                 {
                     continue;
                 }

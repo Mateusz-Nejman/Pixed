@@ -17,8 +17,10 @@ internal class MainViewModel : PixedViewModel, IDisposable
     private readonly RecentFilesService _recentFilesService;
     private readonly PaletteService _paletteService;
     private readonly IDisposable _onMenuBuilt;
+    private readonly IDisposable _projectChanged;
     private NativeMenu? _menu;
     private bool _disposedValue;
+    private string _title;
 
     public NativeMenu? Menu
     {
@@ -26,6 +28,16 @@ internal class MainViewModel : PixedViewModel, IDisposable
         set
         {
             _menu = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public string Title
+    {
+        get => _title;
+        set
+        {
+            _title = value;
             OnPropertyChanged();
         }
     }
@@ -39,6 +51,11 @@ internal class MainViewModel : PixedViewModel, IDisposable
         _onMenuBuilt = menuBuilder.OnMenuBuilt.Subscribe(menu =>
         {
             Menu = menu;
+        });
+
+        _projectChanged = Subjects.ProjectChanged.Subscribe(model =>
+        {
+            Title = model.FileName + " - Pixed";
         });
     }
 
@@ -65,6 +82,7 @@ internal class MainViewModel : PixedViewModel, IDisposable
             if (disposing)
             {
                 _onMenuBuilt?.Dispose();
+                _projectChanged?.Dispose();
             }
 
             _disposedValue = true;

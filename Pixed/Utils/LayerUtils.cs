@@ -1,4 +1,5 @@
 ﻿using Pixed.Models;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace Pixed.Utils;
@@ -15,14 +16,16 @@ internal static class LayerUtils
         graphics.Dispose();
 
         Layer newLayer = new(targetWidth, targetHeight);
-
+        List<Pixel> pixels = [];
         for (int x = 0; x < targetWidth; x++)
         {
             for (int y = 0; y < targetHeight; y++)
             {
-                newLayer.SetPixel(x, y, newBitmap.GetPixel(x, y).ToArgb());
+                pixels.Add(new Pixel(x, y, newBitmap.GetPixel(x, y).ToArgb()));
             }
         }
+
+        newLayer.SetPixels(pixels);
 
         return newLayer;
     }

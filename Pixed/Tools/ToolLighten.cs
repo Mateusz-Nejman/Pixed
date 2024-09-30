@@ -26,7 +26,7 @@ namespace Pixed.Tools
             UniColor overlayColor = overlay.GetPixel(x, y);
             UniColor frameColor = frame.GetPixel(x, y);
 
-            bool isPixelModified = _pixels.Exists(p => p.X == x && p.Y == y);
+            bool isPixelModified = IsPixelModified(new Point(x, y));
             var pixelColor = isPixelModified ? overlayColor : frameColor;
 
             bool isTransparent = pixelColor == UniColor.Transparent;

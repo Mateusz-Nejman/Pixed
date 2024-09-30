@@ -8,10 +8,10 @@ namespace Pixed.Tools;
 internal abstract class BaseTool(ApplicationData applicationData)
 {
     protected readonly ApplicationData _applicationData = applicationData;
-    protected int highlightedX = 0;
-    protected int highlightedY = 0;
+    protected int _highlightedX = 0;
+    protected int _highlightedY = 0;
 
-    public bool AddToHistory { get; protected set; } = true;
+    public virtual bool AddToHistory { get; protected set; } = true;
     public virtual bool ShiftHandle { get; protected set; } = false;
     public virtual bool ControlHandle { get; protected set; } = false;
     public virtual bool AltHandle { get; protected set; } = false;
@@ -46,13 +46,13 @@ internal abstract class BaseTool(ApplicationData applicationData)
     {
         overlay ??= new Bitmap(frame.Width, frame.Height);
 
-        if (highlightedX != x || highlightedY != y)
+        if (_highlightedX != x || _highlightedY != y)
         {
             overlay?.Clear();
         }
 
-        highlightedX = x;
-        highlightedY = y;
+        _highlightedX = x;
+        _highlightedY = y;
 
         int pixel = frame.GetPixel(x, y);
 

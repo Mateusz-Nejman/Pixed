@@ -1,6 +1,7 @@
 ﻿using Pixed.Models;
 using Pixed.Selection;
 using System;
+using System.Collections.Generic;
 
 namespace Pixed.Tools.Transform;
 
@@ -21,6 +22,7 @@ internal static class TransformUtils
     public static void Flip(ref Layer layer, Axis axis)
     {
         Layer clone = layer.Clone();
+        List<Pixel> pixels = [];
 
         for (int x = 0; x < layer.Width; x++)
         {
@@ -38,9 +40,11 @@ internal static class TransformUtils
                     pixelY = layer.Height - y - 1;
                 }
 
-                layer.SetPixel(pixelX, pixelY, clone.GetPixel(x, y));
+                pixels.Add(new Pixel(pixelX, pixelY, clone.GetPixel(x, y)));
             }
         }
+
+        layer.SetPixels(pixels);
     }
 
     public static void Rotate(ref Layer layer, Direction direction)
@@ -53,6 +57,7 @@ internal static class TransformUtils
         double deltaX = Math.Ceiling((max - w) / 2.0);
         double deltaY = Math.Ceiling((max - h) / 2.0);
 
+        List<Pixel> pixels = [];
         for (int x = 0; x < layer.Width; x++)
         {
             for (int y = 0; y < layer.Height; y++)
@@ -79,14 +84,16 @@ internal static class TransformUtils
 
                 if (clone.ContainsPixel((int)newX, (int)newY))
                 {
-                    layer.SetPixel(x, y, clone.GetPixel((int)newX, (int)newY));
+                    pixels.Add(new Pixel(x, y, clone.GetPixel((int)newX, (int)newY)));
                 }
                 else
                 {
-                    layer.SetPixel(x, y, UniColor.Transparent);
+                    pixels.Add(new Pixel(x, y, UniColor.Transparent));
                 }
             }
         }
+
+        layer.SetPixels(pixels);
     }
 
     public static void Center(Layer layer)
@@ -107,6 +114,7 @@ internal static class TransformUtils
     public static void MoveLayerFixes(Layer layer, int dx, int dy)
     {
         Layer clone = layer.Clone();
+        List<Pixel> pixels = [];
 
         for (int x = 0; x < layer.Width; x++)
         {
@@ -117,14 +125,16 @@ internal static class TransformUtils
 
                 if (clone.ContainsPixel(newX, newY))
                 {
-                    layer.SetPixel(x, y, clone.GetPixel(newX, newY));
+                    pixels.Add(new Pixel(x, y, clone.GetPixel(newX, newY)));
                 }
                 else
                 {
-                    layer.SetPixel(x, y, UniColor.Transparent);
+                    pixels.Add(new Pixel(x, y, UniColor.Transparent));
                 }
             }
         }
+
+        layer.SetPixels(pixels);
     }
 
     public static int[] GetBoundaries(Layer[] layers)
