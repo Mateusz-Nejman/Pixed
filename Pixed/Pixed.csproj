@@ -7,6 +7,7 @@
     <AvaloniaUseCompiledBindingsByDefault>True</AvaloniaUseCompiledBindingsByDefault>
     <AssemblyName>Pixed.Core</AssemblyName>
     <PlatformTarget>x64</PlatformTarget>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,7 +24,7 @@
     <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.1.0.4" />
     <PackageReference Include="BigGustave" Version="1.0.6" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.1" />
-    <PackageReference Include="LZMA-SDK" Version="22.1.1" />
+    <PackageReference Include="MateuszNejman.LZMA_SDK" Version="24.8.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="PixiEditor.ColorPicker.AvaloniaUI" Version="1.0.6" />
