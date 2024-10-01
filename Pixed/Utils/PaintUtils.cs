@@ -150,8 +150,6 @@ internal static class PaintUtils
 
         pixels = pixels.Select(p => new Pixel(p.X, p.Y, GetNoiseColor(primaryColor, secondaryColor))).ToList();
         layer.SetPixels(pixels);
-
-        Subjects.LayerModified.OnNext(layer);
     }
 
     public static void OutlineSimiliarConnectedPixels(Layer layer, int x, int y, int replacementColor, bool fillCorners)
@@ -193,6 +191,5 @@ internal static class PaintUtils
         pixels = pixels.Where(neighbourCheck).Select(p => new Pixel(p.X, p.Y, replacementColor)).ToList();
 
         layer.SetPixels(pixels);
-        Subjects.LayerModified.OnNext(layer);
     }
 }

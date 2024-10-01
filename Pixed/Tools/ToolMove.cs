@@ -87,7 +87,7 @@ namespace Pixed.Tools
                 }
             }
 
-            layer.SetPixels(pixels);
+            SetPixels(layer, pixels);
         }
     }
 }

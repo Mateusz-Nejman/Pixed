@@ -42,7 +42,7 @@ internal class ToolPen(ApplicationData applicationData) : BaseTool(applicationDa
 
     public override void ReleaseTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
-        SetPixelsToFrame(frame);
+        SetPixels(frame, _pixels);
         _pixels.Clear();
         _modifiedPoints.Clear();
         _prevX = -1;
@@ -94,10 +94,5 @@ internal class ToolPen(ApplicationData applicationData) : BaseTool(applicationDa
                 AddPixel(toolPoint, color);
             }
         }
-    }
-
-    private void SetPixelsToFrame(Frame frame)
-    {
-        frame.SetPixels(_pixels);
     }
 }

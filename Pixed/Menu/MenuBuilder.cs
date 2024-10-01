@@ -6,6 +6,7 @@ using Pixed.Utils;
 using Pixed.Windows;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 
@@ -146,11 +147,19 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
         NativeMenuItem editMenu = new("Edit");
         NativeMenuItem undoMenu = new("Undo")
         {
-            Command = new ActionCommand(_applicationData.CurrentModel.Undo)
+            Command = new ActionCommand(() =>
+            {
+                _applicationData.CurrentModel.Undo();
+                Subjects.ProjectModified.OnNext(_applicationData.CurrentModel);
+            })
         };
         NativeMenuItem redoMenu = new("Redo")
         {
-            Command = new ActionCommand(_applicationData.CurrentModel.Redo)
+            Command = new ActionCommand(() =>
+            {
+                _applicationData.CurrentModel.Redo();
+                Subjects.ProjectModified.OnNext(_applicationData.CurrentModel);
+            })
         };
         NativeMenuItem gridSettingsMenu = new("Grid settings");
         NativeMenuItem gridToggleMenu = new("Toggle grid");

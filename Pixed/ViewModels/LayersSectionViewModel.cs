@@ -229,9 +229,19 @@ internal class LayersSectionViewModel : PixedViewModel, IDisposable
 
     private void MergeLayerAction()
     {
-        Frame.MergeLayerBelow();
-        OnPropertyChanged(nameof(Layers));
+        var currentLayer = Frame.CurrentLayer;
+        var removedLayer = Frame.MergeLayerBelow();
+
+        if(removedLayer == null)
+        {
+            return;
+        }
+
+        Subjects.LayerRemoved.OnNext(removedLayer);
+        Subjects.LayerModified.OnNext(currentLayer);
+        currentLayer.RefreshRenderSource();
         Subjects.FrameModified.OnNext(Frame);
+        OnPropertyChanged(nameof(Layers));
         _applicationData.CurrentModel.AddHistory();
     }
 

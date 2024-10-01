@@ -196,11 +196,11 @@ internal class Frame : PropertyChangedBase, IPixedSerializer
         OnPropertyChanged(nameof(Layers));
     }
 
-    public void MergeLayerBelow()
+    public Layer? MergeLayerBelow()
     {
         if (SelectedLayer >= Layers.Count - 1)
         {
-            return;
+            return null;
         }
 
         int index = SelectedLayer;
@@ -208,10 +208,8 @@ internal class Frame : PropertyChangedBase, IPixedSerializer
         Layer layer2 = _layers[index + 1];
         layer.MergeLayers(layer2);
         Layers.RemoveAt(index + 1);
-        Layers[index].RefreshRenderSource();
         SelectedLayer = index;
-        Subjects.LayerRemoved.OnNext(layer2);
-        Subjects.LayerModified.OnNext(layer);
+        return layer2;
     }
 
     public void Serialize(Stream stream)
