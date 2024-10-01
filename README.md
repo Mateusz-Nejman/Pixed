@@ -7,6 +7,13 @@ Create pixel art images with **Pixed**. Use it in a game or wherever you want. P
 ![Pixed screenshot1](/screenshot1.png "Screenshot 1")
 ![Pixed screenshot2](/screenshot2.png "Screenshot 2")
 
+## Download
+<a href="https://apps.microsoft.com/detail/9nwzsx6x2bgx?mode=direct">
+	<img src="https://get.microsoft.com/images/en-us%20dark.svg" width="200"/>
+</a>
+
+[Releases](https://github.com/Mateusz-Nejman/Pixed/releases)
+
 ## Features
 - Open/save PNG images and own project format
 - Open Piskel projects from [piskelapp/piskel](https://github.com/piskelapp/piskel)
