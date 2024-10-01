@@ -4,7 +4,7 @@ using System;
 
 namespace Pixed;
 
-internal struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatable<UniColor>
+public struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatable<UniColor>
 {
     public readonly struct Hsl(double h, double s, double l)
     {
@@ -100,6 +100,11 @@ internal struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatab
     public readonly override bool Equals(object? obj)
     {
         return obj is UniColor color && Equals(color);
+    }
+
+    public override readonly string ToString()
+    {
+        return "[" + A + ", " + R + ", " + G +", " + B + "]";
     }
 
     public static UniColor WithAlpha(byte alpha, UniColor color)
