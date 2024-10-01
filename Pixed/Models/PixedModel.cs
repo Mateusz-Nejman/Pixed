@@ -99,7 +99,7 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
         RenderSource = Frames.First().Render().ToAvaloniaBitmap();
     }
 
-    public void Process(bool allFrames, bool allLayers, Action<Frame, Layer> action, ApplicationData applicationData)
+    public void Process(bool allFrames, bool allLayers, Action<Frame, Layer> action, ApplicationData applicationData, bool executeSubjects = true)
     {
         Frame[] frames = allFrames ? [.. Frames] : [applicationData.CurrentFrame];
 
@@ -110,10 +110,16 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
             foreach (Layer layer in layers)
             {
                 action.Invoke(frame, layer);
-                Subjects.LayerModified.OnNext(layer);
+                if(executeSubjects)
+                {
+                    Subjects.LayerModified.OnNext(layer);
+                }
             }
 
-            Subjects.FrameModified.OnNext(frame);
+            if(executeSubjects)
+            {
+                Subjects.FrameModified.OnNext(frame);
+            }
         }
     }
 
@@ -175,7 +181,6 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
         MemoryStream stream = new(data);
         Deserialize(stream);
         stream.Dispose();
-        Subjects.ProjectModified.OnNext(this);
     }
 
     public void Redo()
@@ -195,7 +200,6 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
         MemoryStream stream = new(data);
         Deserialize(stream);
         stream.Dispose();
-        Subjects.ProjectModified.OnNext(this);
     }
 
     public void Serialize(Stream stream)

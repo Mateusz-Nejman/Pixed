@@ -95,7 +95,6 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
     public void SetPixel(int x, int y, int color)
     {
         SetPixelPrivate(x, y, color);
-        RefreshRenderSource(); //TODO performace issue
     }
 
     public void SetPixels(List<Pixel> pixels)
@@ -104,7 +103,6 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
         {
             SetPixelPrivate(pixel.X, pixel.Y, pixel.Color);
         }
-        RefreshRenderSource();
     }
 
     public void MergeLayers(Layer layer2)

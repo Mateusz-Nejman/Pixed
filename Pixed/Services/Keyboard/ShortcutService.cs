@@ -32,8 +32,16 @@ internal class ShortcutService
             }
         });
 
-        Add(new KeyState(Key.Z, false, true, false), () => _applicationData.CurrentModel.Undo());
-        Add(new KeyState(Key.Y, false, true, false), () => _applicationData.CurrentModel.Redo());
+        Add(new KeyState(Key.Z, false, true, false), () =>
+        {
+            _applicationData.CurrentModel.Undo();
+            Subjects.ProjectModified.OnNext(_applicationData.CurrentModel);
+        });
+        Add(new KeyState(Key.Y, false, true, false), () =>
+        {
+            _applicationData.CurrentModel.Redo();
+            Subjects.ProjectModified.OnNext(_applicationData.CurrentModel);
+        });
     }
 
     public void Add(KeyState shortcut, Action action)

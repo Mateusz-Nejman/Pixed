@@ -1,6 +1,7 @@
 ﻿using Pixed.Input;
 using Pixed.Models;
 using Pixed.Utils;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace Pixed.Tools;
@@ -60,6 +61,19 @@ internal abstract class BaseTool(ApplicationData applicationData)
         {
             overlay.SetPixel(x, y, GetHighlightColor(pixel), SingleHighlightedPixel ? 1 : _applicationData.ToolSize);
         }
+    }
+
+    protected static void SetPixels(Frame frame, List<Pixel> pixels)
+    {
+        frame.SetPixels(pixels);
+        Subjects.FrameModified.OnNext(frame);
+        Subjects.LayerModified.OnNext(frame.CurrentLayer);
+    }
+
+    protected static void SetPixels(Layer layer, List<Pixel> pixels)
+    {
+        layer.SetPixels(pixels);
+        Subjects.LayerModified.OnNext(layer);
     }
 
     private static UniColor GetHighlightColor(int pixel)
