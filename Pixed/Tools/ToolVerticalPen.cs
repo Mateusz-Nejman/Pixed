@@ -1,47 +1,45 @@
 ﻿using Pixed.Models;
 using System.Drawing;
 
-namespace Pixed.Tools
+namespace Pixed.Tools;
+internal class ToolVerticalPen(ApplicationData applicationData) : ToolPen(applicationData)
 {
-    internal class ToolVerticalPen(ApplicationData applicationData) : ToolPen(applicationData)
+    public override bool ShiftHandle { get; protected set; } = true;
+    public override bool ControlHandle { get; protected set; } = true;
+    public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
-        public override bool ShiftHandle { get; protected set; } = true;
-        public override bool ControlHandle { get; protected set; } = true;
-        public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+        var color = GetToolColor();
+        DrawOnOverlay(color, x, y, frame, ref overlay);
+
+        int symX = GetSymmetricX(x, frame);
+        int symY = GetSymmetricY(y, frame);
+
+        if (!controlPressed)
         {
-            var color = GetToolColor();
-            DrawOnOverlay(color, x, y, frame, ref overlay);
-
-            int symX = GetSymmetricX(x, frame);
-            int symY = GetSymmetricY(y, frame);
-
-            if (!controlPressed)
-            {
-                DrawOnOverlay(color, symX, y, frame, ref overlay);
-            }
-
-            if (shiftPressed || controlPressed)
-            {
-                DrawOnOverlay(color, x, symY, frame, ref overlay);
-            }
-
-            if (shiftPressed)
-            {
-                DrawOnOverlay(color, symX, symY, frame, ref overlay);
-            }
-
-            _prevX = x;
-            _prevY = y;
+            DrawOnOverlay(color, symX, y, frame, ref overlay);
         }
 
-        private static int GetSymmetricX(int x, Frame frame)
+        if (shiftPressed || controlPressed)
         {
-            return frame.Width - 1 - x;
+            DrawOnOverlay(color, x, symY, frame, ref overlay);
         }
 
-        private static int GetSymmetricY(int y, Frame frame)
+        if (shiftPressed)
         {
-            return frame.Height - 1 - y;
+            DrawOnOverlay(color, symX, symY, frame, ref overlay);
         }
+
+        _prevX = x;
+        _prevY = y;
+    }
+
+    private static int GetSymmetricX(int x, Frame frame)
+    {
+        return frame.Width - 1 - x;
+    }
+
+    private static int GetSymmetricY(int y, Frame frame)
+    {
+        return frame.Height - 1 - y;
     }
 }

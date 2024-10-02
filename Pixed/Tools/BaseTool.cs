@@ -43,6 +43,11 @@ internal abstract class BaseTool(ApplicationData applicationData)
 
     }
 
+    public virtual void Reset()
+    {
+
+    }
+
     public virtual void UpdateHighlightedPixel(int x, int y, Frame frame, ref Bitmap overlay)
     {
         overlay ??= new Bitmap(frame.Width, frame.Height);

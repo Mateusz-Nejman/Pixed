@@ -43,7 +43,7 @@ internal class SelectionManager
         shortcutService.Add(new Services.Keyboard.KeyState(Key.Delete, false, false, false), Erase);
     }
 
-    private void Clear()
+    public void Clear()
     {
         if (_currentSelection != null)
         {
@@ -52,50 +52,13 @@ internal class SelectionManager
         }
     }
 
-    private void SelectAll()
+    public void SelectAll()
     {
         _toolSelector.ToolSelected = _toolSelector.GetTool("tool_rectangle_select");
-        Subjects.ToolChanged.OnNext(_toolSelector.ToolSelected);
         ((RectangleSelect)_toolSelector.ToolSelected).SelectAll(overlay => _paintCanvas.Overlay = overlay);
     }
 
-    private void OnSelectionCreated(BaseSelection? selection)
-    {
-        if (selection != null)
-        {
-            _currentSelection = selection;
-        }
-    }
-
-    private void OnSelectionDismissed(BaseSelection? selection)
-    {
-        Clear();
-    }
-
-    private void Erase()
-    {
-        if (_currentSelection == null || !IsSelectToolActive())
-        {
-            return;
-        }
-
-        var pixels = _currentSelection.Pixels;
-        var frame = _applicationData.CurrentFrame;
-
-        for (int a = 0; a < pixels.Count; a++)
-        {
-            pixels[a].Color = UniColor.Transparent;
-        }
-
-        frame.SetPixels(pixels);
-
-        Subjects.FrameModified.OnNext(frame);
-        Subjects.LayerModified.OnNext(frame.CurrentLayer);
-        Subjects.FrameModified.OnNext(frame);
-        _applicationData.CurrentModel.AddHistory();
-    }
-
-    private void Copy()
+    public void Copy()
     {
         if (!IsSelectToolActive())
         {
@@ -110,7 +73,7 @@ internal class SelectionManager
         }
     }
 
-    private void Cut()
+    public void Cut()
     {
         if (!IsSelectToolActive())
         {
@@ -120,10 +83,9 @@ internal class SelectionManager
         Erase();
     }
 
-    private async Task Paste()
+    public async Task Paste()
     {
         _toolSelector.ToolSelected = _toolSelector.GetTool("tool_rectangle_select");
-        Subjects.ToolChanged.OnNext(_toolSelector.ToolSelected);
         Bitmap? source = await BitmapUtils.CreateFromClipboard();
 
         if (source == null)
@@ -157,6 +119,42 @@ internal class SelectionManager
 
         frame.SetPixels(pixels);
 
+        Subjects.LayerModified.OnNext(frame.CurrentLayer);
+        Subjects.FrameModified.OnNext(frame);
+        _applicationData.CurrentModel.AddHistory();
+    }
+
+    private void OnSelectionCreated(BaseSelection? selection)
+    {
+        if (selection != null)
+        {
+            _currentSelection = selection;
+        }
+    }
+
+    private void OnSelectionDismissed(BaseSelection? selection)
+    {
+        Clear();
+    }
+
+    private void Erase()
+    {
+        if (_currentSelection == null || !IsSelectToolActive())
+        {
+            return;
+        }
+
+        var pixels = _currentSelection.Pixels;
+        var frame = _applicationData.CurrentFrame;
+
+        for (int a = 0; a < pixels.Count; a++)
+        {
+            pixels[a].Color = UniColor.Transparent;
+        }
+
+        frame.SetPixels(pixels);
+
+        Subjects.FrameModified.OnNext(frame);
         Subjects.LayerModified.OnNext(frame.CurrentLayer);
         Subjects.FrameModified.OnNext(frame);
         _applicationData.CurrentModel.AddHistory();

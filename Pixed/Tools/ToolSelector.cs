@@ -8,9 +8,19 @@ namespace Pixed.Tools;
 internal class ToolSelector
 {
     private readonly Dictionary<string, BaseTool> _tools;
+    private BaseTool? _toolSelected;
 
     public Action<string>? SelectToolAction { get; set; } //TODO
-    public BaseTool? ToolSelected { get; set; }
+    public BaseTool? ToolSelected
+    {
+        get => _toolSelected;
+        set
+        {
+            var prev = _toolSelected;
+            _toolSelected = value;
+            Subjects.ToolChanged.OnNext(new BaseToolPair(prev, _toolSelected));
+        }
+    }
 
     public ToolSelector(
         ToolPen toolPen, ToolVerticalPen toolVerticalPen, ToolBucket toolBucket, ToolColorSwap toolColorSwap, ToolEraser toolEraser,

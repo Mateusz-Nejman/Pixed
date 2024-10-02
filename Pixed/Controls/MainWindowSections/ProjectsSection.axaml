@@ -6,33 +6,35 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Pixed.Controls.MainWindowSections.ProjectsSection"
 			 x:DataType="vm:ProjectsSectionViewModel">
-  <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden">
-    <TabControl ItemsSource="{Binding Projects}" SelectedIndex="{Binding SelectedProject, Mode=TwoWay}">
-      <TabControl.ItemTemplate>
-        <DataTemplate>
-          <Grid Width="100" Height="72">
-            <ToolTip.Tip>
-              <TextBlock FontWeight="Bold" FontSize="14" Text="{Binding FileName}" Foreground="White"></TextBlock>
-            </ToolTip.Tip>
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="64"/>
-              <ColumnDefinition Width="32"/>
-            </Grid.ColumnDefinitions>
-            <Grid>
-              <Grid.Background>
-                <ImageBrush Source="avares://Pixed.Core/Resources/transparentBackground.png" TileMode="Tile" Stretch="Uniform" AlignmentY="Top" DestinationRect="0 0 32 32"/>
-              </Grid.Background>
-              <Image Width="64" Height="64" Source="{Binding RenderSource}" RenderOptions.BitmapInterpolationMode="None"/>
-            </Grid>
-            <Button Grid.Column="1" Theme="{StaticResource BaseButton}" Command="{Binding CloseCommand}">
-              <Image Source="/Resources/Icons/cross.png" Width="16" Height="16"/>
-            </Button>
-          </Grid>
-        </DataTemplate>
-      </TabControl.ItemTemplate>
-		<TabControl.ContentTemplate>
-			<DataTemplate></DataTemplate>
-		</TabControl.ContentTemplate>
-    </TabControl>
-  </ScrollViewer>
+	<ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden">
+		<TabControl ItemsSource="{Binding Projects}" SelectedIndex="{Binding SelectedProject, Mode=TwoWay}">
+			<TabControl.ItemTemplate>
+				<DataTemplate>
+					<Grid Width="100" Height="72">
+						<ToolTip.Tip>
+							<TextBlock FontWeight="Bold" FontSize="14" Text="{Binding FileName}" Foreground="White"></TextBlock>
+						</ToolTip.Tip>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="64"/>
+							<ColumnDefinition Width="32"/>
+						</Grid.ColumnDefinitions>
+						<Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+							<Grid MaxWidth="64" MaxHeight="64">
+								<Grid.Background>
+									<ImageBrush Source="avares://Pixed.Core/Resources/transparentBackground.png" TileMode="Tile" Stretch="Uniform" AlignmentY="Top" DestinationRect="0 0 32 32"/>
+								</Grid.Background>
+								<Image MaxWidth="64" MaxHeight="64" Source="{Binding RenderSource}" RenderOptions.BitmapInterpolationMode="None"/>
+							</Grid>
+						</Grid>
+						<Button Grid.Column="1" Theme="{StaticResource BaseButton}" Command="{Binding CloseCommand}">
+							<Image Source="/Resources/Icons/cross.png" Width="16" Height="16"/>
+						</Button>
+					</Grid>
+				</DataTemplate>
+			</TabControl.ItemTemplate>
+			<TabControl.ContentTemplate>
+				<DataTemplate></DataTemplate>
+			</TabControl.ContentTemplate>
+		</TabControl>
+	</ScrollViewer>
 </UserControl>

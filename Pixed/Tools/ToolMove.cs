@@ -3,91 +3,89 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-namespace Pixed.Tools
+namespace Pixed.Tools;
+internal class ToolMove(ApplicationData applicationData) : BaseTool(applicationData)
 {
-    internal class ToolMove(ApplicationData applicationData) : BaseTool(applicationData)
+    private int _startX = -1;
+    private int _startY = -1;
+    private Layer _currentLayer;
+    private Layer _currentLayerClone;
+
+    public override bool ShiftHandle { get; protected set; } = true;
+    public override bool ControlHandle { get; protected set; } = true;
+    public override bool AltHandle { get; protected set; } = true;
+    public override bool SingleHighlightedPixel { get; protected set; } = true;
+
+    public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
-        private int _startX = -1;
-        private int _startY = -1;
-        private Layer _currentLayer;
-        private Layer _currentLayerClone;
+        _startX = x;
+        _startY = y;
+        _currentLayer = frame.CurrentLayer;
+        _currentLayerClone = _currentLayer.Clone();
+    }
 
-        public override bool ShiftHandle { get; protected set; } = true;
-        public override bool ControlHandle { get; protected set; } = true;
-        public override bool AltHandle { get; protected set; } = true;
-        public override bool SingleHighlightedPixel { get; protected set; } = true;
+    public override void MoveTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    {
+        int diffX = x - _startX;
+        int diffY = y - _startY;
 
-        public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+        ShiftLayer(frame.CurrentLayer, _currentLayerClone, diffX, diffY, altPressed);
+        Subjects.LayerModified.OnNext(frame.CurrentLayer);
+    }
+
+    public override void ReleaseTool(int x, int y, Frame _, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    {
+        int diffX = x - _startX;
+        int diffY = y - _startY;
+
+        Frame[] frames = shiftPressed ? _applicationData.CurrentModel.Frames.ToArray() : [_applicationData.CurrentFrame];
+
+        foreach (Frame frame in frames)
         {
-            _startX = x;
-            _startY = y;
-            _currentLayer = frame.CurrentLayer;
-            _currentLayerClone = _currentLayer.Clone();
-        }
+            Layer[] layers = controlPressed ? frame.Layers.ToArray() : [frame.CurrentLayer];
 
-        public override void MoveTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
-        {
-            int diffX = x - _startX;
-            int diffY = y - _startY;
-
-            ShiftLayer(frame.CurrentLayer, _currentLayerClone, diffX, diffY, altPressed);
-            Subjects.LayerModified.OnNext(frame.CurrentLayer);
-        }
-
-        public override void ReleaseTool(int x, int y, Frame _, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
-        {
-            int diffX = x - _startX;
-            int diffY = y - _startY;
-
-            Frame[] frames = shiftPressed ? _applicationData.CurrentModel.Frames.ToArray() : [_applicationData.CurrentFrame];
-
-            foreach (Frame frame in frames)
+            foreach (Layer layer in layers)
             {
-                Layer[] layers = controlPressed ? frame.Layers.ToArray() : [frame.CurrentLayer];
+                var reference = this._currentLayer == layer ? this._currentLayerClone : layer.Clone();
+                ShiftLayer(layer, reference, diffX, diffY, altPressed);
+                Subjects.LayerModified.OnNext(layer);
+            }
 
-                foreach (Layer layer in layers)
+            Subjects.FrameModified.OnNext(frame);
+        }
+    }
+
+    private static void ShiftLayer(Layer layer, Layer reference, int diffX, int diffY, bool altPressed)
+    {
+        int color;
+
+        List<Pixel> pixels = [];
+        for (int x = 0; x < layer.Width; x++)
+        {
+            for (int y = 0; y < layer.Height; y++)
+            {
+                int x1 = x - diffX;
+                int y1 = y - diffY;
+
+                if (altPressed)
                 {
-                    var reference = this._currentLayer == layer ? this._currentLayerClone : layer.Clone();
-                    ShiftLayer(layer, reference, diffX, diffY, altPressed);
-                    Subjects.LayerModified.OnNext(layer);
+                    x1 = (x1 + layer.Width) % layer.Width;
+                    y1 = (y1 + layer.Height) % layer.Height;
                 }
 
-                Subjects.FrameModified.OnNext(frame);
+                if (reference.ContainsPixel(x1, y1))
+                {
+                    color = reference.GetPixel(x1, y1);
+                }
+                else
+                {
+                    color = UniColor.Transparent;
+                }
+
+                pixels.Add(new Pixel(x, y, color));
             }
         }
 
-        private static void ShiftLayer(Layer layer, Layer reference, int diffX, int diffY, bool altPressed)
-        {
-            int color;
-
-            List<Pixel> pixels = [];
-            for (int x = 0; x < layer.Width; x++)
-            {
-                for (int y = 0; y < layer.Height; y++)
-                {
-                    int x1 = x - diffX;
-                    int y1 = y - diffY;
-
-                    if (altPressed)
-                    {
-                        x1 = (x1 + layer.Width) % layer.Width;
-                        y1 = (y1 + layer.Height) % layer.Height;
-                    }
-
-                    if (reference.ContainsPixel(x1, y1))
-                    {
-                        color = reference.GetPixel(x1, y1);
-                    }
-                    else
-                    {
-                        color = UniColor.Transparent;
-                    }
-
-                    pixels.Add(new Pixel(x, y, color));
-                }
-            }
-
-            SetPixels(layer, pixels);
-        }
+        SetPixels(layer, pixels);
     }
 }

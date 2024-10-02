@@ -1,11 +1,9 @@
 ﻿using Pixed.Models;
 using System.IO;
 
-namespace Pixed.IO
+namespace Pixed.IO;
+internal interface IPixedProjectSerializer
 {
-    internal interface IPixedProjectSerializer
-    {
-        public void Serialize(Stream stream, PixedModel model, bool close);
-        public PixedModel Deserialize(Stream stream, ApplicationData applicationData);
-    }
+    public void Serialize(Stream stream, PixedModel model, bool close);
+    public PixedModel Deserialize(Stream stream, ApplicationData applicationData);
 }

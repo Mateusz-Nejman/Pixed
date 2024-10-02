@@ -10,5 +10,7 @@ internal class ToolBucket(ApplicationData applicationData) : BaseTool(applicatio
     {
         int color = GetToolColor();
         PaintUtils.PaintSimiliarConnected(frame.CurrentLayer, x, y, color);
+        Subjects.LayerModified.OnNext(frame.CurrentLayer);
+        Subjects.FrameModified.OnNext(frame);
     }
 }

@@ -39,6 +39,7 @@ internal class PixedProjectMethods(ApplicationData applicationData)
             }
 
             model.FilePath = file.Path.AbsolutePath;
+            model.FileName = file.Name;
             fileStream = await file.OpenWriteAsync();
         }
 
@@ -47,6 +48,8 @@ internal class PixedProjectMethods(ApplicationData applicationData)
             PixedProjectSerializer serializer = new();
             serializer.Serialize(fileStream, model, true);
             recentFilesService.AddRecent(model.FilePath);
+            model.UnsavedChanges = false;
+            Subjects.ProjectChanged.OnNext(model);
         }
     }
 
@@ -82,6 +85,7 @@ internal class PixedProjectMethods(ApplicationData applicationData)
             if (item.Name.EndsWith(".pixed"))
             {
                 model.FilePath = item.Path.AbsolutePath;
+                model.UnsavedChanges = false;
             }
 
             if (_applicationData.CurrentModel.IsEmpty)
@@ -108,6 +112,7 @@ internal class PixedProjectMethods(ApplicationData applicationData)
         model.FileName = info.Name;
         model.FilePath = path;
         model.AddHistory();
+        model.UnsavedChanges = false;
 
         if (_applicationData.CurrentModel.IsEmpty)
         {
