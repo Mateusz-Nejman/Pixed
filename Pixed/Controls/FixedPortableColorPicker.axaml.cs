@@ -7,7 +7,7 @@ using System;
 
 namespace Pixed.Controls;
 
-public partial class FixedPortableColorPicker : UserControl
+internal partial class FixedPortableColorPicker : UserControl
 {
     public static readonly StyledProperty<Color> SelectedColorProperty =
         AvaloniaProperty.Register<FixedPortableColorPicker, Color>(

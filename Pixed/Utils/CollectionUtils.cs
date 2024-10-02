@@ -2,7 +2,7 @@
 using System.Linq;
 
 namespace Pixed.Utils;
-internal static class CollectionUtils
+public static class CollectionUtils
 {
     public static T Pop<T>(this IList<T> list)
     {

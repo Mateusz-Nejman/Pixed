@@ -4,13 +4,18 @@ using System;
 
 namespace Pixed;
 
-internal struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatable<UniColor>
+public struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatable<UniColor>
 {
     public readonly struct Hsl(double h, double s, double l)
     {
         public double H { get; } = h;
         public double S { get; } = s;
         public double L { get; } = l;
+
+        public override string ToString()
+        {
+            return "[" + H + ", " + S + ", " + L + "]";
+        }
     }
 
     public readonly static UniColor Transparent = new();
@@ -49,9 +54,9 @@ internal struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatab
     {
         A = alpha;
         var rgb = ColorSpaceHelper.HslToRgb(hsl.H, hsl.S, hsl.L);
-        R = (byte)(rgb.Item1 * 255d);
-        G = (byte)(rgb.Item2 * 255d);
-        B = (byte)(rgb.Item3 * 255d);
+        R = (byte)Math.Round(rgb.Item1 * 255d);
+        G = (byte)Math.Round(rgb.Item2 * 255d);
+        B = (byte)Math.Round(rgb.Item3 * 255d);
     }
 
     public readonly Hsl ToHsl()
@@ -100,6 +105,11 @@ internal struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatab
     public readonly override bool Equals(object? obj)
     {
         return obj is UniColor color && Equals(color);
+    }
+
+    public override readonly string ToString()
+    {
+        return "[" + A + ", " + R + ", " + G +", " + B + "]";
     }
 
     public static UniColor WithAlpha(byte alpha, UniColor color)
