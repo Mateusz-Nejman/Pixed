@@ -8,7 +8,7 @@ using Frame = Pixed.Models.Frame;
 
 namespace Pixed.Tools.Selection;
 
-internal class BaseSelect : BaseTool
+internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSelector) : BaseTool(applicationData)
 {
     public enum SelectionMode
     {
@@ -17,7 +17,7 @@ internal class BaseSelect : BaseTool
         MoveSelection
     }
 
-    private readonly ToolSelector _toolSelector;
+    private readonly ToolSelector _toolSelector = toolSelector;
     protected int _startX = 0;
     protected int _startY = 0;
 
@@ -33,11 +33,6 @@ internal class BaseSelect : BaseTool
     public override bool ShiftHandle { get; protected set; } = true;
     public override bool AddToHistory { get; protected set; } = false;
     public override bool SingleHighlightedPixel { get; protected set; }
-
-    public BaseSelect(ApplicationData applicationData, ToolSelector toolSelector) : base(applicationData)
-    {
-        _toolSelector = toolSelector;
-    }
 
     public void SelectAll(Action<Bitmap> overlayAction)
     {
@@ -127,6 +122,11 @@ internal class BaseSelect : BaseTool
     public virtual void OnSelectionMoveEnd(int x, int y, Frame frame, ref Bitmap overlay)
     {
         OnSelectionMove(x, y, frame, ref overlay);
+    }
+
+    public override void Reset()
+    {
+        _selection?.Pixels.Clear();
     }
 
     protected bool IsInSelection(int x, int y)
