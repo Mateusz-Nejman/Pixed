@@ -2,47 +2,45 @@
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace Pixed.Tools
+namespace Pixed.Tools;
+internal class ToolColorSwap(ApplicationData applicationData) : BaseTool(applicationData)
 {
-    internal class ToolColorSwap(ApplicationData applicationData) : BaseTool(applicationData)
+    public override bool ShiftHandle { get; protected set; } = true;
+    public override bool ControlHandle { get; protected set; } = true;
+    public override bool SingleHighlightedPixel { get; protected set; } = true;
+    public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
-        public override bool ShiftHandle { get; protected set; } = true;
-        public override bool ControlHandle { get; protected set; } = true;
-        public override bool SingleHighlightedPixel { get; protected set; } = true;
-        public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+        if (frame.ContainsPixel(x, y))
         {
-            if (frame.ContainsPixel(x, y))
-            {
-                var oldColor = frame.GetPixel(x, y);
-                var newColor = GetToolColor();
+            var oldColor = frame.GetPixel(x, y);
+            var newColor = GetToolColor();
 
-                SwapColors(oldColor, newColor, shiftPressed, controlPressed);
-            }
+            SwapColors(oldColor, newColor, shiftPressed, controlPressed);
         }
+    }
 
-        private void SwapColors(int oldColor, int newColor, bool shiftPressed, bool controlPressed)
+    private void SwapColors(int oldColor, int newColor, bool shiftPressed, bool controlPressed)
+    {
+        _applicationData.CurrentModel.Process(shiftPressed, controlPressed, (frame, layer) =>
         {
-            _applicationData.CurrentModel.Process(shiftPressed, controlPressed, (frame, layer) =>
-            {
-                ApplyToolOnLayer(layer, oldColor, newColor);
-            }, _applicationData);
-        }
+            ApplyToolOnLayer(layer, oldColor, newColor);
+        }, _applicationData);
+    }
 
-        private static void ApplyToolOnLayer(Layer layer, int oldColor, int newColor)
+    private static void ApplyToolOnLayer(Layer layer, int oldColor, int newColor)
+    {
+        List<Pixel> pixels = [];
+        for (int x = 0; x < layer.Width; x++)
         {
-            List<Pixel> pixels = [];
-            for (int x = 0; x < layer.Width; x++)
+            for (int y = 0; y < layer.Height; y++)
             {
-                for (int y = 0; y < layer.Height; y++)
+                if (layer.GetPixel(x, y) == oldColor)
                 {
-                    if (layer.GetPixel(x, y) == oldColor)
-                    {
-                        pixels.Add(new Pixel(x, y, newColor));
-                    }
+                    pixels.Add(new Pixel(x, y, newColor));
                 }
             }
-
-            SetPixels(layer, pixels);
         }
+
+        SetPixels(layer, pixels);
     }
 }
