@@ -314,9 +314,14 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
 
         _toolChanged = Subjects.ToolChanged.Subscribe(tool =>
         {
-            ShiftEnabled = tool.ShiftHandle;
-            ControlEnabled = tool.ControlHandle;
-            AltEnabled = tool.AltHandle;
+            if(tool.Previous != null)
+            {
+                tool.Previous.Reset();
+                ResetOverlay();
+            }
+            ShiftEnabled = tool.Current.ShiftHandle;
+            ControlEnabled = tool.Current.ControlHandle;
+            AltEnabled = tool.Current.AltHandle;
 
             if (!ShiftEnabled)
             {
@@ -376,6 +381,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     {
         Overlay?.Dispose();
         Overlay = new Bitmap(_frame.Width, _frame.Height);
+        AvaloniaOverlayBitmap = Overlay.ToAvaloniaBitmap();
     }
 
     protected virtual void Dispose(bool disposing)

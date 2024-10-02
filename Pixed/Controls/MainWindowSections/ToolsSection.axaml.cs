@@ -28,7 +28,6 @@ internal partial class ToolsSection : PixedUserControl<ToolsSectionViewModel>
             string name = radio.Name;
 
             _toolSelector.ToolSelected = _toolSelector.GetTool(name);
-            Subjects.ToolChanged.OnNext(_toolSelector.ToolSelected);
             _paintCanvas.ResetOverlay();
         }
     }

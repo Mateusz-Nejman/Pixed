@@ -55,7 +55,6 @@ internal class SelectionManager
     private void SelectAll()
     {
         _toolSelector.ToolSelected = _toolSelector.GetTool("tool_rectangle_select");
-        Subjects.ToolChanged.OnNext(_toolSelector.ToolSelected);
         ((RectangleSelect)_toolSelector.ToolSelected).SelectAll(overlay => _paintCanvas.Overlay = overlay);
     }
 
@@ -123,7 +122,6 @@ internal class SelectionManager
     private async Task Paste()
     {
         _toolSelector.ToolSelected = _toolSelector.GetTool("tool_rectangle_select");
-        Subjects.ToolChanged.OnNext(_toolSelector.ToolSelected);
         Bitmap? source = await BitmapUtils.CreateFromClipboard();
 
         if (source == null)
