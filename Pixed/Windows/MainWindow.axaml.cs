@@ -62,7 +62,7 @@ internal partial class MainWindow : PixedWindow<MainViewModel>
 
             foreach (var model in _applicationData.Models)
             {
-                if (!model.HistoryEmpty)
+                if (model.UnsavedChanges)
                 {
                     var name = model.FileName;
 

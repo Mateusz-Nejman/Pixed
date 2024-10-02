@@ -52,7 +52,7 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
     }
 
     public bool IsEmpty => _isEmpty;
-    public bool HistoryEmpty => _history.Count <= 1;
+    public bool UnsavedChanges { get; set; } = false;
 
     public ICommand CloseCommand { get; }
 
@@ -165,6 +165,8 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
         {
             _isEmpty = false;
         }
+
+        UnsavedChanges = true;
     }
 
     public void Undo()
