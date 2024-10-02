@@ -11,6 +11,11 @@ public struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatable
         public double H { get; } = h;
         public double S { get; } = s;
         public double L { get; } = l;
+
+        public override string ToString()
+        {
+            return "[" + H + ", " + S + ", " + L + "]";
+        }
     }
 
     public readonly static UniColor Transparent = new();
@@ -49,9 +54,9 @@ public struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatable
     {
         A = alpha;
         var rgb = ColorSpaceHelper.HslToRgb(hsl.H, hsl.S, hsl.L);
-        R = (byte)(rgb.Item1 * 255d);
-        G = (byte)(rgb.Item2 * 255d);
-        B = (byte)(rgb.Item3 * 255d);
+        R = (byte)Math.Round(rgb.Item1 * 255d);
+        G = (byte)Math.Round(rgb.Item2 * 255d);
+        B = (byte)Math.Round(rgb.Item3 * 255d);
     }
 
     public readonly Hsl ToHsl()

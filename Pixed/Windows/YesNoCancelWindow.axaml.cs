@@ -4,7 +4,7 @@ using Pixed.IO;
 
 namespace Pixed.Windows;
 
-public partial class YesNoCancelWindow : Window
+internal partial class YesNoCancelWindow : Window
 {
     public string Text
     {

@@ -22,7 +22,7 @@ public class UniColorTests
     public void LightenTest()
     {
         var newColor = CornflowerBlue.Lighten(10);
-        UniColor expectedColor = new(145, 180, 242);
+        UniColor expectedColor = new(146, 180, 242);
         Assert.That(newColor, Is.EqualTo(expectedColor));
     }
 
@@ -30,16 +30,30 @@ public class UniColorTests
     public void DarkenTest()
     {
         var newColor = CornflowerBlue.Darken(10);
-        UniColor expectedColor = new(54, 117, 231);
+        UniColor expectedColor = new(54, 118, 232);
         Assert.That(newColor, Is.EqualTo(expectedColor));
     }
 
     [Test]
     public void BlendTest()
     {
-        UniColor color = CornflowerBlue;
-        var newColor = color.Blend(MagentaColor, 50);
+        var newColor = CornflowerBlue.Blend(MagentaColor, 50);
         UniColor expectedColor = new(185, 26, 123);
         Assert.That(newColor, Is.EqualTo(expectedColor));
+    }
+
+    [Test]
+    public void HslConversionTest()
+    {
+        var hsl = CornflowerBlue.ToHsl();
+        Assert.That(hsl, Is.EqualTo(new UniColor.Hsl(218.540150538969, 0.7919075255636313, 0.6607843158291835)));
+    }
+
+    [Test]
+    public void HslToRGBConversionTest()
+    {
+        UniColor.Hsl hsl = new(218.540150538969, 0.7919075255636313, 0.6607843158291835);
+        UniColor newColor = new(hsl);
+        Assert.That(newColor, Is.EqualTo(CornflowerBlue));
     }
 }
