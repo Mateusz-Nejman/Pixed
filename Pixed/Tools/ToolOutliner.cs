@@ -13,6 +13,7 @@ namespace Pixed.Tools
             var color = GetToolColor();
             PaintUtils.OutlineSimiliarConnectedPixels(frame.CurrentLayer, x, y, color, controlPressed);
             Subjects.LayerModified.OnNext(frame.CurrentLayer);
+            Subjects.FrameModified.OnNext(frame);
         }
     }
 }
