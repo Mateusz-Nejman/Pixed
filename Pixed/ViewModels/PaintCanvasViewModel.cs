@@ -368,7 +368,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     }
     public void RecalculateFactor(Point windowSize)
     {
-        var factor = Math.Min(windowSize.X, windowSize.Y) / Math.Min(_frame.Width, _frame.Height);
+        var factor = Math.Min(windowSize.X, windowSize.Y - 32) / Math.Min(_frame.Width, _frame.Height);
         _imageFactor = Math.Clamp(factor, 1, 300);
         GridWidth = _frame.Width * factor;
         GridHeight = _frame.Height * factor;
