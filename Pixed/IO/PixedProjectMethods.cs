@@ -39,6 +39,7 @@ internal class PixedProjectMethods(ApplicationData applicationData)
             }
 
             model.FilePath = file.Path.AbsolutePath;
+            model.FileName = file.Name;
             fileStream = await file.OpenWriteAsync();
         }
 
@@ -47,6 +48,7 @@ internal class PixedProjectMethods(ApplicationData applicationData)
             PixedProjectSerializer serializer = new();
             serializer.Serialize(fileStream, model, true);
             recentFilesService.AddRecent(model.FilePath);
+            Subjects.ProjectChanged.OnNext(model);
         }
     }
 
