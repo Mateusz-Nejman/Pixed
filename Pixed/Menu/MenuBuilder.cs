@@ -185,9 +185,12 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
             Subjects.GridChanged.OnNext(true);
         });
 
-        editMenu.Menu = [undoMenu, redoMenu, gridSettingsMenu, gridToggleMenu];
+        editMenu.Menu = [undoMenu, redoMenu];
 
         AddToMenu(ref editMenu, GetEntries(BaseMenuItem.Edit));
+        editMenu.Menu.Add(gridSettingsMenu);
+        editMenu.Menu.Add(gridToggleMenu);
+
         return editMenu;
     }
 

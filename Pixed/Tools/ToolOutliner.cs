@@ -2,18 +2,16 @@
 using Pixed.Utils;
 using System.Drawing;
 
-namespace Pixed.Tools
+namespace Pixed.Tools;
+internal class ToolOutliner(ApplicationData applicationData) : BaseTool(applicationData)
 {
-    internal class ToolOutliner(ApplicationData applicationData) : BaseTool(applicationData)
+    public override bool ControlHandle { get; protected set; } = true;
+    public override bool SingleHighlightedPixel { get; protected set; } = true;
+    public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
-        public override bool ControlHandle { get; protected set; } = true;
-        public override bool SingleHighlightedPixel { get; protected set; } = true;
-        public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
-        {
-            var color = GetToolColor();
-            PaintUtils.OutlineSimiliarConnectedPixels(frame.CurrentLayer, x, y, color, controlPressed);
-            Subjects.LayerModified.OnNext(frame.CurrentLayer);
-            Subjects.FrameModified.OnNext(frame);
-        }
+        var color = GetToolColor();
+        PaintUtils.OutlineSimiliarConnectedPixels(frame.CurrentLayer, x, y, color, controlPressed);
+        Subjects.LayerModified.OnNext(frame.CurrentLayer);
+        Subjects.FrameModified.OnNext(frame);
     }
 }

@@ -2,26 +2,24 @@
 using Pixed.Models;
 using System.Drawing;
 
-namespace Pixed.Tools
+namespace Pixed.Tools;
+internal class ToolColorPicker(ApplicationData applicationData) : BaseTool(applicationData)
 {
-    internal class ToolColorPicker(ApplicationData applicationData) : BaseTool(applicationData)
+    public override bool SingleHighlightedPixel { get; protected set; } = true;
+    public override bool AddToHistory { get; protected set; } = false;
+    public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
-        public override bool SingleHighlightedPixel { get; protected set; } = true;
-        public override bool AddToHistory { get; protected set; } = false;
-        public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+        if (frame.ContainsPixel(x, y))
         {
-            if (frame.ContainsPixel(x, y))
-            {
-                var color = frame.GetPixel(x, y);
+            var color = frame.GetPixel(x, y);
 
-                if (Mouse.LeftButton == MouseButtonState.Pressed)
-                {
-                    Subjects.PrimaryColorChange.OnNext(color);
-                }
-                else if (Mouse.RightButton == MouseButtonState.Pressed)
-                {
-                    Subjects.SecondaryColorChange.OnNext(color);
-                }
+            if (Mouse.LeftButton == MouseButtonState.Pressed)
+            {
+                Subjects.PrimaryColorChange.OnNext(color);
+            }
+            else if (Mouse.RightButton == MouseButtonState.Pressed)
+            {
+                Subjects.SecondaryColorChange.OnNext(color);
             }
         }
     }
