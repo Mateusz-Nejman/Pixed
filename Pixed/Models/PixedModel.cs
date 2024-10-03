@@ -110,13 +110,13 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
             foreach (Layer layer in layers)
             {
                 action.Invoke(frame, layer);
-                if(executeSubjects)
+                if (executeSubjects)
                 {
                     Subjects.LayerModified.OnNext(layer);
                 }
             }
 
-            if(executeSubjects)
+            if (executeSubjects)
             {
                 Subjects.FrameModified.OnNext(frame);
             }

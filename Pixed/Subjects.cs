@@ -1,7 +1,6 @@
 ﻿using Pixed.Models;
 using Pixed.Selection;
 using Pixed.Services.Keyboard;
-using Pixed.Tools;
 using System.Reactive.Subjects;
 
 namespace Pixed;

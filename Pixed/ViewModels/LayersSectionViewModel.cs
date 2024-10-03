@@ -232,7 +232,7 @@ internal class LayersSectionViewModel : PixedViewModel, IDisposable
         var currentLayer = Frame.CurrentLayer;
         var removedLayer = Frame.MergeLayerBelow();
 
-        if(removedLayer == null)
+        if (removedLayer == null)
         {
             return;
         }

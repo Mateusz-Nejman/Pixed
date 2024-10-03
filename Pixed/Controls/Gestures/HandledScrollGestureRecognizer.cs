@@ -1,12 +1,12 @@
-﻿using Avalonia.Input.GestureRecognizers;
-using Avalonia.Input;
+﻿using Avalonia.Input;
+using Avalonia.Input.GestureRecognizers;
 
 namespace Pixed.Controls.Gestures;
 internal class HandledScrollGestureRecognizer : ScrollGestureRecognizer
 {
     protected override void PointerMoved(PointerEventArgs e)
     {
-        if(e.Handled)
+        if (e.Handled)
         {
             return;
         }
@@ -24,7 +24,7 @@ internal class HandledScrollGestureRecognizer : ScrollGestureRecognizer
 
     protected override void PointerReleased(PointerReleasedEventArgs e)
     {
-        if(e.Handled)
+        if (e.Handled)
         {
             return;
         }

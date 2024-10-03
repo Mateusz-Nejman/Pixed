@@ -1,5 +1,4 @@
-﻿using Avalonia.Input;
-using Avalonia.Media;
+﻿using Avalonia.Media;
 using Pixed.Controls;
 using Pixed.Models;
 using Pixed.Tools;
@@ -314,7 +313,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
 
         _toolChanged = Subjects.ToolChanged.Subscribe(tool =>
         {
-            if(tool.Previous != null)
+            if (tool.Previous != null)
             {
                 tool.Previous.Reset();
                 ResetOverlay();
