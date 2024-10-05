@@ -94,5 +94,7 @@ internal class ToolPen(ApplicationData applicationData) : BaseTool(applicationDa
                 AddPixel(toolPoint, color);
             }
         }
+
+        Subjects.LayerModified.OnNext(frame.CurrentLayer);
     }
 }
