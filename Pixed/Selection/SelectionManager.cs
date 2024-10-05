@@ -54,7 +54,12 @@ internal class SelectionManager
 
     public void SelectAll()
     {
-        _toolSelector.ToolSelected = _toolSelector.GetTool("tool_rectangle_select");
+        var newTool = _toolSelector.GetTool("tool_rectangle_select");
+        
+        if(_toolSelector.ToolSelected != newTool)
+        {
+            _toolSelector.ToolSelected = newTool;
+        }
         ((RectangleSelect)_toolSelector.ToolSelected).SelectAll(overlay => _paintCanvas.Overlay = overlay);
     }
 
@@ -85,7 +90,12 @@ internal class SelectionManager
 
     public async Task Paste()
     {
-        _toolSelector.ToolSelected = _toolSelector.GetTool("tool_rectangle_select");
+        var newTool = _toolSelector.GetTool("tool_rectangle_select");
+
+        if (_toolSelector.ToolSelected != newTool)
+        {
+            _toolSelector.ToolSelected = newTool;
+        }
         Bitmap? source = await BitmapUtils.CreateFromClipboard();
 
         if (source == null)
