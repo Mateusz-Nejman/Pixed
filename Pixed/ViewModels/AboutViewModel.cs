@@ -1,6 +1,5 @@
 ﻿using Pixed.Controls;
 using System.Diagnostics;
-using System.Reflection;
 using System.Windows.Input;
 
 namespace Pixed.ViewModels;
@@ -11,7 +10,7 @@ internal class AboutViewModel : PixedViewModel
     public AboutViewModel()
     {
         OpenUrlCommand = new ActionCommand<string>(OpenUrlAction);
-        AppVersion = "Version: " + Assembly.GetExecutingAssembly().GetName().Version.ToString();
+        AppVersion = "Version: " + GetVersion();
     }
 
     private void OpenUrlAction(string url)
@@ -22,5 +21,12 @@ internal class AboutViewModel : PixedViewModel
             UseShellExecute = true
         };
         Process.Start(psi);
+    }
+
+    private static string GetVersion()
+    {
+        var assemblyName = Process.GetCurrentProcess().MainModule.FileName;
+        var versionInfo = FileVersionInfo.GetVersionInfo(assemblyName);
+        return versionInfo.FileVersion;
     }
 }
