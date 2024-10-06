@@ -32,7 +32,6 @@ Create pixel art images with **Pixed**. Use it in a game or wherever you want. P
 - Newtonsoft.JSON [JamesNK/Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json)
 - PixiEditor.ColorPicker [PixiEditor/ColorPicker](https://github.com/PixiEditor/ColorPicker)
 - System.Reactive (RX) [dotnet/reactive](https://github.com/dotnet/reactive)
-- BigGustave [EliotJones/BigGustave](https://github.com/EliotJones/BigGustave)
 - LZMA SDK [monemihir/LZMA-SDK](https://github.com/monemihir/LZMA-SDK)
 
 ## Assets

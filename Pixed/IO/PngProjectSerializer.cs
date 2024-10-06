@@ -1,5 +1,5 @@
-﻿using BigGustave;
-using Pixed.Models;
+﻿using Pixed.Models;
+using Pixed.Utils;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -11,23 +11,12 @@ internal class PngProjectSerializer : IPixedProjectSerializer
     public int ColumnsCount { get; set; } = 1;
     public PixedModel Deserialize(Stream stream, ApplicationData applicationData)
     {
-        Png image = Png.Open(stream);
-        int width = image.Width;
-        int height = image.Height;
-        int[] pixels = new int[width * height];
+        Bitmap bitmap = (Bitmap)Image.FromStream(stream);
+        var colors = bitmap.ToPixelColors();
 
-        for (int y = 0; y < height; y++)
-        {
-            for (int x = 0; x < width; x++)
-            {
-                var pixel = image.GetPixel(x, y);
-                UniColor color = new(pixel.A, pixel.R, pixel.G, pixel.B);
-                pixels[y * width + x] = color;
-            }
-        }
-
-        Layer layer = Layer.FromColors(pixels, width, height, "Layer 0");
+        Layer layer = Layer.FromColors(colors, bitmap.Width, bitmap.Height, "Layer 0");
         Frame frame = Frame.FromLayers([layer]);
+        bitmap.Dispose();
         return PixedModel.FromFrames([frame], applicationData.GenerateName(), applicationData);
     }
 
@@ -62,6 +51,7 @@ internal class PngProjectSerializer : IPixedProjectSerializer
 
         graphics.Dispose();
         outputBitmap.Save(stream, ImageFormat.Png);
+        outputBitmap.Dispose();
 
         if (close)
         {
