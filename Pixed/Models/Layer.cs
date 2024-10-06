@@ -107,15 +107,13 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
 
     public void MergeLayers(Layer layer2)
     {
-        int transparent = UniColor.Transparent;
+        System.Drawing.Bitmap outputBitmap = new(Width, Height);
+        Graphics graphics = Graphics.FromImage(outputBitmap);
+        graphics.DrawImage(Render(), new Point(0, 0));
+        graphics.DrawImage(layer2.Render(), new Point(0, 0));
+        graphics.Dispose();
 
-        for (int a = 0; a < _pixels.Length; a++)
-        {
-            if (layer2._pixels[a] != transparent && _pixels[a] != layer2._pixels[a])
-            {
-                _pixels[a] = layer2._pixels[a];
-            }
-        }
+        _pixels = outputBitmap.ToPixelColors();
 
         _needRerender = true;
     }
@@ -150,17 +148,6 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
 
         int[] pixels = new int[_width * _height];
         _pixels.CopyTo(pixels, 0);
-
-        for (int i = 0; i < pixels.Length; i++)
-        {
-            UniColor color = pixels[i];
-
-            if (color.A * _opacity > 0)
-            {
-                int newColor = UniColor.WithAlpha((byte)(255 * _opacity), color);
-                pixels[i] = newColor;
-            }
-        }
 
         foreach (var pixel in modifiedPixels ?? [])
         {
@@ -214,18 +201,6 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
             _name = name
         };
         return layer;
-    }
-
-    public static Layer MergeAll(Layer[] layers)
-    {
-        Layer first = layers.First().Clone();
-
-        for (int a = 1; a < layers.Length; a++)
-        {
-            first.MergeLayers(layers[a]);
-        }
-
-        return first;
     }
 
     private void SetPixelPrivate(int x, int y, int color)

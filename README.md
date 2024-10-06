@@ -30,10 +30,10 @@ Create pixel art images with **Pixed**. Use it in a game or wherever you want. P
 - Avalonia [AvaloniaUI/avalonia](https://github.com/avaloniaui/avalonia)
 - Microsoft.Extensions.DependencyInjection [NuGet](https://www.nuget.org/packages/Microsoft.Extensions.DependencyInjection)
 - Newtonsoft.JSON [JamesNK/Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json)
-- PixiEditor.ColorPicker [PixiEditor/ColorPicker] (https://github.com/PixiEditor/ColorPicker)
-- System.Reactive (RX) [dotnet/reactive] (https://github.com/dotnet/reactive)
-- BigGustave [EliotJones/BigGustave] (https://github.com/EliotJones/BigGustave)
-- LZMA SDK [monemihir/LZMA-SDK] (https://github.com/monemihir/LZMA-SDK)
+- PixiEditor.ColorPicker [PixiEditor/ColorPicker](https://github.com/PixiEditor/ColorPicker)
+- System.Reactive (RX) [dotnet/reactive](https://github.com/dotnet/reactive)
+- BigGustave [EliotJones/BigGustave](https://github.com/EliotJones/BigGustave)
+- LZMA SDK [monemihir/LZMA-SDK](https://github.com/monemihir/LZMA-SDK)
 
 ## Assets
 - Icons from IcoMoon [https://icomoon.io/](https://icomoon.io/)
