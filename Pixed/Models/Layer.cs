@@ -1,5 +1,6 @@
 ﻿using Pixed.IO;
 using Pixed.Utils;
+using Pixed.Windows;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -7,6 +8,8 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using Bitmap = Avalonia.Media.Imaging.Bitmap;
 
 namespace Pixed.Models;
@@ -18,12 +21,12 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
     private int _height;
     private System.Drawing.Bitmap _renderedBitmap = null;
     private bool _needRerender = true;
-    private float _opacity = 1.0f;
+    private double _opacity = 100.0d;
     private string _name = string.Empty;
     private Bitmap? _renderSource = null;
     private readonly string _id;
 
-    public float Opacity
+    public double Opacity
     {
         get => _opacity;
         set
@@ -56,8 +59,10 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
     public string Id => _id;
     public int Width => _width;
     public int Height => _height;
+    public ICommand? ChangeOpacityCommand { get; }
     public Layer(int width, int height)
     {
+        ChangeOpacityCommand = new AsyncCommand(ChangeOpacityAction);
         _id = Guid.NewGuid().ToString();
         _width = width;
         _height = height;
@@ -68,6 +73,7 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
 
     private Layer(int width, int height, int[] pixels)
     {
+        ChangeOpacityCommand = new AsyncCommand(ChangeOpacityAction);
         _id = Guid.NewGuid().ToString();
         _width = width;
         _height = height;
@@ -107,15 +113,13 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
 
     public void MergeLayers(Layer layer2)
     {
-        int transparent = UniColor.Transparent;
+        System.Drawing.Bitmap outputBitmap = new(Width, Height);
+        Graphics graphics = Graphics.FromImage(outputBitmap);
+        graphics.DrawImage(Render(), new Point(0, 0));
+        graphics.DrawImage(layer2.Render(), new Point(0, 0));
+        graphics.Dispose();
 
-        for (int a = 0; a < _pixels.Length; a++)
-        {
-            if (layer2._pixels[a] != transparent && _pixels[a] != layer2._pixels[a])
-            {
-                _pixels[a] = layer2._pixels[a];
-            }
-        }
+        _pixels = outputBitmap.ToPixelColors();
 
         _needRerender = true;
     }
@@ -151,20 +155,19 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
         int[] pixels = new int[_width * _height];
         _pixels.CopyTo(pixels, 0);
 
-        for (int i = 0; i < pixels.Length; i++)
-        {
-            UniColor color = pixels[i];
-
-            if (color.A * _opacity > 0)
-            {
-                int newColor = UniColor.WithAlpha((byte)(255 * _opacity), color);
-                pixels[i] = newColor;
-            }
-        }
-
         foreach (var pixel in modifiedPixels ?? [])
         {
             pixels[pixel.Y * _width + pixel.X] = pixel.Color;
+        }
+
+        if(Opacity != 100)
+        {
+            for(int a = 0; a < pixels.Length; a++)
+            {
+                UniColor color = pixels[a];
+                color.A = (byte)((Opacity / 100d) * color.A);
+                pixels[a] = color;
+            }
         }
 
         System.Drawing.Bitmap bitmap = new(_width, _height);
@@ -183,7 +186,7 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
 
     public void Serialize(Stream stream)
     {
-        stream.WriteFloat(Opacity);
+        stream.WriteDouble(Opacity);
         stream.WriteInt(Width);
         stream.WriteInt(Height);
         stream.WriteString(Name);
@@ -193,7 +196,7 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
 
     public void Deserialize(Stream stream)
     {
-        Opacity = stream.ReadFloat();
+        Opacity = stream.ReadDouble();
         _width = stream.ReadInt();
         _height = stream.ReadInt();
         _name = stream.ReadString();
@@ -216,18 +219,6 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
         return layer;
     }
 
-    public static Layer MergeAll(Layer[] layers)
-    {
-        Layer first = layers.First().Clone();
-
-        for (int a = 1; a < layers.Length; a++)
-        {
-            first.MergeLayers(layers[a]);
-        }
-
-        return first;
-    }
-
     private void SetPixelPrivate(int x, int y, int color)
     {
         if (x < 0 || y < 0 || x >= _width || y >= _height)
@@ -236,5 +227,25 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
         }
         _pixels[y * _width + x] = color;
         _needRerender = true;
+    }
+
+    private async Task ChangeOpacityAction()
+    {
+        NumericPrompt numeric = new(Opacity)
+        {
+            Text = "Enter new opacity (%):"
+        };
+        var success = await numeric.ShowDialog<bool>(MainWindow.Handle);
+
+        if (success)
+        {
+            if(Opacity != numeric.Value)
+            {
+                _needRerender = true;
+            }
+            Opacity = numeric.Value;
+            RefreshRenderSource();
+            Subjects.LayerModified.OnNext(this);
+        }
     }
 }

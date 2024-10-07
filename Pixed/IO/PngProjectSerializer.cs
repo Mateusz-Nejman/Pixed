@@ -1,6 +1,8 @@
-﻿using BigGustave;
-using Pixed.Models;
+﻿using Pixed.Models;
+using Pixed.Utils;
 using System;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 
 namespace Pixed.IO;
@@ -9,23 +11,12 @@ internal class PngProjectSerializer : IPixedProjectSerializer
     public int ColumnsCount { get; set; } = 1;
     public PixedModel Deserialize(Stream stream, ApplicationData applicationData)
     {
-        Png image = Png.Open(stream);
-        int width = image.Width;
-        int height = image.Height;
-        int[] pixels = new int[width * height];
+        Bitmap bitmap = (Bitmap)Image.FromStream(stream);
+        var colors = bitmap.ToPixelColors();
 
-        for (int y = 0; y < height; y++)
-        {
-            for (int x = 0; x < width; x++)
-            {
-                var pixel = image.GetPixel(x, y);
-                UniColor color = new(pixel.A, pixel.R, pixel.G, pixel.B);
-                pixels[y * width + x] = color;
-            }
-        }
-
-        Layer layer = Layer.FromColors(pixels, width, height, "Layer 0");
+        Layer layer = Layer.FromColors(colors, bitmap.Width, bitmap.Height, "Layer 0");
         Frame frame = Frame.FromLayers([layer]);
+        bitmap.Dispose();
         return PixedModel.FromFrames([frame], applicationData.GenerateName(), applicationData);
     }
 
@@ -36,7 +27,8 @@ internal class PngProjectSerializer : IPixedProjectSerializer
         int rows = (int)Math.Ceiling((double)model.Frames.Count / (double)ColumnsCount);
         int width = model.Width * ColumnsCount;
         int height = model.Height * rows;
-        var builder = PngBuilder.Create(width, height, true);
+        Bitmap outputBitmap = new Bitmap(width, height);
+        Graphics graphics = Graphics.FromImage(outputBitmap);
 
         int frameColumn = 0;
         int frameRow = 0;
@@ -44,20 +36,10 @@ internal class PngProjectSerializer : IPixedProjectSerializer
         {
             //TODO optimize
             Frame frame = model.Frames[a];
-            Layer layer = Layer.MergeAll([.. frame.Layers]);
-            var pixels = layer.GetPixels();
+            var frameBitmap = frame.Render();
             int x1 = frameColumn * model.Width;
             int y1 = frameRow * model.Height;
-            for (int x = 0; x < model.Width; x++)
-            {
-                for (int y = 0; y < model.Height; y++)
-                {
-                    UniColor color = pixels[y * model.Width + x];
-                    var pixel = new BigGustave.Pixel(color.R, color.G, color.B, color.A, false);
-                    builder.SetPixel(pixel, x1 + x, y1 + y);
-                }
-            }
-
+            graphics.DrawImage(frameBitmap, new Point(x1, y1));
             frameColumn++;
 
             if (frameColumn == ColumnsCount)
@@ -67,7 +49,9 @@ internal class PngProjectSerializer : IPixedProjectSerializer
             }
         }
 
-        builder.Save(stream);
+        graphics.Dispose();
+        outputBitmap.Save(stream, ImageFormat.Png);
+        outputBitmap.Dispose();
 
         if (close)
         {

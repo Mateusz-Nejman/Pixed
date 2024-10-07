@@ -122,38 +122,18 @@ internal class Frame : PropertyChangedBase, IPixedSerializer
         }
     }
 
-    public void RefreshRenderSource()
+    public void RefreshRenderSource(List<Pixel>? pixels = null)
     {
-        RenderSource = Render().ToAvaloniaBitmap();
+        RenderSource = Render(pixels).ToAvaloniaBitmap();
     }
 
-    public System.Drawing.Bitmap RenderTransparent(List<Pixel>? pixels = null)
+    public System.Drawing.Bitmap Render(List<Pixel>? pixels = null)
     {
         System.Drawing.Bitmap render = new(Width, Height);
         Graphics g = Graphics.FromImage(render);
         for (int a = 0; a < _layers.Count; a++)
         {
-            if (a == SelectedLayer)
-            {
-                continue;
-            }
-
-            g.DrawImage(_layers[a].Render().OpacityImage(0.5f), 0, 0);
-        }
-
-        var rendered = CurrentLayer.Render(pixels);
-        g.DrawImage(rendered, 0, 0);
-
-        return render;
-    }
-
-    public System.Drawing.Bitmap Render()
-    {
-        System.Drawing.Bitmap render = new(Width, Height);
-        Graphics g = Graphics.FromImage(render);
-        for (int a = 0; a < _layers.Count; a++)
-        {
-            g.DrawImage(_layers[a].Render(), 0, 0);
+            g.DrawImage(_layers[a].Render(a == SelectedLayer ? pixels : null), 0, 0);
         }
 
         return render;

@@ -21,6 +21,27 @@ internal static class BitmapUtils
         return bitmap;
     }
 
+    public static int[] ToPixelColors(this Bitmap bitmap)
+    {
+        int width = bitmap.Width;
+        int height = bitmap.Height;
+        int[] pixelArray = new int[width * height];
+
+        BitmapData data = bitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
+        int bytes = Math.Abs(data.Stride) * height;
+        byte[] byteData = new byte[bytes];
+        Marshal.Copy(data.Scan0, byteData, 0, bytes);
+        bitmap.UnlockBits(data);
+
+        for (int i = 0; i < byteData.Length; i += 4)
+        {
+            int pixel = BitConverter.ToInt32(byteData, i);
+            pixelArray[i / 4] = pixel;
+        }
+
+        return pixelArray;
+    }
+
     public static Bitmap OpacityImage(this Bitmap src, float opacity)
     {
         Bitmap bmp = new(src.Width, src.Height);

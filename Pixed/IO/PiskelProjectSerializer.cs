@@ -1,8 +1,8 @@
-﻿using BigGustave;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using Pixed.Models;
 using System;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -41,7 +41,7 @@ internal partial class PiskelProjectSerializer : IPixedProjectSerializer
                 string str = match.Value[7..];
                 byte[] data = Convert.FromBase64String(str);
                 MemoryStream memoryStream = new(data);
-                var png = Png.Open(memoryStream);
+                Bitmap bitmap = (Bitmap)Image.FromStream(memoryStream);
 
                 for (int f = 0; f < frames.Count; f++)
                 {
@@ -51,8 +51,8 @@ internal partial class PiskelProjectSerializer : IPixedProjectSerializer
                     {
                         for (int y = 0; y < height; y++)
                         {
-                            var pixel = png.GetPixel(x + (f * width), y);
-                            frameLayerData[y * width + x] = new UniColor(pixel.A, pixel.R, pixel.G, pixel.B);
+                            UniColor pixel = bitmap.GetPixel(x + (f * width), y);
+                            frameLayerData[y * width + x] = pixel;
                         }
                     }
 
@@ -61,6 +61,7 @@ internal partial class PiskelProjectSerializer : IPixedProjectSerializer
                 }
 
                 memoryStream.Dispose();
+                bitmap.Dispose();
             }
         }
 

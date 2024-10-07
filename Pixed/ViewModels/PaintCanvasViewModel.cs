@@ -634,7 +634,9 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         {
             pixels = pen.GetPixels();
         }
-        AvaloniaImageBitmap = _frame.RenderTransparent(pixels).ToAvaloniaBitmap();
+
+        _frame.RefreshRenderSource(pixels);
+        AvaloniaImageBitmap = _frame.RenderSource;
     }
 
     private void ReloadFrameRender(Layer _)

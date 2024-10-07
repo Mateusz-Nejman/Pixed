@@ -1,0 +1,19 @@
+<Window x:Class="Pixed.Windows.NumericPrompt"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Pixed.Windows"
+        mc:Ignorable="d"
+        Title="Prompt" MinWidth="200"
+        MinHeight="100"
+        ShowInTaskbar="False" SizeToContent="WidthAndHeight"
+        WindowStartupLocation="CenterOwner"
+        Icon="avares://Pixed.Core/Resources/icon.ico">
+  <StackPanel>
+    <TextBlock Text="{Binding Text, RelativeSource={RelativeSource FindAncestor, AncestorType=local:NumericPrompt}}" Margin="10"/>
+    <NumericUpDown Name="numeric" Margin="10" Minimum="{Binding Minimum, RelativeSource={RelativeSource FindAncestor, AncestorType=local:NumericPrompt}}" Maximum="{Binding Maximum, RelativeSource={RelativeSource FindAncestor, AncestorType=local:NumericPrompt}}" Value="{Binding DefaultValue, RelativeSource={RelativeSource FindAncestor, AncestorType=local:NumericPrompt}}"/>
+    <Button Content="OK" Click="Button_Click"
+        Height="24" MinWidth="80" Padding="10,0" Margin="10"/>
+  </StackPanel>
+</Window>
