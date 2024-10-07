@@ -4,14 +4,25 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Pixed.Controls"
-			 xmlns:models="clr-namespace:Pixed.Models"
+             xmlns:models="clr-namespace:Pixed.Models"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
 			 x:DataType="models:Layer">
-    <StackPanel Orientation="Horizontal">
-        <Border BorderBrush="Gray" BorderThickness="1">
-            <Image Width="32" Height="32" Source="{Binding RenderSource}" RenderOptions.BitmapInterpolationMode="None"/>
-        </Border>
-        <TextBlock Text="{Binding Name}" Foreground="White" VerticalAlignment="Center" Margin="4"/>
-    </StackPanel>
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="34"/>
+      <ColumnDefinition Width="*"/>
+      <ColumnDefinition Width="34"/>
+    </Grid.ColumnDefinitions>
+    <Border BorderBrush="Gray" BorderThickness="1">
+      <Image Width="32" Height="32" Source="{Binding RenderSource}" RenderOptions.BitmapInterpolationMode="None"/>
+    </Border>
+    <TextBlock Grid.Column="1" Text="{Binding Name}" Foreground="White" VerticalAlignment="Center" Margin="4"/>
+    <Button Grid.Column="2" Command="{Binding ChangeOpacityCommand}">
+      <ToolTip.Tip>
+        <local:SimpleTooltip Title="Change layer opacity"/>
+      </ToolTip.Tip>
+      <Image Source="avares://Pixed.Core/Resources/Icons/eye.png"/>
+    </Button>
+  </Grid>
 </UserControl>

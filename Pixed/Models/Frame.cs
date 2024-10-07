@@ -122,9 +122,9 @@ internal class Frame : PropertyChangedBase, IPixedSerializer
         }
     }
 
-    public void RefreshRenderSource()
+    public void RefreshRenderSource(List<Pixel>? pixels = null)
     {
-        RenderSource = Render().ToAvaloniaBitmap();
+        RenderSource = Render(pixels).ToAvaloniaBitmap();
     }
 
     public System.Drawing.Bitmap Render(List<Pixel>? pixels = null)
