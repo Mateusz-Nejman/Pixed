@@ -32,7 +32,6 @@ internal abstract class AbstractDragSelect(ApplicationData applicationData, Tool
         if (_hasSelection)
         {
             _hasSelection = false;
-            //CommitSelection(ref overlay);
         }
         else
         {

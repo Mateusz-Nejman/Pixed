@@ -65,17 +65,17 @@
 			</controls:ToolRadioButton>
 			<controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed.Core/Resources/Icons/tools/tool-shape-select.png" Name="tool_shape_select" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">
 				<ToolTip.Tip>
-					<controls:TooltipWith3Buttons Title="Shape selection" ButtonText1="Ctrl+c" ButtonTextHelper1="Copy the selected area" ButtonText2="Ctrl+v" ButtonTextHelper2="Paste the copied area" ButtonText3="Shift" ButtonTextHelper3="Hold to move the content"/>
+					<controls:TooltipWith3Buttons Title="Shape selection" ButtonText1="Ctrl+c" ButtonTextHelper1="Copy the selected area" ButtonText2="Ctrl+v" ButtonTextHelper2="Paste the copied area"/>
 				</ToolTip.Tip>
 			</controls:ToolRadioButton>
 			<controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed.Core/Resources/Icons/tools/tool-rectangle-select.png" Name="tool_rectangle_select" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">
 				<ToolTip.Tip>
-					<controls:TooltipWith3Buttons Title="Rectangle selection" ButtonText1="Ctrl+c" ButtonTextHelper1="Copy the selected area" ButtonText2="Ctrl+v" ButtonTextHelper2="Paste the copied area" ButtonText3="Shift" ButtonTextHelper3="Hold to move the content"/>
+					<controls:TooltipWith3Buttons Title="Rectangle selection" ButtonText1="Ctrl+c" ButtonTextHelper1="Copy the selected area" ButtonText2="Ctrl+v" ButtonTextHelper2="Paste the copied area" ButtonText3="Shift"/>
 				</ToolTip.Tip>
 			</controls:ToolRadioButton>
 			<controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed.Core/Resources/Icons/tools/tool-lasso-select.png" Name="tool_lasso_select" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">
 				<ToolTip.Tip>
-					<controls:TooltipWith3Buttons Title="Lasso selection" ButtonText1="Ctrl+c" ButtonTextHelper1="Copy the selected area" ButtonText2="Ctrl+v" ButtonTextHelper2="Paste the copied area" ButtonText3="Shift" ButtonTextHelper3="Hold to move the content"/>
+					<controls:TooltipWith3Buttons Title="Lasso selection" ButtonText1="Ctrl+c" ButtonTextHelper1="Copy the selected area" ButtonText2="Ctrl+v" ButtonTextHelper2="Paste the copied area" ButtonText3="Shift"/>
 				</ToolTip.Tip>
 			</controls:ToolRadioButton>
 			<controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed.Core/Resources/Icons/tools/tool-lighten.png" Name="tool_lighten" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">

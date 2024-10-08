@@ -36,9 +36,9 @@ internal class SelectionManager
         Subjects.ClipboardPaste.Subscribe(_ => Paste());
         Subjects.SelectionCreated.Subscribe(OnSelectionCreated);
         Subjects.SelectionDismissed.Subscribe(OnSelectionDismissed);
-        shortcutService.Add(new Services.Keyboard.KeyState(Key.C, false, true, false), Copy);
-        shortcutService.Add(new Services.Keyboard.KeyState(Key.X, false, true, false), Cut);
-        shortcutService.Add(new Services.Keyboard.KeyState(Key.V, false, true, false), () => Paste());
+        shortcutService.Add(new Services.Keyboard.KeyState(Key.C, false, true, false), async() => await Copy());
+        shortcutService.Add(new Services.Keyboard.KeyState(Key.X, false, true, false), async() => await Cut());
+        shortcutService.Add(new Services.Keyboard.KeyState(Key.V, false, true, false), async() => await Paste());
         shortcutService.Add(new Services.Keyboard.KeyState(Key.A, false, true, false), SelectAll);
         shortcutService.Add(new Services.Keyboard.KeyState(Key.Delete, false, false, false), Erase);
     }
@@ -63,7 +63,7 @@ internal class SelectionManager
         ((RectangleSelect)_toolSelector.ToolSelected).SelectAll(overlay => _paintCanvas.Overlay = overlay);
     }
 
-    public void Copy()
+    public async Task Copy()
     {
         if (!IsSelectToolActive())
         {
@@ -74,17 +74,17 @@ internal class SelectionManager
         {
             _currentSelection.FillSelectionFromFrame(_applicationData.CurrentFrame);
             Bitmap selectionBitmap = _currentSelection.ToBitmap();
-            selectionBitmap?.CopyToClipboard();
+            await selectionBitmap?.CopyToClipboard();
         }
     }
 
-    public void Cut()
+    public async Task Cut()
     {
         if (!IsSelectToolActive())
         {
             return;
         }
-        Copy();
+        await Copy();
         Erase();
     }
 
@@ -154,13 +154,8 @@ internal class SelectionManager
             return;
         }
 
-        var pixels = new List<Pixel>(_currentSelection.Pixels);
+        var pixels = _currentSelection.Pixels;
         var frame = _applicationData.CurrentFrame;
-
-        foreach (var pixel in pixels)
-        {
-            pixel.Color = UniColor.Transparent;
-        }
 
         frame.SetPixels(pixels);
 
