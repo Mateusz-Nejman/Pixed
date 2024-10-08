@@ -14,7 +14,7 @@ internal class RectangleSelect(ApplicationData applicationData, ToolSelector too
     public override void OnDragSelect(int x, int y, Frame frame, ref Bitmap overlay)
     {
         overlay.Clear();
-        _selection = new RectangularSelection(_startX, _startY, x, y);
+        _selection = new RectangularSelection(_startX, _startY, x, y, frame);
         Subjects.SelectionCreated.OnNext(_selection);
         DrawSelectionOnOverlay(ref overlay);
     }

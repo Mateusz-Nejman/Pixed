@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pixed.Models;
+using System;
 
 namespace Pixed.Selection;
 
@@ -9,7 +10,7 @@ internal class RectangularSelection : BaseSelection
     private int _x2;
     private int _y2;
 
-    public RectangularSelection(int x1, int y1, int x2, int y2) : base()
+    public RectangularSelection(int x1, int y1, int x2, int y2, Frame frame) : base()
     {
         SetOrderedRectangleCoordinates(x1, y1, x2, y2);
 
@@ -17,7 +18,7 @@ internal class RectangularSelection : BaseSelection
         {
             for (int y = _y1; y <= _y2; y++)
             {
-                Pixels.Add(new Models.Pixel(x, y));
+                Pixels.Add(new Pixel(x, y, frame.GetPixel(x, y)));
             }
         }
     }

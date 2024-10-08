@@ -1,4 +1,6 @@
-﻿using Pixed.Controls;
+﻿using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
+using Pixed.Controls;
 using Pixed.Menu;
 using Pixed.Tools;
 using System.Windows.Input;
@@ -33,5 +35,19 @@ internal class ToolsSectionViewModel(MenuItemRegistry menuItemRegistry, ToolSele
         _menuItemRegistry.Register(BaseMenuItem.Tools, "Pixelart noise tool", ToolSelectAction, "tool_noise");
         _menuItemRegistry.Register(BaseMenuItem.Tools, "Pixelart noise fill tool", ToolSelectAction, "tool_noise_fill");
         _menuItemRegistry.Register(BaseMenuItem.Tools, "Outliner tool", ToolSelectAction, "tool_outliner_tool");
+    }
+
+    public void OpenFlyoutFor(BaseTool tool, ToolRadioButton radioButton)
+    {
+        var propertyItems = tool.GetToolProperties();
+
+        if (propertyItems.Count == 0)
+        {
+            return;
+        }
+
+        ToolFlyout flyout = new(tool);
+        FlyoutBase.SetAttachedFlyout(radioButton, flyout);
+        FlyoutBase.ShowAttachedFlyout(radioButton);
     }
 }

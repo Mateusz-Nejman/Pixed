@@ -36,9 +36,9 @@ internal class SelectionManager
         Subjects.ClipboardPaste.Subscribe(_ => Paste());
         Subjects.SelectionCreated.Subscribe(OnSelectionCreated);
         Subjects.SelectionDismissed.Subscribe(OnSelectionDismissed);
-        shortcutService.Add(new Services.Keyboard.KeyState(Key.C, false, true, false), Copy);
-        shortcutService.Add(new Services.Keyboard.KeyState(Key.X, false, true, false), Cut);
-        shortcutService.Add(new Services.Keyboard.KeyState(Key.V, false, true, false), () => Paste());
+        shortcutService.Add(new Services.Keyboard.KeyState(Key.C, false, true, false), async() => await Copy());
+        shortcutService.Add(new Services.Keyboard.KeyState(Key.X, false, true, false), async() => await Cut());
+        shortcutService.Add(new Services.Keyboard.KeyState(Key.V, false, true, false), async() => await Paste());
         shortcutService.Add(new Services.Keyboard.KeyState(Key.A, false, true, false), SelectAll);
         shortcutService.Add(new Services.Keyboard.KeyState(Key.Delete, false, false, false), Erase);
     }
@@ -55,15 +55,15 @@ internal class SelectionManager
     public void SelectAll()
     {
         var newTool = _toolSelector.GetTool("tool_rectangle_select");
-        
-        if(_toolSelector.ToolSelected != newTool)
+
+        if (_toolSelector.ToolSelected != newTool)
         {
             _toolSelector.ToolSelected = newTool;
         }
         ((RectangleSelect)_toolSelector.ToolSelected).SelectAll(overlay => _paintCanvas.Overlay = overlay);
     }
 
-    public void Copy()
+    public async Task Copy()
     {
         if (!IsSelectToolActive())
         {
@@ -74,17 +74,17 @@ internal class SelectionManager
         {
             _currentSelection.FillSelectionFromFrame(_applicationData.CurrentFrame);
             Bitmap selectionBitmap = _currentSelection.ToBitmap();
-            selectionBitmap?.CopyToClipboard();
+            await selectionBitmap?.CopyToClipboard();
         }
     }
 
-    public void Cut()
+    public async Task Cut()
     {
         if (!IsSelectToolActive())
         {
             return;
         }
-        Copy();
+        await Copy();
         Erase();
     }
 
@@ -156,11 +156,6 @@ internal class SelectionManager
 
         var pixels = _currentSelection.Pixels;
         var frame = _applicationData.CurrentFrame;
-
-        for (int a = 0; a < pixels.Count; a++)
-        {
-            pixels[a].Color = UniColor.Transparent;
-        }
 
         frame.SetPixels(pixels);
 

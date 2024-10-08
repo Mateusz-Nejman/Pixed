@@ -2,6 +2,7 @@
 using Pixed.Selection;
 using Pixed.Utils;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Frame = Pixed.Models.Frame;
@@ -13,8 +14,7 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
     public enum SelectionMode
     {
         None,
-        Select,
-        MoveSelection
+        Select
     }
 
     private readonly ToolSelector _toolSelector = toolSelector;
@@ -28,7 +28,6 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
     protected BaseSelection? _selection = null;
     protected SelectionMode _mode = SelectionMode.None;
     protected bool _hasSelection = false;
-    protected bool _isMovingContent = false;
 
     public override bool ShiftHandle { get; protected set; } = true;
     public override bool AddToHistory { get; protected set; } = false;
@@ -39,14 +38,13 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
         _toolSelector.SelectTool("tool_rectangle_select");
         _hasSelection = true;
         _mode = SelectionMode.Select;
-        _selection = new RectangularSelection(0, 0, _applicationData.CurrentFrame.Width - 1, _applicationData.CurrentFrame.Height - 1);
+        _selection = new RectangularSelection(0, 0, _applicationData.CurrentFrame.Width - 1, _applicationData.CurrentFrame.Height - 1, _applicationData.CurrentFrame);
         overlayAction?.Invoke(CreateOverlayFromCurrentFrame());
         Subjects.SelectionCreated.OnNext(_selection);
     }
 
     public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
-        base.ApplyTool(x, y, frame, ref overlay, shiftPressed, controlPressed, altPressed);
         _startX = x;
         _startY = y;
         _lastX = x;
@@ -59,15 +57,6 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
         }
         else
         {
-            _mode = SelectionMode.MoveSelection;
-
-            if (shiftPressed)
-            {
-                _isMovingContent = true;
-                Subjects.ClipboardCut.OnNext(_selection);
-                DrawSelectionOnOverlay(ref overlay);
-            }
-
             OnSelectionMoveStart(x, y, frame, ref overlay);
         }
     }
@@ -78,10 +67,6 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
         {
             OnSelect(x, y, frame, ref overlay);
         }
-        else if (_mode == SelectionMode.MoveSelection)
-        {
-            OnSelectionMove(x, y, frame, ref overlay);
-        }
     }
 
     public override void ReleaseTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
@@ -89,10 +74,6 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
         if (_mode == SelectionMode.Select)
         {
             OnSelectEnd(x, y, frame, ref overlay);
-        }
-        else if (_mode == SelectionMode.MoveSelection)
-        {
-            OnSelectionMoveEnd(x, y, frame, ref overlay);
         }
     }
 
@@ -103,6 +84,7 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
             base.UpdateHighlightedPixel(x, y, frame, ref overlay);
         }
     }
+
     public virtual void OnSelectStart(int x, int y, Frame frame, ref Bitmap overlay) { }
     public virtual void OnSelect(int x, int y, Frame frame, ref Bitmap overlay) { }
     public virtual void OnSelectEnd(int x, int y, Frame frame, ref Bitmap overlay) { }
@@ -113,7 +95,7 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
         var deltaY = y - _lastY;
         _selection?.Move(deltaX, deltaY);
 
-        overlay = new Bitmap(overlay.Width, overlay.Height);
+        overlay.Clear();
         DrawSelectionOnOverlay(ref overlay);
 
         _lastX = x;
@@ -141,6 +123,7 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
         for (int i = 0; i < pixels.Count; i++)
         {
             var pixel = pixels[i];
+            var hasColor = pixel.Color != UniColor.Transparent;
 
             if (!bitmap.ContainsPixel(pixel.X, pixel.Y))
             {
@@ -148,6 +131,13 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
             }
 
             var color = UniColor.WithAlpha(128, UniColor.GetFromResources("Accent"));
+
+            if (hasColor)
+            {
+                color = pixel.Color;
+                color = color.Lighten(10);
+                color.A = 128;
+            }
 
             bitmap.SetPixel(pixel.X, pixel.Y, color);
         }

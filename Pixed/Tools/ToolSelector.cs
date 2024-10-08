@@ -52,6 +52,11 @@ internal class ToolSelector
         };
     }
 
+    public Dictionary<string, BaseTool> GetTools()
+    {
+        return _tools;
+    }
+
     public void SelectTool(string name)
     {
         if (_tools.ContainsKey(name))

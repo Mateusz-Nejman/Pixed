@@ -29,12 +29,6 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     private bool _shiftPressed;
     private bool _controlPressed;
     private bool _altPressed;
-    private bool _shiftChecked;
-    private bool _controlChecked;
-    private bool _altChecked;
-    private bool _shiftEnabled;
-    private bool _controlEnabled;
-    private bool _altEnabled;
     private string _projectSizeText;
     private string _mouseCoordinatesText;
     private int _toolSize = 1;
@@ -134,69 +128,6 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         set
         {
             _gridHeight = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public bool ShiftChecked
-    {
-        get => _shiftChecked;
-        set
-        {
-            _shiftChecked = value;
-            OnPropertyChanged();
-            _shiftPressed = value;
-        }
-    }
-
-    public bool ControlChecked
-    {
-        get => _controlChecked;
-        set
-        {
-            _controlChecked = value;
-            OnPropertyChanged();
-            _controlPressed = value;
-        }
-    }
-
-    public bool AltChecked
-    {
-        get => _altChecked;
-        set
-        {
-            _altChecked = value;
-            OnPropertyChanged();
-            _altPressed = value;
-        }
-    }
-
-    public bool ShiftEnabled
-    {
-        get => _shiftEnabled;
-        set
-        {
-            _shiftEnabled = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public bool ControlEnabled
-    {
-        get => _controlEnabled;
-        set
-        {
-            _controlEnabled = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public bool AltEnabled
-    {
-        get => _altEnabled;
-        set
-        {
-            _altEnabled = value;
             OnPropertyChanged();
         }
     }
@@ -316,41 +247,16 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
             if (tool.Previous != null)
             {
                 tool.Previous.Reset();
+                tool.Previous.ResetProperties();
                 ResetOverlay();
-            }
-            ShiftEnabled = tool.Current.ShiftHandle;
-            ControlEnabled = tool.Current.ControlHandle;
-            AltEnabled = tool.Current.AltHandle;
-
-            if (!ShiftEnabled)
-            {
-                _shiftChecked = false;
-                OnPropertyChanged(nameof(ShiftChecked));
-            }
-
-            if (!ControlEnabled)
-            {
-                _controlChecked = false;
-                OnPropertyChanged(nameof(ControlChecked));
             }
         });
 
         _keyState = Subjects.KeyState.Subscribe(state =>
         {
-            if (!ShiftChecked)
-            {
-                _shiftPressed = state.IsShift;
-            }
-
-            if (!ControlChecked)
-            {
-                _controlPressed = state.IsCtrl;
-            }
-
-            if (!AltChecked)
-            {
-                _altChecked = state.IsAlt;
-            }
+            _shiftPressed = state.IsShift;
+            _controlPressed = state.IsCtrl;
+            _altPressed = state.IsAlt;
         });
 
         toolMoveCanvas.MoveAction = offset =>

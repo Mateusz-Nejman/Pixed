@@ -10,8 +10,8 @@ internal class CopyPasteMenuRegister(MenuItemRegistry menuItemRegistry, Selectio
 
     public void Register()
     {
-        _menuItemRegistry.Register(BaseMenuItem.Edit, "Copy", _selectionManager.Copy);
-        _menuItemRegistry.Register(BaseMenuItem.Edit, "Cut", _selectionManager.Cut);
+        _menuItemRegistry.Register(BaseMenuItem.Edit, "Copy", new AsyncCommand(_selectionManager.Copy));
+        _menuItemRegistry.Register(BaseMenuItem.Edit, "Cut", new AsyncCommand(_selectionManager.Cut));
         _menuItemRegistry.Register(BaseMenuItem.Edit, "Paste", new AsyncCommand(_selectionManager.Paste));
         _menuItemRegistry.Register(BaseMenuItem.Edit, "Select All", _selectionManager.SelectAll);
     }

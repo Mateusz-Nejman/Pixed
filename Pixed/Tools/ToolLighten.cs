@@ -1,13 +1,19 @@
 ﻿using Pixed.Models;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace Pixed.Tools;
 internal class ToolLighten(ApplicationData applicationData) : ToolPen(applicationData)
 {
+    private const string PROP_DARKEN = "Darken";
+    private const string PROP_APPLY_ONCE = "Apply once per pixel";
     public override bool ShiftHandle { get; protected set; } = true;
     public override bool ControlHandle { get; protected set; } = true;
     public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
+        controlPressed = controlPressed || GetProperty(PROP_DARKEN);
+        shiftPressed = shiftPressed || GetProperty(PROP_APPLY_ONCE);
+
         if (!frame.ContainsPixel(x, y))
         {
             return;
@@ -18,6 +24,14 @@ internal class ToolLighten(ApplicationData applicationData) : ToolPen(applicatio
 
         var modifiedColor = GetModifierColor(x, y, frame, ref overlay, shiftPressed, controlPressed);
         DrawOnOverlay(modifiedColor, x, y, frame, ref overlay);
+    }
+
+    public override List<ToolProperty> GetToolProperties()
+    {
+        return [
+            new ToolProperty(PROP_DARKEN),
+            new ToolProperty(PROP_APPLY_ONCE),
+            ];
     }
 
     private int GetModifierColor(int x, int y, Frame frame, ref Bitmap overlay, bool oncePerPixel, bool isDarken)

@@ -10,6 +10,9 @@ internal class ToolColorSwap(ApplicationData applicationData) : BaseTool(applica
     public override bool SingleHighlightedPixel { get; protected set; } = true;
     public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
+        shiftPressed = shiftPressed || GetProperty(ToolProperties.PROP_APPLY_ALL_FRAMES);
+        controlPressed = controlPressed || GetProperty(ToolProperties.PROP_APPLY_ALL_LAYERS);
+
         if (frame.ContainsPixel(x, y))
         {
             var oldColor = frame.GetPixel(x, y);
@@ -17,6 +20,14 @@ internal class ToolColorSwap(ApplicationData applicationData) : BaseTool(applica
 
             SwapColors(oldColor, newColor, shiftPressed, controlPressed);
         }
+    }
+
+    public override List<ToolProperty> GetToolProperties()
+    {
+        return [
+            ToolProperties.GetApplyToAllLayers(),
+            ToolProperties.GetApplyToAllFrames()
+            ];
     }
 
     private void SwapColors(int oldColor, int newColor, bool shiftPressed, bool controlPressed)
