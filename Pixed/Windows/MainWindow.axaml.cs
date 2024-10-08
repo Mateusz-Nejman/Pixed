@@ -19,18 +19,21 @@ internal partial class MainWindow : PixedWindow<MainViewModel>
     private readonly PixedProjectMethods _pixedProjectMethods;
     private readonly TransformMenuRegister _transformToolsMenuRegister;
     private readonly CopyPasteMenuRegister _copyPasteMenuRegister;
+    private readonly ViewMenuRegister _viewMenuRegister;
     private readonly RecentFilesService _recentFilesService;
     private readonly ToolSelector _toolSelector;
     private readonly MenuBuilder _menuBuilder;
     public static Window? Handle { get; private set; }
     public static ICommand? QuitCommand { get; private set; }
     public MainWindow(ApplicationData applicationData, PixedProjectMethods pixedProjectMethods, MenuBuilder builder, MenuItemRegistry menuItemRegistry,
-        TransformMenuRegister transformToolsMenuRegister, RecentFilesService recentFilesService, ToolSelector toolSelector, CopyPasteMenuRegister copyPasteMenuRegister) : base(menuItemRegistry)
+        TransformMenuRegister transformToolsMenuRegister, RecentFilesService recentFilesService, ToolSelector toolSelector, CopyPasteMenuRegister copyPasteMenuRegister,
+        ViewMenuRegister viewMenuRegister) : base(menuItemRegistry)
     {
         _pixedProjectMethods = pixedProjectMethods;
         _applicationData = applicationData;
         _transformToolsMenuRegister = transformToolsMenuRegister;
         _copyPasteMenuRegister = copyPasteMenuRegister;
+        _viewMenuRegister = viewMenuRegister;
         _recentFilesService = recentFilesService;
         _toolSelector = toolSelector;
         _menuBuilder = builder;
@@ -51,6 +54,7 @@ internal partial class MainWindow : PixedWindow<MainViewModel>
     protected override void OnInitialized()
     {
         base.OnInitialized();
+        _viewMenuRegister.Register();
         _transformToolsMenuRegister.Register();
         _copyPasteMenuRegister.Register();
         _menuBuilder.Build();

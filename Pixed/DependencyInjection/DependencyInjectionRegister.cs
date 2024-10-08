@@ -63,6 +63,7 @@ internal static class DependencyInjectionRegister
         collection.AddScoped<PixedProjectMethods>();
         collection.AddSingleton<TransformMenuRegister>();
         collection.AddSingleton<CopyPasteMenuRegister>();
+        collection.AddSingleton<ViewMenuRegister>();
     }
 
     public static IPixedServiceProvider GetServiceProvider(this IResourceHost control)
