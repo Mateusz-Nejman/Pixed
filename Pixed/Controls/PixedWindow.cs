@@ -10,7 +10,8 @@ internal abstract class PixedWindow<T> : Window
     protected readonly MenuItemRegistry _menuItemRegistry;
     public PixedWindow(MenuItemRegistry menuItemRegistry)
     {
-        this.DataContext = this.CreateInstance<T>();
+        var serviceProvider = this.GetServiceProvider();
+        this.DataContext = serviceProvider.Get<T>();
         _menuItemRegistry = menuItemRegistry;
     }
     public virtual void RegisterMenuItems()

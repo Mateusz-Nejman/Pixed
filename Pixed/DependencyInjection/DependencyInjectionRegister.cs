@@ -76,9 +76,4 @@ internal static class DependencyInjectionRegister
 
         return (IPixedServiceProvider)resource;
     }
-
-    public static T CreateInstance<T>(this IResourceHost control)
-    {
-        return ActivatorUtilities.CreateInstance<T>(control.GetServiceProvider().GetNativeProvider());
-    }
 }
