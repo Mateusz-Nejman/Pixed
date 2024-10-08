@@ -21,6 +21,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
         Tools,
         Palette,
         Project,
+        View,
         Help
     }
 
@@ -49,6 +50,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
         NativeMenuItem toolsMenu = new("Tools");
         NativeMenuItem paletteMenu = new("Palette");
         NativeMenuItem projectMenu = GetProjectMenu();
+        NativeMenuItem viewMenu = new("View");
         NativeMenuItem helpMenu = new("Help");
 
         NativeMenuItem aboutMenu = new("About")
@@ -64,6 +66,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
 
         AddToMenu(ref toolsMenu, GetEntries(BaseMenuItem.Tools));
         AddToMenu(ref paletteMenu, GetEntries(BaseMenuItem.Palette));
+        AddToMenu(ref viewMenu, GetEntries(BaseMenuItem.View));
         AddToMenu(ref helpMenu, GetEntries(BaseMenuItem.Help));
 
         if (clear)
@@ -77,6 +80,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
         menu.Items.Add(toolsMenu);
         menu.Items.Add(paletteMenu);
         menu.Items.Add(projectMenu);
+        menu.Items.Add(viewMenu);
         menu.Items.Add(helpMenu);
 
         OnMenuBuilt.OnNext(menu);
@@ -161,35 +165,9 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
                 Subjects.ProjectModified.OnNext(_applicationData.CurrentModel);
             })
         };
-        NativeMenuItem gridSettingsMenu = new("Grid settings");
-        NativeMenuItem gridToggleMenu = new("Toggle grid");
-
-        gridSettingsMenu.Command = new ActionCommand(async () =>
-        {
-            GridSettingsWindow window = new(_applicationData);
-            var success = await window.ShowDialog<bool>(MainWindow.Handle);
-            if (success)
-            {
-                _applicationData.UserSettings.GridWidth = window.WidthValue;
-                _applicationData.UserSettings.GridHeight = window.HeightValue;
-                _applicationData.UserSettings.GridColor = window.GridColor;
-                _applicationData.UserSettings.GridEnabled = true;
-                _applicationData.UserSettings.Save(_applicationData.DataFolder);
-                Subjects.GridChanged.OnNext(true);
-            }
-        });
-        gridToggleMenu.Command = new ActionCommand(() =>
-        {
-            _applicationData.UserSettings.GridEnabled = !_applicationData.UserSettings.GridEnabled;
-            _applicationData.UserSettings.Save(_applicationData.DataFolder);
-            Subjects.GridChanged.OnNext(true);
-        });
-
+        
         editMenu.Menu = [undoMenu, redoMenu];
-
         AddToMenu(ref editMenu, GetEntries(BaseMenuItem.Edit));
-        editMenu.Menu.Add(gridSettingsMenu);
-        editMenu.Menu.Add(gridToggleMenu);
 
         return editMenu;
     }
