@@ -16,7 +16,21 @@ internal partial class CustomTitleBar : EmptyPixedUserControl
         set { SetValue(TitleProperty, value); }
     }
 
+    public bool CanMinimize
+    {
+        get { return GetValue(CanMinimizeProperty); }
+        set { SetValue(CanMinimizeProperty, value); }
+    }
+
+    public bool CanMaximize
+    {
+        get { return GetValue(CanMaximizeProperty); }
+        set { SetValue(CanMaximizeProperty, value); }
+    }
+
     public static readonly StyledProperty<string> TitleProperty = AvaloniaProperty.Register<CustomTitleBar, string>("Title", "Title");
+    public static readonly StyledProperty<bool> CanMinimizeProperty = AvaloniaProperty.Register<CustomTitleBar, bool>("CanMinimize", true);
+    public static readonly StyledProperty<bool> CanMaximizeProperty = AvaloniaProperty.Register<CustomTitleBar, bool>("CanMaximize", true);
     public CustomTitleBar() : base()
     {
         InitializeComponent();
