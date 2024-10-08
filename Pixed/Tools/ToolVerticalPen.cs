@@ -11,11 +11,8 @@ internal class ToolVerticalPen(ApplicationData applicationData) : ToolPen(applic
     public override bool ControlHandle { get; protected set; } = true;
     public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
-        bool horizontalProp = GetProperty(PROP_HORIZONTAL);
-        bool bothProp = GetProperty(PROP_BOTH_AXIS);
-
-        controlPressed = controlPressed || horizontalProp;
-        shiftPressed = shiftPressed || bothProp;
+        shiftPressed = shiftPressed || GetProperty(PROP_BOTH_AXIS);
+        controlPressed = controlPressed || GetProperty(PROP_HORIZONTAL);
 
         var color = GetToolColor();
         DrawOnOverlay(color, x, y, frame, ref overlay);
@@ -23,7 +20,7 @@ internal class ToolVerticalPen(ApplicationData applicationData) : ToolPen(applic
         int symX = GetSymmetricX(x, frame);
         int symY = GetSymmetricY(y, frame);
 
-        if (!controlPressed && !horizontalProp)
+        if (!controlPressed)
         {
             DrawOnOverlay(color, symX, y, frame, ref overlay);
         }
