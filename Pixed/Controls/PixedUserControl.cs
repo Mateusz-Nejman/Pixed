@@ -16,7 +16,8 @@ internal abstract class PixedUserControl<T> : UserControl
     public PixedUserControl()
     {
         _menuItemRegistry = Provider.Get<MenuItemRegistry>();
-        this.DataContext = this.CreateInstance<T>();
+        var serviceProvider = this.GetServiceProvider();
+        this.DataContext = serviceProvider.Get<T>();
     }
 
     public virtual void RegisterMenuItems()
