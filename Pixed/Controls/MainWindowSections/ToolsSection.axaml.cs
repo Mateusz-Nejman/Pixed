@@ -52,6 +52,15 @@ internal partial class ToolsSection : PixedUserControl<ToolsSectionViewModel>
         {
             var obj = this.FindControl<ToolRadioButton>(toolPair.Key);
             obj.PointerPressed += Radio_PointerPressed;
+            obj.Holding += Radio_Holding;
+        }
+    }
+
+    private void Radio_Holding(object? sender, HoldingRoutedEventArgs e)
+    {
+        if(sender is ToolRadioButton radio)
+        {
+            OpenFlyout(radio);
         }
     }
 
@@ -66,7 +75,12 @@ internal partial class ToolsSection : PixedUserControl<ToolsSectionViewModel>
                 return;
             }
 
-            ViewModel.OpenFlyoutFor(_toolSelector.GetTool(radio.Name), radio);
+            OpenFlyout(radio);
         }
+    }
+
+    private void OpenFlyout(ToolRadioButton radio)
+    {
+        ViewModel.OpenFlyoutFor(_toolSelector.GetTool(radio.Name), radio);
     }
 }
