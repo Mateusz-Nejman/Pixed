@@ -316,6 +316,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
             if (tool.Previous != null)
             {
                 tool.Previous.Reset();
+                tool.Previous.ResetProperties();
                 ResetOverlay();
             }
             ShiftEnabled = tool.Current.ShiftHandle;
