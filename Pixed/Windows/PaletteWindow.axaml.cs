@@ -12,7 +12,7 @@ internal partial class PaletteWindow : Window
     {
         InitializeComponent();
         _paletteService = paletteService;
-        _viewModel = (PaletteWindowViewModel)DataContext;
+        DataContext = _viewModel = new PaletteWindowViewModel(paletteService);
         _viewModel.PaletteAction = (select, model) =>
         {
             if (select)
