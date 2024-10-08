@@ -55,8 +55,8 @@ internal class SelectionManager
     public void SelectAll()
     {
         var newTool = _toolSelector.GetTool("tool_rectangle_select");
-        
-        if(_toolSelector.ToolSelected != newTool)
+
+        if (_toolSelector.ToolSelected != newTool)
         {
             _toolSelector.ToolSelected = newTool;
         }
@@ -154,12 +154,12 @@ internal class SelectionManager
             return;
         }
 
-        var pixels = _currentSelection.Pixels;
+        var pixels = new List<Pixel>(_currentSelection.Pixels);
         var frame = _applicationData.CurrentFrame;
 
-        for (int a = 0; a < pixels.Count; a++)
+        foreach (var pixel in pixels)
         {
-            pixels[a].Color = UniColor.Transparent;
+            pixel.Color = UniColor.Transparent;
         }
 
         frame.SetPixels(pixels);

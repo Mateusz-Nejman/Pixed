@@ -63,7 +63,7 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
         {
             _mode = SelectionMode.MoveSelection;
 
-            if (shiftPressed)
+            if (shiftPressed && !_isMovingContent)
             {
                 _isMovingContent = true;
                 Subjects.ClipboardCut.OnNext(_selection);
@@ -122,7 +122,7 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
         var deltaY = y - _lastY;
         _selection?.Move(deltaX, deltaY);
 
-        overlay = new Bitmap(overlay.Width, overlay.Height);
+        overlay.Clear();
         DrawSelectionOnOverlay(ref overlay);
 
         _lastX = x;
@@ -150,6 +150,7 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
         for (int i = 0; i < pixels.Count; i++)
         {
             var pixel = pixels[i];
+            var hasColor = pixel.Color != UniColor.Transparent;
 
             if (!bitmap.ContainsPixel(pixel.X, pixel.Y))
             {
@@ -157,6 +158,13 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
             }
 
             var color = UniColor.WithAlpha(128, UniColor.GetFromResources("Accent"));
+
+            if (hasColor)
+            {
+                color = pixel.Color;
+                color = color.Lighten(10);
+                color.A = 128;
+            }
 
             bitmap.SetPixel(pixel.X, pixel.Y, color);
         }
