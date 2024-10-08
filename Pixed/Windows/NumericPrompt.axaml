@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pixed.Windows"
         mc:Ignorable="d"
-        Title="Prompt" MinWidth="200"
-        MinHeight="100"
+        Title="Prompt"
         ShowInTaskbar="False" SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterOwner"
+		CanResize="False"
         Icon="avares://Pixed.Core/Resources/icon.ico">
   <StackPanel>
     <TextBlock Text="{Binding Text, RelativeSource={RelativeSource FindAncestor, AncestorType=local:NumericPrompt}}" Margin="10"/>

@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pixed.Windows"
         mc:Ignorable="d"
-        Title="Export tileset to PNG" MinWidth="200"
-        MinHeight="150"
+        Title="Export tileset to PNG"
         ShowInTaskbar="False" SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterOwner"
+		CanResize="False"
         Icon="avares://Pixed.Core/Resources/icon.ico">
   <StackPanel>
     <TextBlock Text="Columns count:" Margin="10"/>

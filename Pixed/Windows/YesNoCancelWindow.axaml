@@ -8,7 +8,7 @@
         Title="YesNoCancelWindow" ShowInTaskbar="False" SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterOwner"
         Icon="avares://Pixed.Core/Resources/icon.ico"
-		MinWidth="400">
+		CanResize="False">
 	<StackPanel Margin="5">
 		<TextBlock Text="{Binding Text, RelativeSource={RelativeSource FindAncestor, AncestorType=local:YesNoCancelWindow}}"/>
 		<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0, 5, 0, 0">

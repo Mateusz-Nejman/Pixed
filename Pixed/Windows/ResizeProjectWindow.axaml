@@ -4,9 +4,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Pixed.Windows.ResizeProjectWindow"
-        Title="Resize Project" MinWidth="200"
+        Title="Resize Project"
         xmlns:vm="clr-namespace:Pixed.ViewModels"
-        MinHeight="230" ShowInTaskbar="False" SizeToContent="WidthAndHeight"
+        CanResize="False" ShowInTaskbar="False" SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterOwner"
         Icon="avares://Pixed.Core/Resources/icon.ico"
 		x:DataType="vm:ResizeProjectWindowViewModel">
@@ -21,7 +21,7 @@
     <CheckBox Margin="10" Content="Maintain aspect ratio" IsChecked="{Binding MaintainAspectRatio, Mode=TwoWay}"/>
     <CheckBox Margin="10" Content="Resize canvas content" IsChecked="{Binding ResizeCanvasContent, Mode=TwoWay}"/>
     <TextBlock Text="Anchor:" Margin="10"/>
-    <ComboBox ItemsSource="{Binding AnchorItems}" SelectedIndex="{Binding Anchor, Mode=TwoWay}"/>
+    <ComboBox Margin="10" ItemsSource="{Binding AnchorItems}" SelectedIndex="{Binding Anchor, Mode=TwoWay}"/>
     <Button Content="Resize" Click="Button_Click"
         Height="24" MinWidth="80" Padding="10,0" Margin="10"/>
   </StackPanel>

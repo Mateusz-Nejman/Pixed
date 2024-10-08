@@ -7,9 +7,9 @@
 		xmlns:controls="clr-namespace:Pixed.Controls;assembly=Pixed.Core"
 		xmlns:local="clr-namespace:Pixed.Windows;assembly=Pixed.Core"
         Title="Grid settings"
-		Width="200" Height="300"
 		ShowInTaskbar="False" SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterOwner"
+		CanResize="False"
         Icon="avares://Pixed.Core/Resources/icon.ico">
 	<StackPanel>
 		<TextBlock Text="Grid color:" Margin="10"/>
