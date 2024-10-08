@@ -2,6 +2,7 @@
 using Pixed.Selection;
 using Pixed.Utils;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Frame = Pixed.Models.Frame;
@@ -10,6 +11,7 @@ namespace Pixed.Tools.Selection;
 
 internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSelector) : BaseTool(applicationData)
 {
+    private const string PROP_MOVE = "Move content";
     public enum SelectionMode
     {
         None,
@@ -46,7 +48,7 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
 
     public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
-        base.ApplyTool(x, y, frame, ref overlay, shiftPressed, controlPressed, altPressed);
+        shiftPressed = shiftPressed || GetProperty(PROP_MOVE);
         _startX = x;
         _startY = y;
         _lastX = x;
@@ -102,6 +104,13 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
         {
             base.UpdateHighlightedPixel(x, y, frame, ref overlay);
         }
+    }
+
+    public override List<ToolProperty> GetToolProperties()
+    {
+        return [
+            new ToolProperty(PROP_MOVE)
+            ];
     }
     public virtual void OnSelectStart(int x, int y, Frame frame, ref Bitmap overlay) { }
     public virtual void OnSelect(int x, int y, Frame frame, ref Bitmap overlay) { }

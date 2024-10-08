@@ -45,7 +45,7 @@
 			</controls:ToolRadioButton>
 			<controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed.Core/Resources/Icons/tools/tool-stroke.png" Name="tool_stroke" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">
 				<ToolTip.Tip>
-					<controls:TooltipWithButton Title="Stroke tool" ButtonText="Shift" ButtonTextHelper="Hold shift to draw straight lines" />
+					<controls:TooltipWithButton Title="Stroke tool" ButtonText="Shift" ButtonTextHelper="Draw straight lines" />
 				</ToolTip.Tip>
 			</controls:ToolRadioButton>
 			<controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed.Core/Resources/Icons/tools/tool-rectangle.png" Name="tool_rectangle" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">

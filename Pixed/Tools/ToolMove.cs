@@ -6,6 +6,7 @@ using System.Linq;
 namespace Pixed.Tools;
 internal class ToolMove(ApplicationData applicationData) : BaseTool(applicationData)
 {
+    private const string PROP_WRAP = "Wrap canvas borders";
     private int _startX = -1;
     private int _startY = -1;
     private Layer _currentLayer;
@@ -35,24 +36,26 @@ internal class ToolMove(ApplicationData applicationData) : BaseTool(applicationD
 
     public override void ReleaseTool(int x, int y, Frame _, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
+        shiftPressed = shiftPressed || GetProperty(ToolProperties.PROP_APPLY_ALL_FRAMES);
+        controlPressed = controlPressed || GetProperty(ToolProperties.PROP_APPLY_ALL_LAYERS);
+        altPressed = altPressed || GetProperty(PROP_WRAP);
         int diffX = x - _startX;
         int diffY = y - _startY;
 
-        Frame[] frames = shiftPressed ? _applicationData.CurrentModel.Frames.ToArray() : [_applicationData.CurrentFrame];
-
-        foreach (Frame frame in frames)
+        _applicationData.CurrentModel.Process(shiftPressed, controlPressed, (frame, layer) =>
         {
-            Layer[] layers = controlPressed ? frame.Layers.ToArray() : [frame.CurrentLayer];
+            var reference = this._currentLayer == layer ? this._currentLayerClone : layer.Clone();
+            ShiftLayer(layer, reference, diffX, diffY, altPressed);
+        }, _applicationData, true);
+    }
 
-            foreach (Layer layer in layers)
-            {
-                var reference = this._currentLayer == layer ? this._currentLayerClone : layer.Clone();
-                ShiftLayer(layer, reference, diffX, diffY, altPressed);
-                Subjects.LayerModified.OnNext(layer);
-            }
-
-            Subjects.FrameModified.OnNext(frame);
-        }
+    public override List<ToolProperty> GetToolProperties()
+    {
+        return [
+            ToolProperties.GetApplyToAllLayers(),
+            ToolProperties.GetApplyToAllFrames(),
+            new ToolProperty(PROP_WRAP)
+        ];
     }
 
     private static void ShiftLayer(Layer layer, Layer reference, int diffX, int diffY, bool altPressed)

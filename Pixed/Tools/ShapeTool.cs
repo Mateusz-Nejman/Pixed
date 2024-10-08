@@ -1,11 +1,13 @@
 ﻿using Pixed.Models;
 using Pixed.Utils;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace Pixed.Tools;
 internal abstract class ShapeTool(ApplicationData applicationData) : BaseTool(applicationData)
 {
+    protected string PROP_SHIFT = "Keep 1 to 1 ratio";
     protected int _startX = -1;
     protected int _startY = -1;
 
@@ -29,16 +31,23 @@ internal abstract class ShapeTool(ApplicationData applicationData) : BaseTool(ap
             color = UniColor.WithAlpha(128, UniColor.GetFromResources("Accent"));
         }
 
-        Draw(x, y, color, shiftPressed, _applicationData.ToolSize, ref overlay);
+        Draw(x, y, color, shiftPressed || GetProperty(PROP_SHIFT), _applicationData.ToolSize, ref overlay);
     }
 
     public override void ReleaseTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
         var color = GetToolColor();
 
-        Draw(x, y, color, shiftPressed, _applicationData.ToolSize, frame);
+        Draw(x, y, color, shiftPressed || GetProperty(PROP_SHIFT), _applicationData.ToolSize, frame);
 
         overlay.Clear();
+    }
+
+    public override List<ToolProperty> GetToolProperties()
+    {
+        return [
+            new ToolProperty(PROP_SHIFT)
+            ];
     }
 
     protected void Draw(int x, int y, int color, bool shiftPressed, int toolSize, ref Bitmap overlay)

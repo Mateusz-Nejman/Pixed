@@ -5,8 +5,12 @@ using System.Collections.Generic;
 using System.Drawing;
 
 namespace Pixed.Tools;
-internal class ToolStroke(ApplicationData applicationData) : ShapeTool(applicationData)
+internal class ToolStroke : ShapeTool
 {
+    public ToolStroke(ApplicationData applicationData) : base(applicationData)
+    {
+        PROP_SHIFT = "Draw straight lines";
+    }
     protected override void Draw(int x, int y, int color, bool isShift, Action<int, int, int> setPixelAction)
     {
         List<Point> linePixels;
