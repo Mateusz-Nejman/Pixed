@@ -189,11 +189,13 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
 
         _projectModified = Subjects.ProjectModified.Subscribe(p =>
         {
+            _frame = p.CurrentFrame;
             RecalculateFactor(_lastWindowSize);
         });
 
         _projectChanged = Subjects.ProjectChanged.Subscribe(p =>
         {
+            _frame = p.CurrentFrame;
             RecalculateFactor(_lastWindowSize);
             GridBrush = GetGridBrush();
             ProjectSizeText = "[" + p.Width + "x" + p.Height + "]";
@@ -274,9 +276,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     public void RecalculateFactor(Point windowSize)
     {
         var factor = Math.Min(windowSize.X, windowSize.Y - 32) / Math.Min(_frame.Width, _frame.Height);
-        _imageFactor = Math.Clamp(factor, 1, 300);
-        GridWidth = _frame.Width * factor;
-        GridHeight = _frame.Height * factor;
+        Zoom(factor);
         GridBrush = GetGridBrush();
         _lastWindowSize = windowSize;
         ResetOverlay();
@@ -462,8 +462,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
 
     private void MouseWheelAction(double delta)
     {
-        double multiplier = delta;
-        var step = multiplier * Math.Max(0.1, Math.Abs(_imageFactor) / 15);
+        var step = delta * Math.Max(0.1, Math.Abs(_imageFactor) / 15);
         var factor = Math.Max(0.1, _imageFactor + step);
         Zoom(factor);
     }
@@ -473,7 +472,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         _imageFactor = Math.Clamp(factor, 1, 300);
         GridWidth = _frame.Width * _imageFactor;
         GridHeight = _frame.Height * _imageFactor;
-        Subjects.MouseWheel.OnNext(factor);
+        Subjects.MouseWheel.OnNext(_imageFactor);
     }
 
     private void MouseLeaveAction()
