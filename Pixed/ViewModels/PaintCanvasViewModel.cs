@@ -342,6 +342,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         {
             _toolSelector.ToolSelected?.ApplyTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
         }
+
         ReloadOverlay();
     }
 
@@ -362,6 +363,8 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         {
             _applicationData.CurrentModel.AddHistory();
         }
+
+        Overlay.Clear();
         ReloadOverlay();
         Subjects.LayerModified.OnNext(_frame.CurrentLayer);
         Subjects.FrameModified.OnNext(_frame);
@@ -390,6 +393,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         {
             _toolSelector.ToolSelected?.ApplyTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
         }
+
         ReloadOverlay();
     }
 
@@ -410,6 +414,8 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         {
             _applicationData.CurrentModel.AddHistory();
         }
+
+        Overlay.Clear();
         ReloadOverlay();
         Subjects.LayerModified.OnNext(_frame.CurrentLayer);
         Subjects.FrameModified.OnNext(_frame);

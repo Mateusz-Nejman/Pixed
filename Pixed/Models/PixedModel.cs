@@ -182,6 +182,9 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
         byte[] data = _history[_historyIndex];
         MemoryStream stream = new(data);
         Deserialize(stream);
+        Subjects.ProjectModified.OnNext(this);
+        Subjects.FrameChanged.OnNext(CurrentFrame);
+        Subjects.LayerChanged.OnNext(CurrentFrame.CurrentLayer);
         stream.Dispose();
     }
 
@@ -201,6 +204,9 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
         byte[] data = _history[_historyIndex];
         MemoryStream stream = new(data);
         Deserialize(stream);
+        Subjects.ProjectModified.OnNext(this);
+        Subjects.FrameChanged.OnNext(CurrentFrame);
+        Subjects.LayerChanged.OnNext(CurrentFrame.CurrentLayer);
         stream.Dispose();
     }
 
