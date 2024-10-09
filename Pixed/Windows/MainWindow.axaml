@@ -22,6 +22,7 @@
         ExtendClientAreaTitleBarHeightHint="-1"
         Icon="avares://Pixed.Core/Resources/icon.ico"
 		NativeMenu.Menu="{Binding Menu}"
+		DragDrop.AllowDrop="True"
 		x:DataType="viewmodels:MainViewModel">
   <Window.KeyBindings>
     <KeyBinding Gesture="CTRL+Q"
