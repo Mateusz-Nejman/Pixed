@@ -2,7 +2,6 @@
 using Pixed.Selection;
 using Pixed.Utils;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Frame = Pixed.Models.Frame;

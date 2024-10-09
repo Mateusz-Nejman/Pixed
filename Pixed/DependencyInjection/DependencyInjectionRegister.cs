@@ -1,7 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Microsoft.Extensions.DependencyInjection;
-using Pixed.Controls;
 using Pixed.IO;
 using Pixed.Menu;
 using Pixed.Models;

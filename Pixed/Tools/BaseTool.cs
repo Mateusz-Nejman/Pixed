@@ -85,7 +85,7 @@ internal abstract class BaseTool(ApplicationData applicationData)
     {
         var toolProperties = GetToolProperties();
 
-        if(toolProperties.Count != _properties.Count)
+        if (toolProperties.Count != _properties.Count)
         {
             ResetProperties();
         }
@@ -99,7 +99,7 @@ internal abstract class BaseTool(ApplicationData applicationData)
 
     public void SetProperty(string name, bool value)
     {
-        if(!_properties.Exists(p => p.Name == name))
+        if (!_properties.Exists(p => p.Name == name))
         {
             return;
         }

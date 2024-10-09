@@ -1,5 +1,4 @@
-﻿using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
+﻿using Avalonia.Controls.Primitives;
 using Pixed.Controls;
 using Pixed.Menu;
 using Pixed.Tools;

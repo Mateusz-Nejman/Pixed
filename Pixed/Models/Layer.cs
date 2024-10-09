@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -160,9 +159,9 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
             pixels[pixel.Y * _width + pixel.X] = pixel.Color;
         }
 
-        if(Opacity != 100)
+        if (Opacity != 100)
         {
-            for(int a = 0; a < pixels.Length; a++)
+            for (int a = 0; a < pixels.Length; a++)
             {
                 UniColor color = pixels[a];
                 color.A = (byte)((Opacity / 100d) * color.A);
@@ -239,7 +238,7 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
 
         if (success)
         {
-            if(Opacity != numeric.Value)
+            if (Opacity != numeric.Value)
             {
                 _needRerender = true;
             }

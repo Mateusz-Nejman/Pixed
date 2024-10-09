@@ -36,9 +36,9 @@ internal class SelectionManager
         Subjects.ClipboardPaste.Subscribe(_ => Paste());
         Subjects.SelectionCreated.Subscribe(OnSelectionCreated);
         Subjects.SelectionDismissed.Subscribe(OnSelectionDismissed);
-        shortcutService.Add(new Services.Keyboard.KeyState(Key.C, false, true, false), async() => await Copy());
-        shortcutService.Add(new Services.Keyboard.KeyState(Key.X, false, true, false), async() => await Cut());
-        shortcutService.Add(new Services.Keyboard.KeyState(Key.V, false, true, false), async() => await Paste());
+        shortcutService.Add(new Services.Keyboard.KeyState(Key.C, false, true, false), async () => await Copy());
+        shortcutService.Add(new Services.Keyboard.KeyState(Key.X, false, true, false), async () => await Cut());
+        shortcutService.Add(new Services.Keyboard.KeyState(Key.V, false, true, false), async () => await Paste());
         shortcutService.Add(new Services.Keyboard.KeyState(Key.A, false, true, false), SelectAll);
         shortcutService.Add(new Services.Keyboard.KeyState(Key.Delete, false, false, false), Erase);
     }

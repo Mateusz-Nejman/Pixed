@@ -54,9 +54,9 @@ internal partial class MainWindow : PixedWindow<MainViewModel>
 
     public void OpenFromArgs(string[] args)
     {
-        foreach(var arg in args)
+        foreach (var arg in args)
         {
-            if(File.Exists(arg))
+            if (File.Exists(arg))
             {
                 _pixedProjectMethods.Open(arg);
             }

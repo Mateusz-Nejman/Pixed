@@ -20,7 +20,7 @@ public partial class App : Application
 
     public async override void OnFrameworkInitializationCompleted()
     {
-        if(ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             SplashWindow splash = new();
             desktop.MainWindow = splash;

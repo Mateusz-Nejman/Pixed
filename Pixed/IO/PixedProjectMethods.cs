@@ -107,11 +107,11 @@ internal class PixedProjectMethods(ApplicationData applicationData)
         IPixedProjectSerializer serializer;
         Stream stream = File.OpenRead(path);
 
-        if(path.EndsWith(".pixed"))
+        if (path.EndsWith(".pixed"))
         {
             serializer = new PixedProjectSerializer();
         }
-        else if(path.EndsWith(".piskel"))
+        else if (path.EndsWith(".piskel"))
         {
             serializer = new PiskelProjectSerializer();
         }
