@@ -156,5 +156,20 @@ internal partial class MainWindow : PixedWindow<MainViewModel>
         await InitializeDataFolder();
         InitializeBeforeUI();
         InitializeComponent();
+        AddHandler(DragDrop.DropEvent, Drop);
+    }
+
+    private void Drop(object? sender, DragEventArgs e)
+    {
+        var files = e.Data.GetFiles();
+        if (files != null)
+        {
+            foreach (var file in files)
+            {
+                _pixedProjectMethods.Open(file.Path.AbsolutePath);
+            }
+
+            e.Handled = true;
+        }
     }
 }
