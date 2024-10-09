@@ -10,6 +10,7 @@ using Pixed.Services.Keyboard;
 using Pixed.Tools;
 using Pixed.ViewModels;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Pixed.Windows;
@@ -39,8 +40,7 @@ internal partial class MainWindow : PixedWindow<MainViewModel>
         _toolSelector = toolSelector;
         _menuBuilder = builder;
 
-        InitializeBeforeUI();
-        InitializeComponent();
+        InitializeWindow();
     }
 
     public override void OnLoaded()
@@ -141,5 +141,20 @@ internal partial class MainWindow : PixedWindow<MainViewModel>
     {
         var point = e.GetCurrentPoint(sender as Control);
         Mouse.ProcessPoint(point);
+    }
+
+    private async Task InitializeDataFolder()
+    {
+        var documentsFolder = await StorageProvider.TryGetWellKnownFolderAsync(Avalonia.Platform.Storage.WellKnownFolder.Documents);
+        var pixedFolder = await documentsFolder.CreateFolderAsync("Pixed");
+        await documentsFolder.CreateFolderAsync("Pixed/Palettes");
+        _applicationData.Initialize(pixedFolder);
+    }
+
+    private async Task InitializeWindow()
+    {
+        await InitializeDataFolder();
+        InitializeBeforeUI();
+        InitializeComponent();
     }
 }

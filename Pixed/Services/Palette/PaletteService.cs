@@ -94,7 +94,7 @@ internal class PaletteService
     {
         FileInfo fileInfo = new(filename);
 
-        string paletteFileName = Path.Combine(_applicationData.DataFolder, "Palettes", fileInfo.Name);
+        string paletteFileName = Path.Combine(_applicationData.DataFolder.Path.AbsolutePath, "Palettes", fileInfo.Name);
         File.Copy(filename, paletteFileName, true);
 
         AbstractPaletteReader reader;
@@ -133,7 +133,7 @@ internal class PaletteService
 
     public void LoadAll()
     {
-        var files = Directory.GetFiles(Path.Combine(_applicationData.DataFolder, "Palettes"));
+        var files = Directory.GetFiles(Path.Combine(_applicationData.DataFolder.Path.AbsolutePath, "Palettes"));
 
         foreach (var file in files)
         {
@@ -177,7 +177,7 @@ internal class PaletteService
 
         if (appData)
         {
-            writer.Write(model, Path.Combine(_applicationData.DataFolder, "Palettes", fileInfo.Name));
+            writer.Write(model, Path.Combine(_applicationData.DataFolder.Path.AbsolutePath, "Palettes", fileInfo.Name));
         }
         else
         {

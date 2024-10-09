@@ -1,13 +1,12 @@
-﻿using System;
+﻿using Avalonia.Platform.Storage;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 
 namespace Pixed.Models;
 internal class ApplicationData
 {
     private int _index = 0;
-    public string DataFolder { get; set; } = string.Empty;
+    public IStorageFolder? DataFolder { get; set; }
     public int CurrentModelIndex { get; set; }
     public PixedModel CurrentModel => Models[CurrentModelIndex];
     public Frame CurrentFrame => CurrentModel.CurrentFrame;
@@ -21,7 +20,12 @@ internal class ApplicationData
 
     public ApplicationData()
     {
-        DataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Pixed");
+        
+    }
+
+    public void Initialize(IStorageFolder pixedFolder)
+    {
+        DataFolder = pixedFolder;
         UserSettings = Settings.Load(DataFolder);
         Models.Add(new PixedModel(this, UserSettings.UserWidth, UserSettings.UserHeight));
         CurrentModel.FileName = GenerateName();

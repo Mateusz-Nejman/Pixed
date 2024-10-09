@@ -10,14 +10,14 @@ namespace Pixed.Services
     internal class RecentFilesService(ApplicationData applicationData, PixedProjectMethods pixedProjectMethods)
     {
         private readonly PixedProjectMethods _projectMethods = pixedProjectMethods;
-        private readonly string _filePath = Path.Combine(applicationData.DataFolder, "recent.json");
+        private string FilePath => Path.Combine(applicationData.DataFolder.Path.AbsolutePath, "recent.json");
         public List<string> RecentFiles { get; private set; } = [];
 
         public void Load()
         {
-            if (File.Exists(_filePath))
+            if (File.Exists(FilePath))
             {
-                RecentFiles = JsonConvert.DeserializeObject<List<string>>(File.ReadAllText(_filePath));
+                RecentFiles = JsonConvert.DeserializeObject<List<string>>(File.ReadAllText(FilePath));
             }
         }
 
@@ -62,7 +62,7 @@ namespace Pixed.Services
 
         private void Save()
         {
-            File.WriteAllText(_filePath, JsonConvert.SerializeObject(RecentFiles));
+            File.WriteAllText(FilePath, JsonConvert.SerializeObject(RecentFiles));
         }
 
         private void OpenProject(string path)

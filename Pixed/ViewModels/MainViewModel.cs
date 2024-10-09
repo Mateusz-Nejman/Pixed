@@ -59,18 +59,8 @@ internal class MainViewModel : PixedViewModel, IDisposable
         });
     }
 
-    public override void OnInitialized()
+    public async override void OnInitialized()
     {
-        if (!Directory.Exists(_applicationData.DataFolder))
-        {
-            Directory.CreateDirectory(_applicationData.DataFolder);
-        }
-
-        if (!Directory.Exists(Path.Combine(_applicationData.DataFolder, "Palettes")))
-        {
-            Directory.CreateDirectory(Path.Combine(_applicationData.DataFolder, "Palettes"));
-        }
-
         _recentFilesService.Load();
         _paletteService.LoadAll();
     }
