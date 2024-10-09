@@ -41,6 +41,19 @@
 					<uap:Rotation Preference="landscape"/>
 				</uap:InitialRotationPreference>
 			</uap:VisualElements>
+			<Extensions>
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="pixed.pixedfile">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.pixed</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:EditFlags OpenIsSafe="true"/>
+						<uap:InfoTip>Pixed project file</uap:InfoTip>
+						<uap:Logo>pixedProject.png</uap:Logo>
+						<uap:DisplayName>Pixed</uap:DisplayName>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+			</Extensions>
 		</Application>
 	</Applications>
 	<Capabilities>
