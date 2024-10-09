@@ -48,9 +48,20 @@
 							<uap:FileType>.pixed</uap:FileType>
 						</uap:SupportedFileTypes>
 						<uap:EditFlags OpenIsSafe="true"/>
-						<uap:InfoTip>Pixed project file</uap:InfoTip>
+						<uap:InfoTip>Pixed Project file</uap:InfoTip>
 						<uap:Logo>pixedProject.png</uap:Logo>
-						<uap:DisplayName>Pixed</uap:DisplayName>
+						<uap:DisplayName>Pixed Project file</uap:DisplayName>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="pixed.piskelfile">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.piskel</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:DisplayName>Piskel Project file</uap:DisplayName>
+						<uap:InfoTip>Piskel Project file</uap:InfoTip>
+						<uap:EditFlags OpenIsSafe="true"/>
+						<uap:Logo>pixedProject.png</uap:Logo>
 					</uap:FileTypeAssociation>
 				</uap:Extension>
 			</Extensions>
