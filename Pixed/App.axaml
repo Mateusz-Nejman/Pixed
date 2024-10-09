@@ -19,6 +19,7 @@
 	  <SimpleTheme/>
 	  <templates:PixiPerfectColorPickerTheme />
     <FluentTheme />
+	  <StyleInclude Source="avares://AvaloniaProgressRing/Styles/ProgressRing.xaml"/>
 	  <StyleInclude Source="/Styles.axaml"/>
   </Application.Styles>
 </Application>
