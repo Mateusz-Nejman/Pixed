@@ -6,7 +6,6 @@ using Pixed.Services;
 using Pixed.Services.Palette;
 using Pixed.Windows;
 using System;
-using System.IO;
 using System.Windows.Input;
 
 namespace Pixed.ViewModels;

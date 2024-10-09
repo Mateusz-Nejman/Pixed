@@ -165,7 +165,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
                 Subjects.ProjectModified.OnNext(_applicationData.CurrentModel);
             })
         };
-        
+
         editMenu.Menu = [undoMenu, redoMenu];
         AddToMenu(ref editMenu, GetEntries(BaseMenuItem.Edit));
 

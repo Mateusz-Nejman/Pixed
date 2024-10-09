@@ -48,7 +48,7 @@ internal partial class ToolsSection : PixedUserControl<ToolsSectionViewModel>
     {
         var tools = _toolSelector.GetTools();
 
-        foreach(var toolPair in tools)
+        foreach (var toolPair in tools)
         {
             var obj = this.FindControl<ToolRadioButton>(toolPair.Key);
             obj.PointerPressed += Radio_PointerPressed;
@@ -58,7 +58,7 @@ internal partial class ToolsSection : PixedUserControl<ToolsSectionViewModel>
 
     private void Radio_Holding(object? sender, HoldingRoutedEventArgs e)
     {
-        if(sender is ToolRadioButton radio)
+        if (sender is ToolRadioButton radio)
         {
             OpenFlyout(radio);
         }
@@ -66,11 +66,11 @@ internal partial class ToolsSection : PixedUserControl<ToolsSectionViewModel>
 
     private void Radio_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if(sender is ToolRadioButton radio)
+        if (sender is ToolRadioButton radio)
         {
             var point = e.GetCurrentPoint(radio);
 
-            if(!point.Properties.IsRightButtonPressed)
+            if (!point.Properties.IsRightButtonPressed)
             {
                 return;
             }

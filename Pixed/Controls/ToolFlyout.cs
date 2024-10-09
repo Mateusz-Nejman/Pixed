@@ -21,7 +21,7 @@ internal class ToolFlyout(BaseTool tool) : Flyout
 
         var properties = _tool.GetCurrentProperties();
 
-        foreach(var property in properties)
+        foreach (var property in properties)
         {
             CheckBox checkBox = new()
             {

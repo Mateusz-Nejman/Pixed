@@ -109,7 +109,7 @@ public struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatable
 
     public override readonly string ToString()
     {
-        return "[" + A + ", " + R + ", " + G +", " + B + "]";
+        return "[" + A + ", " + R + ", " + G + ", " + B + "]";
     }
 
     public static UniColor WithAlpha(byte alpha, UniColor color)

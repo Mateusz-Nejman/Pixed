@@ -1,7 +1,6 @@
 ﻿using Pixed.Models;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 
 namespace Pixed.Tools;
 internal class ToolMove(ApplicationData applicationData) : BaseTool(applicationData)

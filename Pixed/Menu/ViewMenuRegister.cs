@@ -13,7 +13,7 @@ internal class ViewMenuRegister(MenuItemRegistry menuItemRegistry, ApplicationDa
     {
         _menuItemRegistry.Register(BaseMenuItem.View, "Toggle fullscreen", () =>
         {
-            if(MainWindow.Handle.WindowState == WindowState.FullScreen)
+            if (MainWindow.Handle.WindowState == WindowState.FullScreen)
             {
                 MainWindow.Handle.WindowState = WindowState.Maximized;
             }

@@ -20,7 +20,7 @@ internal class ApplicationData
 
     public ApplicationData()
     {
-        
+
     }
 
     public void Initialize(IStorageFolder pixedFolder)
