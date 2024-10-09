@@ -3,9 +3,8 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
-using Pixed.Controls;
 using Pixed.DependencyInjection;
-using Pixed.ViewModels;
+using Pixed.Windows;
 
 namespace Pixed;
 
@@ -29,7 +28,8 @@ public partial class App : Application
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            PixedWindow<MainViewModel> window = provider.Get<PixedWindow<MainViewModel>>();
+            MainWindow window = provider.Get<MainWindow>();
+            window.OpenFromArgs(desktop.Args);
             desktop.MainWindow = window;
         }
 
