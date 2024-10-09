@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Threading;
 using Pixed.Controls;
 using Pixed.Input;
 using Pixed.IO;
@@ -8,14 +9,16 @@ using Pixed.Models;
 using Pixed.Services;
 using Pixed.Services.Keyboard;
 using Pixed.Tools;
+using Pixed.Utils;
 using Pixed.ViewModels;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Pixed.Windows;
 
-internal partial class MainWindow : PixedWindow<MainViewModel>
+internal partial class MainWindow : PixedWindow<MainViewModel>, IDisposable
 {
     private readonly ApplicationData _applicationData;
     private readonly PixedProjectMethods _pixedProjectMethods;
@@ -25,6 +28,9 @@ internal partial class MainWindow : PixedWindow<MainViewModel>
     private readonly RecentFilesService _recentFilesService;
     private readonly ToolSelector _toolSelector;
     private readonly MenuBuilder _menuBuilder;
+    private IDisposable _newInstanceHandled;
+    private bool _disposedValue;
+
     public static Window? Handle { get; private set; }
     public static ICommand? QuitCommand { get; private set; }
     public MainWindow(ApplicationData applicationData, PixedProjectMethods pixedProjectMethods, MenuBuilder builder, MenuItemRegistry menuItemRegistry,
@@ -39,6 +45,13 @@ internal partial class MainWindow : PixedWindow<MainViewModel>
         _recentFilesService = recentFilesService;
         _toolSelector = toolSelector;
         _menuBuilder = builder;
+        _newInstanceHandled = Subjects.NewInstanceHandled.Subscribe(args =>
+        {
+            foreach (var arg in args)
+            {
+                Dispatcher.UIThread.Invoke(() => _pixedProjectMethods.Open(arg));
+            }
+        });
 
         InitializeWindow();
     }
@@ -70,6 +83,25 @@ internal partial class MainWindow : PixedWindow<MainViewModel>
         _transformToolsMenuRegister.Register();
         _copyPasteMenuRegister.Register();
         _menuBuilder.Build();
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposedValue)
+        {
+            if (disposing)
+            {
+                _newInstanceHandled?.Dispose();
+            }
+
+            _disposedValue = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
     }
 
     private void InitializeBeforeUI()
@@ -145,9 +177,8 @@ internal partial class MainWindow : PixedWindow<MainViewModel>
 
     private async Task InitializeDataFolder()
     {
-        var documentsFolder = await StorageProvider.TryGetWellKnownFolderAsync(Avalonia.Platform.Storage.WellKnownFolder.Documents);
-        var pixedFolder = await documentsFolder.CreateFolderAsync("Pixed");
-        await documentsFolder.CreateFolderAsync("Pixed/Palettes");
+        var pixedFolder = await StorageProvider.GetPixedFolder();
+        await pixedFolder.CreateFolderAsync("Palettes");
         _applicationData.Initialize(pixedFolder);
     }
 

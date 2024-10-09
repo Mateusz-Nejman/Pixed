@@ -14,6 +14,7 @@ internal static class Subjects
     public static Subject<bool> GridChanged { get; } = new Subject<bool>();
     public static Subject<BaseToolPair> ToolChanged { get; } = new Subject<BaseToolPair>();
     public static Subject<double> ZoomChanged { get; } = new Subject<double>();
+    public static Subject<string[]> NewInstanceHandled { get; } = new Subject<string[]>();
 
     public static Subject<BaseSelection> ClipboardCopy { get; } = new Subject<BaseSelection>();
     public static Subject<BaseSelection> ClipboardCut { get; } = new Subject<BaseSelection>();

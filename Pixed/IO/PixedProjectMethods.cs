@@ -3,6 +3,7 @@ using Pixed.Services;
 using Pixed.Utils;
 using Pixed.Windows;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Pixed.IO;
@@ -103,7 +104,14 @@ internal class PixedProjectMethods(ApplicationData applicationData)
 
     public void Open(string path)
     {
+        string[] formats = [".pixed", ".piskel", ".png"];
         FileInfo info = new(path);
+
+        if (!formats.Contains(info.Extension))
+        {
+            return;
+        }
+
         IPixedProjectSerializer serializer;
         Stream stream = File.OpenRead(path);
 

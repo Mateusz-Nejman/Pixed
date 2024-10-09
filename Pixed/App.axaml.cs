@@ -3,15 +3,22 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
+using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using Pixed.DependencyInjection;
+using Pixed.Utils;
 using Pixed.Windows;
+using System;
+using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Pixed;
 
 public partial class App : Application
 {
+    private Mutex _mutex;
     internal static IPixedServiceProvider ServiceProvider { get; private set; }
     public override void Initialize()
     {
@@ -32,6 +39,11 @@ public partial class App : Application
 
     private async Task InitializeMainWindow(IClassicDesktopStyleApplicationLifetime desktop, Window splash)
     {
+        if (!HandleNewInstance(Dispatcher.UIThread, desktop))
+        {
+            splash.Close();
+            return;
+        }
         await Task.Delay(1500);
         BindingPlugins.DataValidators.RemoveAt(0);
 
@@ -46,5 +58,55 @@ public partial class App : Application
         desktop.MainWindow = window;
         await Task.Delay(100);
         splash.Close();
+    }
+
+    private bool HandleNewInstance(Dispatcher? dispatcher, IClassicDesktopStyleApplicationLifetime desktop)
+    {
+        _mutex = new(true, "pixed_mutex_name", out bool isOwned);
+        var handle = new EventWaitHandle(false, EventResetMode.AutoReset, "pixed_mutex_event_name");
+
+        GC.KeepAlive(_mutex);
+
+        if (dispatcher == null)
+            return true;
+
+        if (isOwned)
+        {
+            var thread = new Thread(
+                async () =>
+                {
+                    while (handle.WaitOne())
+                    {
+                        var pixed = await desktop.MainWindow.StorageProvider.GetPixedFolder();
+                        var filePath = Path.Combine(pixed.Path.AbsolutePath, "instance.lock");
+
+                        if (File.Exists(filePath))
+                        {
+                            string[] args = JsonConvert.DeserializeObject<string[]>(File.ReadAllText(filePath)) ?? [];
+
+                            if (args.Length > 0)
+                            {
+                                Subjects.NewInstanceHandled.OnNext(args);
+                            }
+                        }
+                    }
+                })
+            {
+                IsBackground = true
+            };
+
+            thread.Start();
+            return true;
+        }
+
+        Task.Run(async () =>
+        {
+            var pixed = await desktop.MainWindow.StorageProvider.GetPixedFolder();
+            File.WriteAllText(Path.Combine(pixed.Path.AbsolutePath, "instance.lock"), JsonConvert.SerializeObject(Environment.GetCommandLineArgs()));
+        });
+        handle.Set();
+
+        desktop.Shutdown();
+        return false;
     }
 }
