@@ -9,6 +9,7 @@ using Pixed.Services;
 using Pixed.Services.Keyboard;
 using Pixed.Tools;
 using Pixed.ViewModels;
+using System.IO;
 using System.Windows.Input;
 
 namespace Pixed.Windows;
@@ -49,6 +50,17 @@ internal partial class MainWindow : PixedWindow<MainViewModel>
         Subjects.ProjectAdded.OnNext(_applicationData.CurrentModel);
         Subjects.ProjectChanged.OnNext(_applicationData.CurrentModel);
         Subjects.FrameChanged.OnNext(_applicationData.CurrentFrame);
+    }
+
+    public void OpenFromArgs(string[] args)
+    {
+        foreach(var arg in args)
+        {
+            if(File.Exists(arg))
+            {
+                _pixedProjectMethods.Open(arg);
+            }
+        }
     }
 
     protected override void OnInitialized()

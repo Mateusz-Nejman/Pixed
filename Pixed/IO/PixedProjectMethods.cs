@@ -104,15 +104,32 @@ internal class PixedProjectMethods(ApplicationData applicationData)
     public void Open(string path)
     {
         FileInfo info = new(path);
-        PixedProjectSerializer serializer = new();
+        IPixedProjectSerializer serializer;
         Stream stream = File.OpenRead(path);
-        PixedModel model = serializer.Deserialize(stream, _applicationData);
-        stream?.Dispose();
 
-        model.FileName = info.Name;
-        model.FilePath = path;
+        if(path.EndsWith(".pixed"))
+        {
+            serializer = new PixedProjectSerializer();
+        }
+        else if(path.EndsWith(".piskel"))
+        {
+            serializer = new PiskelProjectSerializer();
+        }
+        else
+        {
+            serializer = new PngProjectSerializer();
+        }
+
+        PixedModel model = serializer.Deserialize(stream, _applicationData);
+        stream.Dispose();
+        model.FileName = info.Name.Replace(".png", ".pixed");
         model.AddHistory();
-        model.UnsavedChanges = false;
+
+        if (info.Name.EndsWith(".pixed"))
+        {
+            model.FilePath = info.FullName;
+            model.UnsavedChanges = false;
+        }
 
         if (_applicationData.CurrentModel.IsEmpty)
         {
@@ -122,6 +139,7 @@ internal class PixedProjectMethods(ApplicationData applicationData)
         {
             _applicationData.Models.Add(model);
         }
+
         Subjects.ProjectAdded.OnNext(model);
     }
 

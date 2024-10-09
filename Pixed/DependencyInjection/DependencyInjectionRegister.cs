@@ -36,7 +36,7 @@ internal static class DependencyInjectionRegister
         collection.AddSingleton<ProjectsSectionViewModel>();
         collection.AddSingleton<ToolsSectionViewModel>();
 
-        collection.AddSingleton<PixedWindow<MainViewModel>, MainWindow>();
+        collection.AddSingleton<MainWindow>();
 
         collection.AddScoped<ToolBucket>();
         collection.AddScoped<ToolCircle>();
