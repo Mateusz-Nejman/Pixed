@@ -56,4 +56,11 @@ public class UniColorTests
         UniColor newColor = new(hsl);
         Assert.That(newColor, Is.EqualTo(CornflowerBlue));
     }
+
+    [Test]
+    public void ArgbConversionTestSkia()
+    {
+        UniColor color = new(0xFF00FF00);
+        Assert.That(color.ToUInt(), Is.EqualTo(0xFF00FF00));
+    }
 }
