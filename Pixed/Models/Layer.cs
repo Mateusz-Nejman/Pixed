@@ -1,16 +1,12 @@
 ﻿using Pixed.IO;
 using Pixed.Utils;
 using Pixed.Windows;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Bitmap = Avalonia.Media.Imaging.Bitmap;
-
 namespace Pixed.Models;
 
 internal class Layer : PropertyChangedBase, IPixedSerializer
@@ -18,11 +14,11 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
     private uint[] _pixels;
     private int _width;
     private int _height;
-    private System.Drawing.Bitmap _renderedBitmap = null;
+    private SKBitmap _renderedBitmap = null;
     private bool _needRerender = true;
     private double _opacity = 100.0d;
     private string _name = string.Empty;
-    private Bitmap? _renderSource = null;
+    private PixedImage? _renderSource = null;
     private readonly string _id;
 
     public double Opacity
@@ -45,7 +41,7 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
         }
     }
 
-    public Bitmap RenderSource
+    public PixedImage RenderSource
     {
         get => _renderSource;
         set
@@ -86,7 +82,7 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
         Layer layer = new(_width, _height, pixels)
         {
             Name = Name,
-            RenderSource = _renderedBitmap.ToAvaloniaBitmap(),
+            RenderSource = new PixedImage(_renderedBitmap),
             _needRerender = true
         };
         return layer;
@@ -112,14 +108,12 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
 
     public void MergeLayers(Layer layer2)
     {
-        System.Drawing.Bitmap outputBitmap = new(Width, Height);
-        Graphics graphics = Graphics.FromImage(outputBitmap);
-        graphics.DrawImage(Render(), new Point(0, 0));
-        graphics.DrawImage(layer2.Render(), new Point(0, 0));
-        graphics.Dispose();
+        var bitmap = Render();
+        SKCanvas canvas = new(bitmap);
+        canvas.DrawBitmap(layer2.Render(), new SKPoint(0, 0));
+        canvas.Dispose();
 
-        _pixels = outputBitmap.ToPixelColors();
-
+        _pixels = bitmap.ToArray();
         _needRerender = true;
     }
 
@@ -131,7 +125,7 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
 
     public void RefreshRenderSource()
     {
-        RenderSource = Render().ToAvaloniaBitmap();
+        RenderSource = new PixedImage(Render());
     }
 
     public uint GetPixel(int x, int y)
@@ -144,7 +138,7 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
         return _pixels[y * _width + x];
     }
 
-    public System.Drawing.Bitmap Render(List<Pixel>? modifiedPixels = null)
+    public SKBitmap Render(List<Pixel>? modifiedPixels = null)
     {
         if (!_needRerender)
         {
@@ -169,14 +163,10 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
             }
         }
 
-        System.Drawing.Bitmap bitmap = new(_width, _height);
-        var pixelBytes = pixels.ToBytes();
-        BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, _width, _height), ImageLockMode.WriteOnly, bitmap.PixelFormat);
-        Marshal.Copy(pixelBytes, 0, bitmapData.Scan0, pixelBytes.Length);
-        bitmap.UnlockBits(bitmapData);
+        var bitmap = SkiaUtils.FromArray(pixels, _width, _height);
         _renderedBitmap = bitmap;
         _needRerender = false;
-        return bitmap.Clone(new Rectangle(0, 0, _width, _height), bitmap.PixelFormat);
+        return bitmap.Copy();
     }
 
     public bool ContainsPixel(int x, int y)

@@ -1,12 +1,11 @@
 ﻿using Pixed.IO;
 using Pixed.Utils;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using Bitmap = Avalonia.Media.Imaging.Bitmap;
 
 namespace Pixed.Models;
 
@@ -15,7 +14,7 @@ internal class Frame : PropertyChangedBase, IPixedSerializer
     private readonly ObservableCollection<Layer> _layers;
     private int _selectedLayer = 0;
     private readonly string _id;
-    private Bitmap _renderSource;
+    private PixedImage _renderSource;
 
     public int Width => Layers[0].Width;
     public int Height => Layers[0].Height;
@@ -30,7 +29,7 @@ internal class Frame : PropertyChangedBase, IPixedSerializer
         }
     }
 
-    public Bitmap RenderSource
+    public PixedImage RenderSource
     {
         get => _renderSource;
         set
@@ -124,17 +123,18 @@ internal class Frame : PropertyChangedBase, IPixedSerializer
 
     public void RefreshRenderSource(List<Pixel>? pixels = null)
     {
-        RenderSource = Render(pixels).ToAvaloniaBitmap();
+        RenderSource = new PixedImage(Render(pixels));
     }
 
-    public System.Drawing.Bitmap Render(List<Pixel>? pixels = null)
+    public SKBitmap Render(List<Pixel>? pixels = null)
     {
-        System.Drawing.Bitmap render = new(Width, Height);
-        Graphics g = Graphics.FromImage(render);
+        SKBitmap render = new(Width, Height, true);
+        SKCanvas canvas = new(render);
         for (int a = 0; a < _layers.Count; a++)
         {
-            g.DrawImage(_layers[a].Render(a == SelectedLayer ? pixels : null), 0, 0);
+            canvas.DrawBitmap(_layers[a].Render(a == SelectedLayer ? pixels : null), new SKPoint(0, 0));
         }
+        canvas.Dispose();
 
         return render;
     }

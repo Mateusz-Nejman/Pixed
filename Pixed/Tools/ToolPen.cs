@@ -1,5 +1,6 @@
 ﻿using Pixed.Models;
 using Pixed.Utils;
+using SkiaSharp;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -11,7 +12,7 @@ internal class ToolPen(ApplicationData applicationData) : BaseTool(applicationDa
     protected int _prevY = -1;
     private readonly List<Pixel> _pixels = [];
     private readonly List<Point> _modifiedPoints = [];
-    public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
         _prevX = x;
         _prevY = y;
@@ -20,7 +21,7 @@ internal class ToolPen(ApplicationData applicationData) : BaseTool(applicationDa
         DrawOnOverlay(color, x, y, frame, ref overlay);
     }
 
-    public override void MoveTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
         if (_prevX != x || _prevY != y)
         {
@@ -40,7 +41,7 @@ internal class ToolPen(ApplicationData applicationData) : BaseTool(applicationDa
         _prevY = y;
     }
 
-    public override void ReleaseTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ReleaseTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
         SetPixels(frame, _pixels);
         _pixels.Clear();
@@ -75,7 +76,7 @@ internal class ToolPen(ApplicationData applicationData) : BaseTool(applicationDa
         _modifiedPoints.Add(point);
     }
 
-    protected void DrawOnOverlay(UniColor color, int x, int y, Frame frame, ref Bitmap overlay)
+    protected void DrawOnOverlay(UniColor color, int x, int y, Frame frame, ref SKBitmap overlay)
     {
         var toolSize = _applicationData.ToolSize;
         overlay.SetPixel(x, y, color, toolSize);

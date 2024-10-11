@@ -3,6 +3,7 @@ using Pixed.Controls;
 using Pixed.Models;
 using Pixed.Tools;
 using Pixed.Utils;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -17,9 +18,9 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     private double _gridWidth;
     private double _gridHeight;
     private double _imageFactor;
-    private Bitmap _overlayBitmap;
-    private Avalonia.Media.Imaging.Bitmap _avaloniaImageBitmap;
-    private Avalonia.Media.Imaging.Bitmap _avaloniaOverlayBitmap;
+    private SKBitmap _overlayBitmap;
+    private PixedImage _renderImage;
+    private PixedImage _overlayImage;
     private DrawingBrush? _gridBrush;
     private bool _leftPressed;
     private bool _rightPressed;
@@ -71,33 +72,33 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         }
     }
 
-    public Bitmap Overlay
+    public SKBitmap Overlay
     {
         get => _overlayBitmap;
         set
         {
             _overlayBitmap = value;
             OnPropertyChanged();
-            AvaloniaOverlayBitmap = _overlayBitmap.ToAvaloniaBitmap();
+            AvaloniaOverlayBitmap = new PixedImage(_overlayBitmap);
         }
     }
 
-    public Avalonia.Media.Imaging.Bitmap AvaloniaImageBitmap
+    public PixedImage AvaloniaImageBitmap
     {
-        get => _avaloniaImageBitmap;
+        get => _renderImage;
         set
         {
-            _avaloniaImageBitmap = value;
+            _renderImage = value;
             OnPropertyChanged();
         }
     }
 
-    public Avalonia.Media.Imaging.Bitmap AvaloniaOverlayBitmap
+    public PixedImage AvaloniaOverlayBitmap
     {
-        get => _avaloniaOverlayBitmap;
+        get => _overlayImage;
         set
         {
-            _avaloniaOverlayBitmap = value;
+            _overlayImage = value;
             OnPropertyChanged();
         }
     }
@@ -208,7 +209,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
             _frame.RefreshLayerRenderSources();
             ReloadFrameRender();
             Overlay.Clear();
-            AvaloniaOverlayBitmap = Overlay.ToAvaloniaBitmap();
+            AvaloniaOverlayBitmap = new PixedImage(Overlay);
         });
 
         _frameModified = Subjects.FrameModified.Subscribe(f =>
@@ -284,9 +285,20 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
 
     public void ResetOverlay()
     {
-        Overlay?.Dispose();
-        Overlay = new Bitmap(_frame.Width, _frame.Height);
-        AvaloniaOverlayBitmap = Overlay.ToAvaloniaBitmap();
+        if (Overlay == null)
+        {
+            Overlay = new SKBitmap(_frame.Width, _frame.Height, true);
+        }
+
+        if (Overlay.Width == _frame.Width && Overlay.Height == _frame.Height)
+        {
+            Overlay.Clear();
+        }
+        else
+        {
+            Overlay = new SKBitmap(_frame.Width, _frame.Height, true);
+        }
+        AvaloniaOverlayBitmap = new PixedImage(Overlay);
     }
 
     protected virtual void Dispose(bool disposing)
@@ -493,7 +505,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
 
     private void ReloadOverlay()
     {
-        AvaloniaOverlayBitmap = Overlay.ToAvaloniaBitmap();
+        AvaloniaOverlayBitmap = new PixedImage(Overlay);
     }
 
     private DrawingBrush? GetGridBrush()
@@ -547,7 +559,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         }
 
         _frame.RefreshRenderSource(pixels);
-        AvaloniaImageBitmap = _frame.RenderSource;
+        AvaloniaImageBitmap = _frame.RenderSource.Clone();
     }
 
     private void ReloadFrameRender(Layer _)

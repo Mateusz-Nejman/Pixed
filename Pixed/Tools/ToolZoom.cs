@@ -1,6 +1,6 @@
 ﻿using Pixed.Models;
+using SkiaSharp;
 using System;
-using System.Drawing;
 
 namespace Pixed.Tools;
 internal class ToolZoom(ApplicationData applicationData) : BaseTool(applicationData)
@@ -15,11 +15,11 @@ internal class ToolZoom(ApplicationData applicationData) : BaseTool(applicationD
 
     public override bool SingleHighlightedPixel { get; protected set; } = true;
 
-    public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
         SetEnabled?.Invoke(true);
         _startZoom = GetZoom();
-        Bitmap bitmap = overlay;
+        SKBitmap bitmap = overlay;
         _disposed = Subjects.ZoomChanged.Subscribe(zoom =>
         {
             _zoom = zoom;
@@ -28,12 +28,12 @@ internal class ToolZoom(ApplicationData applicationData) : BaseTool(applicationD
         });
     }
 
-    public override void MoveTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
         ZoomAction?.Invoke(_startZoom * _zoom);
     }
 
-    public override void ReleaseTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ReleaseTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
         SetEnabled?.Invoke(false);
         _disposed?.Dispose();

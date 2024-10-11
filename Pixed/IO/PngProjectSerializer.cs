@@ -1,8 +1,7 @@
 ﻿using Pixed.Models;
 using Pixed.Utils;
+using SkiaSharp;
 using System;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 
 namespace Pixed.IO;
@@ -11,8 +10,8 @@ internal class PngProjectSerializer : IPixedProjectSerializer
     public int ColumnsCount { get; set; } = 1;
     public PixedModel Deserialize(Stream stream, ApplicationData applicationData)
     {
-        Bitmap bitmap = (Bitmap)Image.FromStream(stream);
-        var colors = bitmap.ToPixelColors();
+        SKBitmap bitmap = SKBitmap.Decode(stream);
+        var colors = bitmap.ToArray();
 
         Layer layer = Layer.FromColors(colors, bitmap.Width, bitmap.Height, "Layer 0");
         Frame frame = Frame.FromLayers([layer]);
@@ -27,8 +26,8 @@ internal class PngProjectSerializer : IPixedProjectSerializer
         int rows = (int)Math.Ceiling((double)model.Frames.Count / (double)ColumnsCount);
         int width = model.Width * ColumnsCount;
         int height = model.Height * rows;
-        Bitmap outputBitmap = new Bitmap(width, height);
-        Graphics graphics = Graphics.FromImage(outputBitmap);
+        SKBitmap outputBitmap = new(width, height, true);
+        SKCanvas canvas = new(outputBitmap);
 
         int frameColumn = 0;
         int frameRow = 0;
@@ -39,7 +38,7 @@ internal class PngProjectSerializer : IPixedProjectSerializer
             var frameBitmap = frame.Render();
             int x1 = frameColumn * model.Width;
             int y1 = frameRow * model.Height;
-            graphics.DrawImage(frameBitmap, new Point(x1, y1));
+            canvas.DrawBitmap(frameBitmap, new SKPoint(x1, y1));
             frameColumn++;
 
             if (frameColumn == ColumnsCount)
@@ -49,8 +48,8 @@ internal class PngProjectSerializer : IPixedProjectSerializer
             }
         }
 
-        graphics.Dispose();
-        outputBitmap.Save(stream, ImageFormat.Png);
+        canvas.Dispose();
+        outputBitmap.Encode(stream, SKEncodedImageFormat.Png, 100);
         outputBitmap.Dispose();
 
         if (close)

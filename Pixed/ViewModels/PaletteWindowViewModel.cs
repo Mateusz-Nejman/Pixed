@@ -1,13 +1,11 @@
 ﻿using Pixed.Controls;
 using Pixed.Models;
 using Pixed.Services.Palette;
-using Pixed.Utils;
 using Pixed.Windows;
+using SkiaSharp;
 using System;
 using System.Collections.ObjectModel;
-using System.Drawing;
 using System.Windows.Input;
-using Bitmap = Avalonia.Media.Imaging.Bitmap;
 
 namespace Pixed.ViewModels;
 
@@ -15,7 +13,7 @@ internal class PaletteWindowViewModel : PixedViewModel
 {
     public struct PaletteData
     {
-        public Bitmap BitmapImage { get; set; }
+        public PixedImage BitmapImage { get; set; }
         public string Name { get; set; }
         public string Path { get; set; }
         public PaletteModel Model { get; set; }
@@ -65,7 +63,7 @@ internal class PaletteWindowViewModel : PixedViewModel
                 Name = model.Name,
                 Path = model.Path,
                 Model = model,
-                BitmapImage = GeneratePaleteBitmap(model),
+                BitmapImage = new PixedImage(GeneratePaleteBitmap(model)),
                 SelectCommand = new ActionCommand<PaletteModel>(m => PaletteAction?.Invoke(true, m)),
                 RemoveCommand = new ActionCommand<PaletteModel>(m => PaletteAction?.Invoke(false, m)),
                 RenameCommand = new ActionCommand<PaletteModel>(async (m) =>
@@ -87,11 +85,11 @@ internal class PaletteWindowViewModel : PixedViewModel
         }
     }
 
-    private static Bitmap GeneratePaleteBitmap(PaletteModel model)
+    private static SKBitmap GeneratePaleteBitmap(PaletteModel model)
     {
         int mod = (model.Colors.Count % 10) == 0 ? 0 : 1;
-        System.Drawing.Bitmap bitmap = new(200, ((model.Colors.Count / 10) + mod) * 20);
-        Graphics graphics = Graphics.FromImage(bitmap);
+        SKBitmap bitmap = new SKBitmap(200, ((model.Colors.Count / 10) + mod) * 20);
+        SKCanvas canvas = new SKCanvas(bitmap);
         int x = 0;
         int y = 0;
 
@@ -100,7 +98,7 @@ internal class PaletteWindowViewModel : PixedViewModel
             int rectX = x * 20;
             int rectY = y * 20;
 
-            graphics.FillRectangle(new SolidBrush((UniColor)color), new Rectangle(rectX, rectY, 20, 20));
+            canvas.DrawRect(new SKRect(rectX, rectY, 20, 20), new SKPaint() { Color = (UniColor)color });
             x++;
 
             if (x == 10)
@@ -109,7 +107,7 @@ internal class PaletteWindowViewModel : PixedViewModel
                 y++;
             }
         }
-        graphics.Dispose();
-        return bitmap.ToAvaloniaBitmap();
+        canvas.Dispose();
+        return bitmap;
     }
 }

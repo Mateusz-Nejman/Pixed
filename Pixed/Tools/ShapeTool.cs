@@ -1,8 +1,8 @@
 ﻿using Pixed.Models;
 using Pixed.Utils;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace Pixed.Tools;
 internal abstract class ShapeTool(ApplicationData applicationData) : BaseTool(applicationData)
@@ -13,7 +13,7 @@ internal abstract class ShapeTool(ApplicationData applicationData) : BaseTool(ap
 
     public override bool ShiftHandle { get; protected set; } = true;
 
-    public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
         _startX = x;
         _startY = y;
@@ -21,7 +21,7 @@ internal abstract class ShapeTool(ApplicationData applicationData) : BaseTool(ap
         overlay.SetPixel(x, y, GetToolColor(), _applicationData.ToolSize);
     }
 
-    public override void MoveTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
         overlay.Clear();
         var color = GetToolColor();
@@ -34,7 +34,7 @@ internal abstract class ShapeTool(ApplicationData applicationData) : BaseTool(ap
         Draw(x, y, color, shiftPressed || GetProperty(PROP_SHIFT), _applicationData.ToolSize, ref overlay);
     }
 
-    public override void ReleaseTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ReleaseTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
         var color = GetToolColor();
 
@@ -50,9 +50,9 @@ internal abstract class ShapeTool(ApplicationData applicationData) : BaseTool(ap
             ];
     }
 
-    protected void Draw(int x, int y, uint color, bool shiftPressed, int toolSize, ref Bitmap overlay)
+    protected void Draw(int x, int y, uint color, bool shiftPressed, int toolSize, ref SKBitmap overlay)
     {
-        Bitmap bitmap = overlay;
+        SKBitmap bitmap = overlay;
         Draw(x, y, color, shiftPressed, (x, y, color) =>
         {
             bitmap.SetPixel(x, y, color, toolSize);

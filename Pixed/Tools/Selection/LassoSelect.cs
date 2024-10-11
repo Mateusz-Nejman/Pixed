@@ -1,6 +1,7 @@
 ﻿using Pixed.Models;
 using Pixed.Selection;
 using Pixed.Utils;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -13,7 +14,7 @@ internal class LassoSelect(ApplicationData applicationData, ToolSelector toolSel
     private int _prevX;
     private int _prevY;
     private List<Point> _points = [];
-    public override void OnDragSelectStart(int x, int y, Frame frame, ref Bitmap overlay)
+    public override void OnDragSelectStart(int x, int y, Frame frame, ref SKBitmap overlay)
     {
         _points.Clear();
         _points.Add(new Point(x, y));
@@ -25,7 +26,7 @@ internal class LassoSelect(ApplicationData applicationData, ToolSelector toolSel
         _prevY = y;
     }
 
-    public override void OnDragSelect(int x, int y, Frame frame, ref Bitmap overlay)
+    public override void OnDragSelect(int x, int y, Frame frame, ref SKBitmap overlay)
     {
         AddPixel(x, y, frame);
         List<Pixel> pixels = [];
@@ -38,7 +39,7 @@ internal class LassoSelect(ApplicationData applicationData, ToolSelector toolSel
         SetSelection(selection, ref overlay);
     }
 
-    public override void OnDragSelectEnd(int x, int y, Frame frame, ref Bitmap overlay)
+    public override void OnDragSelectEnd(int x, int y, Frame frame, ref SKBitmap overlay)
     {
         AddPixel(x, y, frame);
         BaseSelection selection = new LassoSelection(GetLassoPixels(), frame);
@@ -64,7 +65,7 @@ internal class LassoSelect(ApplicationData applicationData, ToolSelector toolSel
         _prevY = y;
     }
 
-    private void SetSelection(BaseSelection selection, ref Bitmap overlay)
+    private void SetSelection(BaseSelection selection, ref SKBitmap overlay)
     {
         _selection = selection;
         overlay.Clear();

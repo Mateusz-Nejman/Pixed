@@ -1,5 +1,4 @@
-﻿using Avalonia.Media.Imaging;
-using Pixed.IO;
+﻿using Pixed.IO;
 using Pixed.Utils;
 using Pixed.Windows;
 using System;
@@ -18,7 +17,7 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
     private readonly ObservableCollection<Frame> _frames;
     private readonly ObservableCollection<byte[]> _history;
     private int _historyIndex = 0;
-    private Bitmap _renderSource;
+    private PixedImage _renderSource;
     private int _currentFrameIndex = 0;
     private bool _isEmpty = true;
 
@@ -41,7 +40,7 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
         }
     }
 
-    public Bitmap RenderSource
+    public PixedImage RenderSource
     {
         get => _renderSource;
         set
@@ -96,7 +95,7 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
 
     public void UpdatePreview()
     {
-        RenderSource = Frames.First().Render().ToAvaloniaBitmap();
+        RenderSource = new PixedImage(Frames.First().Render());
     }
 
     public void Process(bool allFrames, bool allLayers, Action<Frame, Layer> action, ApplicationData applicationData, bool executeSubjects = true)

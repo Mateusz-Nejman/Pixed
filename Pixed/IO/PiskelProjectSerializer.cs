@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json.Linq;
 using Pixed.Models;
+using SkiaSharp;
 using System;
 using System.Collections.ObjectModel;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -41,7 +41,7 @@ internal partial class PiskelProjectSerializer : IPixedProjectSerializer
                 string str = match.Value[7..];
                 byte[] data = Convert.FromBase64String(str);
                 MemoryStream memoryStream = new(data);
-                Bitmap bitmap = (Bitmap)Image.FromStream(memoryStream);
+                SKBitmap bitmap = SKBitmap.Decode(memoryStream);
 
                 for (int f = 0; f < frames.Count; f++)
                 {

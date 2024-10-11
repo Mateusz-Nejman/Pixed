@@ -1,12 +1,12 @@
 ﻿using Pixed.Input;
 using Pixed.Models;
 using Pixed.Utils;
-using System.Drawing;
+using SkiaSharp;
 
 namespace Pixed.Tools;
 internal class ToolDithering(ApplicationData applicationData) : ToolPen(applicationData)
 {
-    public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
         _prevX = x;
         _prevY = y;

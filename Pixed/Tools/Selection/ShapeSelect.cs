@@ -1,13 +1,13 @@
 ﻿using Pixed.Models;
 using Pixed.Selection;
 using Pixed.Utils;
-using System.Drawing;
+using SkiaSharp;
 
 namespace Pixed.Tools.Selection;
 
 internal class ShapeSelect(ApplicationData applicationData, ToolSelector toolSelector) : AbstractDragSelect(applicationData, toolSelector)
 {
-    public override void OnSelectStart(int x, int y, Frame frame, ref Bitmap overlay)
+    public override void OnSelectStart(int x, int y, Frame frame, ref SKBitmap overlay)
     {
         _hasSelection = true;
         var pixels = PaintUtils.GetSimiliarConnectedPixels(frame, x, y);

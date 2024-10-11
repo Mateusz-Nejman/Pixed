@@ -1,6 +1,6 @@
 ﻿using Pixed.Models;
+using SkiaSharp;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 
 namespace Pixed.Selection;
@@ -45,14 +45,14 @@ internal class BaseSelection
         }
     }
 
-    public Bitmap ToBitmap()
+    public SKBitmap ToBitmap()
     {
         var minX = Pixels.Min(p => p.X);
         var minY = Pixels.Min(p => p.Y);
         var maxX = Pixels.Max(p => p.X);
         var maxY = Pixels.Max(p => p.Y);
 
-        Bitmap bitmap = new((maxX - minX) + 1, (maxY - minY) + 1);
+        SKBitmap bitmap = new((maxX - minX) + 1, (maxY - minY) + 1, true);
 
         foreach (var pixel in Pixels)
         {

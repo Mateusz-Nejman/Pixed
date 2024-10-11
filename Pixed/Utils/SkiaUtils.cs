@@ -1,0 +1,102 @@
+﻿using Avalonia.Input;
+using SkiaSharp;
+using System;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+
+namespace Pixed.Utils;
+internal static class SkiaUtils
+{
+    public static SKBitmap FromArray(uint[] array, int width, int height)
+    {
+        var bitmap = new SKBitmap(width, height, true);
+        var gcHandle = GCHandle.Alloc(array, GCHandleType.Pinned);
+        var info = new SKImageInfo(width, height, SKImageInfo.PlatformColorType, SKAlphaType.Unpremul);
+        bitmap.InstallPixels(info, gcHandle.AddrOfPinnedObject(), info.RowBytes, delegate { gcHandle.Free(); }, null);
+        return bitmap;
+    }
+
+    public static uint[] ToArray(this SKBitmap bitmap)
+    {
+        unsafe
+        {
+            var ptr = bitmap.GetPixels(out nint length);
+            byte[] bytes = new byte[length];
+            Marshal.Copy(ptr, bytes, 0, bytes.Length);
+            return bytes.ToUInt();
+        }
+    }
+
+    public static void Clear(this SKBitmap src)
+    {
+        uint[] pixels = new uint[src.Width * src.Height];
+        Array.Fill(pixels, UniColor.Transparent);
+        Fill(src, pixels);
+    }
+
+    public static void Fill(this SKBitmap src, uint[] array)
+    {
+        var gcHandle = GCHandle.Alloc(array, GCHandleType.Pinned);
+        var info = new SKImageInfo(src.Width, src.Height, SKImageInfo.PlatformColorType, SKAlphaType.Unpremul);
+        src.InstallPixels(info, gcHandle.AddrOfPinnedObject(), info.RowBytes, delegate { gcHandle.Free(); }, null);
+    }
+
+    public static bool ContainsPixel(this SKBitmap src, int x, int y)
+    {
+        return x >= 0 && y >= 0 && x < src.Width && y < src.Height;
+    }
+
+    public static void SetPixel(this SKBitmap bitmap, int x, int y, uint color, int toolSize)
+    {
+        if (toolSize <= 1)
+        {
+            bitmap.SetPixel(x, y, (UniColor)color);
+            return;
+        }
+        for (int y1 = 0; y1 < toolSize; y1++)
+        {
+            for (int x1 = 0; x1 < toolSize; x1++)
+            {
+                Point point = new(x - (int)Math.Floor((double)toolSize / 2.0d) + x1, y - (int)Math.Floor((double)toolSize / 2.0d) + y1);
+
+                if (!bitmap.ContainsPixel(point.X, point.Y))
+                {
+                    continue;
+                }
+
+                bitmap.SetPixel(point.X, point.Y, (UniColor)color);
+            }
+        }
+    }
+
+    public static async Task CopyToClipboard(this SKBitmap src)
+    {
+        DataObject clipboardObject = new();
+        MemoryStream memoryStream = new();
+        src.Encode(memoryStream, SKEncodedImageFormat.Png, 100);
+        clipboardObject.Set("PNG", memoryStream.ToArray());
+        memoryStream.Dispose();
+        await Clipboard.ClearAsync();
+        await Clipboard.SetDataObjectAsync(clipboardObject);
+    }
+
+    public static async Task<SKBitmap?> CreateFromClipboard()
+    {
+        var formats = await Clipboard.GetFormatsAsync();
+
+        if (formats.Contains("PNG"))
+        {
+            var data = await Clipboard.GetDataAsync("PNG");
+
+            if (data is byte[] array)
+            {
+                return SKBitmap.Decode(array);
+            }
+        }
+
+        return null;
+    }
+}
