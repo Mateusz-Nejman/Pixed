@@ -30,6 +30,7 @@ internal partial class MainWindow : PixedWindow<MainViewModel>, IDisposable
     private readonly MenuBuilder _menuBuilder;
     private IDisposable _newInstanceHandled;
     private bool _disposedValue;
+    private IDisposable[] _debugDisposables;
 
     public static Window? Handle { get; private set; }
     public static ICommand? QuitCommand { get; private set; }
@@ -37,6 +38,7 @@ internal partial class MainWindow : PixedWindow<MainViewModel>, IDisposable
         TransformMenuRegister transformToolsMenuRegister, RecentFilesService recentFilesService, ToolSelector toolSelector, CopyPasteMenuRegister copyPasteMenuRegister,
         ViewMenuRegister viewMenuRegister) : base(menuItemRegistry)
     {
+        _debugDisposables = Subjects.InitDebug();
         _pixedProjectMethods = pixedProjectMethods;
         _applicationData = applicationData;
         _transformToolsMenuRegister = transformToolsMenuRegister;
@@ -91,6 +93,10 @@ internal partial class MainWindow : PixedWindow<MainViewModel>, IDisposable
         {
             if (disposing)
             {
+                foreach(var disposable in _debugDisposables)
+                {
+                    disposable.Dispose();
+                }
                 _newInstanceHandled?.Dispose();
             }
 
