@@ -48,6 +48,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     private readonly IDisposable _gridChanged;
     private readonly IDisposable _toolChanged;
     private readonly IDisposable _keyState;
+    private readonly IDisposable _overlayChanged;
 
     public ActionCommand<Point> LeftMouseDown { get; }
     public ActionCommand<Point> LeftMouseUp { get; }
@@ -254,6 +255,11 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
             _altPressed = state.IsAlt;
         });
 
+        _overlayChanged = Subjects.OverlayModified.Subscribe(overlay =>
+        {
+            ReloadOverlay();
+        });
+
         toolMoveCanvas.MoveAction = offset =>
         {
             _scrollViewerOffset = offset;
@@ -308,6 +314,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
                 _gridChanged?.Dispose();
                 _toolChanged?.Dispose();
                 _keyState?.Dispose();
+                _overlayChanged?.Dispose();
             }
 
             _disposedValue = true;
@@ -343,8 +350,6 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         {
             _toolSelector.ToolSelected?.ApplyTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
         }
-
-        ReloadOverlay();
     }
 
     private void LeftMouseUpAction(Point point)
@@ -366,7 +371,6 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         }
 
         Overlay.Clear();
-        ReloadOverlay();
         Subjects.LayerModified.OnNext(_frame.CurrentLayer);
         Subjects.FrameModified.OnNext(_frame);
     }
@@ -394,8 +398,6 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         {
             _toolSelector.ToolSelected?.ApplyTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
         }
-
-        ReloadOverlay();
     }
 
     private void RightMouseUpAction(Point point)
@@ -417,7 +419,6 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         }
 
         Overlay.Clear();
-        ReloadOverlay();
         Subjects.LayerModified.OnNext(_frame.CurrentLayer);
         Subjects.FrameModified.OnNext(_frame);
     }
@@ -453,8 +454,6 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         {
             _toolSelector.ToolSelected?.UpdateHighlightedPixel(imageX, imageY, _frame, ref _overlayBitmap);
         }
-
-        ReloadOverlay();
     }
 
     private void ZoomInAction()

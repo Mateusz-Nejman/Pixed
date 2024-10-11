@@ -96,6 +96,6 @@ internal class ToolPen(ApplicationData applicationData) : BaseTool(applicationDa
             }
         }
 
-        Subjects.LayerModified.OnNext(frame.CurrentLayer);
+        Subjects.OverlayModified.OnNext(overlay);
     }
 }

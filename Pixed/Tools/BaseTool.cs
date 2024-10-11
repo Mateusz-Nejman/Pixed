@@ -68,6 +68,8 @@ internal abstract class BaseTool(ApplicationData applicationData)
         {
             overlay.SetPixel(x, y, GetHighlightColor(pixel), SingleHighlightedPixel ? 1 : _applicationData.ToolSize);
         }
+
+        Subjects.OverlayModified.OnNext(overlay);
     }
 
     public virtual List<ToolProperty> GetToolProperties()
@@ -111,7 +113,6 @@ internal abstract class BaseTool(ApplicationData applicationData)
     protected static void SetPixels(Frame frame, List<Pixel> pixels)
     {
         frame.SetPixels(pixels);
-        Subjects.FrameModified.OnNext(frame);
         Subjects.LayerModified.OnNext(frame.CurrentLayer);
     }
 

@@ -1,6 +1,7 @@
 ﻿using Pixed.Models;
 using Pixed.Selection;
 using Pixed.Services.Keyboard;
+using SkiaSharp;
 using System;
 using System.Reactive.Subjects;
 
@@ -16,6 +17,7 @@ internal static class Subjects
     public static Subject<BaseToolPair> ToolChanged { get; } = new Subject<BaseToolPair>();
     public static Subject<double> ZoomChanged { get; } = new Subject<double>();
     public static Subject<string[]> NewInstanceHandled { get; } = new Subject<string[]>();
+    public static Subject<SKBitmap> OverlayModified { get; } = new Subject<SKBitmap>();
 
     public static Subject<BaseSelection> ClipboardCopy { get; } = new Subject<BaseSelection>();
     public static Subject<BaseSelection> ClipboardCut { get; } = new Subject<BaseSelection>();
@@ -56,6 +58,7 @@ internal static class Subjects
             ToolChanged.DebugSubscribe(nameof(ToolChanged)),
             ZoomChanged.DebugSubscribe(nameof(ZoomChanged)),
             NewInstanceHandled.DebugSubscribe(nameof(NewInstanceHandled)),
+            OverlayModified.DebugSubscribe(nameof(OverlayModified)),
             ClipboardCopy.DebugSubscribe(nameof(ClipboardCopy)),
             ClipboardCut.DebugSubscribe(nameof(ClipboardCut)),
             ClipboardPaste.DebugSubscribe(nameof(ClipboardPaste)),
