@@ -18,6 +18,7 @@ internal class ToolMove(ApplicationData applicationData) : BaseTool(applicationD
 
     public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
+        base.ApplyTool(x, y, frame, ref overlay, shiftPressed, controlPressed, altPressed);
         _startX = x;
         _startY = y;
         _currentLayer = frame.CurrentLayer;
@@ -33,7 +34,7 @@ internal class ToolMove(ApplicationData applicationData) : BaseTool(applicationD
         Subjects.LayerModified.OnNext(frame.CurrentLayer);
     }
 
-    public override void ReleaseTool(int x, int y, Frame _, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ReleaseTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
         shiftPressed = shiftPressed || GetProperty(ToolProperties.PROP_APPLY_ALL_FRAMES);
         controlPressed = controlPressed || GetProperty(ToolProperties.PROP_APPLY_ALL_LAYERS);
@@ -46,6 +47,8 @@ internal class ToolMove(ApplicationData applicationData) : BaseTool(applicationD
             var reference = this._currentLayer == layer ? this._currentLayerClone : layer.Clone();
             ShiftLayer(layer, reference, diffX, diffY, altPressed);
         }, _applicationData, true);
+
+        base.ReleaseTool(x, y, frame, ref overlay, shiftPressed, controlPressed, altPressed);
     }
 
     public override List<ToolProperty> GetToolProperties()

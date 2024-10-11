@@ -9,6 +9,7 @@ internal class ToolColorPicker(ApplicationData applicationData) : BaseTool(appli
     public override bool AddToHistory { get; protected set; } = false;
     public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
+        base.ApplyTool(x, y, frame, ref overlay, shiftPressed, controlPressed, altPressed);
         if (frame.ContainsPixel(x, y))
         {
             var color = frame.GetPixel(x, y);

@@ -15,16 +15,17 @@ internal abstract class ShapeTool(ApplicationData applicationData) : BaseTool(ap
 
     public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
+        base.ApplyTool(x, y, frame, ref overlay, shiftPressed, controlPressed, altPressed);
         _startX = x;
         _startY = y;
 
-        overlay.SetPixel(x, y, GetToolColor(), _applicationData.ToolSize);
+        overlay.SetPixel(x, y, ToolColor, _applicationData.ToolSize);
     }
 
     public override void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
         overlay.Clear();
-        var color = GetToolColor();
+        var color = ToolColor;
 
         if (color == UniColor.Transparent)
         {
@@ -36,11 +37,12 @@ internal abstract class ShapeTool(ApplicationData applicationData) : BaseTool(ap
 
     public override void ReleaseTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
-        var color = GetToolColor();
+        var color = ToolColor;
 
         Draw(x, y, color, shiftPressed || GetProperty(PROP_SHIFT), _applicationData.ToolSize, frame);
 
         overlay.Clear();
+        base.ReleaseTool(x, y, frame, ref overlay, shiftPressed, controlPressed, altPressed);
     }
 
     public override List<ToolProperty> GetToolProperties()
@@ -59,6 +61,7 @@ internal abstract class ShapeTool(ApplicationData applicationData) : BaseTool(ap
         });
 
         overlay = bitmap;
+        Subjects.OverlayModified.OnNext(overlay);
     }
 
     protected void Draw(int x, int y, uint color, bool shiftPressed, int toolSize, Frame frame)

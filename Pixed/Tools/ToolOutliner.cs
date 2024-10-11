@@ -12,8 +12,9 @@ internal class ToolOutliner(ApplicationData applicationData) : BaseTool(applicat
     public override bool SingleHighlightedPixel { get; protected set; } = true;
     public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
+        base.ApplyTool(x, y, frame, ref overlay, shiftPressed, controlPressed, altPressed);
         controlPressed = controlPressed || GetProperty(PROP_FILL_CORNERS);
-        var color = GetToolColor();
+        var color = ToolColor;
         PaintUtils.OutlineSimiliarConnectedPixels(frame.CurrentLayer, x, y, color, controlPressed);
         Subjects.LayerModified.OnNext(frame.CurrentLayer);
         Subjects.FrameModified.OnNext(frame);

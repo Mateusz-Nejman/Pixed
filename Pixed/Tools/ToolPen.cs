@@ -14,11 +14,11 @@ internal class ToolPen(ApplicationData applicationData) : BaseTool(applicationDa
     private readonly List<Point> _modifiedPoints = [];
     public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
+        base.ApplyTool(x, y, frame, ref overlay, shiftPressed, controlPressed, altPressed);
         _prevX = x;
         _prevY = y;
 
-        var color = GetToolColor();
-        DrawOnOverlay(color, x, y, frame, ref overlay);
+        DrawOnOverlay(ToolColor, x, y, frame, ref overlay);
     }
 
     public override void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
@@ -51,6 +51,7 @@ internal class ToolPen(ApplicationData applicationData) : BaseTool(applicationDa
 
         overlay.Clear();
         Subjects.OverlayModified.OnNext(overlay);
+        base.ReleaseTool(x, y, frame, ref overlay, shiftPressed, controlPressed, altPressed);
     }
 
     public List<Pixel> GetPixels()

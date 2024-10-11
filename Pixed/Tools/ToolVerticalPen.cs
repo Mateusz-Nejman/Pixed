@@ -11,10 +11,11 @@ internal class ToolVerticalPen(ApplicationData applicationData) : ToolPen(applic
     public override bool ControlHandle { get; protected set; } = true;
     public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
+        base.ApplyTool(x, y, frame, ref overlay, shiftPressed, controlPressed, altPressed);
         shiftPressed = shiftPressed || GetProperty(PROP_BOTH_AXIS);
         controlPressed = controlPressed || GetProperty(PROP_HORIZONTAL);
 
-        var color = GetToolColor();
+        var color = ToolColor;
         DrawOnOverlay(color, x, y, frame, ref overlay);
 
         int symX = GetSymmetricX(x, frame);

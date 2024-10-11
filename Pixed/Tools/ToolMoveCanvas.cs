@@ -17,6 +17,7 @@ internal class ToolMoveCanvas(ApplicationData applicationData) : BaseTool(applic
 
     public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
+        base.ApplyTool(x, y, frame, ref overlay, shiftPressed, controlPressed, altPressed);
         _startX = x;
         _startY = y;
         _offset = GetOffset();

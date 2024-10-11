@@ -10,13 +10,14 @@ internal class ToolColorSwap(ApplicationData applicationData) : BaseTool(applica
     public override bool SingleHighlightedPixel { get; protected set; } = true;
     public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
+        base.ApplyTool(x, y, frame, ref overlay, shiftPressed, controlPressed, altPressed);
         shiftPressed = shiftPressed || GetProperty(ToolProperties.PROP_APPLY_ALL_FRAMES);
         controlPressed = controlPressed || GetProperty(ToolProperties.PROP_APPLY_ALL_LAYERS);
 
         if (frame.ContainsPixel(x, y))
         {
             var oldColor = frame.GetPixel(x, y);
-            var newColor = GetToolColor();
+            var newColor = ToolColor;
 
             SwapColors(oldColor, newColor, shiftPressed, controlPressed);
         }

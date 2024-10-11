@@ -13,13 +13,16 @@ internal abstract class BaseTool(ApplicationData applicationData)
     protected readonly ApplicationData _applicationData = applicationData;
     protected int _highlightedX = 0;
     protected int _highlightedY = 0;
+    private UniColor? _toolColor;
 
     public virtual bool AddToHistory { get; protected set; } = true;
     public virtual bool ShiftHandle { get; protected set; } = false;
     public virtual bool ControlHandle { get; protected set; } = false;
     public virtual bool AltHandle { get; protected set; } = false;
     public virtual bool SingleHighlightedPixel { get; protected set; } = false;
-    public virtual bool GridMovement { get;protected set; } = true; 
+    public virtual bool GridMovement { get;protected set; } = true;
+
+    protected UniColor ToolColor => _toolColor ?? _applicationData.PrimaryColor;
 
     public virtual UniColor GetToolColor()
     {
@@ -33,7 +36,7 @@ internal abstract class BaseTool(ApplicationData applicationData)
 
     public virtual void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
-
+        _toolColor ??= GetToolColor();
     }
 
     public virtual void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
@@ -43,7 +46,7 @@ internal abstract class BaseTool(ApplicationData applicationData)
 
     public virtual void ReleaseTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
-
+        _toolColor = null;
     }
 
     public virtual void Reset()
