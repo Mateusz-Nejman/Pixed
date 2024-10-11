@@ -28,7 +28,7 @@ internal static class PaintUtils
 
     public static List<Pixel> GetSimiliarConnectedPixels(Layer layer, int x, int y)
     {
-        int targetColor = layer.GetPixel(x, y);
+        uint targetColor = layer.GetPixel(x, y);
 
         List<Pixel> visited = [];
         return VisitConnectedPixels(layer, x, y, p =>
@@ -43,9 +43,9 @@ internal static class PaintUtils
         });
     }
 
-    public static void PaintSimiliarConnected(Layer layer, int x, int y, int replacementColor)
+    public static void PaintSimiliarConnected(Layer layer, int x, int y, uint replacementColor)
     {
-        int targetColor = layer.GetPixel(x, y);
+        uint targetColor = layer.GetPixel(x, y);
 
         if (targetColor == replacementColor)
         {
@@ -78,7 +78,7 @@ internal static class PaintUtils
         int[] dx = [0, 1, 0, -1];
 
         toVisit.Add(new Point(x, y));
-        int color = layer.GetPixel(x, y);
+        uint color = layer.GetPixel(x, y);
         visitor.Invoke(new Pixel(x, y, color));
         pixels.Add(new Pixel(x, y, color));
 
@@ -135,7 +135,7 @@ internal static class PaintUtils
 
     public static void PaintNoiseSimiliarConnected(Layer layer, int x, int y, UniColor primaryColor, UniColor secondaryColor)
     {
-        int targetColor = layer.GetPixel(x, y);
+        uint targetColor = layer.GetPixel(x, y);
 
         var pixels = VisitConnectedPixels(layer, x, y, pixel =>
         {
@@ -152,7 +152,7 @@ internal static class PaintUtils
         layer.SetPixels(pixels);
     }
 
-    public static void OutlineSimiliarConnectedPixels(Layer layer, int x, int y, int replacementColor, bool fillCorners)
+    public static void OutlineSimiliarConnectedPixels(Layer layer, int x, int y, uint replacementColor, bool fillCorners)
     {
         var targetColor = layer.GetPixel(x, y);
 

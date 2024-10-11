@@ -59,12 +59,12 @@ internal class ToolPen(ApplicationData applicationData) : BaseTool(applicationDa
         return _modifiedPoints.Contains(point);
     }
 
-    protected void AddPixel(int x, int y, int color)
+    protected void AddPixel(int x, int y, uint color)
     {
         AddPixel(new Point(x, y), color);
     }
 
-    protected void AddPixel(Point point, int color)
+    protected void AddPixel(Point point, uint color)
     {
         if (IsPixelModified(point))
         {

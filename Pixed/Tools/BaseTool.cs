@@ -62,7 +62,7 @@ internal abstract class BaseTool(ApplicationData applicationData)
         _highlightedX = x;
         _highlightedY = y;
 
-        int pixel = frame.GetPixel(x, y);
+        uint pixel = frame.GetPixel(x, y);
 
         if (overlay.ContainsPixel(x, y))
         {
@@ -121,7 +121,7 @@ internal abstract class BaseTool(ApplicationData applicationData)
         Subjects.LayerModified.OnNext(layer);
     }
 
-    private static UniColor GetHighlightColor(int pixel)
+    private static UniColor GetHighlightColor(uint pixel)
     {
         UniColor.Hsl hsl = ((UniColor)pixel).ToHsl();
 

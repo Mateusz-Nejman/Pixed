@@ -15,7 +15,7 @@ namespace Pixed.Models;
 
 internal class Layer : PropertyChangedBase, IPixedSerializer
 {
-    private int[] _pixels;
+    private uint[] _pixels;
     private int _width;
     private int _height;
     private System.Drawing.Bitmap _renderedBitmap = null;
@@ -65,12 +65,12 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
         _id = Guid.NewGuid().ToString();
         _width = width;
         _height = height;
-        _pixels = new int[width * height];
+        _pixels = new uint[width * height];
 
-        Array.Fill(_pixels, UniColor.Transparent);
+        Array.Fill(_pixels, UniColor.Transparent.ToUInt());
     }
 
-    private Layer(int width, int height, int[] pixels)
+    private Layer(int width, int height, uint[] pixels)
     {
         ChangeOpacityCommand = new AsyncCommand(ChangeOpacityAction);
         _id = Guid.NewGuid().ToString();
@@ -81,7 +81,7 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
 
     public Layer Clone()
     {
-        int[] pixels = new int[_pixels.Length];
+        uint[] pixels = new uint[_pixels.Length];
         _pixels.CopyTo(pixels, 0);
         Layer layer = new(_width, _height, pixels)
         {
@@ -92,12 +92,12 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
         return layer;
     }
 
-    public int[] GetPixels()
+    public uint[] GetPixels()
     {
         return _pixels;
     }
 
-    public void SetPixel(int x, int y, int color)
+    public void SetPixel(int x, int y, uint color)
     {
         SetPixelPrivate(x, y, color);
     }
@@ -134,7 +134,7 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
         RenderSource = Render().ToAvaloniaBitmap();
     }
 
-    public int GetPixel(int x, int y)
+    public uint GetPixel(int x, int y)
     {
         if (x < 0 || y < 0 || x >= _width || y >= _height)
         {
@@ -151,7 +151,7 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
             return _renderedBitmap;
         }
 
-        int[] pixels = new int[_width * _height];
+        uint[] pixels = new uint[_width * _height];
         _pixels.CopyTo(pixels, 0);
 
         foreach (var pixel in modifiedPixels ?? [])
@@ -170,8 +170,9 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
         }
 
         System.Drawing.Bitmap bitmap = new(_width, _height);
+        var pixelBytes = pixels.ToBytes();
         BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, _width, _height), ImageLockMode.WriteOnly, bitmap.PixelFormat);
-        Marshal.Copy(pixels, 0, bitmapData.Scan0, pixels.Length);
+        Marshal.Copy(pixelBytes, 0, bitmapData.Scan0, pixelBytes.Length);
         bitmap.UnlockBits(bitmapData);
         _renderedBitmap = bitmap;
         _needRerender = false;
@@ -190,7 +191,7 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
         stream.WriteInt(Height);
         stream.WriteString(Name);
         stream.WriteInt(_pixels.Length);
-        stream.WriteIntArray(_pixels);
+        stream.WriteUIntArray(_pixels);
     }
 
     public void Deserialize(Stream stream)
@@ -200,15 +201,15 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
         _height = stream.ReadInt();
         _name = stream.ReadString();
         int pixelsSize = stream.ReadInt();
-        _pixels = new int[pixelsSize];
+        _pixels = new uint[pixelsSize];
 
         for (int i = 0; i < pixelsSize; i++)
         {
-            _pixels[i] = stream.ReadInt();
+            _pixels[i] = stream.ReadUInt();
         }
     }
 
-    public static Layer FromColors(int[] colors, int width, int height, string name)
+    public static Layer FromColors(uint[] colors, int width, int height, string name)
     {
         Layer layer = new(width, height)
         {
@@ -218,7 +219,7 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
         return layer;
     }
 
-    private void SetPixelPrivate(int x, int y, int color)
+    private void SetPixelPrivate(int x, int y, uint color)
     {
         if (x < 0 || y < 0 || x >= _width || y >= _height)
         {

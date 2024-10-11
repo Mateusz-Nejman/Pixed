@@ -59,7 +59,7 @@ internal class ToolMove(ApplicationData applicationData) : BaseTool(applicationD
 
     private static void ShiftLayer(Layer layer, Layer reference, int diffX, int diffY, bool altPressed)
     {
-        int color;
+        uint color;
 
         List<Pixel> pixels = [];
         for (int x = 0; x < layer.Width; x++)

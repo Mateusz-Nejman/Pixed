@@ -100,11 +100,6 @@ public struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatable
         return new UniColor(r, g, b);
     }
 
-    public readonly int ToInt()
-    {
-        return (int)this;
-    }
-
     public readonly uint ToUInt()
     {
         return (uint)((A << 24) | (R << 16) | (G << 8) | B);
@@ -167,6 +162,12 @@ public struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatable
     {
         byte[] bgra = [color.B, color.G, color.R, color.A];
         return BitConverter.ToInt32(bgra, 0);
+    }
+
+    public static implicit operator uint(UniColor color)
+    {
+        byte[] bgra = [color.B, color.G, color.R, color.A];
+        return BitConverter.ToUInt32(bgra, 0);
     }
 
     public static implicit operator SkiaSharp.SKColor(UniColor color)

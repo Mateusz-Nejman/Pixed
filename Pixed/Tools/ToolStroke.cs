@@ -11,7 +11,7 @@ internal class ToolStroke : ShapeTool
     {
         PROP_SHIFT = "Draw straight lines";
     }
-    protected override void Draw(int x, int y, int color, bool isShift, Action<int, int, int> setPixelAction)
+    protected override void Draw(int x, int y, uint color, bool isShift, Action<int, int, uint> setPixelAction)
     {
         List<Point> linePixels;
 

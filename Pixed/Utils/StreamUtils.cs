@@ -10,6 +10,11 @@ internal static class StreamUtils
         return BitConverter.ToInt32(stream.Read(sizeof(int)));
     }
 
+    public static uint ReadUInt(this Stream stream)
+    {
+        return BitConverter.ToUInt32(stream.Read(sizeof(uint)));
+    }
+
     public static double ReadDouble(this Stream stream)
     {
         return BitConverter.ToDouble(stream.Read(sizeof(double)));
@@ -44,6 +49,20 @@ internal static class StreamUtils
         for (int i = 0; i < value.Length; i++)
         {
             int arrayIndex = i * sizeof(int);
+            byte[] byteValue = BitConverter.GetBytes(value[i]);
+            Array.Copy(byteValue, 0, newValue, arrayIndex, byteValue.Length);
+        }
+
+        stream.Write(newValue);
+    }
+
+    public static void WriteUIntArray(this Stream stream, uint[] value)
+    {
+        byte[] newValue = new byte[value.Length * sizeof(uint)];
+
+        for (int i = 0; i < value.Length; i++)
+        {
+            int arrayIndex = i * sizeof(uint);
             byte[] byteValue = BitConverter.GetBytes(value[i]);
             Array.Copy(byteValue, 0, newValue, arrayIndex, byteValue.Length);
         }

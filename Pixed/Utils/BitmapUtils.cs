@@ -21,11 +21,11 @@ internal static class BitmapUtils
         return bitmap;
     }
 
-    public static int[] ToPixelColors(this Bitmap bitmap)
+    public static uint[] ToPixelColors(this Bitmap bitmap)
     {
         int width = bitmap.Width;
         int height = bitmap.Height;
-        int[] pixelArray = new int[width * height];
+        uint[] pixelArray = new uint[width * height];
 
         BitmapData data = bitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
         int bytes = Math.Abs(data.Stride) * height;
@@ -35,7 +35,7 @@ internal static class BitmapUtils
 
         for (int i = 0; i < byteData.Length; i += 4)
         {
-            int pixel = BitConverter.ToInt32(byteData, i);
+            uint pixel = BitConverter.ToUInt32(byteData, i);
             pixelArray[i / 4] = pixel;
         }
 
@@ -98,7 +98,7 @@ internal static class BitmapUtils
         return null;
     }
 
-    public static void SetPixel(this Bitmap bitmap, int x, int y, int color, int toolSize)
+    public static void SetPixel(this Bitmap bitmap, int x, int y, uint color, int toolSize)
     {
         if (toolSize <= 1)
         {

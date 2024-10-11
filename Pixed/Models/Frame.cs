@@ -76,7 +76,7 @@ internal class Frame : PropertyChangedBase, IPixedSerializer
         return frame;
     }
 
-    public void SetPixel(int x, int y, int color)
+    public void SetPixel(int x, int y, uint color)
     {
         CurrentLayer.SetPixel(x, y, color);
     }
@@ -86,7 +86,7 @@ internal class Frame : PropertyChangedBase, IPixedSerializer
         CurrentLayer.SetPixels(pixels);
     }
 
-    public void SetPixel(int x, int y, int color, int toolSize)
+    public void SetPixel(int x, int y, uint color, int toolSize)
     {
         if (toolSize <= 1)
         {
@@ -99,7 +99,7 @@ internal class Frame : PropertyChangedBase, IPixedSerializer
         SetPixels(pixels);
     }
 
-    public int GetPixel(int x, int y)
+    public uint GetPixel(int x, int y)
     {
         return CurrentLayer.GetPixel(x, y);
     }

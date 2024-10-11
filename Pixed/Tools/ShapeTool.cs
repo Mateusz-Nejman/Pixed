@@ -50,7 +50,7 @@ internal abstract class ShapeTool(ApplicationData applicationData) : BaseTool(ap
             ];
     }
 
-    protected void Draw(int x, int y, int color, bool shiftPressed, int toolSize, ref Bitmap overlay)
+    protected void Draw(int x, int y, uint color, bool shiftPressed, int toolSize, ref Bitmap overlay)
     {
         Bitmap bitmap = overlay;
         Draw(x, y, color, shiftPressed, (x, y, color) =>
@@ -61,7 +61,7 @@ internal abstract class ShapeTool(ApplicationData applicationData) : BaseTool(ap
         overlay = bitmap;
     }
 
-    protected void Draw(int x, int y, int color, bool shiftPressed, int toolSize, Frame frame)
+    protected void Draw(int x, int y, uint color, bool shiftPressed, int toolSize, Frame frame)
     {
         Draw(x, y, color, shiftPressed, (x1, y1, _) =>
         {
@@ -69,5 +69,5 @@ internal abstract class ShapeTool(ApplicationData applicationData) : BaseTool(ap
         });
         Subjects.FrameModified.OnNext(frame);
     }
-    protected abstract void Draw(int x, int y, int color, bool shiftPressed, Action<int, int, int> setPixelAction);
+    protected abstract void Draw(int x, int y, uint color, bool shiftPressed, Action<int, int, uint> setPixelAction);
 }

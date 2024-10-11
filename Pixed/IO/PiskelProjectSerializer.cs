@@ -45,7 +45,7 @@ internal partial class PiskelProjectSerializer : IPixedProjectSerializer
 
                 for (int f = 0; f < frames.Count; f++)
                 {
-                    int[] frameLayerData = new int[width * height];
+                    uint[] frameLayerData = new uint[width * height];
 
                     for (int x = 0; x < width; x++)
                     {

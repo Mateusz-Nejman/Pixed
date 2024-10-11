@@ -30,7 +30,7 @@ internal class ToolColorSwap(ApplicationData applicationData) : BaseTool(applica
             ];
     }
 
-    private void SwapColors(int oldColor, int newColor, bool shiftPressed, bool controlPressed)
+    private void SwapColors(uint oldColor, uint newColor, bool shiftPressed, bool controlPressed)
     {
         _applicationData.CurrentModel.Process(shiftPressed, controlPressed, (frame, layer) =>
         {
@@ -38,7 +38,7 @@ internal class ToolColorSwap(ApplicationData applicationData) : BaseTool(applica
         }, _applicationData);
     }
 
-    private static void ApplyToolOnLayer(Layer layer, int oldColor, int newColor)
+    private static void ApplyToolOnLayer(Layer layer, uint oldColor, uint newColor)
     {
         List<Pixel> pixels = [];
         for (int x = 0; x < layer.Width; x++)

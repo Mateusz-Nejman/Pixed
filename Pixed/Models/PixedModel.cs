@@ -123,7 +123,7 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
         }
     }
 
-    public List<int> GetAllColors()
+    public List<uint> GetAllColors()
     {
         return [.. _frames.SelectMany(f => f.Layers).Select(l => l.GetPixels()).SelectMany(p => p).Where(p => p != UniColor.Transparent).Distinct().Order()];
     }
