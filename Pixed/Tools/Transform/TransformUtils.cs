@@ -153,7 +153,7 @@ internal static class TransformUtils
             {
                 for (int y = 0; y < layer.Height; y++)
                 {
-                    int color = layer.GetPixel(x, y);
+                    uint color = layer.GetPixel(x, y);
 
                     if (color != transparent)
                     {

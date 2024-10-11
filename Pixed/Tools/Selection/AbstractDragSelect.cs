@@ -1,11 +1,11 @@
 ﻿using Pixed.Models;
-using System.Drawing;
+using SkiaSharp;
 
 namespace Pixed.Tools.Selection;
 
 internal abstract class AbstractDragSelect(ApplicationData applicationData, ToolSelector toolSelector) : BaseSelect(applicationData, toolSelector)
 {
-    public override void OnSelect(int x, int y, Frame frame, ref Bitmap overlay)
+    public override void OnSelect(int x, int y, Frame frame, ref SKBitmap overlay)
     {
         if (!_hasSelection && (x != _startX || y != _startY))
         {
@@ -19,7 +19,7 @@ internal abstract class AbstractDragSelect(ApplicationData applicationData, Tool
         }
     }
 
-    public override void OnSelectEnd(int x, int y, Frame frame, ref Bitmap overlay)
+    public override void OnSelectEnd(int x, int y, Frame frame, ref SKBitmap overlay)
     {
         if (_hasSelection)
         {
@@ -27,7 +27,7 @@ internal abstract class AbstractDragSelect(ApplicationData applicationData, Tool
         }
     }
 
-    public override void OnSelectStart(int x, int y, Frame frame, ref Bitmap overlay)
+    public override void OnSelectStart(int x, int y, Frame frame, ref SKBitmap overlay)
     {
         if (_hasSelection)
         {
@@ -41,7 +41,7 @@ internal abstract class AbstractDragSelect(ApplicationData applicationData, Tool
         }
     }
 
-    public virtual void OnDragSelectStart(int x, int y, Frame frame, ref Bitmap overlay) { }
-    public virtual void OnDragSelect(int x, int y, Frame frame, ref Bitmap overlay) { }
-    public virtual void OnDragSelectEnd(int x, int y, Frame frame, ref Bitmap overlay) { }
+    public virtual void OnDragSelectStart(int x, int y, Frame frame, ref SKBitmap overlay) { }
+    public virtual void OnDragSelect(int x, int y, Frame frame, ref SKBitmap overlay) { }
+    public virtual void OnDragSelectEnd(int x, int y, Frame frame, ref SKBitmap overlay) { }
 }

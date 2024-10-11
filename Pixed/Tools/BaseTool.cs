@@ -1,8 +1,8 @@
 ﻿using Pixed.Input;
 using Pixed.Models;
 using Pixed.Utils;
+using SkiaSharp;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 
 namespace Pixed.Tools;
@@ -30,17 +30,17 @@ internal abstract class BaseTool(ApplicationData applicationData)
         return _applicationData.PrimaryColor;
     }
 
-    public virtual void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public virtual void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
 
     }
 
-    public virtual void MoveTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public virtual void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
 
     }
 
-    public virtual void ReleaseTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public virtual void ReleaseTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
 
     }
@@ -50,9 +50,9 @@ internal abstract class BaseTool(ApplicationData applicationData)
 
     }
 
-    public virtual void UpdateHighlightedPixel(int x, int y, Frame frame, ref Bitmap overlay)
+    public virtual void UpdateHighlightedPixel(int x, int y, Frame frame, ref SKBitmap overlay)
     {
-        overlay ??= new Bitmap(frame.Width, frame.Height);
+        overlay ??= new SKBitmap(frame.Width, frame.Height, true);
 
         if (_highlightedX != x || _highlightedY != y)
         {
@@ -62,7 +62,7 @@ internal abstract class BaseTool(ApplicationData applicationData)
         _highlightedX = x;
         _highlightedY = y;
 
-        int pixel = frame.GetPixel(x, y);
+        uint pixel = frame.GetPixel(x, y);
 
         if (overlay.ContainsPixel(x, y))
         {
@@ -121,7 +121,7 @@ internal abstract class BaseTool(ApplicationData applicationData)
         Subjects.LayerModified.OnNext(layer);
     }
 
-    private static UniColor GetHighlightColor(int pixel)
+    private static UniColor GetHighlightColor(uint pixel)
     {
         UniColor.Hsl hsl = ((UniColor)pixel).ToHsl();
 

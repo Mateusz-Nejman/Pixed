@@ -48,6 +48,14 @@ public struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatable
         B = (byte)(blue * 255d);
     }
 
+    public UniColor(uint argb) : this()
+    {
+        A = (byte)((argb >> 24) & 0xFFu);
+        R = (byte)((argb >> 16) & 0xFFu);
+        G = (byte)((argb >> 8) & 0xFFu);
+        B = (byte)(argb & 0xFFu);
+    }
+
     public UniColor(Hsl hsl) : this(255, hsl) { }
 
     public UniColor(byte alpha, Hsl hsl) : this()
@@ -92,9 +100,9 @@ public struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatable
         return new UniColor(r, g, b);
     }
 
-    public readonly int ToInt()
+    public readonly uint ToUInt()
     {
-        return (int)this;
+        return (uint)((A << 24) | (R << 16) | (G << 8) | B);
     }
 
     public readonly bool Equals(UniColor other)
@@ -130,6 +138,16 @@ public struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatable
         return new UniColor(bgra[3], bgra[2], bgra[1], bgra[0]);
     }
 
+    public static implicit operator UniColor(uint value)
+    {
+        return new UniColor(value);
+    }
+
+    public static implicit operator UniColor(SkiaSharp.SKColor color)
+    {
+        return new UniColor(color.Alpha, color.Red, color.Green, color.Blue);
+    }
+
     public static implicit operator UniColor(System.Drawing.Color color)
     {
         return new UniColor(color.A, color.R, color.G, color.B);
@@ -144,6 +162,17 @@ public struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatable
     {
         byte[] bgra = [color.B, color.G, color.R, color.A];
         return BitConverter.ToInt32(bgra, 0);
+    }
+
+    public static implicit operator uint(UniColor color)
+    {
+        byte[] bgra = [color.B, color.G, color.R, color.A];
+        return BitConverter.ToUInt32(bgra, 0);
+    }
+
+    public static implicit operator SkiaSharp.SKColor(UniColor color)
+    {
+        return new SkiaSharp.SKColor(color.R, color.G, color.B, color.A);
     }
 
     public static implicit operator System.Drawing.Color(UniColor color)

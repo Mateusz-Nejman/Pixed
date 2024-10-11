@@ -1,6 +1,6 @@
 ﻿using Pixed.Models;
+using SkiaSharp;
 using System;
-using System.Drawing;
 
 namespace Pixed.Tools;
 internal class ToolMoveCanvas(ApplicationData applicationData) : BaseTool(applicationData)
@@ -14,14 +14,14 @@ internal class ToolMoveCanvas(ApplicationData applicationData) : BaseTool(applic
 
     public override bool SingleHighlightedPixel { get; protected set; } = true;
 
-    public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
         _startX = x;
         _startY = y;
         _offset = GetOffset();
     }
 
-    public override void MoveTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
         var diffX = (x - _startX);
         var diffY = (y - _startY);

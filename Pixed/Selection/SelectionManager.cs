@@ -5,9 +5,9 @@ using Pixed.Tools;
 using Pixed.Tools.Selection;
 using Pixed.Utils;
 using Pixed.ViewModels;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using Point = System.Drawing.Point;
@@ -73,7 +73,7 @@ internal class SelectionManager
         if (_currentSelection != null && _applicationData.CurrentFrame != null)
         {
             _currentSelection.FillSelectionFromFrame(_applicationData.CurrentFrame);
-            Bitmap selectionBitmap = _currentSelection.ToBitmap();
+            SKBitmap selectionBitmap = _currentSelection.ToBitmap();
             await selectionBitmap?.CopyToClipboard();
         }
     }
@@ -96,7 +96,7 @@ internal class SelectionManager
         {
             _toolSelector.ToolSelected = newTool;
         }
-        Bitmap? source = await BitmapUtils.CreateFromClipboard();
+        SKBitmap? source = await SkiaUtils.CreateFromClipboard();
 
         if (source == null)
         {
@@ -122,7 +122,7 @@ internal class SelectionManager
                 if (frame.ContainsPixel(startPosition.X + x, startPosition.Y + y))
                 {
                     var color = source.GetPixel(x, y);
-                    pixels.Add(new Pixel(startPosition.X + x, startPosition.Y + y, color.ToArgb()));
+                    pixels.Add(new Pixel(startPosition.X + x, startPosition.Y + y, (UniColor)color));
                 }
             }
         }

@@ -1,7 +1,7 @@
 ﻿using Pixed.Models;
 using Pixed.Utils;
+using SkiaSharp;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace Pixed.Tools;
 internal class ToolOutliner(ApplicationData applicationData) : BaseTool(applicationData)
@@ -10,7 +10,7 @@ internal class ToolOutliner(ApplicationData applicationData) : BaseTool(applicat
 
     public override bool ControlHandle { get; protected set; } = true;
     public override bool SingleHighlightedPixel { get; protected set; } = true;
-    public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
         controlPressed = controlPressed || GetProperty(PROP_FILL_CORNERS);
         var color = GetToolColor();

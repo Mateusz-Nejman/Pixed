@@ -1,6 +1,6 @@
 ﻿using Pixed.Models;
+using SkiaSharp;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace Pixed.Tools;
 internal class ToolMove(ApplicationData applicationData) : BaseTool(applicationData)
@@ -16,7 +16,7 @@ internal class ToolMove(ApplicationData applicationData) : BaseTool(applicationD
     public override bool AltHandle { get; protected set; } = true;
     public override bool SingleHighlightedPixel { get; protected set; } = true;
 
-    public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
         _startX = x;
         _startY = y;
@@ -24,7 +24,7 @@ internal class ToolMove(ApplicationData applicationData) : BaseTool(applicationD
         _currentLayerClone = _currentLayer.Clone();
     }
 
-    public override void MoveTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
         int diffX = x - _startX;
         int diffY = y - _startY;
@@ -33,7 +33,7 @@ internal class ToolMove(ApplicationData applicationData) : BaseTool(applicationD
         Subjects.LayerModified.OnNext(frame.CurrentLayer);
     }
 
-    public override void ReleaseTool(int x, int y, Frame _, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ReleaseTool(int x, int y, Frame _, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
         shiftPressed = shiftPressed || GetProperty(ToolProperties.PROP_APPLY_ALL_FRAMES);
         controlPressed = controlPressed || GetProperty(ToolProperties.PROP_APPLY_ALL_LAYERS);
@@ -59,7 +59,7 @@ internal class ToolMove(ApplicationData applicationData) : BaseTool(applicationD
 
     private static void ShiftLayer(Layer layer, Layer reference, int diffX, int diffY, bool altPressed)
     {
-        int color;
+        uint color;
 
         List<Pixel> pixels = [];
         for (int x = 0; x < layer.Width; x++)

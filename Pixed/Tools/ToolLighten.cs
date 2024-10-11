@@ -1,4 +1,5 @@
 ﻿using Pixed.Models;
+using SkiaSharp;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -9,7 +10,7 @@ internal class ToolLighten(ApplicationData applicationData) : ToolPen(applicatio
     private const string PROP_APPLY_ONCE = "Apply once per pixel";
     public override bool ShiftHandle { get; protected set; } = true;
     public override bool ControlHandle { get; protected set; } = true;
-    public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
         controlPressed = controlPressed || GetProperty(PROP_DARKEN);
         shiftPressed = shiftPressed || GetProperty(PROP_APPLY_ONCE);
@@ -31,10 +32,10 @@ internal class ToolLighten(ApplicationData applicationData) : ToolPen(applicatio
         return [
             new ToolProperty(PROP_DARKEN),
             new ToolProperty(PROP_APPLY_ONCE),
-            ];
+        ];
     }
 
-    private int GetModifierColor(int x, int y, Frame frame, ref Bitmap overlay, bool oncePerPixel, bool isDarken)
+    private int GetModifierColor(int x, int y, Frame frame, ref SKBitmap overlay, bool oncePerPixel, bool isDarken)
     {
         UniColor overlayColor = overlay.GetPixel(x, y);
         UniColor frameColor = frame.GetPixel(x, y);

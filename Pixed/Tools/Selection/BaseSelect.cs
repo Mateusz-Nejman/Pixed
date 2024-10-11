@@ -1,8 +1,8 @@
 ﻿using Pixed.Models;
 using Pixed.Selection;
 using Pixed.Utils;
+using SkiaSharp;
 using System;
-using System.Drawing;
 using System.Linq;
 using Frame = Pixed.Models.Frame;
 
@@ -32,7 +32,7 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
     public override bool AddToHistory { get; protected set; } = false;
     public override bool SingleHighlightedPixel { get; protected set; }
 
-    public void SelectAll(Action<Bitmap> overlayAction)
+    public void SelectAll(Action<SKBitmap> overlayAction)
     {
         _toolSelector.SelectTool("tool_rectangle_select");
         _hasSelection = true;
@@ -42,7 +42,7 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
         Subjects.SelectionCreated.OnNext(_selection);
     }
 
-    public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
         _startX = x;
         _startY = y;
@@ -60,7 +60,7 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
         }
     }
 
-    public override void MoveTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
         if (_mode == SelectionMode.Select)
         {
@@ -68,7 +68,7 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
         }
     }
 
-    public override void ReleaseTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ReleaseTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
         if (_mode == SelectionMode.Select)
         {
@@ -76,7 +76,7 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
         }
     }
 
-    public override void UpdateHighlightedPixel(int x, int y, Frame frame, ref Bitmap overlay)
+    public override void UpdateHighlightedPixel(int x, int y, Frame frame, ref SKBitmap overlay)
     {
         if (!_hasSelection)
         {
@@ -84,11 +84,11 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
         }
     }
 
-    public virtual void OnSelectStart(int x, int y, Frame frame, ref Bitmap overlay) { }
-    public virtual void OnSelect(int x, int y, Frame frame, ref Bitmap overlay) { }
-    public virtual void OnSelectEnd(int x, int y, Frame frame, ref Bitmap overlay) { }
-    public virtual void OnSelectionMoveStart(int x, int y, Frame frame, ref Bitmap overlay) { }
-    public virtual void OnSelectionMove(int x, int y, Frame frame, ref Bitmap overlay)
+    public virtual void OnSelectStart(int x, int y, Frame frame, ref SKBitmap overlay) { }
+    public virtual void OnSelect(int x, int y, Frame frame, ref SKBitmap overlay) { }
+    public virtual void OnSelectEnd(int x, int y, Frame frame, ref SKBitmap overlay) { }
+    public virtual void OnSelectionMoveStart(int x, int y, Frame frame, ref SKBitmap overlay) { }
+    public virtual void OnSelectionMove(int x, int y, Frame frame, ref SKBitmap overlay)
     {
         var deltaX = x - _lastX;
         var deltaY = y - _lastY;
@@ -100,7 +100,7 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
         _lastX = x;
         _lastY = y;
     }
-    public virtual void OnSelectionMoveEnd(int x, int y, Frame frame, ref Bitmap overlay)
+    public virtual void OnSelectionMoveEnd(int x, int y, Frame frame, ref SKBitmap overlay)
     {
         OnSelectionMove(x, y, frame, ref overlay);
     }
@@ -115,7 +115,7 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
         return _selection != null && _selection.Pixels.Any(p => p.X == x && p.Y == y);
     }
 
-    protected void DrawSelectionOnOverlay(ref Bitmap bitmap)
+    protected void DrawSelectionOnOverlay(ref SKBitmap bitmap)
     {
         var pixels = _selection.Pixels;
 
@@ -142,9 +142,9 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
         }
     }
 
-    private Bitmap CreateOverlayFromCurrentFrame()
+    private SKBitmap CreateOverlayFromCurrentFrame()
     {
-        Bitmap newOverlay = new(_applicationData.CurrentFrame.Width, _applicationData.CurrentFrame.Height);
+        SKBitmap newOverlay = new(_applicationData.CurrentFrame.Width, _applicationData.CurrentFrame.Height, true);
         DrawSelectionOnOverlay(ref newOverlay);
         return newOverlay;
     }

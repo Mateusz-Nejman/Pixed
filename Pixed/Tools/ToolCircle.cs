@@ -5,7 +5,7 @@ using System;
 namespace Pixed.Tools;
 internal class ToolCircle(ApplicationData applicationData) : ShapeTool(applicationData)
 {
-    protected override void Draw(int x, int y, int color, bool isShift, Action<int, int, int> setPixelAction)
+    protected override void Draw(int x, int y, uint color, bool isShift, Action<int, int, uint> setPixelAction)
     {
         var rectangle = MathUtils.GetOrderedRectangle(_startX, _startY, x, y);
 

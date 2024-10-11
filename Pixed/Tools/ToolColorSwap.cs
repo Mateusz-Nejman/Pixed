@@ -1,6 +1,6 @@
 ﻿using Pixed.Models;
+using SkiaSharp;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace Pixed.Tools;
 internal class ToolColorSwap(ApplicationData applicationData) : BaseTool(applicationData)
@@ -8,7 +8,7 @@ internal class ToolColorSwap(ApplicationData applicationData) : BaseTool(applica
     public override bool ShiftHandle { get; protected set; } = true;
     public override bool ControlHandle { get; protected set; } = true;
     public override bool SingleHighlightedPixel { get; protected set; } = true;
-    public override void ApplyTool(int x, int y, Frame frame, ref Bitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
     {
         shiftPressed = shiftPressed || GetProperty(ToolProperties.PROP_APPLY_ALL_FRAMES);
         controlPressed = controlPressed || GetProperty(ToolProperties.PROP_APPLY_ALL_LAYERS);
@@ -30,7 +30,7 @@ internal class ToolColorSwap(ApplicationData applicationData) : BaseTool(applica
             ];
     }
 
-    private void SwapColors(int oldColor, int newColor, bool shiftPressed, bool controlPressed)
+    private void SwapColors(uint oldColor, uint newColor, bool shiftPressed, bool controlPressed)
     {
         _applicationData.CurrentModel.Process(shiftPressed, controlPressed, (frame, layer) =>
         {
@@ -38,7 +38,7 @@ internal class ToolColorSwap(ApplicationData applicationData) : BaseTool(applica
         }, _applicationData);
     }
 
-    private static void ApplyToolOnLayer(Layer layer, int oldColor, int newColor)
+    private static void ApplyToolOnLayer(Layer layer, uint oldColor, uint newColor)
     {
         List<Pixel> pixels = [];
         for (int x = 0; x < layer.Width; x++)

@@ -1,6 +1,6 @@
 ﻿using Pixed.Models;
+using SkiaSharp;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace Pixed.Utils;
 
@@ -10,10 +10,10 @@ internal static class LayerUtils
     {
         var oldBitmap = layer.Render();
 
-        Bitmap newBitmap = new(targetWidth, targetHeight);
-        Graphics graphics = Graphics.FromImage(newBitmap);
-        graphics.DrawImage(oldBitmap, new Rectangle(0, 0, targetWidth, targetHeight), new Rectangle(0, 0, oldBitmap.Width, oldBitmap.Height), GraphicsUnit.Pixel);
-        graphics.Dispose();
+        SKBitmap newBitmap = new(targetWidth, targetHeight, true);
+        SKCanvas canvas = new SKCanvas(newBitmap);
+        canvas.DrawBitmap(oldBitmap, new SKRect(0, 0, oldBitmap.Width, oldBitmap.Height), new SKRect(0, 0, targetWidth, targetHeight));
+        canvas.Dispose();
 
         Layer newLayer = new(targetWidth, targetHeight);
         List<Pixel> pixels = [];
@@ -21,7 +21,7 @@ internal static class LayerUtils
         {
             for (int y = 0; y < targetHeight; y++)
             {
-                pixels.Add(new Pixel(x, y, newBitmap.GetPixel(x, y).ToArgb()));
+                pixels.Add(new Pixel(x, y, (UniColor)newBitmap.GetPixel(x, y)));
             }
         }
 
