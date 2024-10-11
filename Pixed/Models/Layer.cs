@@ -18,7 +18,7 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
     private bool _needRerender = true;
     private double _opacity = 100.0d;
     private string _name = string.Empty;
-    private PixedImage? _renderSource = null;
+    private PixedImage _renderSource = new(null);
     private readonly string _id;
 
     public double Opacity
@@ -82,9 +82,9 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
         Layer layer = new(_width, _height, pixels)
         {
             Name = Name,
-            RenderSource = new PixedImage(_renderedBitmap),
             _needRerender = true
         };
+        layer.RenderSource.UpdateBitmap(_renderedBitmap);
         return layer;
     }
 
@@ -125,7 +125,7 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
 
     public void RefreshRenderSource()
     {
-        RenderSource = new PixedImage(Render());
+        RenderSource.UpdateBitmap(Render());
     }
 
     public uint GetPixel(int x, int y)

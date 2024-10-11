@@ -14,7 +14,7 @@ internal class Frame : PropertyChangedBase, IPixedSerializer
     private readonly ObservableCollection<Layer> _layers;
     private int _selectedLayer = 0;
     private readonly string _id;
-    private PixedImage _renderSource;
+    private PixedImage _renderSource = new(null);
 
     public int Width => Layers[0].Width;
     public int Height => Layers[0].Height;
@@ -123,7 +123,7 @@ internal class Frame : PropertyChangedBase, IPixedSerializer
 
     public void RefreshRenderSource(List<Pixel>? pixels = null)
     {
-        RenderSource = new PixedImage(Render(pixels));
+        RenderSource.UpdateBitmap(Render(pixels));
     }
 
     public SKBitmap Render(List<Pixel>? pixels = null)

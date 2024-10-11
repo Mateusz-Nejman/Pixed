@@ -12,13 +12,12 @@ internal class PixedImage : IImage, IDisposable
 {
     private record class DrawOperation : ICustomDrawOperation
     {
+        private readonly PixedImage? _image;
         public Rect Bounds { get; set; }
 
-        public SKBitmap? Bitmap { get; init; }
-
-        public DrawOperation(PixedImage image)
+        public DrawOperation(PixedImage? image)
         {
-            Bitmap = image._source;
+            _image = image;
         }
 
         public void Dispose()
@@ -32,7 +31,7 @@ internal class PixedImage : IImage, IDisposable
 
         public void Render(ImmediateDrawingContext context)
         {
-            if (Bitmap is SKBitmap bitmap && context.PlatformImpl.GetFeature<ISkiaSharpApiLeaseFeature>() is ISkiaSharpApiLeaseFeature leaseFeature)
+            if (_image?._source is SKBitmap bitmap && context.PlatformImpl.GetFeature<ISkiaSharpApiLeaseFeature>() is ISkiaSharpApiLeaseFeature leaseFeature)
             {
                 ISkiaSharpApiLease lease = leaseFeature.Lease();
                 using (lease)
@@ -43,30 +42,38 @@ internal class PixedImage : IImage, IDisposable
         }
     }
 
-    private readonly SKBitmap? _source;
+    private SKBitmap? _source;
     private readonly bool _canDispose = false;
-    DrawOperation? _drawImageOperation;
+    private DrawOperation? _drawImageOperation;
+    private Size _size;
+
+    public Size Size => _size;
+
+    public SKBitmap? Source => _source;
 
     public PixedImage(SKBitmap? source)
+    {
+        UpdateBitmap(source);
+    }
+
+    public void UpdateBitmap(SKBitmap? source)
     {
         _source = source;
         if (source?.Info.Size is SKSizeI size)
         {
-            Size = new(size.Width, size.Height);
+            _size = new(size.Width, size.Height);
         }
     }
 
     public PixedImage Clone()
     {
-        return new PixedImage(_source.Copy());
+        return new PixedImage(_source?.Copy());
     }
 
     public PixedImage(uint[] colors, int width, int height) : this(SkiaUtils.FromArray(colors, width, height))
     {
         _canDispose = true;
     }
-
-    public Size Size { get; }
 
     public void Dispose()
     {
