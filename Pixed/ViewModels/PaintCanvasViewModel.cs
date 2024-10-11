@@ -35,6 +35,8 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     private int _toolSize = 1;
     private Avalonia.Vector _scrollViewerOffset;
     private bool _isPinchEnabled = false;
+    private int _prevX = -1;
+    private int _prevY = -1;
 
     private readonly IDisposable _projectModified;
     private readonly IDisposable _projectChanged;
@@ -332,24 +334,15 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         int imageX = (int)(point.X / _imageFactor);
         int imageY = (int)(point.Y / _imageFactor);
 
-        if (!_frame.ContainsPixel(imageX, imageY))
+        if (!_frame.ContainsPixel(imageX, imageY) || _toolSelector.ToolSelected == null)
         {
             return;
         }
 
         _leftPressed = true;
-        if (_toolSelector.ToolSelected is ToolMoveCanvas toolMoveCanvas)
-        {
-            toolMoveCanvas.ApplyTool(point.X, point.Y, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
-        }
-        else if (_toolSelector.ToolSelected is ToolZoom toolZoom)
-        {
-            toolZoom.ApplyTool(point.X, point.Y, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
-        }
-        else
-        {
-            _toolSelector.ToolSelected?.ApplyTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
-        }
+
+        var cursorPoint = GetCursorPoint(point, _toolSelector.ToolSelected.GridMovement, out bool ignore);
+        _toolSelector.ToolSelected?.ApplyTool(cursorPoint.X, cursorPoint.Y, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
     }
 
     private void LeftMouseUpAction(Point point)
@@ -357,20 +350,21 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         int imageX = (int)(point.X / _imageFactor);
         int imageY = (int)(point.Y / _imageFactor);
 
-        if (!_frame.ContainsPixel(imageX, imageY))
+        if (!_frame.ContainsPixel(imageX, imageY) || _toolSelector.ToolSelected == null)
         {
             return;
         }
 
         _leftPressed = false;
-        _toolSelector.ToolSelected?.ReleaseTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
+
+        var cursorPoint = GetCursorPoint(point, _toolSelector.ToolSelected.GridMovement, out bool ignore);
+        _toolSelector.ToolSelected?.ReleaseTool(cursorPoint.X, cursorPoint.Y, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
 
         if (_toolSelector.ToolSelected != null && _toolSelector.ToolSelected.AddToHistory)
         {
             _applicationData.CurrentModel.AddHistory();
         }
 
-        Overlay.Clear();
         Subjects.LayerModified.OnNext(_frame.CurrentLayer);
         Subjects.FrameModified.OnNext(_frame);
     }
@@ -380,24 +374,15 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         int imageX = (int)(point.X / _imageFactor);
         int imageY = (int)(point.Y / _imageFactor);
 
-        if (!_frame.ContainsPixel(imageX, imageY))
+        if (!_frame.ContainsPixel(imageX, imageY) || _toolSelector.ToolSelected == null)
         {
             return;
         }
 
         _rightPressed = true;
-        if (_toolSelector.ToolSelected is ToolMoveCanvas toolMoveCanvas)
-        {
-            toolMoveCanvas.ApplyTool(point.X, point.Y, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
-        }
-        else if (_toolSelector.ToolSelected is ToolZoom toolZoom)
-        {
-            toolZoom.ApplyTool(point.X, point.Y, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
-        }
-        else
-        {
-            _toolSelector.ToolSelected?.ApplyTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
-        }
+
+        var cursorPoint = GetCursorPoint(point, _toolSelector.ToolSelected.GridMovement, out bool ignore);
+        _toolSelector.ToolSelected?.ApplyTool(cursorPoint.X, cursorPoint.Y, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
     }
 
     private void RightMouseUpAction(Point point)
@@ -405,20 +390,21 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         int imageX = (int)(point.X / _imageFactor);
         int imageY = (int)(point.Y / _imageFactor);
 
-        if (!_frame.ContainsPixel(imageX, imageY))
+        if (!_frame.ContainsPixel(imageX, imageY) || _toolSelector.ToolSelected == null)
         {
             return;
         }
 
         _rightPressed = false;
-        _toolSelector.ToolSelected?.ReleaseTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
+
+        var cursorPoint = GetCursorPoint(point, _toolSelector.ToolSelected.GridMovement, out bool ignore);
+        _toolSelector.ToolSelected?.ReleaseTool(cursorPoint.X, cursorPoint.Y, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
 
         if (_toolSelector.ToolSelected != null && _toolSelector.ToolSelected.AddToHistory)
         {
             _applicationData.CurrentModel.AddHistory();
         }
 
-        Overlay.Clear();
         Subjects.LayerModified.OnNext(_frame.CurrentLayer);
         Subjects.FrameModified.OnNext(_frame);
     }
@@ -430,29 +416,25 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
 
         MouseCoordinatesText = "[" + imageX + "x" + imageY + "]";
 
-        if (!_frame.ContainsPixel(imageX, imageY))
+        if (!_frame.ContainsPixel(imageX, imageY) || _toolSelector.ToolSelected == null)
         {
             return;
         }
 
+        var cursorPoint = GetCursorPoint(point, _toolSelector.ToolSelected.GridMovement, out bool ignore);
+
+        if(ignore)
+        {
+            return;
+        }
+        
         if (_leftPressed || _rightPressed)
         {
-            if (_toolSelector.ToolSelected is ToolMoveCanvas toolMoveCanvas)
-            {
-                toolMoveCanvas.MoveTool(point.X, point.Y, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
-            }
-            else if (_toolSelector.ToolSelected is ToolZoom toolZoom)
-            {
-                toolZoom.MoveTool(point.X, point.Y, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
-            }
-            else
-            {
-                _toolSelector.ToolSelected?.MoveTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
-            }
+            _toolSelector.ToolSelected.MoveTool(cursorPoint.X, cursorPoint.Y, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
         }
         else
         {
-            _toolSelector.ToolSelected?.UpdateHighlightedPixel(imageX, imageY, _frame, ref _overlayBitmap);
+            _toolSelector.ToolSelected.UpdateHighlightedPixel(cursorPoint.X, cursorPoint.Y, _frame, ref _overlayBitmap);
         }
     }
 
@@ -553,5 +535,30 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     private void ReloadFrameRender(Layer _)
     {
         ReloadFrameRender();
+    }
+
+    private Point GetCursorPoint(Point point, bool gridMovenent, out bool ignore)
+    {
+        ignore = false;
+        int argX = point.X;
+        int argY = point.Y;
+
+        if (gridMovenent)
+        {
+            argX = (int)(point.X / _imageFactor);
+            argY = (int)(point.Y / _imageFactor);
+
+            if (_prevX == argX && _prevY == argY)
+            {
+                ignore = true;
+            }
+            else
+            {
+                _prevX = argX;
+                _prevY = argY;
+            }
+        }
+
+        return new Point(argX, argY);
     }
 }

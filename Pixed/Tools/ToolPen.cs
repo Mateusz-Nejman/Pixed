@@ -48,6 +48,9 @@ internal class ToolPen(ApplicationData applicationData) : BaseTool(applicationDa
         _modifiedPoints.Clear();
         _prevX = -1;
         _prevY = -1;
+
+        overlay.Clear();
+        Subjects.OverlayModified.OnNext(overlay);
     }
 
     public List<Pixel> GetPixels()

@@ -9,6 +9,7 @@ internal class ToolMoveCanvas(ApplicationData applicationData) : BaseTool(applic
     private double _startY;
     private Avalonia.Vector _offset;
     public override bool AddToHistory { get; protected set; } = false;
+    public override bool GridMovement { get; protected set; } = false;
     public Action<Avalonia.Vector>? MoveAction { get; set; }
     public Func<Avalonia.Vector>? GetOffset { get; set; }
 

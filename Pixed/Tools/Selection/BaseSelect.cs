@@ -140,6 +140,8 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
 
             bitmap.SetPixel(pixel.X, pixel.Y, color);
         }
+
+        Subjects.OverlayModified.OnNext(bitmap);
     }
 
     private SKBitmap CreateOverlayFromCurrentFrame()

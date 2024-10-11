@@ -9,6 +9,7 @@ internal class ToolZoom(ApplicationData applicationData) : BaseTool(applicationD
     private double _zoom;
     private IDisposable _disposed;
     public override bool AddToHistory { get; protected set; } = false;
+    public override bool GridMovement { get; protected set; } = false;
     public Action<double> ZoomAction { get; set; }
     public Action<bool> SetEnabled { get; set; }
     public Func<double> GetZoom { get; set; }
