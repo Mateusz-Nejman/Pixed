@@ -20,6 +20,7 @@ internal abstract class ShapeTool(ApplicationData applicationData) : BaseTool(ap
         _startY = y;
 
         overlay.SetPixel(x, y, ToolColor, _applicationData.ToolSize);
+        Subjects.OverlayModified.OnNext(overlay);
     }
 
     public override void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)

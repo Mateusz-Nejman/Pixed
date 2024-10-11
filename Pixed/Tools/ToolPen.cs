@@ -19,6 +19,7 @@ internal class ToolPen(ApplicationData applicationData) : BaseTool(applicationDa
         _prevY = y;
 
         DrawOnOverlay(ToolColor, x, y, frame, ref overlay);
+        Subjects.OverlayModified.OnNext(overlay);
     }
 
     public override void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
@@ -99,7 +100,5 @@ internal class ToolPen(ApplicationData applicationData) : BaseTool(applicationDa
                 AddPixel(toolPoint, color);
             }
         }
-
-        Subjects.OverlayModified.OnNext(overlay);
     }
 }

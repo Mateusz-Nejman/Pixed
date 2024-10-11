@@ -16,5 +16,6 @@ internal class ToolNoise(ApplicationData applicationData) : ToolPen(applicationD
         _prevY = y;
 
         DrawOnOverlay(PaintUtils.GetNoiseColor(_applicationData.PrimaryColor, _applicationData.SecondaryColor), x, y, frame, ref overlay);
+        Subjects.OverlayModified.OnNext(overlay);
     }
 }

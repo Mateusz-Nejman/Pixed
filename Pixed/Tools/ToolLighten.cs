@@ -25,6 +25,7 @@ internal class ToolLighten(ApplicationData applicationData) : ToolPen(applicatio
 
         var modifiedColor = GetModifierColor(x, y, frame, ref overlay, shiftPressed, controlPressed);
         DrawOnOverlay(modifiedColor, x, y, frame, ref overlay);
+        Subjects.OverlayModified.OnNext(overlay);
     }
 
     public override List<ToolProperty> GetToolProperties()

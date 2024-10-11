@@ -36,6 +36,8 @@ internal class ToolVerticalPen(ApplicationData applicationData) : ToolPen(applic
             DrawOnOverlay(color, symX, symY, frame, ref overlay);
         }
 
+        Subjects.OverlayModified.OnNext(overlay);
+
         _prevX = x;
         _prevY = y;
     }

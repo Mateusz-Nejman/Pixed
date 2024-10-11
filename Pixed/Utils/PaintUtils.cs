@@ -65,8 +65,6 @@ internal static class PaintUtils
 
         pixels = pixels.Select(p => new Pixel(p.X, p.Y, replacementColor)).ToList();
         layer.SetPixels(pixels);
-
-        Subjects.LayerModified.OnNext(layer);
     }
 
     public static List<Pixel> VisitConnectedPixels(Layer layer, int x, int y, Func<Pixel, bool> visitor) //TODO optimize
