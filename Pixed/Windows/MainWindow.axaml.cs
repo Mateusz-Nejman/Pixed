@@ -93,7 +93,7 @@ internal partial class MainWindow : PixedWindow<MainViewModel>, IDisposable
         {
             if (disposing)
             {
-                foreach(var disposable in _debugDisposables)
+                foreach (var disposable in _debugDisposables)
                 {
                     disposable.Dispose();
                 }
