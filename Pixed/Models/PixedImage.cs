@@ -42,7 +42,7 @@ internal class PixedImage : IImage, IDisposable
                         {
                             lease.SkCanvas.DrawBitmap(bitmap, SKRect.Create((float)Bounds.X, (float)Bounds.Y, (float)Bounds.Width, (float)Bounds.Height));
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
 #if DEBUG
                             Console.WriteLine(ex.Message);

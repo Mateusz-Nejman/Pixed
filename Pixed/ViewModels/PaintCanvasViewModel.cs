@@ -423,11 +423,11 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
 
         var cursorPoint = GetCursorPoint(point, _toolSelector.ToolSelected.GridMovement, out bool ignore);
 
-        if(ignore)
+        if (ignore)
         {
             return;
         }
-        
+
         if (_leftPressed || _rightPressed)
         {
             _toolSelector.ToolSelected.MoveTool(cursorPoint.X, cursorPoint.Y, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);

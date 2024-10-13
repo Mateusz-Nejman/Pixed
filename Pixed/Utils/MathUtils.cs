@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pixed.Algos;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -6,6 +7,17 @@ namespace Pixed.Utils;
 
 internal static class MathUtils
 {
+    public static List<Point> FloodFill(Point startPosition, Point size, Func<Point, bool> predicate)
+    {
+        List<Point> points = [];
+
+        FloodFill algorithm = new(startPosition, size);
+        bool predicateInternal(int x, int y) => predicate(new Point(x, y));
+        void action(int x, int y) => points.Add(new Point(x, y));
+        algorithm.Execute(predicateInternal, action);
+
+        return points;
+    }
     public static List<Point> GetBresenhamLine(int x0, int y0, int x1, int y1)
     {
         List<Point> points = [];

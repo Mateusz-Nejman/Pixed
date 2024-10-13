@@ -20,7 +20,7 @@ internal abstract class BaseTool(ApplicationData applicationData)
     public virtual bool ControlHandle { get; protected set; } = false;
     public virtual bool AltHandle { get; protected set; } = false;
     public virtual bool SingleHighlightedPixel { get; protected set; } = false;
-    public virtual bool GridMovement { get;protected set; } = true;
+    public virtual bool GridMovement { get; protected set; } = true;
 
     protected UniColor ToolColor => _toolColor ?? _applicationData.PrimaryColor;
 

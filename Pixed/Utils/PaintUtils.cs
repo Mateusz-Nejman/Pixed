@@ -30,17 +30,9 @@ internal static class PaintUtils
     {
         uint targetColor = layer.GetPixel(x, y);
 
-        List<Pixel> visited = [];
-        return VisitConnectedPixels(layer, x, y, p =>
-        {
-            if (visited.Contains(p))
-            {
-                return false;
-            }
-
-            visited.Add(p);
-            return layer.GetPixel(p.X, p.Y) == targetColor;
-        });
+        var points = MathUtils.FloodFill(new Point(x, y), new Point(layer.Width, layer.Height), pos => layer.GetPixel(pos.X, pos.Y) == targetColor);
+        var pixels = points.Select(point => new Pixel(point.X, point.Y, targetColor)).ToList();
+        return pixels;
     }
 
     public static void PaintSimiliarConnected(Layer layer, int x, int y, uint replacementColor)
@@ -52,75 +44,9 @@ internal static class PaintUtils
             return;
         }
 
-        var pixels = VisitConnectedPixels(layer, x, y, pixel =>
-        {
-            var sourceColor = layer.GetPixel(pixel.X, pixel.Y);
-            if (sourceColor == targetColor)
-            {
-                return true;
-            }
-
-            return false;
-        });
-
-        pixels = pixels.Select(p => new Pixel(p.X, p.Y, replacementColor)).ToList();
+        var points = MathUtils.FloodFill(new Point(x, y), new Point(layer.Width, layer.Height), pos => layer.GetPixel(pos.X, pos.Y) == targetColor);
+        var pixels = points.Select(p => new Pixel(p.X, p.Y, replacementColor)).ToList();
         layer.SetPixels(pixels);
-    }
-
-    public static List<Pixel> VisitConnectedPixels(Layer layer, int x, int y, Func<Pixel, bool> visitor) //TODO optimize
-    {
-        List<Point> toVisit = [];
-        List<Point> visited = [];
-        List<Pixel> pixels = [];
-        int[] dy = [-1, 0, 1, 0];
-        int[] dx = [0, 1, 0, -1];
-
-        toVisit.Add(new Point(x, y));
-        uint color = layer.GetPixel(x, y);
-        visitor.Invoke(new Pixel(x, y, color));
-        pixels.Add(new Pixel(x, y, color));
-
-        int loopCount = 0;
-        int cellCount = layer.Width * layer.Height;
-        while (toVisit.Count > 0)
-        {
-            var current = toVisit.Pop();
-
-            if (visited.Contains(current)) continue;
-
-            visited.Add(current);
-
-            loopCount++;
-
-            for (int i = 0; i < 4; i++)
-            {
-                int nextX = current.X + dx[i];
-                int nextY = current.Y + dy[i];
-                try
-                {
-                    color = layer.GetPixel(nextX, nextY);
-                    bool isValid = visitor(new Pixel(nextX, nextY, color));
-
-                    if (isValid && layer.ContainsPixel(nextX, nextY))
-                    {
-                        toVisit.Add(new Point(nextX, nextY));
-                        pixels.Add(new Pixel(nextX, nextY, color));
-                    }
-                }
-                catch (Exception e)
-                {
-                    //Ignored
-                }
-            }
-
-            if (loopCount > 10 * cellCount)
-            {
-                break;
-            }
-        }
-
-        pixels = pixels.DistinctBy(p => p.X + ";" + p.Y).ToList();
-        return pixels;
     }
 
     public static UniColor GetNoiseColor(UniColor primary, UniColor secondary)
@@ -135,18 +61,8 @@ internal static class PaintUtils
     {
         uint targetColor = layer.GetPixel(x, y);
 
-        var pixels = VisitConnectedPixels(layer, x, y, pixel =>
-        {
-            var sourceColor = layer.GetPixel(pixel.X, pixel.Y);
-            if (sourceColor == targetColor)
-            {
-                return true;
-            }
-
-            return false;
-        });
-
-        pixels = pixels.Select(p => new Pixel(p.X, p.Y, GetNoiseColor(primaryColor, secondaryColor))).ToList();
+        var points = MathUtils.FloodFill(new Point(x, y), new Point(layer.Width, layer.Height), pos => layer.GetPixel(pos.X, pos.Y) == targetColor);
+        var pixels = points.Select(point => new Pixel(point.X, point.Y, GetNoiseColor(primaryColor, secondaryColor))).ToList();
         layer.SetPixels(pixels);
     }
 
