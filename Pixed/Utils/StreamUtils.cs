@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Pixed.Utils;
@@ -39,35 +41,30 @@ internal static class StreamUtils
 
     public static void WriteInt(this Stream stream, int value)
     {
-        stream.Write(BitConverter.GetBytes(value));
+        IList<byte> buffer = BitConverter.GetBytes(value);
+        stream.Write(buffer.ToArray());
+    }
+
+    public static void WriteUInt(this Stream stream, uint value)
+    {
+        IList<byte> buffer = BitConverter.GetBytes(value);
+        stream.Write(buffer.ToArray());
     }
 
     public static void WriteIntArray(this Stream stream, int[] value)
     {
-        byte[] newValue = new byte[value.Length * sizeof(int)];
-
         for (int i = 0; i < value.Length; i++)
         {
-            int arrayIndex = i * sizeof(int);
-            byte[] byteValue = BitConverter.GetBytes(value[i]);
-            Array.Copy(byteValue, 0, newValue, arrayIndex, byteValue.Length);
+            WriteInt(stream, value[i]);
         }
-
-        stream.Write(newValue);
     }
 
     public static void WriteUIntArray(this Stream stream, uint[] value)
     {
-        byte[] newValue = new byte[value.Length * sizeof(uint)];
-
         for (int i = 0; i < value.Length; i++)
         {
-            int arrayIndex = i * sizeof(uint);
-            byte[] byteValue = BitConverter.GetBytes(value[i]);
-            Array.Copy(byteValue, 0, newValue, arrayIndex, byteValue.Length);
+            WriteUInt(stream, value[i]);
         }
-
-        stream.Write(newValue);
     }
 
     public static void WriteDouble(this Stream stream, double value)

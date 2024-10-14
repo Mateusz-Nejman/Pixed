@@ -20,7 +20,7 @@ class Program
         {
             BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Log(ex);
         }

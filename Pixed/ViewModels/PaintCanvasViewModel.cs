@@ -448,7 +448,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
             _toolSelector.ToolSelected.UpdateHighlightedPixel(cursorPoint.X, cursorPoint.Y, _frame, ref _overlayBitmap);
         }
 
-        
+
     }
 
     private void ZoomInAction()

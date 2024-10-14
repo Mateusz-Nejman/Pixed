@@ -5,6 +5,7 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 namespace Pixed.Models;
@@ -93,6 +94,11 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
         return _pixels;
     }
 
+    public uint[] GetDistinctPixels()
+    {
+        return _pixels.Distinct().ToArray();
+    }
+
     public void SetPixel(int x, int y, uint color)
     {
         SetPixelPrivate(x, y, color);
@@ -150,8 +156,7 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
             return false;
         }
 
-        uint[] pixels = new uint[_width * _height];
-        _pixels.CopyTo(pixels, 0);
+        IList<uint> pixels = new List<uint>(_pixels);
 
         if (modifiedPixels != null)
         {
@@ -163,7 +168,7 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
 
         if (Opacity != 100)
         {
-            for (int a = 0; a < pixels.Length; a++)
+            for (int a = 0; a < pixels.Count; a++)
             {
                 UniColor color = pixels[a];
                 color.A = (byte)((Opacity / 100d) * color.A);
@@ -172,6 +177,7 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
         }
 
         var bitmap = SkiaUtils.FromArray(pixels, _width, _height);
+        pixels.Clear();
         _renderedBitmap = bitmap;
         _needRerender = false;
         render = bitmap;

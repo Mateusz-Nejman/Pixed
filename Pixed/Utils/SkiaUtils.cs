@@ -1,6 +1,7 @@
 ﻿using Avalonia.Input;
 using SkiaSharp;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -10,10 +11,10 @@ using System.Threading.Tasks;
 namespace Pixed.Utils;
 internal static class SkiaUtils
 {
-    public static SKBitmap FromArray(uint[] array, int width, int height)
+    public static SKBitmap FromArray(IList<uint> array, int width, int height)
     {
         var bitmap = new SKBitmap(width, height, true);
-        var gcHandle = GCHandle.Alloc(array, GCHandleType.Pinned);
+        var gcHandle = GCHandle.Alloc(array.ToArray(), GCHandleType.Pinned);
         var info = new SKImageInfo(width, height, SKImageInfo.PlatformColorType, SKAlphaType.Unpremul);
         bitmap.InstallPixels(info, gcHandle.AddrOfPinnedObject(), info.RowBytes, delegate { gcHandle.Free(); }, null);
         return bitmap;
@@ -37,9 +38,9 @@ internal static class SkiaUtils
         Fill(src, pixels);
     }
 
-    public static void Fill(this SKBitmap src, uint[] array)
+    public static void Fill(this SKBitmap src, IList<uint> array)
     {
-        var gcHandle = GCHandle.Alloc(array, GCHandleType.Pinned);
+        var gcHandle = GCHandle.Alloc(array.ToArray(), GCHandleType.Pinned);
         var info = new SKImageInfo(src.Width, src.Height, SKImageInfo.PlatformColorType, SKAlphaType.Unpremul);
         src.InstallPixels(info, gcHandle.AddrOfPinnedObject(), info.RowBytes, delegate { gcHandle.Free(); }, null);
     }
