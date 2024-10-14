@@ -113,17 +113,18 @@ internal class Frame : PropertyChangedBase, IPixedSerializer
         return layer;
     }
 
-    public void RefreshLayerRenderSources()
+    public void RefreshLayerRenderSources(List<Pixel>? pixels = null)
     {
         foreach (var layer in _layers)
         {
-            layer.Rerender();
+            layer.Rerender(layer == CurrentLayer ? pixels : null);
         }
     }
 
-    public void RefreshRenderSource(List<Pixel>? pixels = null)
+    public void RefreshCurrentLayerRenderSource(List<Pixel> pixels)
     {
-        RenderSource.UpdateBitmap(Render(pixels));
+        RenderSource?.Dispose();
+        RenderSource = new PixedImage(Render(pixels));
     }
 
     public SKBitmap Render(List<Pixel>? pixels = null)
@@ -132,7 +133,8 @@ internal class Frame : PropertyChangedBase, IPixedSerializer
         SKCanvas canvas = new(render);
         for (int a = 0; a < _layers.Count; a++)
         {
-            canvas.DrawBitmap(_layers[a].Render(a == SelectedLayer ? pixels : null), new SKPoint(0, 0));
+            _layers[a].Render(out SKBitmap bitmap, a == SelectedLayer ? pixels : null);
+            canvas.DrawBitmap(bitmap, new SKPoint(0, 0));
         }
         canvas.Dispose();
 

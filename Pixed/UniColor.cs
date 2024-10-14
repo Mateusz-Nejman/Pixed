@@ -56,6 +56,14 @@ public struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatable
         B = (byte)(argb & 0xFFu);
     }
 
+    public UniColor(int argb) : this()
+    {
+        A = (byte)((argb >> 24) & 0xFF);
+        R = (byte)((argb >> 16) & 0xFF);
+        G = (byte)((argb >> 8) & 0xFF);
+        B = (byte)(argb & 0xFF);
+    }
+
     public UniColor(Hsl hsl) : this(255, hsl) { }
 
     public UniColor(byte alpha, Hsl hsl) : this()
@@ -134,8 +142,7 @@ public struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatable
 
     public static implicit operator UniColor(int value)
     {
-        byte[] bgra = BitConverter.GetBytes(value);
-        return new UniColor(bgra[3], bgra[2], bgra[1], bgra[0]);
+        return new UniColor(value);
     }
 
     public static implicit operator UniColor(uint value)
@@ -160,14 +167,24 @@ public struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatable
 
     public static implicit operator int(UniColor color)
     {
-        byte[] bgra = [color.B, color.G, color.R, color.A];
-        return BitConverter.ToInt32(bgra, 0);
+        int value = 0;
+        value |= color.B;
+        value |= color.G << 8;
+        value |= color.R << 16;
+        value |= color.A << 24;
+
+        return value;
     }
 
     public static implicit operator uint(UniColor color)
     {
-        byte[] bgra = [color.B, color.G, color.R, color.A];
-        return BitConverter.ToUInt32(bgra, 0);
+        uint value = 0;
+        value |= color.B;
+        value |= ((uint)color.G << 8);
+        value |= ((uint)color.R << 16);
+        value |= ((uint)color.A << 24);
+
+        return value;
     }
 
     public static implicit operator SkiaSharp.SKColor(UniColor color)

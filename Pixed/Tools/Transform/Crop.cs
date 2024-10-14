@@ -75,7 +75,7 @@ internal class Crop(ApplicationData applicationData, SelectionManager selectionM
         foreach (var frame in _applicationData.CurrentModel.Frames)
         {
             frame.RefreshLayerRenderSources();
-            frame.RefreshRenderSource();
+            frame.RefreshCurrentLayerRenderSource([]);
         }
         return true;
     }

@@ -5,6 +5,7 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 namespace Pixed.Models;
@@ -93,6 +94,11 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
         return _pixels;
     }
 
+    public uint[] GetDistinctPixels()
+    {
+        return _pixels.Distinct().ToArray();
+    }
+
     public void SetPixel(int x, int y, uint color)
     {
         SetPixelPrivate(x, y, color);
@@ -108,24 +114,28 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
 
     public void MergeLayers(Layer layer2)
     {
-        var bitmap = Render();
+        Render(out SKBitmap bitmap);
+        layer2.Render(out SKBitmap layer2bitmap);
         SKCanvas canvas = new(bitmap);
-        canvas.DrawBitmap(layer2.Render(), new SKPoint(0, 0));
+        canvas.DrawBitmap(layer2bitmap, new SKPoint(0, 0));
         canvas.Dispose();
 
         _pixels = bitmap.ToArray();
         _needRerender = true;
     }
 
-    public void Rerender()
+    public void Rerender(List<Pixel>? pixels = null)
     {
         _needRerender = true;
-        RefreshRenderSource();
+        RefreshRenderSource(pixels);
     }
 
-    public void RefreshRenderSource()
+    public void RefreshRenderSource(List<Pixel>? pixels = null)
     {
-        RenderSource.UpdateBitmap(Render());
+        if (Render(out SKBitmap bitmap, pixels))
+        {
+            RenderSource.UpdateBitmap(bitmap);
+        }
     }
 
     public uint GetPixel(int x, int y)
@@ -138,24 +148,27 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
         return _pixels[y * _width + x];
     }
 
-    public SKBitmap Render(List<Pixel>? modifiedPixels = null)
+    public bool Render(out SKBitmap render, List<Pixel>? modifiedPixels = null)
     {
-        if (!_needRerender)
+        render = _renderedBitmap;
+        if (!_needRerender && (modifiedPixels == null || modifiedPixels.Count == 0))
         {
-            return _renderedBitmap;
+            return false;
         }
 
-        uint[] pixels = new uint[_width * _height];
-        _pixels.CopyTo(pixels, 0);
+        IList<uint> pixels = new List<uint>(_pixels);
 
-        foreach (var pixel in modifiedPixels ?? [])
+        if (modifiedPixels != null)
         {
-            pixels[pixel.Y * _width + pixel.X] = pixel.Color;
+            foreach (var pixel in modifiedPixels)
+            {
+                pixels[pixel.Y * _width + pixel.X] = pixel.Color;
+            }
         }
 
         if (Opacity != 100)
         {
-            for (int a = 0; a < pixels.Length; a++)
+            for (int a = 0; a < pixels.Count; a++)
             {
                 UniColor color = pixels[a];
                 color.A = (byte)((Opacity / 100d) * color.A);
@@ -164,9 +177,11 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
         }
 
         var bitmap = SkiaUtils.FromArray(pixels, _width, _height);
+        pixels.Clear();
         _renderedBitmap = bitmap;
         _needRerender = false;
-        return bitmap.Copy();
+        render = bitmap;
+        return true;
     }
 
     public bool ContainsPixel(int x, int y)

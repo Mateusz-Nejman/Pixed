@@ -36,15 +36,15 @@ internal partial class PaintCanvas : PixedUserControl<PaintCanvasViewModel>
 
             if (mapper.ChangedButton == MouseButton.Left && mapper.ButtonState == MouseButtonState.Pressed)
             {
-                ViewModel.LeftMouseDown?.Execute(pos.ToSystemPoint());
+                ViewModel.LeftMouseDown?.Execute(new MouseEvent(pos.ToSystemPoint(), e.Pointer.Type == PointerType.Touch));
             }
             else if (mapper.ChangedButton == MouseButton.Right && mapper.ButtonState == MouseButtonState.Pressed)
             {
-                ViewModel.RightMouseDown?.Execute(pos.ToSystemPoint());
+                ViewModel.RightMouseDown?.Execute(new MouseEvent(pos.ToSystemPoint(), e.Pointer.Type == PointerType.Touch));
             }
             else if (mapper.ChangedButton == MouseButton.Middle && mapper.ButtonState == MouseButtonState.Pressed)
             {
-                ViewModel.MiddleMouseDown?.Execute(pos.ToSystemPoint());
+                ViewModel.MiddleMouseDown?.Execute(new MouseEvent(pos.ToSystemPoint(), e.Pointer.Type == PointerType.Touch));
             }
         }
     }
@@ -58,15 +58,15 @@ internal partial class PaintCanvas : PixedUserControl<PaintCanvasViewModel>
 
             if (mapper.ChangedButton == MouseButton.Left && mapper.ButtonState == MouseButtonState.Released)
             {
-                ViewModel.LeftMouseUp?.Execute(pos.ToSystemPoint());
+                ViewModel.LeftMouseUp?.Execute(new MouseEvent(pos.ToSystemPoint(), e.Pointer.Type == PointerType.Touch));
             }
             else if (mapper.ChangedButton == MouseButton.Right && mapper.ButtonState == MouseButtonState.Released)
             {
-                ViewModel.RightMouseUp?.Execute(pos.ToSystemPoint());
+                ViewModel.RightMouseUp?.Execute(new MouseEvent(pos.ToSystemPoint(), e.Pointer.Type == PointerType.Touch));
             }
             else if (mapper.ChangedButton == MouseButton.Middle && mapper.ButtonState == MouseButtonState.Released)
             {
-                ViewModel.MiddleMouseUp?.Execute(pos.ToSystemPoint());
+                ViewModel.MiddleMouseUp?.Execute(new MouseEvent(pos.ToSystemPoint(), e.Pointer.Type == PointerType.Touch));
             }
         }
     }
@@ -88,7 +88,7 @@ internal partial class PaintCanvas : PixedUserControl<PaintCanvasViewModel>
         {
             var pos = e.GetPosition(border);
 
-            ViewModel?.MouseMove?.Execute(pos.ToSystemPoint());
+            ViewModel?.MouseMove?.Execute(new MouseEvent(pos.ToSystemPoint(), e.Pointer.Type == PointerType.Touch));
         }
     }
 }

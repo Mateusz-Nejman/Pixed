@@ -1,6 +1,8 @@
 ﻿using Avalonia.Media;
 using Pixed.Controls;
+using Pixed.Input;
 using Pixed.Models;
+using Pixed.Services.Keyboard;
 using Pixed.Tools;
 using Pixed.Utils;
 using SkiaSharp;
@@ -27,14 +29,14 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     private Frame _frame;
     private Point _lastWindowSize;
     private bool _disposedValue;
-    private bool _shiftPressed;
-    private bool _controlPressed;
-    private bool _altPressed;
+    private KeyState _currentKeyState = new(Avalonia.Input.Key.None, false, false, false);
     private string _projectSizeText;
     private string _mouseCoordinatesText;
     private int _toolSize = 1;
     private Avalonia.Vector _scrollViewerOffset;
     private bool _isPinchEnabled = false;
+    private int _prevX = -1;
+    private int _prevY = -1;
 
     private readonly IDisposable _projectModified;
     private readonly IDisposable _projectChanged;
@@ -48,14 +50,16 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     private readonly IDisposable _gridChanged;
     private readonly IDisposable _toolChanged;
     private readonly IDisposable _keyState;
+    private readonly IDisposable _overlayChanged;
+    private readonly IDisposable _currentLayerRenderModified;
 
-    public ActionCommand<Point> LeftMouseDown { get; }
-    public ActionCommand<Point> LeftMouseUp { get; }
-    public ActionCommand<Point> MouseMove { get; }
-    public ActionCommand<Point> RightMouseDown { get; }
-    public ActionCommand<Point> RightMouseUp { get; }
-    public ActionCommand<Point> MiddleMouseDown { get; }
-    public ActionCommand<Point> MiddleMouseUp { get; }
+    public ActionCommand<MouseEvent> LeftMouseDown { get; }
+    public ActionCommand<MouseEvent> LeftMouseUp { get; }
+    public ActionCommand<MouseEvent> MouseMove { get; }
+    public ActionCommand<MouseEvent> RightMouseDown { get; }
+    public ActionCommand<MouseEvent> RightMouseUp { get; }
+    public ActionCommand<MouseEvent> MiddleMouseDown { get; }
+    public ActionCommand<MouseEvent> MiddleMouseUp { get; }
     public ActionCommand<double> MouseWheel { get; }
     public ActionCommand MouseLeave { get; }
     public ActionCommand ZoomInCommand { get; }
@@ -83,7 +87,15 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         }
     }
 
-    public PixedImage AvaloniaImageBitmap => _renderImage;
+    public PixedImage AvaloniaImageBitmap
+    {
+        get => _renderImage;
+        set
+        {
+            _renderImage = value;
+            OnPropertyChanged();
+        }
+    }
 
     public PixedImage AvaloniaOverlayBitmap
     {
@@ -170,11 +182,11 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         _applicationData = applicationData;
         _toolSelector = toolSelector;
         _frame = new Frame(32, 32);
-        LeftMouseDown = new ActionCommand<Point>(LeftMouseDownAction);
-        LeftMouseUp = new ActionCommand<Point>(LeftMouseUpAction);
-        RightMouseDown = new ActionCommand<Point>(RightMouseDownAction);
-        RightMouseUp = new ActionCommand<Point>(RightMouseUpAction);
-        MouseMove = new ActionCommand<Point>(MouseMoveAction);
+        LeftMouseDown = new ActionCommand<MouseEvent>(LeftMouseDownAction);
+        LeftMouseUp = new ActionCommand<MouseEvent>(LeftMouseUpAction);
+        RightMouseDown = new ActionCommand<MouseEvent>(RightMouseDownAction);
+        RightMouseUp = new ActionCommand<MouseEvent>(RightMouseUpAction);
+        MouseMove = new ActionCommand<MouseEvent>(MouseMoveAction);
         MouseWheel = new ActionCommand<double>(MouseWheelAction);
         MouseLeave = new ActionCommand(MouseLeaveAction);
         ZoomInCommand = new ActionCommand(ZoomInAction);
@@ -207,17 +219,9 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         _frameModified = Subjects.FrameModified.Subscribe(f =>
         {
             f.RefreshLayerRenderSources();
-            f.RefreshRenderSource();
+            f.RefreshCurrentLayerRenderSource([]);
             ReloadFrameRender();
         });
-
-        _layerAdded = Subjects.LayerAdded.Subscribe(ReloadFrameRender);
-
-        _layerRemoved = Subjects.LayerRemoved.Subscribe(ReloadFrameRender);
-
-        _layerChanged = Subjects.LayerChanged.Subscribe(ReloadFrameRender);
-
-        _layerModified = Subjects.LayerModified.Subscribe(ReloadFrameRender);
 
         _mouseWheel = Subjects.MouseWheel.Subscribe(d =>
         {
@@ -249,9 +253,18 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
 
         _keyState = Subjects.KeyState.Subscribe(state =>
         {
-            _shiftPressed = state.IsShift;
-            _controlPressed = state.IsCtrl;
-            _altPressed = state.IsAlt;
+            _currentKeyState = state;
+        });
+
+        _overlayChanged = Subjects.OverlayModified.Subscribe(overlay =>
+        {
+            ReloadOverlay();
+        });
+
+        _currentLayerRenderModified = Subjects.CurrentLayerRenderModified.Subscribe(pixels =>
+        {
+            _applicationData.CurrentFrame.RefreshLayerRenderSources(pixels);
+            AvaloniaImageBitmap = _applicationData.CurrentFrame.RenderSource;
         });
 
         toolMoveCanvas.MoveAction = offset =>
@@ -308,6 +321,8 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
                 _gridChanged?.Dispose();
                 _toolChanged?.Dispose();
                 _keyState?.Dispose();
+                _overlayChanged?.Dispose();
+                _currentLayerRenderModified?.Dispose();
             }
 
             _disposedValue = true;
@@ -320,141 +335,120 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         GC.SuppressFinalize(this);
     }
 
-    private void LeftMouseDownAction(Point point)
+    private void LeftMouseDownAction(MouseEvent mouseEvent)
     {
-        int imageX = (int)(point.X / _imageFactor);
-        int imageY = (int)(point.Y / _imageFactor);
+        int imageX = (int)(mouseEvent.Point.X / _imageFactor);
+        int imageY = (int)(mouseEvent.Point.Y / _imageFactor);
 
-        if (!_frame.ContainsPixel(imageX, imageY))
+        if (!_frame.ContainsPixel(imageX, imageY) || _toolSelector.ToolSelected == null)
         {
             return;
         }
 
         _leftPressed = true;
-        if (_toolSelector.ToolSelected is ToolMoveCanvas toolMoveCanvas)
-        {
-            toolMoveCanvas.ApplyTool(point.X, point.Y, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
-        }
-        else if (_toolSelector.ToolSelected is ToolZoom toolZoom)
-        {
-            toolZoom.ApplyTool(point.X, point.Y, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
-        }
-        else
-        {
-            _toolSelector.ToolSelected?.ApplyTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
-        }
-
-        ReloadOverlay();
+        var cursorPoint = GetCursorPoint(mouseEvent.Point, _toolSelector.ToolSelected.GridMovement, out _);
+        _toolSelector.ToolSelected?.ApplyTool(cursorPoint.X, cursorPoint.Y, _frame, ref _overlayBitmap, _currentKeyState);
+        DebugTouchPointer(mouseEvent);
+        Subjects.LayerModified.OnNext(_frame.CurrentLayer);
+        Subjects.FrameModified.OnNext(_frame);
     }
 
-    private void LeftMouseUpAction(Point point)
+    private void LeftMouseUpAction(MouseEvent mouseEvent)
     {
-        int imageX = (int)(point.X / _imageFactor);
-        int imageY = (int)(point.Y / _imageFactor);
+        int imageX = (int)(mouseEvent.Point.X / _imageFactor);
+        int imageY = (int)(mouseEvent.Point.Y / _imageFactor);
 
-        if (!_frame.ContainsPixel(imageX, imageY))
+        if (!_frame.ContainsPixel(imageX, imageY) || _toolSelector.ToolSelected == null)
         {
             return;
         }
 
         _leftPressed = false;
-        _toolSelector.ToolSelected?.ReleaseTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
+
+        var cursorPoint = GetCursorPoint(mouseEvent.Point, _toolSelector.ToolSelected.GridMovement, out _);
+        _toolSelector.ToolSelected?.ReleaseTool(cursorPoint.X, cursorPoint.Y, _frame, ref _overlayBitmap, _currentKeyState);
 
         if (_toolSelector.ToolSelected != null && _toolSelector.ToolSelected.AddToHistory)
         {
             _applicationData.CurrentModel.AddHistory();
         }
 
-        Overlay.Clear();
-        ReloadOverlay();
+        DebugTouchPointer(mouseEvent);
         Subjects.LayerModified.OnNext(_frame.CurrentLayer);
         Subjects.FrameModified.OnNext(_frame);
     }
 
-    private void RightMouseDownAction(Point point)
+    private void RightMouseDownAction(MouseEvent mouseEvent)
     {
-        int imageX = (int)(point.X / _imageFactor);
-        int imageY = (int)(point.Y / _imageFactor);
+        int imageX = (int)(mouseEvent.Point.X / _imageFactor);
+        int imageY = (int)(mouseEvent.Point.Y / _imageFactor);
 
-        if (!_frame.ContainsPixel(imageX, imageY))
+        if (!_frame.ContainsPixel(imageX, imageY) || _toolSelector.ToolSelected == null)
         {
             return;
         }
 
         _rightPressed = true;
-        if (_toolSelector.ToolSelected is ToolMoveCanvas toolMoveCanvas)
-        {
-            toolMoveCanvas.ApplyTool(point.X, point.Y, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
-        }
-        else if (_toolSelector.ToolSelected is ToolZoom toolZoom)
-        {
-            toolZoom.ApplyTool(point.X, point.Y, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
-        }
-        else
-        {
-            _toolSelector.ToolSelected?.ApplyTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
-        }
 
-        ReloadOverlay();
+        var cursorPoint = GetCursorPoint(mouseEvent.Point, _toolSelector.ToolSelected.GridMovement, out _);
+        _toolSelector.ToolSelected?.ApplyTool(cursorPoint.X, cursorPoint.Y, _frame, ref _overlayBitmap, _currentKeyState);
+        DebugTouchPointer(mouseEvent);
     }
 
-    private void RightMouseUpAction(Point point)
+    private void RightMouseUpAction(MouseEvent mouseEvent)
     {
-        int imageX = (int)(point.X / _imageFactor);
-        int imageY = (int)(point.Y / _imageFactor);
+        int imageX = (int)(mouseEvent.Point.X / _imageFactor);
+        int imageY = (int)(mouseEvent.Point.Y / _imageFactor);
 
-        if (!_frame.ContainsPixel(imageX, imageY))
+        if (!_frame.ContainsPixel(imageX, imageY) || _toolSelector.ToolSelected == null)
         {
             return;
         }
 
         _rightPressed = false;
-        _toolSelector.ToolSelected?.ReleaseTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
+
+        var cursorPoint = GetCursorPoint(mouseEvent.Point, _toolSelector.ToolSelected.GridMovement, out _);
+        _toolSelector.ToolSelected?.ReleaseTool(cursorPoint.X, cursorPoint.Y, _frame, ref _overlayBitmap, _currentKeyState);
 
         if (_toolSelector.ToolSelected != null && _toolSelector.ToolSelected.AddToHistory)
         {
             _applicationData.CurrentModel.AddHistory();
         }
 
-        Overlay.Clear();
-        ReloadOverlay();
+        DebugTouchPointer(mouseEvent);
         Subjects.LayerModified.OnNext(_frame.CurrentLayer);
         Subjects.FrameModified.OnNext(_frame);
     }
 
-    private void MouseMoveAction(Point point)
+    private void MouseMoveAction(MouseEvent mouseEvent)
     {
-        int imageX = (int)(point.X / _imageFactor);
-        int imageY = (int)(point.Y / _imageFactor);
+        int imageX = (int)(mouseEvent.Point.X / _imageFactor);
+        int imageY = (int)(mouseEvent.Point.Y / _imageFactor);
 
         MouseCoordinatesText = "[" + imageX + "x" + imageY + "]";
 
-        if (!_frame.ContainsPixel(imageX, imageY))
+        if (!_frame.ContainsPixel(imageX, imageY) || _toolSelector.ToolSelected == null)
+        {
+            return;
+        }
+
+        var cursorPoint = GetCursorPoint(mouseEvent.Point, _toolSelector.ToolSelected.GridMovement, out bool ignore);
+
+        if (ignore)
         {
             return;
         }
 
         if (_leftPressed || _rightPressed)
         {
-            if (_toolSelector.ToolSelected is ToolMoveCanvas toolMoveCanvas)
-            {
-                toolMoveCanvas.MoveTool(point.X, point.Y, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
-            }
-            else if (_toolSelector.ToolSelected is ToolZoom toolZoom)
-            {
-                toolZoom.MoveTool(point.X, point.Y, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
-            }
-            else
-            {
-                _toolSelector.ToolSelected?.MoveTool(imageX, imageY, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
-            }
+            _toolSelector.ToolSelected.MoveTool(cursorPoint.X, cursorPoint.Y, _frame, ref _overlayBitmap, _currentKeyState);
         }
         else
         {
-            _toolSelector.ToolSelected?.UpdateHighlightedPixel(imageX, imageY, _frame, ref _overlayBitmap);
+            _toolSelector.ToolSelected.UpdateHighlightedPixel(cursorPoint.X, cursorPoint.Y, _frame, ref _overlayBitmap);
         }
 
-        ReloadOverlay();
+
     }
 
     private void ZoomInAction()
@@ -486,7 +480,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     {
         if (_rightPressed || _leftPressed)
         {
-            _toolSelector.ToolSelected?.ReleaseTool(0, 0, _frame, ref _overlayBitmap, _shiftPressed, _controlPressed, _altPressed);
+            _toolSelector.ToolSelected?.ReleaseTool(0, 0, _frame, ref _overlayBitmap, _currentKeyState);
         }
         _rightPressed = false;
         _leftPressed = false;
@@ -547,12 +541,42 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
             pixels = pen.GetPixels();
         }
 
-        _frame.RefreshRenderSource(pixels);
-        AvaloniaImageBitmap.UpdateBitmap(_frame.RenderSource.Source);
+        _frame.RefreshCurrentLayerRenderSource(pixels);
+        AvaloniaImageBitmap = new PixedImage(_frame.RenderSource.Source);
     }
 
-    private void ReloadFrameRender(Layer _)
+    private Point GetCursorPoint(Point point, bool gridMovenent, out bool ignore)
     {
-        ReloadFrameRender();
+        ignore = false;
+        int argX = point.X;
+        int argY = point.Y;
+
+        if (gridMovenent)
+        {
+            argX = (int)(point.X / _imageFactor);
+            argY = (int)(point.Y / _imageFactor);
+
+            if (_prevX == argX && _prevY == argY)
+            {
+                ignore = true;
+            }
+            else
+            {
+                _prevX = argX;
+                _prevY = argY;
+            }
+        }
+
+        return new Point(argX, argY);
+    }
+
+    private void DebugTouchPointer(MouseEvent mouseEvent)
+    {
+#if DEBUG
+        int imageX = (int)(mouseEvent.Point.X / _imageFactor);
+        int imageY = (int)(mouseEvent.Point.Y / _imageFactor);
+        _overlayBitmap.SetPixel(imageX, imageY, UniColor.Black);
+        Overlay = _overlayBitmap;
+#endif
     }
 }

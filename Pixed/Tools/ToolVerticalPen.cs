@@ -1,4 +1,5 @@
 ﻿using Pixed.Models;
+using Pixed.Services.Keyboard;
 using SkiaSharp;
 using System.Collections.Generic;
 
@@ -9,12 +10,13 @@ internal class ToolVerticalPen(ApplicationData applicationData) : ToolPen(applic
     private const string PROP_BOTH_AXIS = "Use horizontal and vertical axis";
     public override bool ShiftHandle { get; protected set; } = true;
     public override bool ControlHandle { get; protected set; } = true;
-    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
-        shiftPressed = shiftPressed || GetProperty(PROP_BOTH_AXIS);
-        controlPressed = controlPressed || GetProperty(PROP_HORIZONTAL);
+        ApplyToolBase(x, y, frame, ref overlay, keyState);
+        var shiftPressed = keyState.IsShift || GetProperty(PROP_BOTH_AXIS);
+        var controlPressed = keyState.IsCtrl || GetProperty(PROP_HORIZONTAL);
 
-        var color = GetToolColor();
+        var color = ToolColor;
         DrawOnOverlay(color, x, y, frame, ref overlay);
 
         int symX = GetSymmetricX(x, frame);
@@ -34,6 +36,8 @@ internal class ToolVerticalPen(ApplicationData applicationData) : ToolPen(applic
         {
             DrawOnOverlay(color, symX, symY, frame, ref overlay);
         }
+
+        Subjects.OverlayModified.OnNext(overlay);
 
         _prevX = x;
         _prevY = y;

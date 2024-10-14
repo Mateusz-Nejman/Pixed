@@ -109,10 +109,6 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
             foreach (Layer layer in layers)
             {
                 action.Invoke(frame, layer);
-                if (executeSubjects)
-                {
-                    Subjects.LayerModified.OnNext(layer);
-                }
             }
 
             if (executeSubjects)
@@ -124,7 +120,8 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
 
     public List<uint> GetAllColors()
     {
-        return [.. _frames.SelectMany(f => f.Layers).Select(l => l.GetPixels()).SelectMany(p => p).Where(p => p != UniColor.Transparent).Distinct().Order()];
+        uint transparentColor = UniColor.Transparent;
+        return [.. _frames.SelectMany(f => f.Layers).Select(l => l.GetDistinctPixels()).SelectMany(p => p).Distinct().Where(p => p != transparentColor).Order()];
     }
 
     public void AddHistory(bool setIsEmpty = true)

@@ -1,4 +1,5 @@
 ﻿using Pixed.Models;
+using Pixed.Services.Keyboard;
 using Pixed.Utils;
 using SkiaSharp;
 using System;
@@ -13,34 +14,37 @@ internal abstract class ShapeTool(ApplicationData applicationData) : BaseTool(ap
 
     public override bool ShiftHandle { get; protected set; } = true;
 
-    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
+        ApplyToolBase(x, y, frame, ref overlay, keyState);
         _startX = x;
         _startY = y;
 
-        overlay.SetPixel(x, y, GetToolColor(), _applicationData.ToolSize);
+        overlay.SetPixel(x, y, ToolColor, _applicationData.ToolSize);
+        Subjects.OverlayModified.OnNext(overlay);
     }
 
-    public override void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
         overlay.Clear();
-        var color = GetToolColor();
+        var color = ToolColor;
 
         if (color == UniColor.Transparent)
         {
             color = UniColor.WithAlpha(128, UniColor.GetFromResources("Accent"));
         }
 
-        Draw(x, y, color, shiftPressed || GetProperty(PROP_SHIFT), _applicationData.ToolSize, ref overlay);
+        Draw(x, y, color, keyState.IsShift || GetProperty(PROP_SHIFT), _applicationData.ToolSize, ref overlay);
     }
 
-    public override void ReleaseTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ReleaseTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
-        var color = GetToolColor();
+        var color = ToolColor;
 
-        Draw(x, y, color, shiftPressed || GetProperty(PROP_SHIFT), _applicationData.ToolSize, frame);
+        Draw(x, y, color, keyState.IsShift || GetProperty(PROP_SHIFT), _applicationData.ToolSize, frame);
 
         overlay.Clear();
+        ReleaseToolBase(x, y, frame, ref overlay, keyState);
     }
 
     public override List<ToolProperty> GetToolProperties()
@@ -59,6 +63,7 @@ internal abstract class ShapeTool(ApplicationData applicationData) : BaseTool(ap
         });
 
         overlay = bitmap;
+        Subjects.OverlayModified.OnNext(overlay);
     }
 
     protected void Draw(int x, int y, uint color, bool shiftPressed, int toolSize, Frame frame)

@@ -1,5 +1,6 @@
 ﻿using Pixed.Input;
 using Pixed.Models;
+using Pixed.Services.Keyboard;
 using Pixed.Utils;
 using SkiaSharp;
 using System.Collections.Generic;
@@ -13,12 +14,16 @@ internal abstract class BaseTool(ApplicationData applicationData)
     protected readonly ApplicationData _applicationData = applicationData;
     protected int _highlightedX = 0;
     protected int _highlightedY = 0;
+    private UniColor? _toolColor;
 
     public virtual bool AddToHistory { get; protected set; } = true;
     public virtual bool ShiftHandle { get; protected set; } = false;
     public virtual bool ControlHandle { get; protected set; } = false;
     public virtual bool AltHandle { get; protected set; } = false;
     public virtual bool SingleHighlightedPixel { get; protected set; } = false;
+    public virtual bool GridMovement { get; protected set; } = true;
+
+    protected UniColor ToolColor => _toolColor ?? _applicationData.PrimaryColor;
 
     public virtual UniColor GetToolColor()
     {
@@ -30,19 +35,29 @@ internal abstract class BaseTool(ApplicationData applicationData)
         return _applicationData.PrimaryColor;
     }
 
-    public virtual void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    protected void ApplyToolBase(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    {
+        _toolColor ??= GetToolColor();
+    }
+
+    public virtual void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    {
+        ApplyToolBase(x, y, frame, ref overlay, keyState);
+    }
+
+    public virtual void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
 
     }
 
-    public virtual void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    protected void ReleaseToolBase(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
-
+        _toolColor = null;
     }
 
-    public virtual void ReleaseTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public virtual void ReleaseTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
-
+        ReleaseToolBase(x, y, frame, ref overlay, keyState);
     }
 
     public virtual void Reset()
@@ -68,6 +83,8 @@ internal abstract class BaseTool(ApplicationData applicationData)
         {
             overlay.SetPixel(x, y, GetHighlightColor(pixel), SingleHighlightedPixel ? 1 : _applicationData.ToolSize);
         }
+
+        Subjects.OverlayModified.OnNext(overlay);
     }
 
     public virtual List<ToolProperty> GetToolProperties()
@@ -111,7 +128,6 @@ internal abstract class BaseTool(ApplicationData applicationData)
     protected static void SetPixels(Frame frame, List<Pixel> pixels)
     {
         frame.SetPixels(pixels);
-        Subjects.FrameModified.OnNext(frame);
         Subjects.LayerModified.OnNext(frame.CurrentLayer);
     }
 

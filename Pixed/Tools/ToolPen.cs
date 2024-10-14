@@ -1,4 +1,6 @@
-﻿using Pixed.Models;
+﻿using Pixed.Algos;
+using Pixed.Models;
+using Pixed.Services.Keyboard;
 using Pixed.Utils;
 using SkiaSharp;
 using System.Collections.Generic;
@@ -12,42 +14,52 @@ internal class ToolPen(ApplicationData applicationData) : BaseTool(applicationDa
     protected int _prevY = -1;
     private readonly List<Pixel> _pixels = [];
     private readonly List<Point> _modifiedPoints = [];
-    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
+        ApplyToolBase(x, y, frame, ref overlay, keyState);
         _prevX = x;
         _prevY = y;
 
-        var color = GetToolColor();
-        DrawOnOverlay(color, x, y, frame, ref overlay);
+        DrawOnOverlay(ToolColor, x, y, frame, ref overlay);
+        Subjects.OverlayModified.OnNext(overlay);
+
+        if (_pixels.Count > 0)
+        {
+            Subjects.CurrentLayerRenderModified.OnNext(_pixels);
+        }
     }
 
-    public override void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
         if (_prevX != x || _prevY != y)
         {
-            var interpolatedPixels = MathUtils.GetBresenhamLine(x, y, _prevX, _prevY);
+            var interpolatedPixels = BresenhamLine.Get(x, y, _prevX, _prevY);
 
             foreach (var pixel in interpolatedPixels)
             {
-                ApplyTool(pixel.X, pixel.Y, frame, ref overlay, shiftPressed, controlPressed, altPressed);
+                ApplyTool(pixel.X, pixel.Y, frame, ref overlay, keyState);
             }
         }
         else
         {
-            ApplyTool(x, y, frame, ref overlay, shiftPressed, controlPressed, altPressed);
+            ApplyTool(x, y, frame, ref overlay, keyState);
         }
 
         _prevX = x;
         _prevY = y;
     }
 
-    public override void ReleaseTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ReleaseTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
         SetPixels(frame, _pixels);
         _pixels.Clear();
         _modifiedPoints.Clear();
         _prevX = -1;
         _prevY = -1;
+
+        overlay.Clear();
+        Subjects.OverlayModified.OnNext(overlay);
+        ReleaseToolBase(x, y, frame, ref overlay, keyState);
     }
 
     public List<Pixel> GetPixels()
@@ -95,7 +107,5 @@ internal class ToolPen(ApplicationData applicationData) : BaseTool(applicationDa
                 AddPixel(toolPoint, color);
             }
         }
-
-        Subjects.LayerModified.OnNext(frame.CurrentLayer);
     }
 }

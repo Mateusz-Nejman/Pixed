@@ -1,5 +1,6 @@
 ﻿using Pixed.Input;
 using Pixed.Models;
+using Pixed.Services.Keyboard;
 using SkiaSharp;
 
 namespace Pixed.Tools;
@@ -7,8 +8,9 @@ internal class ToolColorPicker(ApplicationData applicationData) : BaseTool(appli
 {
     public override bool SingleHighlightedPixel { get; protected set; } = true;
     public override bool AddToHistory { get; protected set; } = false;
-    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
+        ApplyToolBase(x, y, frame, ref overlay, keyState);
         if (frame.ContainsPixel(x, y))
         {
             var color = frame.GetPixel(x, y);

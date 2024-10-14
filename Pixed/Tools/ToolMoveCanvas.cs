@@ -1,4 +1,5 @@
 ﻿using Pixed.Models;
+using Pixed.Services.Keyboard;
 using SkiaSharp;
 using System;
 
@@ -9,19 +10,21 @@ internal class ToolMoveCanvas(ApplicationData applicationData) : BaseTool(applic
     private double _startY;
     private Avalonia.Vector _offset;
     public override bool AddToHistory { get; protected set; } = false;
+    public override bool GridMovement { get; protected set; } = false;
     public Action<Avalonia.Vector>? MoveAction { get; set; }
     public Func<Avalonia.Vector>? GetOffset { get; set; }
 
     public override bool SingleHighlightedPixel { get; protected set; } = true;
 
-    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
+        ApplyToolBase(x, y, frame, ref overlay, keyState);
         _startX = x;
         _startY = y;
         _offset = GetOffset();
     }
 
-    public override void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
         var diffX = (x - _startX);
         var diffY = (y - _startY);

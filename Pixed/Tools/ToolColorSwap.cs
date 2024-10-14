@@ -1,4 +1,5 @@
 ﻿using Pixed.Models;
+using Pixed.Services.Keyboard;
 using SkiaSharp;
 using System.Collections.Generic;
 
@@ -8,15 +9,16 @@ internal class ToolColorSwap(ApplicationData applicationData) : BaseTool(applica
     public override bool ShiftHandle { get; protected set; } = true;
     public override bool ControlHandle { get; protected set; } = true;
     public override bool SingleHighlightedPixel { get; protected set; } = true;
-    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
-        shiftPressed = shiftPressed || GetProperty(ToolProperties.PROP_APPLY_ALL_FRAMES);
-        controlPressed = controlPressed || GetProperty(ToolProperties.PROP_APPLY_ALL_LAYERS);
+        ApplyToolBase(x, y, frame, ref overlay, keyState);
+        var shiftPressed = keyState.IsShift || GetProperty(ToolProperties.PROP_APPLY_ALL_FRAMES);
+        var controlPressed = keyState.IsCtrl || GetProperty(ToolProperties.PROP_APPLY_ALL_LAYERS);
 
         if (frame.ContainsPixel(x, y))
         {
             var oldColor = frame.GetPixel(x, y);
-            var newColor = GetToolColor();
+            var newColor = ToolColor;
 
             SwapColors(oldColor, newColor, shiftPressed, controlPressed);
         }

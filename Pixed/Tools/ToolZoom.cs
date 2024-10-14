@@ -1,4 +1,5 @@
 ﻿using Pixed.Models;
+using Pixed.Services.Keyboard;
 using SkiaSharp;
 using System;
 
@@ -9,14 +10,16 @@ internal class ToolZoom(ApplicationData applicationData) : BaseTool(applicationD
     private double _zoom;
     private IDisposable _disposed;
     public override bool AddToHistory { get; protected set; } = false;
+    public override bool GridMovement { get; protected set; } = false;
     public Action<double> ZoomAction { get; set; }
     public Action<bool> SetEnabled { get; set; }
     public Func<double> GetZoom { get; set; }
 
     public override bool SingleHighlightedPixel { get; protected set; } = true;
 
-    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
+        ApplyToolBase(x, y, frame, ref overlay, keyState);
         SetEnabled?.Invoke(true);
         _startZoom = GetZoom();
         SKBitmap bitmap = overlay;
@@ -24,18 +27,19 @@ internal class ToolZoom(ApplicationData applicationData) : BaseTool(applicationD
         {
             _zoom = zoom;
 
-            MoveTool(x, y, frame, ref bitmap, shiftPressed, controlPressed, altPressed);
+            MoveTool(x, y, frame, ref bitmap, keyState);
         });
     }
 
-    public override void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
         ZoomAction?.Invoke(_startZoom * _zoom);
     }
 
-    public override void ReleaseTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ReleaseTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
         SetEnabled?.Invoke(false);
         _disposed?.Dispose();
+        ReleaseToolBase(x, y, frame, ref overlay, keyState);
     }
 }

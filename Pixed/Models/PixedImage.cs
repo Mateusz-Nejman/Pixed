@@ -36,7 +36,7 @@ internal class PixedImage : IImage, IDisposable
                 ISkiaSharpApiLease lease = leaseFeature.Lease();
                 using (lease)
                 {
-                    if(bitmap != null)
+                    if (bitmap != null)
                     {
                         lease.SkCanvas.DrawBitmap(bitmap, SKRect.Create((float)Bounds.X, (float)Bounds.Y, (float)Bounds.Width, (float)Bounds.Height));
                     }
@@ -66,6 +66,8 @@ internal class PixedImage : IImage, IDisposable
         {
             _size = new(size.Width, size.Height);
         }
+        _drawImageOperation?.Dispose();
+        _drawImageOperation = null;
     }
 
     public PixedImage Clone()

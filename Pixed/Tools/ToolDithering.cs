@@ -1,13 +1,15 @@
 ﻿using Pixed.Input;
 using Pixed.Models;
+using Pixed.Services.Keyboard;
 using Pixed.Utils;
 using SkiaSharp;
 
 namespace Pixed.Tools;
 internal class ToolDithering(ApplicationData applicationData) : ToolPen(applicationData)
 {
-    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
+        ApplyToolBase(x, y, frame, ref overlay, keyState);
         _prevX = x;
         _prevY = y;
         var toolPoints = PaintUtils.GetToolPoints(x, y, _applicationData.ToolSize);
