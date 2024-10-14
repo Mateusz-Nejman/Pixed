@@ -12,6 +12,7 @@ internal class PixedImage : IImage, IDisposable
 {
     private record class DrawOperation : ICustomDrawOperation
     {
+        private readonly object _lock = new();
         private readonly PixedImage? _image;
         public Rect Bounds { get; set; }
 
@@ -36,9 +37,12 @@ internal class PixedImage : IImage, IDisposable
                 ISkiaSharpApiLease lease = leaseFeature.Lease();
                 using (lease)
                 {
-                    if (bitmap != null)
+                    lock(_lock)
                     {
-                        lease.SkCanvas.DrawBitmap(bitmap, SKRect.Create((float)Bounds.X, (float)Bounds.Y, (float)Bounds.Width, (float)Bounds.Height));
+                        if (bitmap != null)
+                        {
+                            lease.SkCanvas.DrawBitmap(bitmap, SKRect.Create((float)Bounds.X, (float)Bounds.Y, (float)Bounds.Width, (float)Bounds.Height));
+                        }
                     }
                 }
             }
