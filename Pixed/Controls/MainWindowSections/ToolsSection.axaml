@@ -23,7 +23,7 @@
 					<controls:SimpleTooltip Title="Pen tool"/>
 				</ToolTip.Tip>
 			</controls:ToolRadioButton>
-			<controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed.Core/Resources/Icons/tools/tool-vertical-mirror-pen.png" Name="tool_mirror_pen" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">
+			<controls:ToolRadioButton Theme="{StaticResource ToolRadioCustom}" Source="avares://Pixed.Core/Resources/Icons/tools/tool-vertical-mirror-pen.png" Name="tool_mirror_pen" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">
 				<ToolTip.Tip>
 					<controls:TooltipWith2Buttons Title="Vertical mirror pen" ButtonText1="Ctrl" ButtonTextHelper1="Use horizontal axis" ButtonText2="Shift" ButtonTextHelper2="Use horizontal and vertical axis"/>
 				</ToolTip.Tip>
@@ -33,7 +33,7 @@
 					<controls:SimpleTooltip Title="Paint bucket tool"/>
 				</ToolTip.Tip>
 			</controls:ToolRadioButton>
-			<controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed.Core/Resources/Icons/tools/tool-colorswap.png" Name="tool_colorswap" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">
+			<controls:ToolRadioButton Theme="{StaticResource ToolRadioCustom}" Source="avares://Pixed.Core/Resources/Icons/tools/tool-colorswap.png" Name="tool_colorswap" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">
 				<ToolTip.Tip>
 					<controls:TooltipWith2Buttons Title="Paint all pixels of the same color" ButtonText1="Ctrl" ButtonTextHelper1="Apply to all layers" ButtonText2="Shift" ButtonTextHelper2="Apply to all frames"/>
 				</ToolTip.Tip>
@@ -43,22 +43,22 @@
 					<controls:SimpleTooltip Title="Eraser tool"/>
 				</ToolTip.Tip>
 			</controls:ToolRadioButton>
-			<controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed.Core/Resources/Icons/tools/tool-stroke.png" Name="tool_stroke" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">
+			<controls:ToolRadioButton Theme="{StaticResource ToolRadioCustom}" Source="avares://Pixed.Core/Resources/Icons/tools/tool-stroke.png" Name="tool_stroke" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">
 				<ToolTip.Tip>
 					<controls:TooltipWithButton Title="Stroke tool" ButtonText="Shift" ButtonTextHelper="Draw straight lines" />
 				</ToolTip.Tip>
 			</controls:ToolRadioButton>
-			<controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed.Core/Resources/Icons/tools/tool-rectangle.png" Name="tool_rectangle" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">
+			<controls:ToolRadioButton Theme="{StaticResource ToolRadioCustom}" Source="avares://Pixed.Core/Resources/Icons/tools/tool-rectangle.png" Name="tool_rectangle" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">
 				<ToolTip.Tip>
 					<controls:TooltipWithButton Title="Rectangle tool" ButtonText="Shift" ButtonTextHelper="Keep 1 to 1 ratio"/>
 				</ToolTip.Tip>
 			</controls:ToolRadioButton>
-			<controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed.Core/Resources/Icons/tools/tool-circle.png" Name="tool_circle" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">
+			<controls:ToolRadioButton Theme="{StaticResource ToolRadioCustom}" Source="avares://Pixed.Core/Resources/Icons/tools/tool-circle.png" Name="tool_circle" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">
 				<ToolTip.Tip>
 					<controls:TooltipWithButton Title="Circle tool" ButtonText="Shift" ButtonTextHelper="Keep 1 to 1 ratio"/>
 				</ToolTip.Tip>
 			</controls:ToolRadioButton>
-			<controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed.Core/Resources/Icons/tools/tool-move.png" Name="tool_move" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">
+			<controls:ToolRadioButton Theme="{StaticResource ToolRadioCustom}" Source="avares://Pixed.Core/Resources/Icons/tools/tool-move.png" Name="tool_move" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">
 				<ToolTip.Tip>
 					<controls:TooltipWith3Buttons Title="Move tool" ButtonText1="Ctrl" ButtonTextHelper1="Apply to all layers" ButtonText2="Shift" ButtonTextHelper2="Apply to all frames" ButtonText3="Alt" ButtonTextHelper3="Wrap canvas borders"/>
 				</ToolTip.Tip>
@@ -78,7 +78,7 @@
 					<controls:TooltipWith3Buttons Title="Lasso selection" ButtonText1="Ctrl+c" ButtonTextHelper1="Copy the selected area" ButtonText2="Ctrl+v" ButtonTextHelper2="Paste the copied area" ButtonText3="Shift"/>
 				</ToolTip.Tip>
 			</controls:ToolRadioButton>
-			<controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed.Core/Resources/Icons/tools/tool-lighten.png" Name="tool_lighten" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">
+			<controls:ToolRadioButton Theme="{StaticResource ToolRadioCustom}" Source="avares://Pixed.Core/Resources/Icons/tools/tool-lighten.png" Name="tool_lighten" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">
 				<ToolTip.Tip>
 					<controls:TooltipWith2Buttons Title="Lighten" ButtonText1="Ctrl" ButtonTextHelper1="Darken" ButtonText2="Shift" ButtonTextHelper2="Apply only once per pixel"/>
 				</ToolTip.Tip>
@@ -103,7 +103,7 @@
 					<controls:SimpleTooltip Title="Pixelart noise fill tool"/>
 				</ToolTip.Tip>
 			</controls:ToolRadioButton>
-			<controls:ToolRadioButton Theme="{StaticResource ToolRadio}" Source="avares://Pixed.Core/Resources/Icons/tools/tool-outliner.png" Name="tool_outliner" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">
+			<controls:ToolRadioButton Theme="{StaticResource ToolRadioCustom}" Source="avares://Pixed.Core/Resources/Icons/tools/tool-outliner.png" Name="tool_outliner" IsCheckedChanged="ToolRadioButton_IsCheckedChanged">
 				<ToolTip.Tip>
 					<controls:TooltipWithButton Title="Outliner tool" ButtonText="Ctrl" ButtonTextHelper="Fill corners"/>
 				</ToolTip.Tip>
