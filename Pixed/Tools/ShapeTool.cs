@@ -1,4 +1,5 @@
 ﻿using Pixed.Models;
+using Pixed.Services.Keyboard;
 using Pixed.Utils;
 using SkiaSharp;
 using System;
@@ -13,9 +14,9 @@ internal abstract class ShapeTool(ApplicationData applicationData) : BaseTool(ap
 
     public override bool ShiftHandle { get; protected set; } = true;
 
-    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
-        base.ApplyTool(x, y, frame, ref overlay, shiftPressed, controlPressed, altPressed);
+        ApplyToolBase(x, y, frame, ref overlay, keyState);
         _startX = x;
         _startY = y;
 
@@ -23,7 +24,7 @@ internal abstract class ShapeTool(ApplicationData applicationData) : BaseTool(ap
         Subjects.OverlayModified.OnNext(overlay);
     }
 
-    public override void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
         overlay.Clear();
         var color = ToolColor;
@@ -33,17 +34,17 @@ internal abstract class ShapeTool(ApplicationData applicationData) : BaseTool(ap
             color = UniColor.WithAlpha(128, UniColor.GetFromResources("Accent"));
         }
 
-        Draw(x, y, color, shiftPressed || GetProperty(PROP_SHIFT), _applicationData.ToolSize, ref overlay);
+        Draw(x, y, color, keyState.IsShift || GetProperty(PROP_SHIFT), _applicationData.ToolSize, ref overlay);
     }
 
-    public override void ReleaseTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ReleaseTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
         var color = ToolColor;
 
-        Draw(x, y, color, shiftPressed || GetProperty(PROP_SHIFT), _applicationData.ToolSize, frame);
+        Draw(x, y, color, keyState.IsShift || GetProperty(PROP_SHIFT), _applicationData.ToolSize, frame);
 
         overlay.Clear();
-        base.ReleaseTool(x, y, frame, ref overlay, shiftPressed, controlPressed, altPressed);
+        ReleaseToolBase(x, y, frame, ref overlay, keyState);
     }
 
     public override List<ToolProperty> GetToolProperties()

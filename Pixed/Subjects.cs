@@ -3,6 +3,7 @@ using Pixed.Selection;
 using Pixed.Services.Keyboard;
 using SkiaSharp;
 using System;
+using System.Collections.Generic;
 using System.Reactive.Subjects;
 
 namespace Pixed;
@@ -18,6 +19,7 @@ internal static class Subjects
     public static Subject<double> ZoomChanged { get; } = new Subject<double>();
     public static Subject<string[]> NewInstanceHandled { get; } = new Subject<string[]>();
     public static Subject<SKBitmap> OverlayModified { get; } = new Subject<SKBitmap>();
+    public static Subject<List<Pixel>> CurrentLayerRenderModified { get; } = new Subject<List<Pixel>>();
 
     public static Subject<BaseSelection> ClipboardCopy { get; } = new Subject<BaseSelection>();
     public static Subject<BaseSelection> ClipboardCut { get; } = new Subject<BaseSelection>();

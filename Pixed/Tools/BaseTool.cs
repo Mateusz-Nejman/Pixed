@@ -1,5 +1,6 @@
 ﻿using Pixed.Input;
 using Pixed.Models;
+using Pixed.Services.Keyboard;
 using Pixed.Utils;
 using SkiaSharp;
 using System.Collections.Generic;
@@ -34,19 +35,29 @@ internal abstract class BaseTool(ApplicationData applicationData)
         return _applicationData.PrimaryColor;
     }
 
-    public virtual void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    protected void ApplyToolBase(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
         _toolColor ??= GetToolColor();
     }
 
-    public virtual void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public virtual void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    {
+        ApplyToolBase(x, y, frame, ref overlay, keyState);
+    }
+
+    public virtual void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
 
     }
 
-    public virtual void ReleaseTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    protected void ReleaseToolBase(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
         _toolColor = null;
+    }
+
+    public virtual void ReleaseTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    {
+        ReleaseToolBase(x, y, frame, ref overlay, keyState);
     }
 
     public virtual void Reset()

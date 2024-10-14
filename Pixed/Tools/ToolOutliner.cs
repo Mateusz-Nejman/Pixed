@@ -1,4 +1,5 @@
 ﻿using Pixed.Models;
+using Pixed.Services.Keyboard;
 using Pixed.Utils;
 using SkiaSharp;
 using System.Collections.Generic;
@@ -10,10 +11,10 @@ internal class ToolOutliner(ApplicationData applicationData) : BaseTool(applicat
 
     public override bool ControlHandle { get; protected set; } = true;
     public override bool SingleHighlightedPixel { get; protected set; } = true;
-    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
-        base.ApplyTool(x, y, frame, ref overlay, shiftPressed, controlPressed, altPressed);
-        controlPressed = controlPressed || GetProperty(PROP_FILL_CORNERS);
+        ApplyToolBase(x, y, frame, ref overlay, keyState);
+        var controlPressed = keyState.IsCtrl || GetProperty(PROP_FILL_CORNERS);
         var color = ToolColor;
         PaintUtils.OutlineSimiliarConnectedPixels(frame.CurrentLayer, x, y, color, controlPressed);
         Subjects.LayerModified.OnNext(frame.CurrentLayer);

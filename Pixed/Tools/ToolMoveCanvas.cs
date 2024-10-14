@@ -1,4 +1,5 @@
 ﻿using Pixed.Models;
+using Pixed.Services.Keyboard;
 using SkiaSharp;
 using System;
 
@@ -15,15 +16,15 @@ internal class ToolMoveCanvas(ApplicationData applicationData) : BaseTool(applic
 
     public override bool SingleHighlightedPixel { get; protected set; } = true;
 
-    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
-        base.ApplyTool(x, y, frame, ref overlay, shiftPressed, controlPressed, altPressed);
+        ApplyToolBase(x, y, frame, ref overlay, keyState);
         _startX = x;
         _startY = y;
         _offset = GetOffset();
     }
 
-    public override void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
         var diffX = (x - _startX);
         var diffY = (y - _startY);

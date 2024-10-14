@@ -75,6 +75,8 @@ internal class PixedImage : IImage, IDisposable
         {
             _size = new(size.Width, size.Height);
         }
+        _drawImageOperation?.Dispose();
+        _drawImageOperation = null;
     }
 
     public PixedImage Clone()

@@ -1,4 +1,5 @@
 ﻿using Pixed.Models;
+using Pixed.Services.Keyboard;
 using SkiaSharp;
 using System.Collections.Generic;
 
@@ -16,29 +17,29 @@ internal class ToolMove(ApplicationData applicationData) : BaseTool(applicationD
     public override bool AltHandle { get; protected set; } = true;
     public override bool SingleHighlightedPixel { get; protected set; } = true;
 
-    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
-        base.ApplyTool(x, y, frame, ref overlay, shiftPressed, controlPressed, altPressed);
+        ApplyToolBase(x, y, frame, ref overlay, keyState);
         _startX = x;
         _startY = y;
         _currentLayer = frame.CurrentLayer;
         _currentLayerClone = _currentLayer.Clone();
     }
 
-    public override void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
         int diffX = x - _startX;
         int diffY = y - _startY;
 
-        ShiftLayer(frame.CurrentLayer, _currentLayerClone, diffX, diffY, altPressed);
+        ShiftLayer(frame.CurrentLayer, _currentLayerClone, diffX, diffY, keyState.IsAlt);
         Subjects.LayerModified.OnNext(frame.CurrentLayer);
     }
 
-    public override void ReleaseTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ReleaseTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
-        shiftPressed = shiftPressed || GetProperty(ToolProperties.PROP_APPLY_ALL_FRAMES);
-        controlPressed = controlPressed || GetProperty(ToolProperties.PROP_APPLY_ALL_LAYERS);
-        altPressed = altPressed || GetProperty(PROP_WRAP);
+        var shiftPressed = keyState.IsShift || GetProperty(ToolProperties.PROP_APPLY_ALL_FRAMES);
+        var controlPressed = keyState.IsCtrl || GetProperty(ToolProperties.PROP_APPLY_ALL_LAYERS);
+        var altPressed = keyState.IsAlt || GetProperty(PROP_WRAP);
         int diffX = x - _startX;
         int diffY = y - _startY;
 
@@ -48,7 +49,7 @@ internal class ToolMove(ApplicationData applicationData) : BaseTool(applicationD
             ShiftLayer(layer, reference, diffX, diffY, altPressed);
         }, _applicationData, true);
 
-        base.ReleaseTool(x, y, frame, ref overlay, shiftPressed, controlPressed, altPressed);
+        ReleaseToolBase(x, y, frame, ref overlay, keyState);
     }
 
     public override List<ToolProperty> GetToolProperties()

@@ -1,5 +1,6 @@
 ﻿using Pixed.Models;
 using Pixed.Selection;
+using Pixed.Services.Keyboard;
 using Pixed.Utils;
 using SkiaSharp;
 using System;
@@ -42,8 +43,9 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
         Subjects.SelectionCreated.OnNext(_selection);
     }
 
-    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
+        ApplyToolBase(x, y, frame, ref overlay, keyState);
         _startX = x;
         _startY = y;
         _lastX = x;
@@ -60,7 +62,7 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
         }
     }
 
-    public override void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
         if (_mode == SelectionMode.Select)
         {
@@ -68,12 +70,14 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
         }
     }
 
-    public override void ReleaseTool(int x, int y, Frame frame, ref SKBitmap overlay, bool shiftPressed, bool controlPressed, bool altPressed)
+    public override void ReleaseTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
         if (_mode == SelectionMode.Select)
         {
             OnSelectEnd(x, y, frame, ref overlay);
         }
+
+        ReleaseToolBase(x, y, frame, ref overlay, keyState);
     }
 
     public override void UpdateHighlightedPixel(int x, int y, Frame frame, ref SKBitmap overlay)

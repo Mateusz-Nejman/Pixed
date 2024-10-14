@@ -8,7 +8,7 @@ internal static class LayerUtils
 {
     public static Layer Resize(Layer layer, int targetWidth, int targetHeight)
     {
-        var oldBitmap = layer.Render();
+        layer.Render(out SKBitmap oldBitmap);
 
         SKBitmap newBitmap = new(targetWidth, targetHeight, true);
         SKCanvas canvas = new SKCanvas(newBitmap);

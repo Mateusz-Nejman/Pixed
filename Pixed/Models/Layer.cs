@@ -108,24 +108,28 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
 
     public void MergeLayers(Layer layer2)
     {
-        var bitmap = Render();
+        Render(out SKBitmap bitmap);
+        layer2.Render(out SKBitmap layer2bitmap);
         SKCanvas canvas = new(bitmap);
-        canvas.DrawBitmap(layer2.Render(), new SKPoint(0, 0));
+        canvas.DrawBitmap(layer2bitmap, new SKPoint(0, 0));
         canvas.Dispose();
 
         _pixels = bitmap.ToArray();
         _needRerender = true;
     }
 
-    public void Rerender()
+    public void Rerender(List<Pixel>? pixels = null)
     {
         _needRerender = true;
-        RefreshRenderSource();
+        RefreshRenderSource(pixels);
     }
 
-    public void RefreshRenderSource()
+    public void RefreshRenderSource(List<Pixel>? pixels = null)
     {
-        RenderSource.UpdateBitmap(Render());
+        if (Render(out SKBitmap bitmap, pixels))
+        {
+            RenderSource.UpdateBitmap(bitmap);
+        }
     }
 
     public uint GetPixel(int x, int y)
@@ -138,19 +142,23 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
         return _pixels[y * _width + x];
     }
 
-    public SKBitmap Render(List<Pixel>? modifiedPixels = null)
+    public bool Render(out SKBitmap render, List<Pixel>? modifiedPixels = null)
     {
-        if (!_needRerender)
+        render = _renderedBitmap;
+        if (!_needRerender && (modifiedPixels == null || modifiedPixels.Count == 0))
         {
-            return _renderedBitmap;
+            return false;
         }
 
         uint[] pixels = new uint[_width * _height];
         _pixels.CopyTo(pixels, 0);
 
-        foreach (var pixel in modifiedPixels ?? [])
+        if (modifiedPixels != null)
         {
-            pixels[pixel.Y * _width + pixel.X] = pixel.Color;
+            foreach (var pixel in modifiedPixels)
+            {
+                pixels[pixel.Y * _width + pixel.X] = pixel.Color;
+            }
         }
 
         if (Opacity != 100)
@@ -166,7 +174,8 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
         var bitmap = SkiaUtils.FromArray(pixels, _width, _height);
         _renderedBitmap = bitmap;
         _needRerender = false;
-        return bitmap.Copy();
+        render = bitmap;
+        return true;
     }
 
     public bool ContainsPixel(int x, int y)
