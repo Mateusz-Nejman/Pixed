@@ -348,7 +348,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         _leftPressed = true;
         var cursorPoint = GetCursorPoint(mouseEvent.Point, _toolSelector.ToolSelected.GridMovement, out _);
         _toolSelector.ToolSelected?.ApplyTool(cursorPoint.X, cursorPoint.Y, _frame, ref _overlayBitmap, _currentKeyState);
-        _overlayBitmap.SetPixel(imageX, imageY, UniColor.Black);
+        DebugTouchPointer(mouseEvent);
         Subjects.LayerModified.OnNext(_frame.CurrentLayer);
         Subjects.FrameModified.OnNext(_frame);
     }
@@ -373,7 +373,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
             _applicationData.CurrentModel.AddHistory();
         }
 
-        _overlayBitmap.SetPixel(imageX, imageY, UniColor.Black);
+        DebugTouchPointer(mouseEvent);
         Subjects.LayerModified.OnNext(_frame.CurrentLayer);
         Subjects.FrameModified.OnNext(_frame);
     }
@@ -392,7 +392,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
 
         var cursorPoint = GetCursorPoint(mouseEvent.Point, _toolSelector.ToolSelected.GridMovement, out _);
         _toolSelector.ToolSelected?.ApplyTool(cursorPoint.X, cursorPoint.Y, _frame, ref _overlayBitmap, _currentKeyState);
-        _overlayBitmap.SetPixel(imageX, imageY, UniColor.Black);
+        DebugTouchPointer(mouseEvent);
     }
 
     private void RightMouseUpAction(MouseEvent mouseEvent)
@@ -415,7 +415,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
             _applicationData.CurrentModel.AddHistory();
         }
 
-        _overlayBitmap.SetPixel(imageX, imageY, UniColor.Black);
+        DebugTouchPointer(mouseEvent);
         Subjects.LayerModified.OnNext(_frame.CurrentLayer);
         Subjects.FrameModified.OnNext(_frame);
     }
@@ -448,7 +448,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
             _toolSelector.ToolSelected.UpdateHighlightedPixel(cursorPoint.X, cursorPoint.Y, _frame, ref _overlayBitmap);
         }
 
-        _overlayBitmap.SetPixel(imageX, imageY, UniColor.Black);
+        
     }
 
     private void ZoomInAction()
@@ -568,5 +568,15 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         }
 
         return new Point(argX, argY);
+    }
+
+    private void DebugTouchPointer(MouseEvent mouseEvent)
+    {
+#if DEBUG
+        int imageX = (int)(mouseEvent.Point.X / _imageFactor);
+        int imageY = (int)(mouseEvent.Point.Y / _imageFactor);
+        _overlayBitmap.SetPixel(imageX, imageY, UniColor.Black);
+        Overlay = _overlayBitmap;
+#endif
     }
 }
