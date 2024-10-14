@@ -1,0 +1,10 @@
+﻿using System.Drawing;
+
+namespace Pixed.Input
+{
+    internal readonly struct MouseEvent(Point point, bool touch)
+    {
+        public Point Point { get; } = point;
+        public bool Touch { get; } = touch;
+    }
+}
