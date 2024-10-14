@@ -180,13 +180,17 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
         projectMenu.Menu = [];
         projectResize.Command = new ActionCommand(async () =>
         {
-            ResizeProjectWindow window = new(_applicationData.CurrentModel);
+            ResizeProjectWindow window = new(_applicationData);
             bool success = await window.ShowDialog<bool>(MainWindow.Handle);
 
             if (success)
             {
                 var result = window.Result;
                 var model = ResizeUtils.ResizeModel(_applicationData, _applicationData.CurrentModel, result.Width, result.Height, result.ResizeCanvasContent, result.Anchor);
+                _applicationData.UserSettings.UserWidth = result.Width;
+                _applicationData.UserSettings.UserHeight = result.Height;
+                _applicationData.UserSettings.MaintainAspectRatio = result.MaintainAspectRatio;
+                _applicationData.UserSettings.Save(_applicationData.DataFolder);
                 _applicationData.Models[_applicationData.CurrentModelIndex] = model;
                 Subjects.ProjectModified.OnNext(model);
                 Subjects.ProjectChanged.OnNext(model);

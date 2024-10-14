@@ -12,6 +12,7 @@ internal class Settings
     public int GridWidth { get; set; } = 1;
     public int GridHeight { get; set; } = 1;
     public bool GridEnabled { get; set; } = true;
+    public bool MaintainAspectRatio { get; set; } = false;
 
     public void Save(IStorageFolder dataFolder)
     {
