@@ -1,4 +1,5 @@
-﻿using Pixed.Models;
+﻿using Pixed.Algos;
+using Pixed.Models;
 using Pixed.Selection;
 using Pixed.Utils;
 using SkiaSharp;
@@ -48,7 +49,7 @@ internal class LassoSelect(ApplicationData applicationData, ToolSelector toolSel
 
     private List<Point> GetLassoPixels()
     {
-        var line = MathUtils.GetBresenhamLine(_prevX, _prevY, _startX, _startY);
+        var line = BresenhamLine.Get(_prevX, _prevY, _startX, _startY);
         return [.. _points, .. line];
     }
 
@@ -57,7 +58,7 @@ internal class LassoSelect(ApplicationData applicationData, ToolSelector toolSel
         x = Math.Clamp(x, 0, frame.Width - 1);
         y = Math.Clamp(y, 0, frame.Height - 1);
 
-        var interpolated = MathUtils.GetBresenhamLine(x, y, _prevX, _prevY);
+        var interpolated = BresenhamLine.Get(x, y, _prevX, _prevY);
         _points = [.. _points, .. interpolated];
         _points = _points.Distinct().ToList();
 

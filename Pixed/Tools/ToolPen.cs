@@ -1,4 +1,5 @@
-﻿using Pixed.Models;
+﻿using Pixed.Algos;
+using Pixed.Models;
 using Pixed.Utils;
 using SkiaSharp;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ internal class ToolPen(ApplicationData applicationData) : BaseTool(applicationDa
     {
         if (_prevX != x || _prevY != y)
         {
-            var interpolatedPixels = MathUtils.GetBresenhamLine(x, y, _prevX, _prevY);
+            var interpolatedPixels = BresenhamLine.Get(x, y, _prevX, _prevY);
 
             foreach (var pixel in interpolatedPixels)
             {

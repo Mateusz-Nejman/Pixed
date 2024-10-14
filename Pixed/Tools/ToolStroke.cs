@@ -1,4 +1,5 @@
-﻿using Pixed.Models;
+﻿using Pixed.Algos;
+using Pixed.Models;
 using Pixed.Utils;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ internal class ToolStroke : ShapeTool
         }
         else
         {
-            linePixels = MathUtils.GetBresenhamLine(x, y, _startX, _startY);
+            linePixels = BresenhamLine.Get(x, y, _startX, _startY);
         }
 
         setPixelAction.Invoke(linePixels[0].X, linePixels[0].Y, color);
