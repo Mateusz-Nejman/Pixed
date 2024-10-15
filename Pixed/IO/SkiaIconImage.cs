@@ -1,11 +1,10 @@
-﻿using BluwolfIcons;
-using Pixed.Utils;
+﻿using Pixed.Utils;
 using SkiaSharp;
 using System.Collections.Generic;
 using System.IO;
 
 namespace Pixed.IO;
-internal class SkiaIconImage : IIconImage
+internal class SkiaIconImage
 {
     private readonly SKBitmap _bitmap;
 

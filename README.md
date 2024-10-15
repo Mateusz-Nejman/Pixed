@@ -32,10 +32,9 @@ Create pixel art images with **Pixed**. Use it in a game or wherever you want. P
 - Newtonsoft.JSON [JamesNK/Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json)
 - PixiEditor.ColorPicker [PixiEditor/ColorPicker](https://github.com/PixiEditor/ColorPicker)
 - System.Reactive (RX) [dotnet/reactive](https://github.com/dotnet/reactive)
-- LZMA SDK [monemihir/LZMA-SDK](https://github.com/monemihir/LZMA-SDK)
+- LZMA SDK [Mateusz-Nejman/LZMA_SDK](https://github.com/Mateusz-Nejman/LZMA_SDK)
 - AvaloniaProgressRing [Deadpikle/AvaloniaProgressRing](https://github.com/Deadpikle/AvaloniaProgressRing)
 - SkiaSharp [mono/SkiaSharp](https://github.com/mono/SkiaSharp)
-- BluwolfIcons [Davipb/BluwolfIcons](https://github.com/Davipb/BluwolfIcons)
 
 ## Assets
 - Icons from IcoMoon [https://icomoon.io/](https://icomoon.io/)
