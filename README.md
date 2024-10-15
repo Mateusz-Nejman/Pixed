@@ -2,9 +2,12 @@
 Pixed
 ======
 
-Create pixel art images with **Pixed**. Use it in a game or wherever you want. Pixed is developed also for touch screens. 
+Your imagination and **Pixed**. These two things are needed for pixel-arted image dreams comes true. **Pixed** is actively developed to be best software for creating pixel-art images. I'm focused on making reliable solution for touch-friendly software. If You have any ideas, questions or doubts, fell free to ask or create issue.
 
+## Screenshots
+### Base interface
 ![Pixed screenshot1](/screenshot1.png "Screenshot 1")
+### Custom actions menu (right click or long touch for open)
 ![Pixed screenshot2](/screenshot2.png "Screenshot 2")
 
 ## Download
@@ -14,16 +17,21 @@ Create pixel art images with **Pixed**. Use it in a game or wherever you want. P
 
 [Releases](https://github.com/Mateusz-Nejman/Pixed/releases)
 
-## Features
-- Open/save PNG images and own project format
-- Open Piskel projects from [piskelapp/piskel](https://github.com/piskelapp/piskel)
-- Most tools helpful with pixel art creation
-- Touch screen friendly UI
+## Supported formats
+- Pixed (own project format)
+- Piskel from [piskelapp/piskel](https://github.com/piskelapp/piskel) (only open)
+- PNG (open/save)
+- ICO (only open)
+- JSON custom palette format
+- GPL palette format
 
-## Work in progress
+## Work in progress or planned
 - Animations
 - Linux/MacOS support
-- Better touch screen helpers
+- Better touch screen support
+- AI support
+- More formats support
+- Extensions support
 
 ## Stack
 - .NET 8
