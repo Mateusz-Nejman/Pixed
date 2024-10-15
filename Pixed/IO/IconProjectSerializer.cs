@@ -19,15 +19,14 @@ internal class IconProjectSerializer : IPixedProjectSerializer
 
     public void Serialize(Stream stream, PixedModel model, bool close)
     {
-        BluwolfIcons.Icon icon = new();
-
+        IList<SkiaIconImage> images = [];
         if (model.Frames.Count == 1)
         {
             var bitmap = model.CurrentFrame.Render();
 
             if (IconFormats.Count == 0)
             {
-                icon.Images.Add(new SkiaIconImage(bitmap));
+                images.Add(new SkiaIconImage(bitmap));
             }
             else
             {
@@ -37,7 +36,7 @@ internal class IconProjectSerializer : IPixedProjectSerializer
                 {
                     if (format.X == bitmap.Width && format.Y == bitmap.Height)
                     {
-                        icon.Images.Add(new SkiaIconImage(bitmap));
+                        images.Add(new SkiaIconImage(bitmap));
                     }
                     else
                     {
@@ -46,7 +45,7 @@ internal class IconProjectSerializer : IPixedProjectSerializer
                         canvas.Clear(SKColors.Transparent);
                         canvas.DrawBitmap(bitmap, new SKRect(0, 0, scaledBitmap.Width, scaledBitmap.Height));
                         canvas.Dispose();
-                        icon.Images.Add(new SkiaIconImage(scaledBitmap));
+                        images.Add(new SkiaIconImage(scaledBitmap));
                     }
                 }
             }
@@ -55,15 +54,58 @@ internal class IconProjectSerializer : IPixedProjectSerializer
         {
             foreach (var frame in model.Frames)
             {
-                icon.Images.Add(new SkiaIconImage(frame.Render()));
+                images.Add(new SkiaIconImage(frame.Render()));
             }
         }
 
-        icon.Save(stream);
+        Save(stream, images);
 
         if (close)
         {
             stream.Dispose();
         }
+    }
+
+    private static void Save(Stream stream, IList<SkiaIconImage> images)
+    {
+        ArgumentNullException.ThrowIfNull(stream);
+
+        if (!stream.CanWrite)
+            throw new ArgumentException("Stream must support writing.", nameof(stream));
+
+        using var writer = new BinaryWriter(stream);
+        // Reserved, always 0.
+        writer.Write((ushort)0);
+        // 1 for ICO, 2 for CUR
+        writer.Write((ushort)1);
+        writer.Write((ushort)images.Count);
+
+        var pendingImages = new Queue<byte[]>();
+        var offset = 6 + 16 * images.Count; // Header: 6; Each Image: 16
+
+        foreach (var image in images)
+        {
+            writer.Write((byte)image.Width);
+            writer.Write((byte)image.Height);
+
+            // Number of colors in the palette. Since we always save the image ourselves (with no palette), hardcode this to 0 (No palette).
+            writer.Write((byte)0);
+            // Reserved, always 0.
+            writer.Write((byte)0);
+            // Color planes. Since we save the images ourselves, this is 1.
+            writer.Write((ushort)1);
+            writer.Write((ushort)image.BitsPerPixel);
+
+            var data = image.GetData();
+
+            writer.Write((uint)data.Length);
+            writer.Write((uint)offset);
+
+            offset += data.Length;
+            pendingImages.Enqueue(data);
+        }
+
+        while (pendingImages.Count > 0)
+            writer.Write(pendingImages.Dequeue());
     }
 }

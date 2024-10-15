@@ -25,7 +25,6 @@
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.1.4" />
     <PackageReference Include="Avalonia.Themes.Simple" Version="11.1.4" />
     <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.1.0.4" />
-    <PackageReference Include="BluwolfIcons" Version="1.0.1" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
     <PackageReference Include="Deadpikle.AvaloniaProgressRing" Version="0.10.8" />
     <PackageReference Include="MateuszNejman.LZMA_SDK" Version="24.8.0" />
