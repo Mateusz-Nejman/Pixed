@@ -4,6 +4,10 @@ Pixed
 
 Your imagination and **Pixed**. These two things are needed for pixel-arted image dreams comes true. **Pixed** is actively developed to be best software for creating pixel-art images. I'm focused on making reliable solution for touch-friendly software. If You have any ideas, questions or doubts, fell free to ask or create issue.
 
+![Release](https://img.shields.io/github/v/release/Mateusz-Nejman/Pixed)](https://github.com/Mateusz-Nejman/Pixed/releases) 
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/Mateusz-Nejman/Pixed/dotnet-desktop.yml)
+
+
 ## Screenshots
 ### Base interface
 ![Pixed screenshot1](/screenshot1.png "Screenshot 1")
