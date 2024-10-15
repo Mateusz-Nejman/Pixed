@@ -3,6 +3,7 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -11,6 +12,17 @@ using System.Threading.Tasks;
 namespace Pixed.Utils;
 internal static class SkiaUtils
 {
+    public static void Export(this SKBitmap value, Stream stream)
+    {
+        var colors = ToByteArray(value);
+
+        Bitmap bitmap = new(value.Width, value.Height);
+        BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, value.Width, value.Height), ImageLockMode.WriteOnly, bitmap.PixelFormat);
+        Marshal.Copy(colors, 0, bitmapData.Scan0, colors.Length);
+        bitmap.UnlockBits(bitmapData);
+        bitmap.Save(stream, ImageFormat.Png);
+        bitmap.Dispose();
+    }
     public static SKBitmap FromArray(IList<uint> array, int width, int height)
     {
         var bitmap = new SKBitmap(width, height, true);
@@ -22,12 +34,17 @@ internal static class SkiaUtils
 
     public static uint[] ToArray(this SKBitmap bitmap)
     {
+        return ToByteArray(bitmap).ToUInt();
+    }
+
+    public static byte[] ToByteArray(this SKBitmap bitmap)
+    {
         unsafe
         {
             var ptr = bitmap.GetPixels(out nint length);
             byte[] bytes = new byte[length];
             Marshal.Copy(ptr, bytes, 0, bytes.Length);
-            return bytes.ToUInt();
+            return bytes;
         }
     }
 

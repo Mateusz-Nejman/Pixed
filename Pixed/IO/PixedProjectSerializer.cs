@@ -54,6 +54,8 @@ internal sealed class PixedProjectSerializer : IPixedProjectSerializer
 
     #endregion
 
+    public bool CanSerialize => true;
+    public bool CanDeserialize => true;
     public void Serialize(Stream stream, PixedModel model, bool close = false)
     {
         MemoryStream memoryStream = new();

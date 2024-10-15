@@ -35,6 +35,7 @@ Create pixel art images with **Pixed**. Use it in a game or wherever you want. P
 - LZMA SDK [monemihir/LZMA-SDK](https://github.com/monemihir/LZMA-SDK)
 - AvaloniaProgressRing [Deadpikle/AvaloniaProgressRing](https://github.com/Deadpikle/AvaloniaProgressRing)
 - SkiaSharp [mono/SkiaSharp](https://github.com/mono/SkiaSharp)
+- BluwolfIcons [Davipb/BluwolfIcons](https://github.com/Davipb/BluwolfIcons)
 
 ## Assets
 - Icons from IcoMoon [https://icomoon.io/](https://icomoon.io/)

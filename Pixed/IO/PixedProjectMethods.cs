@@ -3,7 +3,6 @@ using Pixed.Services;
 using Pixed.Utils;
 using Pixed.Windows;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Pixed.IO;
@@ -61,21 +60,18 @@ internal class PixedProjectMethods(ApplicationData applicationData)
         foreach (var item in files)
         {
             var stream = await item.OpenReadAsync();
+            string extension = (new FileInfo(item.Name)).Extension;
 
-            IPixedProjectSerializer serializer;
-            if (item.Name.EndsWith(".pixed"))
+            IPixedProjectSerializer? serializer = GetSerializer(extension);
+
+            if (serializer == null || !serializer.CanDeserialize)
             {
-                serializer = new PixedProjectSerializer();
+                continue;
+            }
 
+            if (serializer is PixedProjectSerializer)
+            {
                 recentFilesService.AddRecent(item.Path.AbsolutePath);
-            }
-            else if (item.Name.EndsWith(".piskel"))
-            {
-                serializer = new PiskelProjectSerializer();
-            }
-            else
-            {
-                serializer = new PngProjectSerializer();
             }
 
             PixedModel model = serializer.Deserialize(stream, _applicationData);
@@ -83,7 +79,7 @@ internal class PixedProjectMethods(ApplicationData applicationData)
             model.FileName = item.Name.Replace(".png", ".pixed");
             model.AddHistory();
 
-            if (item.Name.EndsWith(".pixed"))
+            if (serializer is PixedProjectSerializer)
             {
                 model.FilePath = item.Path.AbsolutePath;
                 model.UnsavedChanges = false;
@@ -104,29 +100,14 @@ internal class PixedProjectMethods(ApplicationData applicationData)
 
     public void Open(string path)
     {
-        string[] formats = [".pixed", ".piskel", ".png"];
         FileInfo info = new(path);
+        IPixedProjectSerializer? serializer = GetSerializer(info.Extension);
 
-        if (!formats.Contains(info.Extension))
+        if (serializer == null || !serializer.CanDeserialize)
         {
             return;
         }
-
-        IPixedProjectSerializer serializer;
         Stream stream = File.OpenRead(path);
-
-        if (path.EndsWith(".pixed"))
-        {
-            serializer = new PixedProjectSerializer();
-        }
-        else if (path.EndsWith(".piskel"))
-        {
-            serializer = new PiskelProjectSerializer();
-        }
-        else
-        {
-            serializer = new PngProjectSerializer();
-        }
 
         PixedModel model = serializer.Deserialize(stream, _applicationData);
         stream.Dispose();
@@ -186,5 +167,51 @@ internal class PixedProjectMethods(ApplicationData applicationData)
         serializer.ColumnsCount = columnsCount;
         var stream = await file.OpenWriteAsync();
         serializer.Serialize(stream, model, true);
+    }
+
+    public async Task ExportToIco(PixedModel model)
+    {
+        FileInfo info = new(model.FileName);
+        string name = info.Name;
+
+        if (!string.IsNullOrEmpty(info.Extension))
+        {
+            name = info.Name.Replace(info.Extension, string.Empty);
+        }
+        var file = await DialogUtils.SaveFileDialog("Icon (*.ico)|*.ico", name);
+
+        if (file == null)
+        {
+            return;
+        }
+
+        IconProjectSerializer serializer = new();
+
+        if (model.Frames.Count == 1)
+        {
+            ExportIconWindow window = new ExportIconWindow();
+            var success = await window.ShowDialog<bool>(MainWindow.Handle);
+
+            if (!success)
+            {
+                return;
+            }
+
+            serializer.IconFormats = window.IconFormats;
+        }
+        var stream = await file.OpenWriteAsync();
+        serializer.Serialize(stream, model, true);
+    }
+
+    private IPixedProjectSerializer? GetSerializer(string format)
+    {
+        return format switch
+        {
+            ".pixed" => new PixedProjectSerializer(),
+            ".png" => new PngProjectSerializer(),
+            ".piskel" => new PiskelProjectSerializer(),
+            ".ico" => new IconProjectSerializer(),
+            _ => null,
+        };
     }
 }
