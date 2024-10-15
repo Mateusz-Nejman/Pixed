@@ -10,6 +10,8 @@ using System.Text.RegularExpressions;
 namespace Pixed.IO;
 internal partial class PiskelProjectSerializer : IPixedProjectSerializer
 {
+    public bool CanSerialize => false;
+    public bool CanDeserialize => true;
     private const string BASE64_REGEX = @"base64?\s*,[^\\""]+(?=,|$)?";
     public PixedModel Deserialize(Stream stream, ApplicationData applicationData)
     {

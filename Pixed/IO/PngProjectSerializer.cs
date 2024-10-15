@@ -7,6 +7,8 @@ using System.IO;
 namespace Pixed.IO;
 internal class PngProjectSerializer : IPixedProjectSerializer
 {
+    public bool CanSerialize => true;
+    public bool CanDeserialize => true;
     public int ColumnsCount { get; set; } = 1;
     public PixedModel Deserialize(Stream stream, ApplicationData applicationData)
     {
@@ -49,7 +51,7 @@ internal class PngProjectSerializer : IPixedProjectSerializer
         }
 
         canvas.Dispose();
-        outputBitmap.Encode(stream, SKEncodedImageFormat.Png, 100);
+        outputBitmap.Export(stream);
         outputBitmap.Dispose();
 
         if (close)

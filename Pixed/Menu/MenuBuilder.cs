@@ -124,9 +124,13 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
             Command = new AsyncCommand<bool>(SaveAction),
             CommandParameter = true
         };
-        NativeMenuItem fileExport = new("Export to PNG")
+        NativeMenuItem fileExportPng = new("Export to PNG")
         {
-            Command = new AsyncCommand(ExportAction)
+            Command = new AsyncCommand(ExportPngAction)
+        };
+        NativeMenuItem fileExportIco = new("Export to Ico")
+        {
+            Command = new AsyncCommand(ExportIcoAction)
         };
         NativeMenuItem fileRecent = new("Recent")
         {
@@ -138,7 +142,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
             Command = MainWindow.QuitCommand
         };
 
-        fileMenu.Menu = [fileNew, fileOpen, fileSave, fileSaveAs, fileExport];
+        fileMenu.Menu = [fileNew, fileOpen, fileSave, fileSaveAs, fileExportPng, fileExportIco];
         AddToMenu(ref fileMenu, GetEntries(BaseMenuItem.File));
 
         fileMenu.Menu.Add(fileRecent);
@@ -222,8 +226,13 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
         await _projectMethods.Save(_applicationData.CurrentModel, saveAs, _recentFilesService);
     }
 
-    private async Task ExportAction()
+    private async Task ExportPngAction()
     {
         await _projectMethods.ExportToPng(_applicationData.CurrentModel);
+    }
+
+    private async Task ExportIcoAction()
+    {
+        await _projectMethods.ExportToIco(_applicationData.CurrentModel);
     }
 }

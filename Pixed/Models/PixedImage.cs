@@ -37,7 +37,7 @@ internal class PixedImage : IImage, IDisposable
                 ISkiaSharpApiLease lease = leaseFeature.Lease();
                 using (lease)
                 {
-                    lock(_lock)
+                    lock (_lock)
                     {
                         if (bitmap != null)
                         {

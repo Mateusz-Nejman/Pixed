@@ -131,6 +131,7 @@ internal class Frame : PropertyChangedBase, IPixedSerializer
     {
         SKBitmap render = new(Width, Height, true);
         SKCanvas canvas = new(render);
+        canvas.Clear(SKColors.Transparent);
         for (int a = 0; a < _layers.Count; a++)
         {
             _layers[a].Render(out SKBitmap bitmap, a == SelectedLayer ? pixels : null);
