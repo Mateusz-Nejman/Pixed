@@ -13,7 +13,7 @@
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*"/>
-			<RowDefinition Height="32"/>
+			<RowDefinition Height="40"/>
 		</Grid.RowDefinitions>
 		<ScrollViewer
 		x:Name="scrollView"
@@ -40,7 +40,7 @@
 								PointerWheelChanged="Border_PointerWheelChanged"/>
 			</Grid>
 		</ScrollViewer>
-		<StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="5">
+		<StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="5" Margin="4">
 			<Button Width="32" Height="32" Command="{Binding ZoomOutCommand}">
 				<Image Source="/Resources/Icons/zoom-out.png"/>
 			</Button>
@@ -48,9 +48,10 @@
 				<Image Source="/Resources/Icons/zoom-in.png"/>
 			</Button>
 			<TextBlock Text="Tool size" VerticalAlignment="Center"/>
-			<NumericUpDown Minimum="1" Value="{Binding ToolSize, Mode=TwoWay}" Width="200"/>
+			<NumericUpDown Minimum="1" Maximum="32" Value="{Binding ToolSize, Mode=TwoWay}" Width="200"/>
 			<TextBlock Text="{Binding ProjectSizeText}" VerticalAlignment="Center" Margin="10,0,0,0"/>
 			<TextBlock Text="{Binding MouseCoordinatesText}" VerticalAlignment="Center"/>
+			<TextBlock Text="{Binding ZoomText}" VerticalAlignment="Center" Margin="0,0,10,0"/>
 		</StackPanel>
 	</Grid>
 </UserControl>
