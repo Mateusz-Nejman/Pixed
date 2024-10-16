@@ -12,6 +12,8 @@ internal class ToolMove(ApplicationData applicationData) : BaseTool(applicationD
     private Layer _currentLayer;
     private Layer _currentLayerClone;
 
+    public override string ImagePath => "avares://Pixed.Core/Resources/Icons/tools/tool-move.png";
+    public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Move content", "Ctrl", "Apply to all layers", "Shift", "Apply to all frames", "Alt", "Wrap canvas borders");
     public override bool ShiftHandle { get; protected set; } = true;
     public override bool ControlHandle { get; protected set; } = true;
     public override bool AltHandle { get; protected set; } = true;

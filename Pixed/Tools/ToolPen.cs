@@ -14,6 +14,9 @@ internal class ToolPen(ApplicationData applicationData) : BaseTool(applicationDa
     protected int _prevY = -1;
     private readonly List<Pixel> _pixels = [];
     private readonly List<Point> _modifiedPoints = [];
+
+    public override string ImagePath => "avares://Pixed.Core/Resources/Icons/tools/tool-pen.png";
+    public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Simple pen");
     public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
         ApplyToolBase(x, y, frame, ref overlay, keyState);
