@@ -8,6 +8,8 @@ using System.Drawing;
 namespace Pixed.Tools;
 internal class ToolStroke : ShapeTool
 {
+    public override string ImagePath => "avares://Pixed.Core/Resources/Icons/tools/tool-stroke.png";
+    public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Line", "Shift", "Draw straight lines");
     public ToolStroke(ApplicationData applicationData) : base(applicationData)
     {
         PROP_SHIFT = "Draw straight lines";

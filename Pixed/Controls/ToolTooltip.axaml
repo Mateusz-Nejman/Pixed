@@ -1,0 +1,28 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Pixed.Controls.ToolTooltip">
+	<StackPanel>
+		<TextBlock Name="title" FontWeight="Bold" FontSize="14" Margin="0,0,0,5" Foreground="White"></TextBlock>
+		<WrapPanel Name="wrap1" IsVisible="False">
+			<Border Padding="2" BorderBrush="{StaticResource ButtonBorder}" BorderThickness="1" Margin="0,0,5,0">
+				<TextBlock Name="button1" FontSize="10" Foreground="White"/>
+			</Border>
+			<TextBlock Name="button1Text" FontSize="12" Foreground="White"/>
+		</WrapPanel>
+		<WrapPanel Name="wrap2" IsVisible="False">
+			<Border Padding="2" BorderBrush="{StaticResource ButtonBorder}" BorderThickness="1" Margin="0,0,5,0">
+				<TextBlock Name="button2" FontSize="10" Foreground="White"/>
+			</Border>
+			<TextBlock FontSize="12" Foreground="White" Name="button2Text"/>
+		</WrapPanel>
+		<WrapPanel Name="wrap3" IsVisible="False">
+			<Border Padding="2" BorderBrush="{StaticResource ButtonBorder}" BorderThickness="1" Margin="0,0,5,0">
+				<TextBlock Name="button3" FontSize="10" Foreground="White"/>
+			</Border>
+			<TextBlock FontSize="12" Foreground="White" Name="button3Text"/>
+		</WrapPanel>
+	</StackPanel>
+</UserControl>

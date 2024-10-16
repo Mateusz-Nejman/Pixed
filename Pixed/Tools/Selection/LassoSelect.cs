@@ -15,6 +15,9 @@ internal class LassoSelect(ApplicationData applicationData, ToolSelector toolSel
     private int _prevX;
     private int _prevY;
     private List<Point> _points = [];
+
+    public override string ImagePath => "avares://Pixed.Core/Resources/Icons/tools/tool-lasso-select.png";
+    public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Lasso selection", "Ctrl+C", "Copy the selected area", "Ctrl+V", "Paste the copied area");
     public override void OnDragSelectStart(int x, int y, Frame frame, ref SKBitmap overlay)
     {
         _points.Clear();

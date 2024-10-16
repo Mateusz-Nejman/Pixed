@@ -11,6 +11,7 @@ namespace Pixed.Tools.Selection;
 
 internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSelector) : BaseTool(applicationData)
 {
+    public override string ImagePath => string.Empty;
     public enum SelectionMode
     {
         None,

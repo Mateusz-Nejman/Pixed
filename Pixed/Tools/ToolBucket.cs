@@ -6,6 +6,8 @@ using SkiaSharp;
 namespace Pixed.Tools;
 internal class ToolBucket(ApplicationData applicationData) : BaseTool(applicationData)
 {
+    public override string ImagePath => "avares://Pixed.Core/Resources/Icons/tools/tool-paint-bucket.png";
+    public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Fill color");
     public override bool SingleHighlightedPixel { get; protected set; } = true;
     public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {

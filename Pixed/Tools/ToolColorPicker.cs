@@ -6,6 +6,8 @@ using SkiaSharp;
 namespace Pixed.Tools;
 internal class ToolColorPicker(ApplicationData applicationData) : BaseTool(applicationData)
 {
+    public override string ImagePath => "avares://Pixed.Core/Resources/Icons/tools/tool-colorpicker.png";
+    public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Color picker");
     public override bool SingleHighlightedPixel { get; protected set; } = true;
     public override bool AddToHistory { get; protected set; } = false;
     public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
