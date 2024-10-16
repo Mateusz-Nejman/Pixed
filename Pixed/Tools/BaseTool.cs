@@ -16,6 +16,8 @@ internal abstract class BaseTool(ApplicationData applicationData)
     protected int _highlightedY = 0;
     private UniColor? _toolColor;
 
+    public abstract string ImagePath { get; }
+    public virtual ToolTooltipProperties? ToolTipProperties { get; }
     public virtual bool AddToHistory { get; protected set; } = true;
     public virtual bool ShiftHandle { get; protected set; } = false;
     public virtual bool ControlHandle { get; protected set; } = false;

@@ -5,6 +5,8 @@ using System;
 namespace Pixed.Tools;
 internal class ToolRectangle(ApplicationData applicationData) : ShapeTool(applicationData)
 {
+    public override string ImagePath => "avares://Pixed.Core/Resources/Icons/tools/tool-rectangle.png";
+    public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Rectangle", "Shift", "1 to 1 ratio");
     protected override void Draw(int x, int y, uint color, bool isShift, Action<int, int, uint> setPixelAction)
     {
         var rectangle = MathUtils.GetOrderedRectangle(_startX, _startY, x, y);

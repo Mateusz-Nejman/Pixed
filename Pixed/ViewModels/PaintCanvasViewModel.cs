@@ -20,6 +20,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     private double _gridWidth;
     private double _gridHeight;
     private double _imageFactor;
+    private double _minimumImageFactor;
     private SKBitmap _overlayBitmap;
     private PixedImage _renderImage = new(null);
     private PixedImage _overlayImage = new(null);
@@ -177,6 +178,8 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         }
     }
 
+    public string ZoomText => GetZoomText();
+
     public PaintCanvasViewModel(ApplicationData applicationData, ToolSelector toolSelector, ToolMoveCanvas toolMoveCanvas, ToolZoom toolZoom)
     {
         _applicationData = applicationData;
@@ -281,7 +284,8 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     }
     public void RecalculateFactor(Point windowSize)
     {
-        var factor = Math.Min(windowSize.X, windowSize.Y - 32) / Math.Min(_frame.Width, _frame.Height);
+        var factor = Math.Min((double)windowSize.X, (double)windowSize.Y - 40.0d) / Math.Min((double)_frame.Width, (double)_frame.Height);
+        _minimumImageFactor = Math.Min((double)windowSize.X / 2, (double)(windowSize.Y - 40) / 2) / Math.Min((double)_frame.Width, (double)_frame.Height);
         Zoom(factor);
         GridBrush = GetGridBrush();
         _lastWindowSize = windowSize;
@@ -463,14 +467,15 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
 
     private void MouseWheelAction(double delta)
     {
-        var step = delta * Math.Max(0.1, Math.Abs(_imageFactor) / 15);
-        var factor = Math.Max(0.1, _imageFactor + step);
+        var step = delta * Math.Max(_minimumImageFactor, Math.Abs(_imageFactor) / 15);
+        var factor = Math.Max(_minimumImageFactor, _imageFactor + step);
         Zoom(factor);
     }
 
     private void Zoom(double factor)
     {
-        _imageFactor = Math.Clamp(factor, 1, 300);
+        _imageFactor = Math.Clamp(factor, _minimumImageFactor, 60);
+        OnPropertyChanged(nameof(ZoomText));
         GridWidth = _frame.Width * _imageFactor;
         GridHeight = _frame.Height * _imageFactor;
         Subjects.MouseWheel.OnNext(_imageFactor);
@@ -568,6 +573,13 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         }
 
         return new Point(argX, argY);
+    }
+
+    private string GetZoomText()
+    {
+        double zoom = _imageFactor * 100d;
+        bool needRound = zoom % 1 != 0;
+        return "Zoom: " + zoom.ToString(needRound ? "#.0" : "#");
     }
 
     private void DebugTouchPointer(MouseEvent mouseEvent)

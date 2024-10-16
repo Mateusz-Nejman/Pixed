@@ -20,7 +20,7 @@
     <TextBlock Grid.Column="1" Text="{Binding Name}" Foreground="White" VerticalAlignment="Center" Margin="4"/>
     <Button Grid.Column="2" Command="{Binding ChangeOpacityCommand}">
       <ToolTip.Tip>
-        <local:SimpleTooltip Title="Change layer opacity"/>
+        <local:TextTooltip Text="Change layer opacity"/>
       </ToolTip.Tip>
       <Image Source="avares://Pixed.Core/Resources/Icons/eye.png"/>
     </Button>
