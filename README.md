@@ -9,7 +9,7 @@ Your imagination and **Pixed**. These two things are needed for pixel-arted imag
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/Mateusz-Nejman/Pixed/dotnet-desktop.yml)
 ![GitHub commits since latest release](https://img.shields.io/github/commits-since/Mateusz-Nejman/Pixed/latest)
 ![GitHub top language](https://img.shields.io/github/languages/top/Mateusz-Nejman/Pixed)
-![GitHub issue custom search in repo](https://img.shields.io/github/issues-search/Mateusz-Nejman/Pixed?query=is%3Aissue%20is%3Aopen)
+![GitHub issue custom search in repo](https://img.shields.io/github/issues-search/Mateusz-Nejman/Pixed?query=is%3Aissue%20is%3Aopen&label=issues)
 ![GitHub repo size](https://img.shields.io/github/repo-size/Mateusz-Nejman/Pixed)
 
 ## Screenshots
