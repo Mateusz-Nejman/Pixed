@@ -14,6 +14,8 @@ internal class PaletteWindowViewModel : PixedViewModel
     public struct PaletteData
     {
         public PixedImage BitmapImage { get; set; }
+        public int BitmapWidth { get; set; }
+        public int BitmapHeight { get; set; }
         public string Name { get; set; }
         public string Path { get; set; }
         public PaletteModel Model { get; set; }
@@ -58,12 +60,15 @@ internal class PaletteWindowViewModel : PixedViewModel
                 continue;
             }
 
+            var paletteBitmap = GeneratePaleteBitmap(model);
             Palettes.Add(new PaletteData
             {
                 Name = model.Name,
                 Path = model.Path,
                 Model = model,
-                BitmapImage = new PixedImage(GeneratePaleteBitmap(model)),
+                BitmapImage = new PixedImage(paletteBitmap),
+                BitmapWidth = paletteBitmap.Width,
+                BitmapHeight = paletteBitmap.Height,
                 SelectCommand = new ActionCommand<PaletteModel>(m => PaletteAction?.Invoke(true, m)),
                 RemoveCommand = new ActionCommand<PaletteModel>(m => PaletteAction?.Invoke(false, m)),
                 RenameCommand = new ActionCommand<PaletteModel>(async (m) =>
@@ -88,8 +93,8 @@ internal class PaletteWindowViewModel : PixedViewModel
     private static SKBitmap GeneratePaleteBitmap(PaletteModel model)
     {
         int mod = (model.Colors.Count % 10) == 0 ? 0 : 1;
-        SKBitmap bitmap = new SKBitmap(200, ((model.Colors.Count / 10) + mod) * 20);
-        SKCanvas canvas = new SKCanvas(bitmap);
+        SKBitmap bitmap = new(200, ((model.Colors.Count / 10) + mod) * 20);
+        SKCanvas canvas = new(bitmap);
         int x = 0;
         int y = 0;
 
@@ -98,7 +103,7 @@ internal class PaletteWindowViewModel : PixedViewModel
             int rectX = x * 20;
             int rectY = y * 20;
 
-            canvas.DrawRect(new SKRect(rectX, rectY, 20, 20), new SKPaint() { Color = (UniColor)color });
+            canvas.DrawRect(SKRect.Create(rectX, rectY, 20, 20), new SKPaint() { Color = (UniColor)color });
             x++;
 
             if (x == 10)

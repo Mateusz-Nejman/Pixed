@@ -13,6 +13,11 @@ internal partial class PaletteWindow : Window
         InitializeComponent();
         _paletteService = paletteService;
         DataContext = _viewModel = new PaletteWindowViewModel(paletteService);
+
+        if (_viewModel.Palettes.Count != 0)
+        {
+            noPalettesInfo.IsVisible = false;
+        }
         _viewModel.PaletteAction = (select, model) =>
         {
             if (select)

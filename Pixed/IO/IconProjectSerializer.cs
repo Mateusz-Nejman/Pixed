@@ -43,7 +43,7 @@ internal class IconProjectSerializer : IPixedProjectSerializer
                         var scaledBitmap = new SKBitmap(format.X, format.Y, true);
                         var canvas = new SKCanvas(scaledBitmap);
                         canvas.Clear(SKColors.Transparent);
-                        canvas.DrawBitmap(bitmap, new SKRect(0, 0, scaledBitmap.Width, scaledBitmap.Height));
+                        canvas.DrawBitmap(bitmap, SKRect.Create(scaledBitmap.Width, scaledBitmap.Height));
                         canvas.Dispose();
                         images.Add(new SkiaIconImage(scaledBitmap));
                     }
