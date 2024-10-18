@@ -10,7 +10,7 @@ internal class ToolZoom(ApplicationData applicationData) : BaseTool(applicationD
     private double _zoom;
     private IDisposable _disposed;
 
-    public override string ImagePath => "avares://Pixed.Core/Resources/Icons/tools/tool-zoom.png";
+    public override string ImagePath => "avares://Pixed.Common/Resources/Icons/tools/tool-zoom.png";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Zoom");
     public override bool AddToHistory { get; protected set; } = false;
     public override bool GridMovement { get; protected set; } = false;

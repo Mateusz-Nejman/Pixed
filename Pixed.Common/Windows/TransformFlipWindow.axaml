@@ -9,7 +9,7 @@
 		ShowInTaskbar="False" 
 		SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterOwner"
-        Icon="avares://Pixed.Core/Resources/icon.ico">
+        Icon="avares://Pixed.Common/Resources/icon.ico">
 	<StackPanel>
 		<CheckBox Content="Flip vertically" Name="flipVertically" Margin="10"/>
 		<CheckBox Content="Apply to all frames" Name="applyToAllFrames" Margin="10"/>

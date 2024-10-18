@@ -9,7 +9,7 @@
         ShowInTaskbar="False" SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterOwner"
 		CanResize="False"
-        Icon="avares://Pixed.Core/Resources/icon.ico">
+        Icon="avares://Pixed.Common/Resources/icon.ico">
   <StackPanel>
     <TextBlock Text="{Binding Text, RelativeSource={RelativeSource FindAncestor, AncestorType=local:NumericPrompt}}" Margin="10"/>
     <NumericUpDown Name="numeric" Margin="10" Minimum="{Binding Minimum, RelativeSource={RelativeSource FindAncestor, AncestorType=local:NumericPrompt}}" Maximum="{Binding Maximum, RelativeSource={RelativeSource FindAncestor, AncestorType=local:NumericPrompt}}" Value="{Binding DefaultValue, RelativeSource={RelativeSource FindAncestor, AncestorType=local:NumericPrompt}}"/>

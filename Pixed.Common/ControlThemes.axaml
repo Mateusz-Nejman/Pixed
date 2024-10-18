@@ -1,12 +1,12 @@
 ﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 					xmlns:controls="clr-namespace:Pixed.Controls;assembly=Pixed"
-					xmlns:gestures="clr-namespace:Pixed.Controls.Gestures;assembly=Pixed.Core">
+					xmlns:gestures="clr-namespace:Pixed.Controls.Gestures;assembly=Pixed.Common">
 	<Design.PreviewWith>
 		<Border Padding="20">
 			<StackPanel Spacing="10">
 				<RadioButton>
-					<Image Source="avares://Pixed.Core/Resources/Icons/arrow-left.png" Width="40" Height="40"/>
+					<Image Source="avares://Pixed.Common/Resources/Icons/arrow-left.png" Width="40" Height="40"/>
 				</RadioButton>
 			</StackPanel>
 		</Border>
@@ -117,7 +117,7 @@
 							  Foreground="{TemplateBinding Foreground}"
 							  RecognizesAccessKey="True" />
 					</Border>
-					<Image Source="avares://Pixed.Core/Resources/Icons/cogs.png" Grid.Row="2" Grid.Column="2"/>
+					<Image Source="avares://Pixed.Common/Resources/Icons/cogs.png" Grid.Row="2" Grid.Column="2"/>
 				</Grid>
 			</ControlTemplate>
 		</Setter>

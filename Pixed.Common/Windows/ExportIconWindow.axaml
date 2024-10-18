@@ -2,14 +2,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		xmlns:viewModels="clr-namespace:Pixed.ViewModels;assembly=Pixed.Core"
+		xmlns:viewModels="clr-namespace:Pixed.ViewModels;assembly=Pixed.Common"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Pixed.Windows.ExportIconWindow"
         Title="Export Icon"
         ShowInTaskbar="False" SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterOwner"
 		CanResize="False"
-        Icon="avares://Pixed.Core/Resources/icon.ico"
+        Icon="avares://Pixed.Common/Resources/icon.ico"
 		x:DataType="viewModels:ExportIconWindowViewModel">
 	<Window.DataContext>
 		<viewModels:ExportIconWindowViewModel/>

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Pixed.Tools;
 internal class ToolColorSwap(ApplicationData applicationData) : BaseTool(applicationData)
 {
-    public override string ImagePath => "avares://Pixed.Core/Resources/Icons/tools/tool-colorswap.png";
+    public override string ImagePath => "avares://Pixed.Common/Resources/Icons/tools/tool-colorswap.png";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Replace colors", "Ctrl", "Apply to all layers", "Shift", "Apply to all frames");
     public override bool ShiftHandle { get; protected set; } = true;
     public override bool ControlHandle { get; protected set; } = true;

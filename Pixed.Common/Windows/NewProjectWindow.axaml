@@ -9,7 +9,7 @@
         ShowInTaskbar="False" SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterOwner"
 		CanResize="False"
-        Icon="avares://Pixed.Core/Resources/icon.ico">
+        Icon="avares://Pixed.Common/Resources/icon.ico">
   <StackPanel>
     <TextBlock Text="Width:" Margin="10"/>
     <NumericUpDown Margin="10" Value="{Binding WidthValue, RelativeSource={RelativeSource FindAncestor, AncestorType=local:NewProjectWindow}, Mode=TwoWay}" Minimum="1"/>

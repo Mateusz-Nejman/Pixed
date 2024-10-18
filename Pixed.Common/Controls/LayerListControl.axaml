@@ -22,7 +22,7 @@
       <ToolTip.Tip>
         <local:TextTooltip Text="Change layer opacity"/>
       </ToolTip.Tip>
-      <Image Source="avares://Pixed.Core/Resources/Icons/eye.png"/>
+      <Image Source="avares://Pixed.Common/Resources/Icons/eye.png"/>
     </Button>
   </Grid>
 </UserControl>

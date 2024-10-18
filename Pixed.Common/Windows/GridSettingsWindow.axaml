@@ -4,13 +4,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         x:Class="Pixed.Windows.GridSettingsWindow"
-		xmlns:controls="clr-namespace:Pixed.Controls;assembly=Pixed.Core"
-		xmlns:local="clr-namespace:Pixed.Windows;assembly=Pixed.Core"
+		xmlns:controls="clr-namespace:Pixed.Controls;assembly=Pixed.Common"
+		xmlns:local="clr-namespace:Pixed.Windows;assembly=Pixed.Common"
         Title="Grid settings"
 		ShowInTaskbar="False" SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterOwner"
 		CanResize="False"
-        Icon="avares://Pixed.Core/Resources/icon.ico">
+        Icon="avares://Pixed.Common/Resources/icon.ico">
 	<StackPanel>
 		<TextBlock Text="Grid color:" Margin="10"/>
 		<controls:FixedPortableColorPicker Width="100" Height="32" SelectedColor="{Binding GridColor, RelativeSource={RelativeSource FindAncestor, AncestorType=local:GridSettingsWindow}, Mode=TwoWay}" x:Name="colorPicker"/>

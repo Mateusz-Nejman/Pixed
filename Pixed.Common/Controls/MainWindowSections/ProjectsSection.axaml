@@ -21,7 +21,7 @@
 						<Grid HorizontalAlignment="Center" VerticalAlignment="Center">
 							<Grid MaxWidth="64" MaxHeight="64">
 								<Grid.Background>
-									<ImageBrush Source="avares://Pixed.Core/Resources/transparentBackground.png" TileMode="Tile" Stretch="Uniform" AlignmentY="Top" DestinationRect="0 0 32 32"/>
+									<ImageBrush Source="avares://Pixed.Common/Resources/transparentBackground.png" TileMode="Tile" Stretch="Uniform" AlignmentY="Top" DestinationRect="0 0 32 32"/>
 								</Grid.Background>
 								<Image MaxWidth="64" MaxHeight="64" Source="{Binding RenderSource}" RenderOptions.BitmapInterpolationMode="None"/>
 							</Grid>

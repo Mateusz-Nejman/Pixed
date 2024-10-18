@@ -9,7 +9,7 @@ internal class ToolOutliner(ApplicationData applicationData) : BaseTool(applicat
 {
     private const string PROP_FILL_CORNERS = "Fill corners";
 
-    public override string ImagePath => "avares://Pixed.Core/Resources/Icons/tools/tool-outliner.png";
+    public override string ImagePath => "avares://Pixed.Common/Resources/Icons/tools/tool-outliner.png";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Outliner", "Ctrl", "Fill corners");
     public override bool ControlHandle { get; protected set; } = true;
     public override bool SingleHighlightedPixel { get; protected set; } = true;

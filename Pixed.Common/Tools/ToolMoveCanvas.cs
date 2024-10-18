@@ -10,7 +10,7 @@ internal class ToolMoveCanvas(ApplicationData applicationData) : BaseTool(applic
     private double _startY;
     private Avalonia.Vector _offset;
 
-    public override string ImagePath => "avares://Pixed.Core/Resources/Icons/tools/tool-move-canvas.png";
+    public override string ImagePath => "avares://Pixed.Common/Resources/Icons/tools/tool-move-canvas.png";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Move canvas");
     public override bool AddToHistory { get; protected set; } = false;
     public override bool GridMovement { get; protected set; } = false;

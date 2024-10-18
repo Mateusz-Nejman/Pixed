@@ -8,7 +8,7 @@
         xmlns:vm="clr-namespace:Pixed.ViewModels"
         CanResize="False" ShowInTaskbar="False" SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterOwner"
-        Icon="avares://Pixed.Core/Resources/icon.ico"
+        Icon="avares://Pixed.Common/Resources/icon.ico"
 		x:DataType="vm:ResizeProjectWindowViewModel">
   <Window.DataContext>
     <vm:ResizeProjectWindowViewModel/>

@@ -2,7 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:local="clr-namespace:Pixed.Controls;assembly=Pixed.Core"
+             xmlns:local="clr-namespace:Pixed.Controls;assembly=Pixed.Common"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Pixed.Controls.CustomTitleBar"
 			 DockPanel.Dock="Top">
@@ -13,7 +13,7 @@
 			<ColumnDefinition Width="Auto"/>
 		</Grid.ColumnDefinitions>
 		<StackPanel Orientation="Horizontal" Spacing="0">
-			<Image Source="avares://Pixed.Core/Resources/icon.png"
+			<Image Source="avares://Pixed.Common/Resources/icon.png"
 				 Height="20"
 				 Width="20"
 				 VerticalAlignment="Center"

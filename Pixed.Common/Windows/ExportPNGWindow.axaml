@@ -9,7 +9,7 @@
         ShowInTaskbar="False" SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterOwner"
 		CanResize="False"
-        Icon="avares://Pixed.Core/Resources/icon.ico">
+        Icon="avares://Pixed.Common/Resources/icon.ico">
   <StackPanel>
     <TextBlock Text="Columns count:" Margin="10"/>
     <NumericUpDown Margin="10" Value="{Binding ColumnsCount, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ExportPNGWindow}, Mode=TwoWay}" Minimum="1"/>

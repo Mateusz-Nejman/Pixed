@@ -7,7 +7,7 @@ namespace Pixed.Tools.Selection;
 
 internal class ShapeSelect(ApplicationData applicationData, ToolSelector toolSelector) : AbstractDragSelect(applicationData, toolSelector)
 {
-    public override string ImagePath => "avares://Pixed.Core/Resources/Icons/tools/tool-shape-select.png";
+    public override string ImagePath => "avares://Pixed.Common/Resources/Icons/tools/tool-shape-select.png";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Shape selection", "Ctrl+C", "Copy the selected area", "Ctrl+V", "Paste the copied area");
     public override void OnSelectStart(int x, int y, Frame frame, ref SKBitmap overlay)
     {

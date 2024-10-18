@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Pixed.Windows.AboutWindow"
-		xmlns:vm="clr-namespace:Pixed.ViewModels;assembly=Pixed.Core"
+		xmlns:vm="clr-namespace:Pixed.ViewModels;assembly=Pixed.Common"
         Title="About"
         ShowInTaskbar="False" SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterOwner" CanResize="False"
@@ -19,10 +19,10 @@
 		<TextBlock Text="Author: Mateusz Nejman"/>
 		<StackPanel Orientation="Horizontal" Spacing="10">
 			<Button Name="buttonWWW" Command="{Binding OpenUrlCommand}" CommandParameter="https://mateusz-nejman.com">
-				<Image Source="avares://Pixed.Core/Resources/Icons/sphere.png"/>
+				<Image Source="avares://Pixed.Common/Resources/Icons/sphere.png"/>
 			</Button>
 			<Button Name="buttonGithub" Command="{Binding OpenUrlCommand}" CommandParameter="https://github.com/Mateusz-Nejman/Pixed">
-				<Image Source="avares://Pixed.Core/Resources/Icons/github.png"/>
+				<Image Source="avares://Pixed.Common/Resources/Icons/github.png"/>
 			</Button>
 		</StackPanel>
 	</StackPanel>
