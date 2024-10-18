@@ -74,6 +74,25 @@ internal class PixedProjectMethods(ApplicationData applicationData)
                 recentFilesService.AddRecent(item.Path.AbsolutePath);
             }
 
+            if(serializer is PngProjectSerializer pngSerializer)
+            {
+                OpenPNGWindow window = new OpenPNGWindow();
+                var success = await window.ShowDialog<bool>(MainWindow.Handle);
+
+                if(success)
+                {
+                    if(window.IsTileset)
+                    {
+                        pngSerializer.TileWidth = window.TileWidth;
+                        pngSerializer.TileHeight = window.TileHeight;
+                    }
+                }
+                else
+                {
+                    continue;
+                }
+            }
+
             PixedModel model = serializer.Deserialize(stream, _applicationData);
             stream?.Dispose();
             model.FileName = item.Name.Replace(".png", ".pixed");
