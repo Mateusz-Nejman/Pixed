@@ -2,10 +2,24 @@
 Pixed
 ======
 
-Create pixel art images with **Pixed**. Use it in a game or wherever you want. Pixed is developed also for touch screens. 
+Your imagination and **Pixed**. These two things are needed for pixel-arted image dreams comes true. **Pixed** is actively developed to be best software for creating pixel-art images. I'm focused on making reliable solution for touch-friendly software. If You have any ideas, questions or doubts, fell free to ask or create issue.
 
+![GitHub License](https://img.shields.io/github/license/Mateusz-Nejman/Pixed)
+![GitHub Release](https://img.shields.io/github/v/release/Mateusz-Nejman/Pixed)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/Mateusz-Nejman/Pixed/dotnet-desktop.yml)
+![GitHub commits since latest release](https://img.shields.io/github/commits-since/Mateusz-Nejman/Pixed/latest)
+![GitHub top language](https://img.shields.io/github/languages/top/Mateusz-Nejman/Pixed)
+![GitHub issue custom search in repo](https://img.shields.io/github/issues-search/Mateusz-Nejman/Pixed?query=is%3Aissue%20is%3Aopen&label=issues)
+![GitHub repo size](https://img.shields.io/github/repo-size/Mateusz-Nejman/Pixed)
+
+## Screenshots
+
+### Base interface
 ![Pixed screenshot1](/screenshot1.png "Screenshot 1")
+### Custom actions menu (right click or long touch for open)
 ![Pixed screenshot2](/screenshot2.png "Screenshot 2")
+### Palette window
+![Pixed screenshot3](/screenshot3.png "Screenshot 3")
 
 ## Download
 <a href="https://apps.microsoft.com/detail/9nwzsx6x2bgx?mode=direct">
@@ -14,16 +28,21 @@ Create pixel art images with **Pixed**. Use it in a game or wherever you want. P
 
 [Releases](https://github.com/Mateusz-Nejman/Pixed/releases)
 
-## Features
-- Open/save PNG images and own project format
-- Open Piskel projects from [piskelapp/piskel](https://github.com/piskelapp/piskel)
-- Most tools helpful with pixel art creation
-- Touch screen friendly UI
+## Supported formats
+- Pixed (own project format)
+- Piskel from [piskelapp/piskel](https://github.com/piskelapp/piskel) (only open)
+- PNG (open/save)
+- ICO (only open)
+- JSON custom palette format
+- GPL palette format
 
-## Work in progress
+## Work in progress or planned
 - Animations
 - Linux/MacOS support
-- Better touch screen helpers
+- Better touch screen support
+- AI support
+- More formats support
+- Extensions support
 
 ## Stack
 - .NET 8
