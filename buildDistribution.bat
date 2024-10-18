@@ -11,7 +11,7 @@ set MSI_PATH=%SOLUTION_PATH%build\Dist\Pixed.%VERSION%.win_x64.msi
 set MSIX_PATH=%SOLUTION_PATH%build\Dist\Pixed.%VERSION%.win_x64.msixbundle
 set MSIX_STORE_PATH=%SOLUTION_PATH%build\Dist\Pixed.%VERSION%.win_x64.msixupload
 
-set MSIX_INPUT_PATH=%SOLUTION_PATH%\build\AppPackages\Pixed.MSStore_%VERSION%.0.0_Debug_Test\Pixed.MSStore_%VERSION%.0.0_x64_Debug.msixbundle
+set MSIX_INPUT_PATH=%SOLUTION_PATH%\build\AppPackages\Pixed.MSStore_%VERSION%.0.0_Test\Pixed.MSStore_%VERSION%.0.0_x64.msixbundle
 set MSIX_STORE_INPUT_PATH=%SOLUTION_PATH%\build\AppPackages\Pixed.MSStore_%VERSION%.0.0_x64_bundle.msixupload
 set MSI_INPUT_PATH=%SOLUTION_PATH%build\Pixed.Release.msi
 
