@@ -2,6 +2,7 @@
 using Pixed.Utils;
 using SkiaSharp;
 using System;
+using System.Collections.ObjectModel;
 using System.IO;
 
 namespace Pixed.IO;
@@ -10,15 +11,35 @@ internal class PngProjectSerializer : IPixedProjectSerializer
     public bool CanSerialize => true;
     public bool CanDeserialize => true;
     public int ColumnsCount { get; set; } = 1;
+    public int TileWidth { get; set; } = -1;
+    public int TileHeight { get; set; } = -1;
     public PixedModel Deserialize(Stream stream, ApplicationData applicationData)
     {
         SKBitmap bitmap = SKBitmap.Decode(stream);
         var colors = bitmap.ToArray();
+        ObservableCollection<Frame> frames = [];
 
         Layer layer = Layer.FromColors(colors, bitmap.Width, bitmap.Height, "Layer 0");
-        Frame frame = Frame.FromLayers([layer]);
-        bitmap.Dispose();
-        return PixedModel.FromFrames([frame], applicationData.GenerateName(), applicationData);
+        if (TileWidth == -1 && TileHeight == -1)
+        {
+            Frame frame = Frame.FromLayers([layer]);
+            bitmap.Dispose();
+            frames.Add(frame);
+        }
+        else
+        {
+            for (int x = 0; x < layer.Width; x += TileWidth)
+            {
+                for (int y = 0; y < layer.Height; y += TileHeight)
+                {
+                    Layer subLayer = Layer.FromColors(layer.GetRectangleColors(x, y, TileWidth, TileHeight), TileWidth, TileHeight, "Layer 0");
+                    Frame subFrame = Frame.FromLayers([subLayer]);
+                    frames.Add(subFrame);
+                }
+            }
+        }
+
+        return PixedModel.FromFrames(frames, applicationData.GenerateName(), applicationData);
     }
 
     public void Serialize(Stream stream, PixedModel model, bool close)
