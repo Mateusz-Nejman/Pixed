@@ -74,14 +74,14 @@ internal class PixedProjectMethods(ApplicationData applicationData)
                 recentFilesService.AddRecent(item.Path.AbsolutePath);
             }
 
-            if(serializer is PngProjectSerializer pngSerializer)
+            if (serializer is PngProjectSerializer pngSerializer)
             {
                 OpenPNGWindow window = new OpenPNGWindow();
                 var success = await window.ShowDialog<bool>(MainWindow.Handle);
 
-                if(success)
+                if (success)
                 {
-                    if(window.IsTileset)
+                    if (window.IsTileset)
                     {
                         pngSerializer.TileWidth = window.TileWidth;
                         pngSerializer.TileHeight = window.TileHeight;

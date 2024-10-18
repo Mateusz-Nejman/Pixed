@@ -17,7 +17,7 @@ public partial class OpenPNGWindow : Window
 
     private void RadioButton_IsCheckedChanged(object? sender, RoutedEventArgs e)
     {
-        if(sender is RadioButton radioButton && radioButton.IsChecked == true)
+        if (sender is RadioButton radioButton && radioButton.IsChecked == true)
         {
             IsTileset = radioButton.Name == "tileset";
         }

@@ -34,16 +34,16 @@ internal static class LayerUtils
     {
         var pixels = layer.GetPixels();
 
-        if(x + width > layer.Width || y + height > layer.Height)
+        if (x + width > layer.Width || y + height > layer.Height)
         {
             return [];
         }
 
         IList<uint> colors = [];
 
-        for(int y1 = y; y1 < y + height; y1++)
+        for (int y1 = y; y1 < y + height; y1++)
         {
-            for(int x1 = x; x1 < x + width; x1++)
+            for (int x1 = x; x1 < x + width; x1++)
             {
                 colors.Add(pixels[y1 * layer.Width + x1]);
             }
