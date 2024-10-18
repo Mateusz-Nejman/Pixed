@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Pixed\Pixed.csproj" />
+    <ProjectReference Include="..\Pixed.Common\Pixed.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>

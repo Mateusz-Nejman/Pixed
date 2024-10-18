@@ -1,6 +1,5 @@
 ﻿using Avalonia;
-using ColorPicker.Models;
-using System;
+using Pixed.Common.Utils;
 
 namespace Pixed;
 
@@ -69,7 +68,7 @@ public struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatable
     public UniColor(byte alpha, Hsl hsl) : this()
     {
         A = alpha;
-        var rgb = ColorSpaceHelper.HslToRgb(hsl.H, hsl.S, hsl.L);
+        var rgb = ColorUtils.HslToRgb(hsl.H, hsl.S, hsl.L);
         R = (byte)Math.Round(rgb.Item1 * 255d);
         G = (byte)Math.Round(rgb.Item2 * 255d);
         B = (byte)Math.Round(rgb.Item3 * 255d);
@@ -77,7 +76,7 @@ public struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatable
 
     public readonly Hsl ToHsl()
     {
-        var hsl = ColorSpaceHelper.RgbToHsl((double)(R / 255d), (double)(G / 255f), (double)(B / 255f));
+        var hsl = ColorUtils.RgbToHsl((double)(R / 255d), (double)(G / 255f), (double)(B / 255f));
 
         return new Hsl(hsl.Item1, hsl.Item2, hsl.Item3);
     }
@@ -212,5 +211,15 @@ public struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatable
             }
         }
         return new UniColor();
+    }
+
+    public static bool operator ==(UniColor left, UniColor right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(UniColor left, UniColor right)
+    {
+        return !(left == right);
     }
 }
