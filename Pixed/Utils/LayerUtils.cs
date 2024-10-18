@@ -12,7 +12,7 @@ internal static class LayerUtils
 
         SKBitmap newBitmap = new(targetWidth, targetHeight, true);
         SKCanvas canvas = new(newBitmap);
-        canvas.DrawBitmap(oldBitmap, new SKRect(0, 0, oldBitmap.Width, oldBitmap.Height), new SKRect(0, 0, targetWidth, targetHeight));
+        canvas.DrawBitmap(oldBitmap, SKRect.Create(oldBitmap.Width, oldBitmap.Height), SKRect.Create(targetWidth, targetHeight));
         canvas.Dispose();
 
         Layer newLayer = new(targetWidth, targetHeight);
