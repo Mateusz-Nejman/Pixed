@@ -5,6 +5,7 @@ using Pixed.Application.Services;
 using Pixed.Application.ViewModels;
 using Pixed.Application.Windows;
 using Pixed.Common.DependencyInjection;
+using Pixed.Common.Platform;
 
 namespace Pixed.Application.DependencyInjection;
 internal class ApplicationDependencyRegister : IDependencyRegister
@@ -28,5 +29,6 @@ internal class ApplicationDependencyRegister : IDependencyRegister
         collection.AddSingleton<TransformMenuRegister>();
         collection.AddSingleton<CopyPasteMenuRegister>();
         collection.AddSingleton<ViewMenuRegister>();
+        collection.AddSingleton<IClipboardHandle, ClipboardHandle>();
     }
 }

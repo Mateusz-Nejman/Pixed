@@ -217,7 +217,6 @@ internal partial class MainWindow : PixedWindow<MainViewModel>, IDisposable
     private void InjectMethods()
     {
         Layer.ChangeOpacityAction = ChangeOpacityAction;
-        Common.Clipboard.ClipboardHandle = Clipboard;
         PixedModel.CloseCommandAction = CloseCommandAction;
     }
 

@@ -1,5 +1,4 @@
-﻿using Avalonia.Input;
-using Pixed.Common.Utils;
+﻿using Pixed.Common.Utils;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -8,7 +7,6 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 
 namespace Pixed.Common.Utils;
 public static class SkiaUtils
@@ -89,33 +87,5 @@ public static class SkiaUtils
                 bitmap.SetPixel(point.X, point.Y, (UniColor)color);
             }
         }
-    }
-
-    public static async Task CopyToClipboard(this SKBitmap src)
-    {
-        DataObject clipboardObject = new();
-        MemoryStream memoryStream = new();
-        src.Encode(memoryStream, SKEncodedImageFormat.Png, 100);
-        clipboardObject.Set("PNG", memoryStream.ToArray());
-        memoryStream.Dispose();
-        await Clipboard.ClearAsync();
-        await Clipboard.SetDataObjectAsync(clipboardObject);
-    }
-
-    public static async Task<SKBitmap?> CreateFromClipboard()
-    {
-        var formats = await Clipboard.GetFormatsAsync();
-
-        if (formats.Contains("PNG"))
-        {
-            var data = await Clipboard.GetDataAsync("PNG");
-
-            if (data is byte[] array)
-            {
-                return SKBitmap.Decode(array);
-            }
-        }
-
-        return null;
     }
 }
