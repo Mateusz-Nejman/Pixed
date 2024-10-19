@@ -1,10 +1,10 @@
-﻿using Pixed.Models;
-using Pixed.Services.Keyboard;
+﻿using Pixed.Common.Models;
+using Pixed.Common.Services.Keyboard;
 using SkiaSharp;
 using System.Collections.Generic;
 
-namespace Pixed.Tools;
-internal class ToolMove(ApplicationData applicationData) : BaseTool(applicationData)
+namespace Pixed.Common.Tools;
+public class ToolMove(ApplicationData applicationData) : BaseTool(applicationData)
 {
     private const string PROP_WRAP = "Wrap canvas borders";
     private int _startX = -1;
@@ -12,7 +12,7 @@ internal class ToolMove(ApplicationData applicationData) : BaseTool(applicationD
     private Layer _currentLayer;
     private Layer _currentLayerClone;
 
-    public override string ImagePath => "avares://Pixed.Common/Resources/Icons/tools/tool-move.png";
+    public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-move.png";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Move content", "Ctrl", "Apply to all layers", "Shift", "Apply to all frames", "Alt", "Wrap canvas borders");
     public override bool ShiftHandle { get; protected set; } = true;
     public override bool ControlHandle { get; protected set; } = true;
@@ -47,7 +47,7 @@ internal class ToolMove(ApplicationData applicationData) : BaseTool(applicationD
 
         _applicationData.CurrentModel.Process(shiftPressed, controlPressed, (frame, layer) =>
         {
-            var reference = this._currentLayer == layer ? this._currentLayerClone : layer.Clone();
+            var reference = _currentLayer == layer ? _currentLayerClone : layer.Clone();
             ShiftLayer(layer, reference, diffX, diffY, altPressed);
         }, _applicationData, true);
 

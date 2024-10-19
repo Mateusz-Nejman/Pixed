@@ -1,13 +1,13 @@
-﻿using Pixed.Models;
-using Pixed.Selection;
-using Pixed.Services.Keyboard;
-using Pixed.Utils;
+﻿using Pixed.Common.Models;
+using Pixed.Common.Selection;
+using Pixed.Common.Services.Keyboard;
+using Pixed.Common.Utils;
 using SkiaSharp;
 using System;
 using System.Linq;
-using Frame = Pixed.Models.Frame;
+using Frame = Pixed.Common.Models.Frame;
 
-namespace Pixed.Tools.Selection;
+namespace Pixed.Common.Tools.Selection;
 
 internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSelector) : BaseTool(applicationData)
 {

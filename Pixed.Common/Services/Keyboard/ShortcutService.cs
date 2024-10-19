@@ -1,11 +1,11 @@
 ﻿using Avalonia.Input;
-using Pixed.Models;
+using Pixed.Common.Models;
 using System;
 using System.Collections.Generic;
 
-namespace Pixed.Services.Keyboard;
+namespace Pixed.Common.Services.Keyboard;
 
-internal class ShortcutService
+public class ShortcutService
 {
     private readonly ApplicationData _applicationData;
     private readonly struct ShortcutEntry(KeyState state, Action action)

@@ -1,5 +1,5 @@
-﻿using Pixed.IO;
-using Pixed.Utils;
+﻿using Pixed.Common.IO;
+using Pixed.Common.Utils;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -7,9 +7,9 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 
-namespace Pixed.Models;
+namespace Pixed.Common.Models;
 
-internal class Frame : PropertyChangedBase, IPixedSerializer
+public class Frame : PropertyChangedBase, IPixedSerializer
 {
     private readonly ObservableCollection<Layer> _layers;
     private int _selectedLayer = 0;

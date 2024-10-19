@@ -1,6 +1,5 @@
-﻿using Pixed.IO;
-using Pixed.Utils;
-using Pixed.Windows;
+﻿using Pixed.Common.IO;
+using Pixed.Common.Utils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,9 +7,9 @@ using System.IO;
 using System.Linq;
 using System.Windows.Input;
 
-namespace Pixed.Models;
+namespace Pixed.Common.Models;
 
-internal class PixedModel : PropertyChangedBase, IPixedSerializer
+public class PixedModel : PropertyChangedBase, IPixedSerializer
 {
     private readonly ApplicationData _applicationData;
     private const int MAX_HISTORY_ENTRIES = 500;
@@ -54,6 +53,7 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
     public bool UnsavedChanges { get; set; } = false;
 
     public ICommand CloseCommand { get; }
+    public static Action<PixedModel> CloseCommandAction { get; set; }
 
     public PixedModel(ApplicationData applicationData) : this(applicationData, applicationData.UserSettings.UserWidth, applicationData.UserSettings.UserHeight)
     {
@@ -66,7 +66,7 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
         _frames = [];
         _history = [];
 
-        CloseCommand = new ActionCommand(CloseCommandAction);
+        CloseCommand = new ActionCommand(() => CloseCommandAction(this));
 
         Frames.Add(new Frame(width, height));
     }
@@ -244,19 +244,5 @@ internal class PixedModel : PropertyChangedBase, IPixedSerializer
         }
 
         return model;
-    }
-
-    private void CloseCommandAction()
-    {
-        if (_applicationData.Models.Count == 1)
-        {
-            MainWindow.QuitCommand.Execute(null);
-        }
-        else
-        {
-            _applicationData.Models.Remove(this);
-            Subjects.ProjectRemoved.OnNext(this);
-            _applicationData.CurrentModelIndex = Math.Clamp(_applicationData.CurrentModelIndex, 0, _applicationData.Models.Count - 1);
-        }
     }
 }

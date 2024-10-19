@@ -1,16 +1,16 @@
-﻿using Pixed.Models;
-using Pixed.Services.Keyboard;
+﻿using Pixed.Common.Models;
+using Pixed.Common.Services.Keyboard;
 using SkiaSharp;
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace Pixed.Tools;
-internal class ToolLighten(ApplicationData applicationData) : ToolPen(applicationData)
+namespace Pixed.Common.Tools;
+public class ToolLighten(ApplicationData applicationData) : ToolPen(applicationData)
 {
     private const string PROP_DARKEN = "Darken";
     private const string PROP_APPLY_ONCE = "Apply once per pixel";
 
-    public override string ImagePath => "avares://Pixed.Common/Resources/Icons/tools/tool-lighten.png";
+    public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-lighten.png";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Lighten", "Ctrl", "Darken", "Shift", "Apply once per pixel");
     public override bool ShiftHandle { get; protected set; } = true;
     public override bool ControlHandle { get; protected set; } = true;

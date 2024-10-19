@@ -1,10 +1,10 @@
-﻿using Pixed.Models;
+﻿using Pixed.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-namespace Pixed.Utils;
+namespace Pixed.Common.Utils;
 
 internal static class PaintUtils
 {
@@ -15,7 +15,7 @@ internal static class PaintUtils
         {
             for (int x1 = 0; x1 < toolSize; x1++)
             {
-                points.Add(new(x - (int)Math.Floor((double)toolSize / 2.0d) + x1, y - (int)Math.Floor((double)toolSize / 2.0d) + y1));
+                points.Add(new(x - (int)Math.Floor(toolSize / 2.0d) + x1, y - (int)Math.Floor(toolSize / 2.0d) + y1));
             }
         }
 
@@ -86,7 +86,7 @@ internal static class PaintUtils
                         continue;
                     }
 
-                    if (fillCorners || (x1 == 0 || y1 == 0))
+                    if (fillCorners || x1 == 0 || y1 == 0)
                     {
                         var pixelColor = layer.GetPixel(pixel.X + x1, pixel.Y + y1);
 

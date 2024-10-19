@@ -1,8 +1,8 @@
-﻿using Pixed.Models;
+﻿using Pixed.Common.Models;
 using System.IO;
 using System.Text;
 
-namespace Pixed.Services.Palette.Writers;
+namespace Pixed.Common.Services.Palette.Writers;
 
 internal class GplPaletteWriter : IAbstractPaletteWriter
 {

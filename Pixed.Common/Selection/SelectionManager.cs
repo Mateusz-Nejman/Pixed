@@ -1,10 +1,9 @@
 ﻿using Avalonia.Input;
-using Pixed.Models;
-using Pixed.Services.Keyboard;
-using Pixed.Tools;
-using Pixed.Tools.Selection;
-using Pixed.Utils;
-using Pixed.ViewModels;
+using Pixed.Common.Models;
+using Pixed.Common.Services.Keyboard;
+using Pixed.Common.Tools;
+using Pixed.Common.Tools.Selection;
+using Pixed.Common.Utils;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -12,23 +11,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using Point = System.Drawing.Point;
 
-namespace Pixed.Selection;
+namespace Pixed.Common.Selection;
 
-internal class SelectionManager
+public class SelectionManager
 {
     private readonly ApplicationData _applicationData;
     private readonly ToolSelector _toolSelector;
-    private readonly PaintCanvasViewModel _paintCanvas;
     private BaseSelection? _currentSelection;
 
     public bool HasSelection => _currentSelection != null;
     public BaseSelection? Selection => _currentSelection;
+    public Action<SKBitmap> SetOverlayAction { get; set; }
 
-    public SelectionManager(ApplicationData applicationData, ShortcutService shortcutService, ToolSelector toolSelector, PaintCanvasViewModel paintCanvas)
+    public SelectionManager(ApplicationData applicationData, ShortcutService shortcutService, ToolSelector toolSelector)
     {
         _applicationData = applicationData;
         _toolSelector = toolSelector;
-        _paintCanvas = paintCanvas;
         _currentSelection = null;
 
         Subjects.ClipboardCopy.Subscribe(_ => Copy());
@@ -36,11 +34,11 @@ internal class SelectionManager
         Subjects.ClipboardPaste.Subscribe(_ => Paste());
         Subjects.SelectionCreated.Subscribe(OnSelectionCreated);
         Subjects.SelectionDismissed.Subscribe(OnSelectionDismissed);
-        shortcutService.Add(new Services.Keyboard.KeyState(Key.C, false, true, false), async () => await Copy());
-        shortcutService.Add(new Services.Keyboard.KeyState(Key.X, false, true, false), async () => await Cut());
-        shortcutService.Add(new Services.Keyboard.KeyState(Key.V, false, true, false), async () => await Paste());
-        shortcutService.Add(new Services.Keyboard.KeyState(Key.A, false, true, false), SelectAll);
-        shortcutService.Add(new Services.Keyboard.KeyState(Key.Delete, false, false, false), Erase);
+        shortcutService.Add(new KeyState(Key.C, false, true, false), async () => await Copy());
+        shortcutService.Add(new KeyState(Key.X, false, true, false), async () => await Cut());
+        shortcutService.Add(new KeyState(Key.V, false, true, false), async () => await Paste());
+        shortcutService.Add(new KeyState(Key.A, false, true, false), SelectAll);
+        shortcutService.Add(new KeyState(Key.Delete, false, false, false), Erase);
     }
 
     public void Clear()
@@ -60,7 +58,7 @@ internal class SelectionManager
         {
             _toolSelector.ToolSelected = newTool;
         }
-        ((RectangleSelect)_toolSelector.ToolSelected).SelectAll(overlay => _paintCanvas.Overlay = overlay);
+        ((RectangleSelect)_toolSelector.ToolSelected).SelectAll(SetOverlayAction);
     }
 
     public async Task Copy()

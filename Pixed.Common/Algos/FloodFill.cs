@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace Pixed.Algos;
+namespace Pixed.Common.Algos;
 
 internal class FloodFill(Point startPosition, Point size) : IDisposable
 {
@@ -62,7 +62,7 @@ internal class FloodFill(Point startPosition, Point size) : IDisposable
     {
         if (neighbourX >= 0 && neighbourX <= _sizeX && neighbourY >= 0 && neighbourY <= _sizeY
                && points[neighbourX, neighbourY] == int.MaxValue
-               && (validator(neighbourX, neighbourY)))
+               && validator(neighbourX, neighbourY))
         {
             points[neighbourX, neighbourY] = value;
             action.Invoke(neighbourX, neighbourY);

@@ -1,4 +1,5 @@
 ﻿using Avalonia.Input;
+using Pixed.Common.Utils;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -9,12 +10,12 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
-namespace Pixed.Utils;
-internal static class SkiaUtils
+namespace Pixed.Common.Utils;
+public static class SkiaUtils
 {
     public static void Export(this SKBitmap value, Stream stream)
     {
-        var colors = ToByteArray(value);
+        var colors = value.ToByteArray();
 
         Bitmap bitmap = new(value.Width, value.Height);
         BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, value.Width, value.Height), ImageLockMode.WriteOnly, bitmap.PixelFormat);
@@ -34,7 +35,7 @@ internal static class SkiaUtils
 
     public static uint[] ToArray(this SKBitmap bitmap)
     {
-        return ToByteArray(bitmap).ToUInt();
+        return bitmap.ToByteArray().ToUInt();
     }
 
     public static byte[] ToByteArray(this SKBitmap bitmap)
@@ -52,7 +53,7 @@ internal static class SkiaUtils
     {
         uint[] pixels = new uint[src.Width * src.Height];
         Array.Fill(pixels, UniColor.Transparent);
-        Fill(src, pixels);
+        src.Fill(pixels);
     }
 
     public static void Fill(this SKBitmap src, IList<uint> array)
@@ -78,7 +79,7 @@ internal static class SkiaUtils
         {
             for (int x1 = 0; x1 < toolSize; x1++)
             {
-                Point point = new(x - (int)Math.Floor((double)toolSize / 2.0d) + x1, y - (int)Math.Floor((double)toolSize / 2.0d) + y1);
+                Point point = new(x - (int)Math.Floor(toolSize / 2.0d) + x1, y - (int)Math.Floor(toolSize / 2.0d) + y1);
 
                 if (!bitmap.ContainsPixel(point.X, point.Y))
                 {

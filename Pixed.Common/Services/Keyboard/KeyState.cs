@@ -1,9 +1,9 @@
 ﻿using Avalonia.Input;
 using System;
 
-namespace Pixed.Services.Keyboard;
+namespace Pixed.Common.Services.Keyboard;
 
-internal class KeyState(Key key, bool isShift, bool isCtrl, bool isAlt) : IEquatable<KeyState>
+public class KeyState(Key key, bool isShift, bool isCtrl, bool isAlt) : IEquatable<KeyState>
 {
     public Key Key { get; } = key;
     public bool IsShift { get; } = isShift;

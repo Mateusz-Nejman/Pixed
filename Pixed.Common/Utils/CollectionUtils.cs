@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Pixed.Utils;
+namespace Pixed.Common.Utils;
 public static class CollectionUtils
 {
     public static T Pop<T>(this IList<T> list)

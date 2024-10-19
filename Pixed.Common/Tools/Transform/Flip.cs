@@ -1,8 +1,8 @@
-﻿using Pixed.Models;
+﻿using Pixed.Common.Models;
 
-namespace Pixed.Tools.Transform;
+namespace Pixed.Common.Tools.Transform;
 
-internal class Flip(ApplicationData applicationData) : AbstractTransformTool(applicationData)
+public class Flip(ApplicationData applicationData) : AbstractTransformTool(applicationData)
 {
     public override void ApplyToolOnLayer(Layer layer, bool altKey)
     {

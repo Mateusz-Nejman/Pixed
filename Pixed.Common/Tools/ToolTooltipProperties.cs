@@ -1,5 +1,5 @@
-﻿namespace Pixed.Tools;
-internal readonly struct ToolTooltipProperties(string title, string? button1, string? button1text, string? button2, string? button2text, string? button3, string? button3text)
+﻿namespace Pixed.Common.Tools;
+public readonly struct ToolTooltipProperties(string title, string? button1, string? button1text, string? button2, string? button2text, string? button3, string? button3text)
 {
     public string Title { get; } = title;
     public string? Button1 { get; } = button1;

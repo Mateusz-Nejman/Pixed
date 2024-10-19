@@ -1,7 +1,7 @@
-﻿using Pixed.Models;
+﻿using Pixed.Common.Models;
 using SkiaSharp;
 
-namespace Pixed.Tools.Selection;
+namespace Pixed.Common.Tools.Selection;
 
 internal abstract class AbstractDragSelect(ApplicationData applicationData, ToolSelector toolSelector) : BaseSelect(applicationData, toolSelector)
 {

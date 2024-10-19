@@ -1,10 +1,10 @@
-﻿using Pixed.Models;
+﻿using Pixed.Common.Models;
 using SkiaSharp;
 using System.Collections.Generic;
 
-namespace Pixed.Utils;
+namespace Pixed.Common.Utils;
 
-internal static class LayerUtils
+public static class LayerUtils
 {
     public static Layer Resize(Layer layer, int targetWidth, int targetHeight)
     {

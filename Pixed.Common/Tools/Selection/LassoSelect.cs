@@ -1,14 +1,14 @@
-﻿using Pixed.Algos;
-using Pixed.Models;
-using Pixed.Selection;
-using Pixed.Utils;
+﻿using Pixed.Common.Algos;
+using Pixed.Common.Models;
+using Pixed.Common.Selection;
+using Pixed.Common.Utils;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-namespace Pixed.Tools.Selection;
+namespace Pixed.Common.Tools.Selection;
 
 internal class LassoSelect(ApplicationData applicationData, ToolSelector toolSelector) : AbstractDragSelect(applicationData, toolSelector)
 {
@@ -16,7 +16,7 @@ internal class LassoSelect(ApplicationData applicationData, ToolSelector toolSel
     private int _prevY;
     private List<Point> _points = [];
 
-    public override string ImagePath => "avares://Pixed.Common/Resources/Icons/tools/tool-lasso-select.png";
+    public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-lasso-select.png";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Lasso selection", "Ctrl+C", "Copy the selected area", "Ctrl+V", "Paste the copied area");
     public override void OnDragSelectStart(int x, int y, Frame frame, ref SKBitmap overlay)
     {

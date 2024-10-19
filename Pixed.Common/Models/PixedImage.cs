@@ -3,12 +3,12 @@ using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
-using Pixed.Utils;
+using Pixed.Common.Utils;
 using SkiaSharp;
 using System;
 
-namespace Pixed.Models;
-internal class PixedImage : IImage, IDisposable
+namespace Pixed.Common.Models;
+public class PixedImage : IImage, IDisposable
 {
     private record class DrawOperation : ICustomDrawOperation
     {

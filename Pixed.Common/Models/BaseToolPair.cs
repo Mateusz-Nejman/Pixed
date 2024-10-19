@@ -1,7 +1,7 @@
-﻿using Pixed.Tools;
+﻿using Pixed.Common.Tools;
 
-namespace Pixed.Models;
-internal readonly struct BaseToolPair(BaseTool prev, BaseTool current)
+namespace Pixed.Common.Models;
+public readonly struct BaseToolPair(BaseTool prev, BaseTool current)
 {
     public BaseTool Previous { get; } = prev;
     public BaseTool Current { get; } = current;

@@ -11,7 +11,9 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Pixed.Installer", "Pixed.In
 EndProject
 Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "Pixed.MSStore", "Pixed.MSStore\Pixed.MSStore.wapproj", "{4C37F951-812D-4584-B092-C3D03C1B1CA0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pixed.Tests", "Pixed.Tests\Pixed.Tests.csproj", "{450F3BDE-36E5-4987-9470-46BD6087C8EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pixed.Tests", "Pixed.Tests\Pixed.Tests.csproj", "{450F3BDE-36E5-4987-9470-46BD6087C8EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pixed.Application", "Pixed.Application\Pixed.Application.csproj", "{62B77C93-EDB8-41B2-9752-9365CC5A98BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,6 +63,14 @@ Global
 		{450F3BDE-36E5-4987-9470-46BD6087C8EE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{450F3BDE-36E5-4987-9470-46BD6087C8EE}.Release|x64.ActiveCfg = Release|Any CPU
 		{450F3BDE-36E5-4987-9470-46BD6087C8EE}.Release|x64.Build.0 = Release|Any CPU
+		{62B77C93-EDB8-41B2-9752-9365CC5A98BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62B77C93-EDB8-41B2-9752-9365CC5A98BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62B77C93-EDB8-41B2-9752-9365CC5A98BF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{62B77C93-EDB8-41B2-9752-9365CC5A98BF}.Debug|x64.Build.0 = Debug|Any CPU
+		{62B77C93-EDB8-41B2-9752-9365CC5A98BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62B77C93-EDB8-41B2-9752-9365CC5A98BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62B77C93-EDB8-41B2-9752-9365CC5A98BF}.Release|x64.ActiveCfg = Release|Any CPU
+		{62B77C93-EDB8-41B2-9752-9365CC5A98BF}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

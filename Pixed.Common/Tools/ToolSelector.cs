@@ -1,11 +1,11 @@
-﻿using Pixed.Models;
-using Pixed.Tools.Selection;
+﻿using Pixed.Common.Models;
+using Pixed.Common.Tools.Selection;
 using System;
 using System.Collections.Generic;
 
-namespace Pixed.Tools;
+namespace Pixed.Common.Tools;
 
-internal class ToolSelector
+public class ToolSelector
 {
     private readonly Dictionary<string, BaseTool> _tools;
     private BaseTool? _toolSelected;

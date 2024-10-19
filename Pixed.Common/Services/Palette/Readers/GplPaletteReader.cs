@@ -1,8 +1,8 @@
-﻿using Pixed.Models;
+﻿using Pixed.Common.Models;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace Pixed.Services.Palette.Readers;
+namespace Pixed.Common.Services.Palette.Readers;
 
 internal class GplPaletteReader(string filename) : AbstractPaletteReader(filename)
 {

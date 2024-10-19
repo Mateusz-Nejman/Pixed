@@ -1,10 +1,10 @@
-﻿using Pixed.Models;
+﻿using Pixed.Common.Models;
 
-namespace Pixed.Tools;
+namespace Pixed.Common.Tools;
 
-internal class ToolEraser(ApplicationData applicationData) : ToolPen(applicationData)
+public class ToolEraser(ApplicationData applicationData) : ToolPen(applicationData)
 {
-    public override string ImagePath => "avares://Pixed.Common/Resources/Icons/tools/tool-eraser.png";
+    public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-eraser.png";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Eraser");
     public override UniColor GetToolColor()
     {

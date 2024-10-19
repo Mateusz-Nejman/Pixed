@@ -1,7 +1,7 @@
-﻿using Pixed.Models;
+﻿using Pixed.Common.Models;
 using System.IO;
 
-namespace Pixed.Services.Palette.Writers;
+namespace Pixed.Common.Services.Palette.Writers;
 
 internal class BasePaletteWriter : IAbstractPaletteWriter
 {

@@ -2,7 +2,7 @@
 using ColorPicker.Models;
 using System;
 
-namespace Pixed;
+namespace Pixed.Common;
 
 public struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatable<UniColor>
 {
@@ -50,17 +50,17 @@ public struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatable
 
     public UniColor(uint argb) : this()
     {
-        A = (byte)((argb >> 24) & 0xFFu);
-        R = (byte)((argb >> 16) & 0xFFu);
-        G = (byte)((argb >> 8) & 0xFFu);
+        A = (byte)(argb >> 24 & 0xFFu);
+        R = (byte)(argb >> 16 & 0xFFu);
+        G = (byte)(argb >> 8 & 0xFFu);
         B = (byte)(argb & 0xFFu);
     }
 
     public UniColor(int argb) : this()
     {
-        A = (byte)((argb >> 24) & 0xFF);
-        R = (byte)((argb >> 16) & 0xFF);
-        G = (byte)((argb >> 8) & 0xFF);
+        A = (byte)(argb >> 24 & 0xFF);
+        R = (byte)(argb >> 16 & 0xFF);
+        G = (byte)(argb >> 8 & 0xFF);
         B = (byte)(argb & 0xFF);
     }
 
@@ -110,12 +110,12 @@ public struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatable
 
     public readonly uint ToUInt()
     {
-        return (uint)((A << 24) | (R << 16) | (G << 8) | B);
+        return (uint)(A << 24 | R << 16 | G << 8 | B);
     }
 
     public readonly bool Equals(UniColor other)
     {
-        return (other == null && this == null) || (other.R == R && other.G == G && other.B == B && other.A == A);
+        return other == null && this == null || other.R == R && other.G == G && other.B == B && other.A == A;
     }
 
     public readonly override bool Equals(object? obj)
@@ -180,9 +180,9 @@ public struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatable
     {
         uint value = 0;
         value |= color.B;
-        value |= ((uint)color.G << 8);
-        value |= ((uint)color.R << 16);
-        value |= ((uint)color.A << 24);
+        value |= (uint)color.G << 8;
+        value |= (uint)color.R << 16;
+        value |= (uint)color.A << 24;
 
         return value;
     }

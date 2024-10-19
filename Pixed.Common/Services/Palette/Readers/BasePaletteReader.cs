@@ -1,7 +1,7 @@
-﻿using Pixed.Models;
+﻿using Pixed.Common.Models;
 using System.IO;
 
-namespace Pixed.Services.Palette.Readers;
+namespace Pixed.Common.Services.Palette.Readers;
 
 internal class BasePaletteReader(string filename) : AbstractPaletteReader(filename)
 {

@@ -1,13 +1,13 @@
-﻿using Pixed.Input;
-using Pixed.Models;
-using Pixed.Services.Keyboard;
-using Pixed.Utils;
+﻿using Pixed.Common.Input;
+using Pixed.Common.Models;
+using Pixed.Common.Services.Keyboard;
+using Pixed.Common.Utils;
 using SkiaSharp;
 
-namespace Pixed.Tools;
-internal class ToolDithering(ApplicationData applicationData) : ToolPen(applicationData)
+namespace Pixed.Common.Tools;
+public class ToolDithering(ApplicationData applicationData) : ToolPen(applicationData)
 {
-    public override string ImagePath => "avares://Pixed.Common/Resources/Icons/tools/tool-dithering.png";
+    public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-dithering.png";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Dithering");
     public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {

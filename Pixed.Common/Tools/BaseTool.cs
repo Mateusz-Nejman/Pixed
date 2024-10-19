@@ -1,14 +1,14 @@
-﻿using Pixed.Input;
-using Pixed.Models;
-using Pixed.Services.Keyboard;
-using Pixed.Utils;
+﻿using Pixed.Common.Input;
+using Pixed.Common.Models;
+using Pixed.Common.Services.Keyboard;
+using Pixed.Common.Utils;
 using SkiaSharp;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Pixed.Tools;
+namespace Pixed.Common.Tools;
 
-internal abstract class BaseTool(ApplicationData applicationData)
+public abstract class BaseTool(ApplicationData applicationData)
 {
     private readonly List<ToolProperty> _properties = [];
     protected readonly ApplicationData _applicationData = applicationData;

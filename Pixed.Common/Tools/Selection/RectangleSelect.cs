@@ -1,13 +1,13 @@
-﻿using Pixed.Models;
-using Pixed.Selection;
-using Pixed.Utils;
+﻿using Pixed.Common.Models;
+using Pixed.Common.Selection;
+using Pixed.Common.Utils;
 using SkiaSharp;
 
-namespace Pixed.Tools.Selection;
+namespace Pixed.Common.Tools.Selection;
 
 internal class RectangleSelect(ApplicationData applicationData, ToolSelector toolSelector) : AbstractDragSelect(applicationData, toolSelector)
 {
-    public override string ImagePath => "avares://Pixed.Common/Resources/Icons/tools/tool-rectangle-select.png";
+    public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-rectangle-select.png";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Rectangle selection", "Ctrl+C", "Copy the selected area", "Ctrl+V", "Paste the copied area");
     public override void OnDragSelectStart(int x, int y, Frame frame, ref SKBitmap overlay)
     {

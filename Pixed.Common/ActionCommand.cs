@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace Pixed;
+namespace Pixed.Common;
 
-internal class ActionCommand<T> : ICommand
+public class ActionCommand<T> : ICommand
 {
     #region Fields
     private readonly Action<T> _action;
@@ -15,7 +15,7 @@ internal class ActionCommand<T> : ICommand
     #region Constructors
     public ActionCommand(Action<T> action)
     {
-        this._action = action;
+        _action = action;
         CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }
 
@@ -43,7 +43,7 @@ internal class ActionCommand<T> : ICommand
     #endregion
 }
 
-internal class ActionCommand : ICommand
+public class ActionCommand : ICommand
 {
     #region Fields
     private readonly Action _action;
@@ -54,7 +54,7 @@ internal class ActionCommand : ICommand
     #region Constructors
     public ActionCommand(Action action)
     {
-        this._action = action;
+        _action = action;
         CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }
 
@@ -77,7 +77,7 @@ internal class ActionCommand : ICommand
     #endregion
 }
 
-internal class StaticActionCommand<T> : ICommand
+public class StaticActionCommand<T> : ICommand
 {
     #region Fields
     private readonly Action<T> _action;
@@ -89,7 +89,7 @@ internal class StaticActionCommand<T> : ICommand
     #region Constructors
     public StaticActionCommand(Action<T> action, T param)
     {
-        this._action = action;
+        _action = action;
         _parameter = param;
         CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }
@@ -113,7 +113,7 @@ internal class StaticActionCommand<T> : ICommand
     #endregion
 }
 
-internal class AsyncCommand<T> : ICommand
+public class AsyncCommand<T> : ICommand
 {
     #region Fields
     private readonly Func<T, Task> _func;
@@ -124,7 +124,7 @@ internal class AsyncCommand<T> : ICommand
     #region Constructors
     public AsyncCommand(Func<T, Task> func)
     {
-        this._func = func;
+        _func = func;
         CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }
 
@@ -152,7 +152,7 @@ internal class AsyncCommand<T> : ICommand
     #endregion
 }
 
-internal class AsyncCommand : ICommand
+public class AsyncCommand : ICommand
 {
     #region Fields
     private readonly Func<Task> _func;
@@ -163,7 +163,7 @@ internal class AsyncCommand : ICommand
     #region Constructors
     public AsyncCommand(Func<Task> func)
     {
-        this._func = func;
+        _func = func;
         CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }
 

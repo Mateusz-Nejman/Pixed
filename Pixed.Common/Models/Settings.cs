@@ -2,9 +2,9 @@
 using Newtonsoft.Json;
 using System.IO;
 
-namespace Pixed.Models;
+namespace Pixed.Common.Models;
 
-internal class Settings
+public class Settings
 {
     public int UserWidth { get; set; } = 16;
     public int UserHeight { get; set; } = 16;

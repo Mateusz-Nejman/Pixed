@@ -1,8 +1,8 @@
-﻿using Pixed.Models;
+﻿using Pixed.Common.Models;
 
-namespace Pixed.Tools.Transform;
+namespace Pixed.Common.Tools.Transform;
 
-internal abstract class AbstractTransformTool(ApplicationData applicationData)
+public abstract class AbstractTransformTool(ApplicationData applicationData)
 {
     protected ApplicationData _applicationData = applicationData;
 

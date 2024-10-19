@@ -1,14 +1,14 @@
-﻿using Pixed.Models;
-using Pixed.Selection;
-using Pixed.Services.Keyboard;
+﻿using Pixed.Common.Models;
+using Pixed.Common.Selection;
+using Pixed.Common.Services.Keyboard;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Reactive.Subjects;
 
-namespace Pixed;
+namespace Pixed.Common;
 
-internal static class Subjects
+public static class Subjects
 {
     public static Subject<KeyState> KeyState { get; } = new Subject<KeyState>();
     public static Subject<BaseSelection> SelectionCreated { get; } = new Subject<BaseSelection>();

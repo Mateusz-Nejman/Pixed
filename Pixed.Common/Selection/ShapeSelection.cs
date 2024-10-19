@@ -1,7 +1,7 @@
-﻿using Pixed.Models;
+﻿using Pixed.Common.Models;
 using System.Collections.Generic;
 
-namespace Pixed.Selection;
+namespace Pixed.Common.Selection;
 
 internal class ShapeSelection : BaseSelection
 {

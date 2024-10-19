@@ -1,16 +1,16 @@
-﻿using Pixed.Models;
-using Pixed.Services.Keyboard;
+﻿using Pixed.Common.Models;
+using Pixed.Common.Services.Keyboard;
 using SkiaSharp;
 using System;
 
-namespace Pixed.Tools;
-internal class ToolZoom(ApplicationData applicationData) : BaseTool(applicationData)
+namespace Pixed.Common.Tools;
+public class ToolZoom(ApplicationData applicationData) : BaseTool(applicationData)
 {
     private double _startZoom;
     private double _zoom;
     private IDisposable _disposed;
 
-    public override string ImagePath => "avares://Pixed.Common/Resources/Icons/tools/tool-zoom.png";
+    public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-zoom.png";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Zoom");
     public override bool AddToHistory { get; protected set; } = false;
     public override bool GridMovement { get; protected set; } = false;

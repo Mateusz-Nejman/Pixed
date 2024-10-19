@@ -1,6 +1,6 @@
-﻿using Pixed.Models;
+﻿using Pixed.Common.Models;
 
-namespace Pixed.Services.Palette.Writers;
+namespace Pixed.Common.Services.Palette.Writers;
 
 internal interface IAbstractPaletteWriter
 {

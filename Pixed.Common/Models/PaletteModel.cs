@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Pixed.Models;
+namespace Pixed.Common.Models;
 
-internal class PaletteModel(string id)
+public class PaletteModel(string id)
 {
     [JsonIgnore]
     public string Id { get; } = id;

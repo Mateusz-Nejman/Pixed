@@ -1,41 +1,21 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Microsoft.Extensions.DependencyInjection;
-using Pixed.IO;
-using Pixed.Menu;
-using Pixed.Models;
-using Pixed.Selection;
-using Pixed.Services;
-using Pixed.Services.Keyboard;
-using Pixed.Services.Palette;
-using Pixed.Tools;
-using Pixed.Tools.Selection;
-using Pixed.ViewModels;
-using Pixed.Windows;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Pixed.Common.Models;
+using Pixed.Common.Selection;
+using Pixed.Common.Services.Keyboard;
+using Pixed.Common.Services.Palette;
+using Pixed.Common.Tools;
+using Pixed.Common.Tools.Selection;
 
-namespace Pixed.DependencyInjection;
-internal static class DependencyInjectionRegister
+namespace Pixed.Common.DependencyInjection;
+public class DependencyInjectionRegister : IDependencyRegister
 {
-    public static void Register(ref IServiceCollection collection)
+    public void Register(ref IServiceCollection collection)
     {
         collection.AddSingleton<ApplicationData>();
         collection.AddSingleton<SelectionManager>();
         collection.AddSingleton<ToolSelector>();
-        collection.AddSingleton<MenuBuilder>();
-        collection.AddSingleton<MenuItemRegistry>();
-        collection.AddSingleton<RecentFilesService>();
         collection.AddSingleton<ShortcutService>();
         collection.AddSingleton<PaletteService>();
-
-        collection.AddSingleton<FramesSectionViewModel>();
-        collection.AddSingleton<LayersSectionViewModel>();
-        collection.AddSingleton<MainViewModel>();
-        collection.AddSingleton<PaintCanvasViewModel>();
-        collection.AddSingleton<PaletteSectionViewModel>();
-        collection.AddSingleton<ProjectsSectionViewModel>();
-        collection.AddSingleton<ToolsSectionViewModel>();
-
-        collection.AddSingleton<MainWindow>();
 
         collection.AddScoped<ToolBucket>();
         collection.AddScoped<ToolCircle>();
@@ -58,22 +38,5 @@ internal static class DependencyInjectionRegister
         collection.AddScoped<LassoSelect>();
         collection.AddScoped<RectangleSelect>();
         collection.AddScoped<ShapeSelect>();
-
-        collection.AddScoped<PixedProjectMethods>();
-        collection.AddSingleton<TransformMenuRegister>();
-        collection.AddSingleton<CopyPasteMenuRegister>();
-        collection.AddSingleton<ViewMenuRegister>();
-    }
-
-    public static IPixedServiceProvider GetServiceProvider(this IResourceHost control)
-    {
-        var resource = control.FindResource(typeof(IPixedServiceProvider));
-
-        if (resource is UnsetValueType unset)
-        {
-            return App.ServiceProvider;
-        }
-
-        return (IPixedServiceProvider)resource;
     }
 }

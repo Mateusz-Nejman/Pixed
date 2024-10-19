@@ -1,12 +1,12 @@
-﻿using Pixed.Models;
+﻿using Pixed.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 
-namespace Pixed.Utils;
+namespace Pixed.Common.Utils;
 
-internal static class ResizeUtils
+public static class ResizeUtils
 {
     public enum Origin
     {

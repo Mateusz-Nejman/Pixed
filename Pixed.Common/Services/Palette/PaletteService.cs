@@ -1,14 +1,14 @@
-﻿using Pixed.Models;
-using Pixed.Services.Palette.Readers;
-using Pixed.Services.Palette.Writers;
+﻿using Pixed.Common.Models;
+using Pixed.Common.Services.Palette.Readers;
+using Pixed.Common.Services.Palette.Writers;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Pixed.Services.Palette;
+namespace Pixed.Common.Services.Palette;
 
-internal class PaletteService
+public class PaletteService
 {
     private readonly ApplicationData _applicationData;
     public List<PaletteModel> Palettes { get; }

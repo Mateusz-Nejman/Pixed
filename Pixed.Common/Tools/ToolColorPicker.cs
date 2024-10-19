@@ -1,12 +1,12 @@
-﻿using Pixed.Input;
-using Pixed.Models;
-using Pixed.Services.Keyboard;
+﻿using Pixed.Common.Input;
+using Pixed.Common.Models;
+using Pixed.Common.Services.Keyboard;
 using SkiaSharp;
 
-namespace Pixed.Tools;
-internal class ToolColorPicker(ApplicationData applicationData) : BaseTool(applicationData)
+namespace Pixed.Common.Tools;
+public class ToolColorPicker(ApplicationData applicationData) : BaseTool(applicationData)
 {
-    public override string ImagePath => "avares://Pixed.Common/Resources/Icons/tools/tool-colorpicker.png";
+    public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-colorpicker.png";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Color picker");
     public override bool SingleHighlightedPixel { get; protected set; } = true;
     public override bool AddToHistory { get; protected set; } = false;

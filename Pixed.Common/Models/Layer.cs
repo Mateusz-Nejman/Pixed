@@ -1,6 +1,5 @@
-﻿using Pixed.IO;
-using Pixed.Utils;
-using Pixed.Windows;
+﻿using Pixed.Common.IO;
+using Pixed.Common.Utils;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -8,9 +7,9 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-namespace Pixed.Models;
+namespace Pixed.Common.Models;
 
-internal class Layer : PropertyChangedBase, IPixedSerializer
+public class Layer : PropertyChangedBase, IPixedSerializer
 {
     private uint[] _pixels;
     private int _width;
@@ -56,9 +55,14 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
     public int Width => _width;
     public int Height => _height;
     public ICommand? ChangeOpacityCommand { get; }
+
+    public static Func<Layer, Task> ChangeOpacityAction { get; set; }
     public Layer(int width, int height)
     {
-        ChangeOpacityCommand = new AsyncCommand(ChangeOpacityAction);
+        ChangeOpacityCommand = new AsyncCommand(async () =>
+        {
+            await ChangeOpacityAction(this);
+        });
         _id = Guid.NewGuid().ToString();
         _width = width;
         _height = height;
@@ -69,7 +73,10 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
 
     private Layer(int width, int height, uint[] pixels)
     {
-        ChangeOpacityCommand = new AsyncCommand(ChangeOpacityAction);
+        ChangeOpacityCommand = new AsyncCommand(async () =>
+        {
+            await ChangeOpacityAction(this);
+        });
         _id = Guid.NewGuid().ToString();
         _width = width;
         _height = height;
@@ -171,7 +178,7 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
             for (int a = 0; a < pixels.Count; a++)
             {
                 UniColor color = pixels[a];
-                color.A = (byte)((Opacity / 100d) * color.A);
+                color.A = (byte)(Opacity / 100d * color.A);
                 pixels[a] = color;
             }
         }
@@ -232,25 +239,5 @@ internal class Layer : PropertyChangedBase, IPixedSerializer
         }
         _pixels[y * _width + x] = color;
         _needRerender = true;
-    }
-
-    private async Task ChangeOpacityAction()
-    {
-        NumericPrompt numeric = new(Opacity)
-        {
-            Text = "Enter new opacity (%):"
-        };
-        var success = await numeric.ShowDialog<bool>(MainWindow.Handle);
-
-        if (success)
-        {
-            if (Opacity != numeric.Value)
-            {
-                _needRerender = true;
-            }
-            Opacity = numeric.Value;
-            RefreshRenderSource();
-            Subjects.LayerModified.OnNext(this);
-        }
     }
 }

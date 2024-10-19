@@ -6,7 +6,7 @@
     <TargetFramework>net8.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
-    <ApplicationIcon>../Pixed/Resources/icon.ico</ApplicationIcon>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
     <AssemblyName>Pixed</AssemblyName>
     <Platforms>AnyCPU;x64</Platforms>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
@@ -18,12 +18,16 @@
     <NoWin32Manifest>true</NoWin32Manifest>
     <AssemblyVersion>1.6</AssemblyVersion>
   </PropertyGroup>
+  <ItemGroup>
+    <Content Include="icon.ico" />
+  </ItemGroup>
   
   <ItemGroup>
     <PackageReference Include="Avalonia.Desktop" Version="11.1.4" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Pixed.Application\Pixed.Application.csproj" />
     <ProjectReference Include="..\Pixed.Common\Pixed.Common.csproj" />
   </ItemGroup>
 </Project>

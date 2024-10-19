@@ -1,12 +1,12 @@
-﻿using Pixed.Models;
-using Pixed.Services.Keyboard;
-using Pixed.Utils;
+﻿using Pixed.Common.Models;
+using Pixed.Common.Services.Keyboard;
+using Pixed.Common.Utils;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
 
-namespace Pixed.Tools;
-internal abstract class ShapeTool(ApplicationData applicationData) : BaseTool(applicationData)
+namespace Pixed.Common.Tools;
+public abstract class ShapeTool(ApplicationData applicationData) : BaseTool(applicationData)
 {
     protected string PROP_SHIFT = "Keep 1 to 1 ratio";
     protected int _startX = -1;

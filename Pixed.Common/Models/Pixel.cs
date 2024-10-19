@@ -1,6 +1,6 @@
-﻿namespace Pixed.Models;
+﻿namespace Pixed.Common.Models;
 
-internal class Pixel(int x, int y)
+public class Pixel(int x, int y)
 {
     public int X { get; set; } = x;
     public int Y { get; set; } = y;

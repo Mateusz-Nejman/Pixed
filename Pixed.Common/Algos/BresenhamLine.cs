@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace Pixed.Algos;
+namespace Pixed.Common.Algos;
 internal static class BresenhamLine
 {
     public static List<Point> Get(int x0, int y0, int x1, int y1)
@@ -12,8 +12,8 @@ internal static class BresenhamLine
         var dx = Math.Abs(x1 - x0);
         var dy = Math.Abs(y1 - y0);
 
-        var stepX = (x0 < x1) ? 1 : -1;
-        var stepY = (y0 < y1) ? 1 : -1;
+        var stepX = x0 < x1 ? 1 : -1;
+        var stepY = y0 < y1 ? 1 : -1;
 
         var error = dx - dy;
 

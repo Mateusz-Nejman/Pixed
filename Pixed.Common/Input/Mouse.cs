@@ -1,8 +1,8 @@
 ﻿using Avalonia.Input;
 
-namespace Pixed.Input;
+namespace Pixed.Common.Input;
 
-internal static class Mouse
+public static class Mouse
 {
     public static MouseButton ButtonChanged { get; set; }
     public static MouseButtonState LeftButton { get; set; } = MouseButtonState.Released;

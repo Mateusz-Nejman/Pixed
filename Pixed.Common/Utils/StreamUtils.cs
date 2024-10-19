@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Pixed.Utils;
+namespace Pixed.Common.Utils;
 internal static class StreamUtils
 {
     public static int ReadInt(this Stream stream)
@@ -55,7 +55,7 @@ internal static class StreamUtils
     {
         for (int i = 0; i < value.Length; i++)
         {
-            WriteInt(stream, value[i]);
+            stream.WriteInt(value[i]);
         }
     }
 
@@ -63,7 +63,7 @@ internal static class StreamUtils
     {
         for (int i = 0; i < value.Length; i++)
         {
-            WriteUInt(stream, value[i]);
+            stream.WriteUInt(value[i]);
         }
     }
 

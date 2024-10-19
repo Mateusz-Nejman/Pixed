@@ -1,11 +1,11 @@
-﻿using Pixed.Models;
-using Pixed.Selection;
+﻿using Pixed.Common.Models;
+using Pixed.Common.Selection;
 using System;
 using System.Collections.Generic;
 
-namespace Pixed.Tools.Transform;
+namespace Pixed.Common.Tools.Transform;
 
-internal static class TransformUtils
+public static class TransformUtils
 {
     public enum Axis
     {

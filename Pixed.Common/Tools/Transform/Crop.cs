@@ -1,11 +1,11 @@
-﻿using Pixed.Models;
-using Pixed.Selection;
-using Pixed.Utils;
+﻿using Pixed.Common.Models;
+using Pixed.Common.Selection;
+using Pixed.Common.Utils;
 using System;
 
-namespace Pixed.Tools.Transform;
+namespace Pixed.Common.Tools.Transform;
 
-internal class Crop(ApplicationData applicationData, SelectionManager selectionManager) : AbstractTransformTool(applicationData)
+public class Crop(ApplicationData applicationData, SelectionManager selectionManager) : AbstractTransformTool(applicationData)
 {
     private readonly SelectionManager _selectionManager = selectionManager;
 

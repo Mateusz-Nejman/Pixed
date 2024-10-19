@@ -2,8 +2,8 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace Pixed.Models;
-internal class ApplicationData
+namespace Pixed.Common.Models;
+public class ApplicationData
 {
     private int _index = 0;
     public IStorageFolder? DataFolder { get; set; }

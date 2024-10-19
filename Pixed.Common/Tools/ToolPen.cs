@@ -1,21 +1,21 @@
-﻿using Pixed.Algos;
-using Pixed.Models;
-using Pixed.Services.Keyboard;
-using Pixed.Utils;
+﻿using Pixed.Common.Algos;
+using Pixed.Common.Models;
+using Pixed.Common.Services.Keyboard;
+using Pixed.Common.Utils;
 using SkiaSharp;
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace Pixed.Tools;
+namespace Pixed.Common.Tools;
 
-internal class ToolPen(ApplicationData applicationData) : BaseTool(applicationData)
+public class ToolPen(ApplicationData applicationData) : BaseTool(applicationData)
 {
     protected int _prevX = -1;
     protected int _prevY = -1;
     private readonly List<Pixel> _pixels = [];
     private readonly List<Point> _modifiedPoints = [];
 
-    public override string ImagePath => "avares://Pixed.Common/Resources/Icons/tools/tool-pen.png";
+    public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-pen.png";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Simple pen");
     public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {

@@ -13,10 +13,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <AvaloniaResource Include="Resources\**" />
-  </ItemGroup>
-
-  <ItemGroup>
 	<PackageReference Include="Avalonia" Version="11.1.4" />
 	<PackageReference Include="Avalonia.Skia" Version="11.1.4" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.1.4" />

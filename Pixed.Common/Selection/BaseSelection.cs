@@ -1,10 +1,10 @@
-﻿using Pixed.Models;
+﻿using Pixed.Common.Models;
 using SkiaSharp;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Pixed.Selection;
-internal class BaseSelection
+namespace Pixed.Common.Selection;
+public class BaseSelection
 {
     public List<Pixel> Pixels { get; }
 
@@ -52,7 +52,7 @@ internal class BaseSelection
         var maxX = Pixels.Max(p => p.X);
         var maxY = Pixels.Max(p => p.Y);
 
-        SKBitmap bitmap = new((maxX - minX) + 1, (maxY - minY) + 1, true);
+        SKBitmap bitmap = new(maxX - minX + 1, maxY - minY + 1, true);
 
         foreach (var pixel in Pixels)
         {

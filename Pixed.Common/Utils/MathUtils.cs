@@ -1,11 +1,11 @@
-﻿using Pixed.Algos;
+﻿using Pixed.Common.Algos;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace Pixed.Utils;
+namespace Pixed.Common.Utils;
 
-internal static class MathUtils
+public static class MathUtils
 {
     public static List<Point> FloodFill(Point startPosition, Point size, Func<Point, bool> predicate)
     {
@@ -29,7 +29,7 @@ internal static class MathUtils
         var sx = x0 < x1 ? 1 : -1;
         var sy = y0 < y1 ? 1 : -1;
 
-        var ratio = (double)Math.Max(dx, dy) / (double)Math.Min(dx, dy);
+        var ratio = Math.Max(dx, dy) / (double)Math.Min(dx, dy);
         var step = Math.Round(ratio);
         if (step > Math.Min(dx, dy))
         {
@@ -69,8 +69,8 @@ internal static class MathUtils
 
     public static double Distance(int x0, int y0, int x1, int y1)
     {
-        var dx = Math.Abs((double)x1 - (double)x0);
-        var dy = Math.Abs((double)y1 - (double)y0);
+        var dx = Math.Abs(x1 - (double)x0);
+        var dy = Math.Abs(y1 - (double)y0);
         return Math.Sqrt(Math.Pow(dx, 2) + Math.Pow(dy, 2));
     }
 

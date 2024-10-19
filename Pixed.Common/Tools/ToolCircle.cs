@@ -1,11 +1,11 @@
-﻿using Pixed.Models;
-using Pixed.Utils;
+﻿using Pixed.Common.Models;
+using Pixed.Common.Utils;
 using System;
 
-namespace Pixed.Tools;
-internal class ToolCircle(ApplicationData applicationData) : ShapeTool(applicationData)
+namespace Pixed.Common.Tools;
+public class ToolCircle(ApplicationData applicationData) : ShapeTool(applicationData)
 {
-    public override string ImagePath => "avares://Pixed.Common/Resources/Icons/tools/tool-circle.png";
+    public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-circle.png";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Circle", "Shift", "1 to 1 ratio");
     protected override void Draw(int x, int y, uint color, bool isShift, Action<int, int, uint> setPixelAction)
     {
