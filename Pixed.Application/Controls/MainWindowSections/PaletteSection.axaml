@@ -1,0 +1,76 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:local="clr-namespace:Pixed.Application.Controls.MainWindowSections"
+             xmlns:vm="clr-namespace:Pixed.Application.ViewModels"
+             xmlns:controls="clr-namespace:Pixed.Application.Controls"
+             xmlns:colorpicker="clr-namespace:ColorPicker;assembly=ColorPicker.AvaloniaUI"
+             x:Class="Pixed.Application.Controls.MainWindowSections.PaletteSection"
+			 x:DataType="vm:PaletteSectionViewModel">
+	<local:Section>
+		<StackPanel>
+			<colorpicker:StandardColorPicker Width="186" Height="400" SelectedColor="{Binding PrimaryColor, Mode=TwoWay}" SecondaryColor="{Binding SecondaryColor, Mode=TwoWay}"/>
+			<TabControl BorderThickness="0" Background="Transparent" Padding="0">
+				<TabItem Header="Current colors" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" FontSize="13" FontWeight="Bold">
+					<controls:ColorGrid Columns="5" Colors="{Binding CurrentPaletteColors}"/>
+				</TabItem>
+				<TabItem Header="Palette" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" FontSize="13" FontWeight="Bold">
+					<StackPanel>
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="*"/>
+							</Grid.ColumnDefinitions>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="32"/>
+							</Grid.RowDefinitions>
+							<controls:TouchButton Theme="{StaticResource BaseButton}" Command="{Binding PaletteAddPrimaryCommand}">
+								<Image Source="avares://Pixed.Application/Resources/Icons/plus.png" Width="16" Height="16"/>
+								<ToolTip.Tip>
+									<controls:TextTooltip Text="Add Primary color to palette"/>
+								</ToolTip.Tip>
+							</controls:TouchButton>
+							<controls:TouchButton Theme="{StaticResource BaseButton}" Grid.Column="1" Command="{Binding PaletteAddCurrentCommand}">
+								<Image Source="avares://Pixed.Application/Resources/Icons/merge_palettes.png" Width="16" Height="16"/>
+								<ToolTip.Tip>
+									<controls:TextTooltip Text="Merge palette with current colors"/>
+								</ToolTip.Tip>
+							</controls:TouchButton>
+							<controls:TouchButton Theme="{StaticResource BaseButton}" Grid.Column="2" Command="{Binding PaletteListCommand}">
+								<Image Source="avares://Pixed.Application/Resources/Icons/database.png" Width="16" Height="16"/>
+								<ToolTip.Tip>
+									<controls:TextTooltip Text="Palettes list"/>
+								</ToolTip.Tip>
+							</controls:TouchButton>
+							<controls:TouchButton Theme="{StaticResource BaseButton}" Grid.Column="3" Command="{Binding PaletteOpenCommand}">
+								<Image Source="avares://Pixed.Application/Resources/Icons/folder-open.png" Width="16" Height="16"/>
+								<ToolTip.Tip>
+									<controls:TextTooltip Text="Open palette from file"/>
+								</ToolTip.Tip>
+							</controls:TouchButton>
+							<controls:TouchButton Theme="{StaticResource BaseButton}" Grid.Column="4" Command="{Binding PaletteSaveCommand}">
+								<Image Source="avares://Pixed.Application/Resources/Icons/floppy-disk.png" Width="16" Height="16"/>
+								<ToolTip.Tip>
+									<controls:TextTooltip Text="Save palette to file"/>
+								</ToolTip.Tip>
+							</controls:TouchButton>
+							<controls:TouchButton Theme="{StaticResource BaseButton}" Grid.Column="5" Command="{Binding PaletteClearCommand}">
+								<Image Source="avares://Pixed.Application/Resources/Icons/cross.png" Width="16" Height="16"/>
+								<ToolTip.Tip>
+									<controls:TextTooltip Text="Clear palette"/>
+								</ToolTip.Tip>
+							</controls:TouchButton>
+						</Grid>
+						<controls:ColorGrid Columns="5" Colors="{Binding SelectedPaletteColors}"/>
+					</StackPanel>
+				</TabItem>
+			</TabControl>
+		</StackPanel>
+	</local:Section>
+</UserControl>

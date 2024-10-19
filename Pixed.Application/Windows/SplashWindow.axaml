@@ -1,0 +1,28 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:progRing="clr-namespace:AvaloniaProgressRing;assembly=AvaloniaProgressRing"
+        mc:Ignorable="d"
+        x:Class="Pixed.Application.Windows.SplashWindow"
+        Title="SplashWindow"
+		ShowInTaskbar="False" 
+		SystemDecorations="None"
+        CanResize="False" 
+		WindowStartupLocation="CenterScreen"
+		Width="200"
+		Height="200"
+		Background="Transparent">
+	<Border CornerRadius="16" Background="{StaticResource BaseBackground}">
+		<Grid>
+			<Image Source="/Resources/icon256.png" Width="100" Height="100"/>
+			<progRing:ProgressRing Width="80"
+							   Height="80"
+							   IsActive="True"
+							   HorizontalAlignment="Center"
+							   VerticalAlignment="Center"
+							   Foreground="{StaticResource Accent}"
+							   Margin="10,20,0,0"/>
+		</Grid>
+	</Border>
+</Window>

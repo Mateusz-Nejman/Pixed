@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <!--If you are willing to use Windows/MacOS native APIs you will need to create 3 projects.
+    One for Windows with net8.0-windows TFM, one for MacOS with net8.0-macos and one with net8.0 TFM for Linux.-->
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <AssemblyName>Pixed</AssemblyName>
+    <Platforms>AnyCPU;x64</Platforms>
+    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+    <BaseOutputPath>$(SolutionDir)build\Pixed.Windows</BaseOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Label="Avalonia">
+    <AvaloniaUseCompiledBindingsByDefault>True</AvaloniaUseCompiledBindingsByDefault>
+    <PlatformTarget>x64</PlatformTarget>
+    <NoWin32Manifest>true</NoWin32Manifest>
+    <AssemblyVersion>1.6</AssemblyVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="icon.ico" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Avalonia.Desktop" Version="11.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Pixed.Application\Pixed.Application.csproj" />
+    <ProjectReference Include="..\Pixed.Common\Pixed.Common.csproj" />
+  </ItemGroup>
+</Project>

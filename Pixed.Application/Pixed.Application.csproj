@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <AvaloniaUseCompiledBindingsByDefault>True</AvaloniaUseCompiledBindingsByDefault>
+    <PlatformTarget>x64</PlatformTarget>
+    <Platforms>AnyCPU;x64</Platforms>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <BaseOutputPath>$(SolutionDir)build\Pixed</BaseOutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Avalonia">
+    <AvaloniaXamlIlDebuggerLaunch>False</AvaloniaXamlIlDebuggerLaunch>
+    <AvaloniaXamlVerboseExceptions>False</AvaloniaXamlVerboseExceptions>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="Resources\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<PackageReference Include="Avalonia" Version="11.1.4" />
+	<PackageReference Include="Avalonia.Skia" Version="11.1.4" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.1.4" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.1.4" />
+    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.1.4" />
+    <PackageReference Include="Avalonia.Themes.Simple" Version="11.1.4" />
+    <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.1.0.4" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
+    <PackageReference Include="Deadpikle.AvaloniaProgressRing" Version="0.10.8" />
+    <PackageReference Include="MateuszNejman.LZMA_SDK" Version="24.8.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="PixiEditor.ColorPicker.AvaloniaUI" Version="1.0.6" />
+    <PackageReference Include="SkiaSharp" Version="2.88.8" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.10" />
+    <PackageReference Include="System.Reactive" Version="6.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Pixed.Common\Pixed.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Input\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+</Project>

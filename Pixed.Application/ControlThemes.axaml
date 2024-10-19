@@ -1,0 +1,334 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:controls="clr-namespace:Pixed.Application.Controls;assembly=Pixed"
+					xmlns:gestures="clr-namespace:Pixed.Application.Controls.Gestures;assembly=Pixed.Application">
+	<Design.PreviewWith>
+		<Border Padding="20">
+			<StackPanel Spacing="10">
+				<RadioButton>
+					<Image Source="avares://Pixed.Application/Resources/Icons/arrow-left.png" Width="40" Height="40"/>
+				</RadioButton>
+			</StackPanel>
+		</Border>
+	</Design.PreviewWith>
+	<ControlTheme x:Key="BaseButton" TargetType="Button">
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="BorderBrush" Value="{StaticResource BaseBorder}"/>
+		<Setter Property="BorderThickness" Value="0, 1, 0, 0"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Border Background="{TemplateBinding Background}">
+						<ContentPresenter Name="PART_ContentPresenter" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+					</Border>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Style Selector="^:pointerover">
+			<Setter Property="Background" Value="{StaticResource BaseBackgroundHover}"/>
+		</Style>
+		<Style Selector="^:disabled">
+			<Setter Property="Opacity" Value="0.5" />
+		</Style>
+	</ControlTheme>
+	<ControlTheme x:Key="ToolButton" TargetType="Button">
+		<Setter Property="Width" Value="46"/>
+		<Setter Property="Height" Value="46"/>
+		<Setter Property="BorderThickness" Value="3"/>
+		<Setter Property="Background" Value="{StaticResource ButtonBackground}"/>
+		<Setter Property="BorderBrush" Value="{StaticResource ButtonBackground}"/>
+		<Setter Property="Template">
+			<ControlTemplate TargetType="RadioButton">
+				<Border BorderThickness="{TemplateBinding BorderThickness}"
+							BorderBrush="{TemplateBinding BorderBrush}"
+							Background="{TemplateBinding Background}">
+					<ContentPresenter
+						  Name="PART_ContentPresenter"
+						  Margin="{TemplateBinding Padding}"
+						  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+						  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+						  Content="{TemplateBinding Content}"
+						  ContentTemplate="{TemplateBinding ContentTemplate}"
+						  Foreground="{TemplateBinding Foreground}"
+						  RecognizesAccessKey="True" />
+				</Border>
+			</ControlTemplate>
+		</Setter>
+	</ControlTheme>
+	<ControlTheme x:Key="ToolRadio" TargetType="RadioButton">
+		<Setter Property="Width" Value="46"/>
+		<Setter Property="Height" Value="46"/>
+		<Setter Property="BorderThickness" Value="3"/>
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="BorderBrush" Value="Transparent"/>
+		<Setter Property="Template">
+			<ControlTemplate TargetType="RadioButton">
+				<Border BorderThickness="{TemplateBinding BorderThickness}"
+							BorderBrush="{TemplateBinding BorderBrush}"
+							Background="{TemplateBinding Background}">
+					<ContentPresenter
+						  Name="PART_ContentPresenter"
+						  Margin="{TemplateBinding Padding}"
+						  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+						  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+						  Content="{TemplateBinding Content}"
+						  ContentTemplate="{TemplateBinding ContentTemplate}"
+						  Foreground="{TemplateBinding Foreground}"
+						  RecognizesAccessKey="True" />
+				</Border>
+			</ControlTemplate>
+		</Setter>
+		<Style Selector="^:checked">
+			<Setter Property="BorderBrush" Value="{StaticResource Accent}"/>
+		</Style>
+		<Style Selector="^:pointerover">
+			<Setter Property="Background" Value="{StaticResource BaseBackgroundHover}"/>
+		</Style>
+	</ControlTheme>
+	<ControlTheme x:Key="ToolRadioCustom" TargetType="RadioButton">
+		<Setter Property="Width" Value="46"/>
+		<Setter Property="Height" Value="46"/>
+		<Setter Property="BorderThickness" Value="3"/>
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="BorderBrush" Value="Transparent"/>
+		<Setter Property="Template">
+			<ControlTemplate TargetType="RadioButton">
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*"/>
+						<ColumnDefinition Width="*"/>
+						<ColumnDefinition Width="*"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="*"/>
+						<RowDefinition Height="*"/>
+						<RowDefinition Height="*"/>
+					</Grid.RowDefinitions>
+					<Border BorderThickness="{TemplateBinding BorderThickness}"
+							BorderBrush="{TemplateBinding BorderBrush}"
+							Background="{TemplateBinding Background}" Grid.ColumnSpan="3" Grid.RowSpan="3">
+						<ContentPresenter
+							  Name="PART_ContentPresenter"
+							  Margin="{TemplateBinding Padding}"
+							  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+							  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+							  Content="{TemplateBinding Content}"
+							  ContentTemplate="{TemplateBinding ContentTemplate}"
+							  Foreground="{TemplateBinding Foreground}"
+							  RecognizesAccessKey="True" />
+					</Border>
+					<Image Source="avares://Pixed.Application/Resources/Icons/cogs.png" Grid.Row="2" Grid.Column="2"/>
+				</Grid>
+			</ControlTemplate>
+		</Setter>
+		<Style Selector="^:checked">
+			<Setter Property="BorderBrush" Value="{StaticResource Accent}"/>
+		</Style>
+		<Style Selector="^:pointerover">
+			<Setter Property="Background" Value="{StaticResource BaseBackgroundHover}"/>
+		</Style>
+	</ControlTheme>
+	<ControlTheme x:Key="FrameListBoxItem" TargetType="ListBoxItem">
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="Margin" Value="0, 4" />
+		<Setter Property="Template">
+			<ControlTemplate>
+				<ContentPresenter Name="PART_ContentPresenter"
+								  Background="{TemplateBinding Background}"
+								  BorderBrush="{TemplateBinding BorderBrush}"
+								  BorderThickness="{TemplateBinding BorderThickness}"
+								  CornerRadius="{TemplateBinding CornerRadius}"
+								  ContentTemplate="{TemplateBinding ContentTemplate}"
+								  Content="{TemplateBinding Content}"
+								  Padding="{TemplateBinding Padding}"
+								  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+								  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" />
+			</ControlTemplate>
+		</Setter>
+		<Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="{DynamicResource SystemControlHighlightListLowBrush}" />
+			<Setter Property="Foreground" Value="{DynamicResource SystemControlHighlightAltBaseHighBrush}" />
+		</Style>
+
+		<!--  Pressed State  -->
+		<Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="{DynamicResource SystemControlHighlightListMediumBrush}" />
+			<Setter Property="Foreground" Value="{DynamicResource SystemControlHighlightAltBaseHighBrush}" />
+		</Style>
+
+		<!--  Selected State  -->
+		<Style Selector="^:selected">
+
+			<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Background" Value="{DynamicResource SystemControlHighlightListAccentLowBrush}" />
+				<Setter Property="Foreground" Value="{DynamicResource SystemControlHighlightAltBaseHighBrush}" />
+			</Style>
+
+			<!--  Selected Unfocused State  -->
+			<Style Selector="^:not(:focus) /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Background" Value="{DynamicResource SystemControlHighlightListAccentLowBrush}" />
+				<Setter Property="Foreground" Value="{DynamicResource SystemControlHighlightAltBaseHighBrush}" />
+			</Style>
+
+			<!--  Selected PointerOver State  -->
+			<Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Background" Value="{DynamicResource SystemControlHighlightListAccentMediumBrush}" />
+				<Setter Property="Foreground" Value="{DynamicResource SystemControlHighlightAltBaseHighBrush}" />
+			</Style>
+
+			<!--  Selected Pressed State  -->
+			<Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Background" Value="{DynamicResource SystemControlHighlightListAccentHighBrush}" />
+				<Setter Property="Foreground" Value="{DynamicResource SystemControlHighlightAltBaseHighBrush}" />
+			</Style>
+		</Style>
+	</ControlTheme>
+	<ControlTheme x:Key="LayersListBoxItem" TargetType="ListBoxItem">
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="Padding" Value="4" />
+		<Setter Property="Template">
+			<ControlTemplate>
+				<ContentPresenter Name="PART_ContentPresenter"
+								  Background="{TemplateBinding Background}"
+								  BorderBrush="{TemplateBinding BorderBrush}"
+								  BorderThickness="{TemplateBinding BorderThickness}"
+								  CornerRadius="{TemplateBinding CornerRadius}"
+								  ContentTemplate="{TemplateBinding ContentTemplate}"
+								  Content="{TemplateBinding Content}"
+								  Padding="{TemplateBinding Padding}"
+								  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+								  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" />
+			</ControlTemplate>
+		</Setter>
+		<Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="{DynamicResource SystemControlHighlightListLowBrush}" />
+			<Setter Property="Foreground" Value="{DynamicResource SystemControlHighlightAltBaseHighBrush}" />
+		</Style>
+
+		<!--  Pressed State  -->
+		<Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="{DynamicResource SystemControlHighlightListMediumBrush}" />
+			<Setter Property="Foreground" Value="{DynamicResource SystemControlHighlightAltBaseHighBrush}" />
+		</Style>
+
+		<!--  Selected State  -->
+		<Style Selector="^:selected">
+
+			<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Background" Value="{DynamicResource SystemControlHighlightListAccentLowBrush}" />
+				<Setter Property="Foreground" Value="{DynamicResource SystemControlHighlightAltBaseHighBrush}" />
+			</Style>
+
+			<!--  Selected Unfocused State  -->
+			<Style Selector="^:not(:focus) /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Background" Value="{DynamicResource SystemControlHighlightListAccentLowBrush}" />
+				<Setter Property="Foreground" Value="{DynamicResource SystemControlHighlightAltBaseHighBrush}" />
+			</Style>
+
+			<!--  Selected PointerOver State  -->
+			<Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Background" Value="{DynamicResource SystemControlHighlightListAccentMediumBrush}" />
+				<Setter Property="Foreground" Value="{DynamicResource SystemControlHighlightAltBaseHighBrush}" />
+			</Style>
+
+			<!--  Selected Pressed State  -->
+			<Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Background" Value="{DynamicResource SystemControlHighlightListAccentHighBrush}" />
+				<Setter Property="Foreground" Value="{DynamicResource SystemControlHighlightAltBaseHighBrush}" />
+			</Style>
+		</Style>
+	</ControlTheme>
+	<ControlTheme x:Key="NoGesturesScrollViewer" TargetType="ScrollViewer">
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Grid ColumnDefinitions="*,Auto" RowDefinitions="*,Auto">
+					<ScrollContentPresenter Name="PART_ContentPresenter"
+											Grid.Row="0"
+											Grid.Column="0"
+											Background="{TemplateBinding Background}"
+											HorizontalSnapPointsType="{TemplateBinding HorizontalSnapPointsType}"
+											VerticalSnapPointsType="{TemplateBinding VerticalSnapPointsType}"
+											HorizontalSnapPointsAlignment="{TemplateBinding HorizontalSnapPointsAlignment}"
+											VerticalSnapPointsAlignment="{TemplateBinding VerticalSnapPointsAlignment}"
+											Padding="{TemplateBinding Padding}"
+											ScrollViewer.IsScrollInertiaEnabled="{TemplateBinding IsScrollInertiaEnabled}">
+					</ScrollContentPresenter>
+					<ScrollBar Name="PART_HorizontalScrollBar"
+							   Orientation="Horizontal"
+							   Grid.Row="1"/>
+					<ScrollBar Name="PART_VerticalScrollBar"
+							   Orientation="Vertical"
+							   Grid.Column="1"/>
+					<Panel x:Name="PART_ScrollBarsSeparator"
+						   Grid.Row="1"
+						   Grid.Column="1"
+						   Background="{DynamicResource ScrollViewerScrollBarsSeparatorBackground}"
+						   Opacity="0">
+						<Panel.Transitions>
+							<Transitions>
+								<DoubleTransition Property="Opacity" Duration="0:0:0.1" />
+							</Transitions>
+						</Panel.Transitions>
+					</Panel>
+				</Grid>
+			</ControlTemplate>
+		</Setter>
+		<Style Selector="^[IsExpanded=true] /template/ Panel#PART_ScrollBarsSeparator">
+			<Setter Property="Opacity" Value="1" />
+		</Style>
+		<Style Selector="^[AllowAutoHide=True] /template/ ScrollContentPresenter#PART_ContentPresenter">
+			<Setter Property="Grid.ColumnSpan" Value="2" />
+			<Setter Property="Grid.RowSpan" Value="2" />
+		</Style>
+	</ControlTheme>
+	<ControlTheme x:Key="HandledFixScrollViewer" TargetType="ScrollViewer">
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Grid ColumnDefinitions="*,Auto" RowDefinitions="*,Auto">
+					<ScrollContentPresenter Name="PART_ContentPresenter"
+											Grid.Row="0"
+											Grid.Column="0"
+											Background="{TemplateBinding Background}"
+											HorizontalSnapPointsType="{TemplateBinding HorizontalSnapPointsType}"
+											VerticalSnapPointsType="{TemplateBinding VerticalSnapPointsType}"
+											HorizontalSnapPointsAlignment="{TemplateBinding HorizontalSnapPointsAlignment}"
+											VerticalSnapPointsAlignment="{TemplateBinding VerticalSnapPointsAlignment}"
+											Padding="{TemplateBinding Padding}"
+											ScrollViewer.IsScrollInertiaEnabled="{TemplateBinding IsScrollInertiaEnabled}">
+						<ScrollContentPresenter.GestureRecognizers>
+							<gestures:HandledScrollGestureRecognizer CanHorizontallyScroll="{Binding CanHorizontallyScroll, ElementName=PART_ContentPresenter}"
+													 CanVerticallyScroll="{Binding CanVerticallyScroll, ElementName=PART_ContentPresenter}"
+													 IsScrollInertiaEnabled="{Binding (ScrollViewer.IsScrollInertiaEnabled), ElementName=PART_ContentPresenter}"/>
+						</ScrollContentPresenter.GestureRecognizers>
+					</ScrollContentPresenter>
+					<ScrollBar Name="PART_HorizontalScrollBar"
+							   Orientation="Horizontal"
+							   Grid.Row="1"/>
+					<ScrollBar Name="PART_VerticalScrollBar"
+							   Orientation="Vertical"
+							   Grid.Column="1"/>
+					<Panel x:Name="PART_ScrollBarsSeparator"
+						   Grid.Row="1"
+						   Grid.Column="1"
+						   Background="{DynamicResource ScrollViewerScrollBarsSeparatorBackground}"
+						   Opacity="0">
+						<Panel.Transitions>
+							<Transitions>
+								<DoubleTransition Property="Opacity" Duration="0:0:0.1" />
+							</Transitions>
+						</Panel.Transitions>
+					</Panel>
+				</Grid>
+			</ControlTemplate>
+		</Setter>
+		<Style Selector="^[IsExpanded=true] /template/ Panel#PART_ScrollBarsSeparator">
+			<Setter Property="Opacity" Value="1" />
+		</Style>
+		<Style Selector="^[AllowAutoHide=True] /template/ ScrollContentPresenter#PART_ContentPresenter">
+			<Setter Property="Grid.ColumnSpan" Value="2" />
+			<Setter Property="Grid.RowSpan" Value="2" />
+		</Style>
+	</ControlTheme>
+</ResourceDictionary>

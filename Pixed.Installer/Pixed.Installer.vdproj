@@ -753,7 +753,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_AC636B93ABD94B38800472F18D569447"
             {
-            "SourcePath" = "8:..\\Pixed.Desktop\\obj\\x64\\Debug\\net8.0-windows\\apphost.exe"
+            "SourcePath" = "8:..\\Pixed.Windows\\obj\\x64\\Debug\\net8.0-windows\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_F8C7BF363229488B968E9A7265AA89CE"
