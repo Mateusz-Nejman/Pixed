@@ -10,7 +10,7 @@
     <AssemblyName>Pixed</AssemblyName>
     <Platforms>AnyCPU;x64</Platforms>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
-    <BaseOutputPath>$(SolutionDir)build\Pixed.Desktop</BaseOutputPath>
+    <BaseOutputPath>$(SolutionDir)build\Pixed.Windows</BaseOutputPath>
   </PropertyGroup>
   <PropertyGroup Label="Avalonia">
     <AvaloniaUseCompiledBindingsByDefault>True</AvaloniaUseCompiledBindingsByDefault>

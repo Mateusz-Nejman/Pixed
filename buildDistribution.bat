@@ -35,7 +35,7 @@ if exist "%MSIX_STORE_PATH%" (
     del "%MSIX_STORE_PATH%"
 )
 
-cd "%SOLUTION_PATH%\build\Pixed.Desktop\x64\Release\net8.0-windows"
+cd "%SOLUTION_PATH%\build\Pixed.Windows\x64\Release\net8.0-windows"
 
 "%SOLUTION_PATH%\7za.exe" a -x"!win-x64/" "%ZIP_PATH%" -mx9 -tzip
 

@@ -5,7 +5,7 @@ VisualStudioVersion = 17.11.35219.272
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pixed.Common", "Pixed.Common\Pixed.Common.csproj", "{B8B7F90E-0A5E-4A19-9BF9-9E2AC1046EAC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pixed.Desktop", "Pixed.Desktop\Pixed.Desktop.csproj", "{A519001E-8F96-4F91-8A98-F5BC1ACD5D17}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pixed.Windows", "Pixed.Windows\Pixed.Windows.csproj", "{A519001E-8F96-4F91-8A98-F5BC1ACD5D17}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pixed.Tests", "Pixed.Tests\Pixed.Tests.csproj", "{450F3BDE-36E5-4987-9470-46BD6087C8EE}"
 EndProject
