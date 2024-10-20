@@ -1,5 +1,4 @@
 ﻿using Pixed.Application.Controls;
-using Pixed.Application.Menu;
 using Pixed.Application.Windows;
 using Pixed.Common;
 using Pixed.Common.Menu;
@@ -14,7 +13,7 @@ namespace Pixed.Application.ViewModels;
 internal class LayersSectionViewModel : PixedViewModel, IDisposable
 {
     private readonly ApplicationData _applicationData;
-    private readonly MenuItemRegistry _menuItemRegistry;
+    private readonly IMenuItemRegistry _menuItemRegistry;
     private int _selectedLayer = 0;
 
     private bool _canLayerMoveUp = false;
@@ -100,7 +99,7 @@ internal class LayersSectionViewModel : PixedViewModel, IDisposable
     public ICommand MergeLayerCommand { get; }
     public ICommand RemoveLayerCommand { get; }
 
-    public LayersSectionViewModel(ApplicationData applicationData, MenuItemRegistry menuItemRegistry)
+    public LayersSectionViewModel(ApplicationData applicationData, IMenuItemRegistry menuItemRegistry)
     {
         _applicationData = applicationData;
         _menuItemRegistry = menuItemRegistry;

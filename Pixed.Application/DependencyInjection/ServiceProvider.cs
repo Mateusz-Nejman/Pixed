@@ -12,6 +12,11 @@ public class ServiceProvider(IServiceProvider serviceProvider) : IPixedServicePr
         return _serviceProvider.GetService<T>();
     }
 
+    public object? Get(Type serviceType)
+    {
+        return _serviceProvider.GetService(serviceType);
+    }
+
     public IServiceProvider GetNativeProvider()
     {
         return _serviceProvider;

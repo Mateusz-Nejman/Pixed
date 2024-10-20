@@ -5,6 +5,7 @@ using Pixed.Application.Services;
 using Pixed.Application.ViewModels;
 using Pixed.Application.Windows;
 using Pixed.Common.DependencyInjection;
+using Pixed.Common.Menu;
 using Pixed.Common.Platform;
 
 namespace Pixed.Application.DependencyInjection;
@@ -24,7 +25,7 @@ internal class ApplicationDependencyRegister : IDependencyRegister
         collection.AddSingleton<RecentFilesService>();
         collection.AddScoped<PixedProjectMethods>();
         collection.AddSingleton<MenuBuilder>();
-        collection.AddSingleton<MenuItemRegistry>();
+        collection.AddSingleton<IMenuItemRegistry, MenuItemRegistry>();
 
         collection.AddSingleton<TransformMenuRegister>();
         collection.AddSingleton<CopyPasteMenuRegister>();

@@ -3,9 +3,9 @@ using Pixed.Common.Menu;
 using Pixed.Common.Selection;
 
 namespace Pixed.Application.Menu;
-internal class CopyPasteMenuRegister(MenuItemRegistry menuItemRegistry, SelectionManager selectionManager)
+internal class CopyPasteMenuRegister(IMenuItemRegistry menuItemRegistry, SelectionManager selectionManager)
 {
-    private readonly MenuItemRegistry _menuItemRegistry = menuItemRegistry;
+    private readonly IMenuItemRegistry _menuItemRegistry = menuItemRegistry;
     private readonly SelectionManager _selectionManager = selectionManager;
 
     public void Register()

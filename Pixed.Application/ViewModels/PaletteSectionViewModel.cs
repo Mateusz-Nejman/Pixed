@@ -1,6 +1,5 @@
 ﻿using Avalonia.Media;
 using Pixed.Application.Controls;
-using Pixed.Application.Menu;
 using Pixed.Application.Utils;
 using Pixed.Application.Windows;
 using Pixed.Common;
@@ -18,7 +17,7 @@ namespace Pixed.Application.ViewModels;
 internal class PaletteSectionViewModel : PixedViewModel, IDisposable
 {
     private readonly ApplicationData _applicationData;
-    private readonly MenuItemRegistry _menuItemRegistry;
+    private readonly IMenuItemRegistry _menuItemRegistry;
     private readonly PaletteService _paletteService;
 
     private UniColor _primaryColor = UniColor.Black;
@@ -78,7 +77,7 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
     public ICommand PaletteSaveCommand { get; }
     public ICommand PaletteClearCommand { get; }
 
-    public PaletteSectionViewModel(ApplicationData applicationData, MenuItemRegistry menuItemRegistry, PaletteService paletteService)
+    public PaletteSectionViewModel(ApplicationData applicationData, IMenuItemRegistry menuItemRegistry, PaletteService paletteService)
     {
         _applicationData = applicationData;
         _menuItemRegistry = menuItemRegistry;

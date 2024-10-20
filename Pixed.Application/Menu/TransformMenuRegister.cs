@@ -8,9 +8,9 @@ using Pixed.Common.Tools.Transform;
 using System;
 
 namespace Pixed.Application.Menu;
-internal class TransformMenuRegister(MenuItemRegistry menuItemRegistry, SelectionManager selectionManager, ApplicationData applicationData)
+internal class TransformMenuRegister(IMenuItemRegistry menuItemRegistry, SelectionManager selectionManager, ApplicationData applicationData)
 {
-    private readonly MenuItemRegistry _menuItemRegistry = menuItemRegistry;
+    private readonly IMenuItemRegistry _menuItemRegistry = menuItemRegistry;
     private readonly SelectionManager _selectionManager = selectionManager;
     private readonly ApplicationData _applicationData = applicationData;
 

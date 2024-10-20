@@ -5,9 +5,9 @@ using Pixed.Common.Menu;
 using Pixed.Common.Models;
 
 namespace Pixed.Application.Menu;
-internal class ViewMenuRegister(MenuItemRegistry menuItemRegistry, ApplicationData applicationData)
+internal class ViewMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationData applicationData)
 {
-    private readonly MenuItemRegistry _menuItemRegistry = menuItemRegistry;
+    private readonly IMenuItemRegistry _menuItemRegistry = menuItemRegistry;
     private readonly ApplicationData _applicationData = applicationData;
 
     public void Register()
