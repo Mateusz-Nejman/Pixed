@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Pixed.Application.Extensions;
 using Pixed.Application.IO;
 using Pixed.Application.Services;
 using Pixed.Application.Windows;
@@ -37,6 +38,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
 
     public void Build(bool clear = true)
     {
+        AddFromExtensions();
         NativeMenuItem fileMenu = GetFileMenu();
         NativeMenuItem editMenu = GetEditMenu();
         NativeMenuItem toolsMenu = new("Tools");
@@ -226,5 +228,11 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
     private async Task ExportIcoAction()
     {
         await _projectMethods.ExportToIco(_applicationData.CurrentModel);
+    }
+
+    private void AddFromExtensions()
+    {
+        MenuItemRegistry registry = new(this);
+        ExtensionsLoader.RegisterMenuItems(registry);
     }
 }

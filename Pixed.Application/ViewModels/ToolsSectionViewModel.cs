@@ -6,7 +6,9 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Styling;
 using Pixed.Application.Controls;
-using Pixed.Application.Menu;
+using Pixed.Application.DependencyInjection;
+using Pixed.Application.Extensions;
+using Pixed.Application.Windows;
 using Pixed.Common;
 using Pixed.Common.Menu;
 using Pixed.Common.Tools;
@@ -15,9 +17,9 @@ using System.Collections.Generic;
 using System.Windows.Input;
 
 namespace Pixed.Application.ViewModels;
-internal class ToolsSectionViewModel(MenuItemRegistry menuItemRegistry, ToolSelector toolSelector, PaintCanvasViewModel paintCanvas) : PixedViewModel
+internal class ToolsSectionViewModel(IMenuItemRegistry menuItemRegistry, ToolSelector toolSelector, PaintCanvasViewModel paintCanvas) : PixedViewModel
 {
-    private readonly MenuItemRegistry _menuItemRegistry = menuItemRegistry;
+    private readonly IMenuItemRegistry _menuItemRegistry = menuItemRegistry;
     private readonly ToolSelector _toolSelector = toolSelector;
     private readonly PaintCanvasViewModel _paintCanvas = paintCanvas;
     private readonly Dictionary<string, ToolRadioButton> _radios = [];
@@ -53,6 +55,13 @@ internal class ToolsSectionViewModel(MenuItemRegistry menuItemRegistry, ToolSele
         _toolSelector.SelectToolAction = SelectTool;
         _radios.Clear();
         var tools = _toolSelector.GetTools();
+
+        var extensionTools = ExtensionsLoader.GetTools(MainWindow.Handle.GetServiceProvider());
+
+        foreach (var extensionTool in extensionTools)
+        {
+            tools.Add(extensionTool.Key, extensionTool.Value);
+        }
 
         foreach (var tool in tools)
         {

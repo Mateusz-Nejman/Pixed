@@ -6,6 +6,7 @@ using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Pixed.Application.DependencyInjection;
+using Pixed.Application.Extensions;
 using Pixed.Application.Windows;
 using Pixed.Common;
 using Pixed.Common.DependencyInjection;
@@ -57,6 +58,9 @@ public partial class App : Avalonia.Application
         {
             register.Register(ref collection);
         }
+
+        ExtensionsLoader.Load(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Pixed", "Extensions"));
+        ExtensionsLoader.RegisterTools(ref collection);
         ServiceProvider provider = new(collection.BuildServiceProvider());
         this.Resources[typeof(IPixedServiceProvider)] = provider;
         ServiceProvider = provider;

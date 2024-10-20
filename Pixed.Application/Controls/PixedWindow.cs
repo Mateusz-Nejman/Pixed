@@ -1,14 +1,14 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Pixed.Application.DependencyInjection;
-using Pixed.Application.Menu;
+using Pixed.Common.Menu;
 using System;
 
 namespace Pixed.Application.Controls;
 internal abstract class PixedWindow<T> : Window
 {
-    protected readonly MenuItemRegistry _menuItemRegistry;
-    public PixedWindow(MenuItemRegistry menuItemRegistry)
+    protected readonly IMenuItemRegistry _menuItemRegistry;
+    public PixedWindow(IMenuItemRegistry menuItemRegistry)
     {
         var serviceProvider = this.GetServiceProvider();
         this.DataContext = serviceProvider.Get<T>();

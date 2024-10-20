@@ -1,14 +1,14 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Pixed.Application.DependencyInjection;
-using Pixed.Application.Menu;
 using Pixed.Common.DependencyInjection;
+using Pixed.Common.Menu;
 using System;
 
 namespace Pixed.Application.Controls;
 internal abstract class PixedUserControl<T> : UserControl
 {
-    protected readonly MenuItemRegistry _menuItemRegistry;
+    protected readonly IMenuItemRegistry _menuItemRegistry;
 
     protected static IPixedServiceProvider Provider => App.ServiceProvider;
 
@@ -16,7 +16,7 @@ internal abstract class PixedUserControl<T> : UserControl
 
     public PixedUserControl()
     {
-        _menuItemRegistry = Provider.Get<MenuItemRegistry>();
+        _menuItemRegistry = Provider.Get<IMenuItemRegistry>();
         var serviceProvider = this.GetServiceProvider();
         this.DataContext = serviceProvider.Get<T>();
     }

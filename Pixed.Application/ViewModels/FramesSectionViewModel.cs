@@ -1,5 +1,4 @@
 ﻿using Pixed.Application.Controls;
-using Pixed.Application.Menu;
 using Pixed.Common;
 using Pixed.Common.Menu;
 using Pixed.Common.Models;
@@ -12,7 +11,7 @@ namespace Pixed.Application.ViewModels;
 internal class FramesSectionViewModel : PixedViewModel, IDisposable
 {
     private readonly ApplicationData _applicationData;
-    private readonly MenuItemRegistry _menuItemRegistry;
+    private readonly IMenuItemRegistry _menuItemRegistry;
     private int _selectedFrame = 0;
     private bool _removeFrameEnabled = false;
     private bool _disposedValue;
@@ -52,7 +51,7 @@ internal class FramesSectionViewModel : PixedViewModel, IDisposable
     public ICommand RemoveFrameCommand { get; }
     public ICommand DuplicateFrameCommand { get; }
 
-    public FramesSectionViewModel(ApplicationData applicationData, MenuItemRegistry menuItemRegistry)
+    public FramesSectionViewModel(ApplicationData applicationData, IMenuItemRegistry menuItemRegistry)
     {
         _applicationData = applicationData;
         _menuItemRegistry = menuItemRegistry;

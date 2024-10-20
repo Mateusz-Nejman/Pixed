@@ -5,7 +5,7 @@ using System;
 using System.Windows.Input;
 
 namespace Pixed.Application.Menu;
-internal class MenuItemRegistry(MenuBuilder menuBuilder)
+internal class MenuItemRegistry(MenuBuilder menuBuilder) : IMenuItemRegistry
 {
     private readonly MenuBuilder _menuBuilder = menuBuilder;
 

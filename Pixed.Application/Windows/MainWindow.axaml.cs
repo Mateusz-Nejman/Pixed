@@ -9,6 +9,7 @@ using Pixed.Application.Services;
 using Pixed.Application.ViewModels;
 using Pixed.Common;
 using Pixed.Common.Input;
+using Pixed.Common.Menu;
 using Pixed.Common.Models;
 using Pixed.Common.Services.Keyboard;
 using Pixed.Common.Tools;
@@ -37,7 +38,7 @@ internal partial class MainWindow : PixedWindow<MainViewModel>, IDisposable
 
     public static Window? Handle { get; private set; }
     public static ICommand? QuitCommand { get; private set; }
-    public MainWindow(ApplicationData applicationData, PixedProjectMethods pixedProjectMethods, MenuBuilder builder, MenuItemRegistry menuItemRegistry,
+    public MainWindow(ApplicationData applicationData, PixedProjectMethods pixedProjectMethods, MenuBuilder builder, IMenuItemRegistry menuItemRegistry,
         TransformMenuRegister transformToolsMenuRegister, RecentFilesService recentFilesService, ToolSelector toolSelector, CopyPasteMenuRegister copyPasteMenuRegister,
         ViewMenuRegister viewMenuRegister) : base(menuItemRegistry)
     {
@@ -58,7 +59,6 @@ internal partial class MainWindow : PixedWindow<MainViewModel>, IDisposable
                 Dispatcher.UIThread.Invoke(() => _pixedProjectMethods.Open(arg));
             }
         });
-
         InitializeWindow();
     }
 
@@ -189,6 +189,7 @@ internal partial class MainWindow : PixedWindow<MainViewModel>, IDisposable
     {
         var pixedFolder = await StorageProvider.GetPixedFolder();
         await pixedFolder.CreateFolderAsync("Palettes");
+        await pixedFolder.CreateFolderAsync("Extensions");
         _applicationData.Initialize(pixedFolder);
     }
 

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Pixed.Common.Utils;
 
-internal static class PaintUtils
+public static class PaintUtils
 {
     public static List<Point> GetToolPoints(int x, int y, int toolSize)
     {
