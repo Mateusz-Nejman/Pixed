@@ -17,6 +17,14 @@ internal partial class PaintCanvas : PixedUserControl<PaintCanvasViewModel>
         InitializeComponent();
         SizeChanged += PaintCanvas_SizeChanged;
         this.AddHandler(Avalonia.Input.Gestures.PinchEvent, PinchHandler);
+        zoomBorder.ZoomChanged += ZoomBorder_ZoomChanged;
+    }
+
+    private void ZoomBorder_ZoomChanged(object sender, Avalonia.Controls.PanAndZoom.ZoomChangedEventArgs e)
+    {
+        ViewModel.ZoomValue = e.ZoomX;
+        ViewModel.ZoomOffsetX = e.OffsetX;
+        ViewModel.ZoomOffsetY = e.OffsetY;
     }
 
     private void PinchHandler(object? sender, PinchEventArgs e)
@@ -76,7 +84,7 @@ internal partial class PaintCanvas : PixedUserControl<PaintCanvasViewModel>
     private void Border_PointerWheelChanged(object? sender, PointerWheelEventArgs e)
     {
         ViewModel?.MouseWheel?.Execute(e.Delta.Y);
-        e.Handled = true;
+        //e.Handled = true;
     }
 
     private void Border_PointerExited(object? sender, PointerEventArgs e)

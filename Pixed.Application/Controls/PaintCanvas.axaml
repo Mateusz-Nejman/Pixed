@@ -7,7 +7,8 @@
 			 xmlns:controls="clr-namespace:Pixed.Application.Controls"
 			 xmlns:gestures="clr-namespace:Pixed.Application.Controls.Gestures"
              xmlns:viewmodels="clr-namespace:Pixed.Application.ViewModels"
-             mc:Ignorable="d" 
+			 xmlns:paz="clr-namespace:Avalonia.Controls.PanAndZoom;assembly=Avalonia.Controls.PanAndZoom"
+             mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
 			 x:DataType="viewmodels:PaintCanvasViewModel">
 	<Grid>
@@ -20,25 +21,26 @@
 		VerticalScrollBarVisibility="Visible"
 		HorizontalScrollBarVisibility="Visible"
 		AllowAutoHide="False"
-		Theme="{StaticResource NoGesturesScrollViewer}"
-		Offset="{Binding ScrollViewerOffset, Mode=TwoWay}">
+		Theme="{StaticResource NoGesturesScrollViewer}">
 			<ScrollViewer.GestureRecognizers>
 				<gestures:SwitchablePinchGesture IsEnabled="{Binding IsPinchEnabled}"/>
 			</ScrollViewer.GestureRecognizers>
-			<Grid Name="imageGrid" Width="{Binding GridWidth, Mode=TwoWay}" Height="{Binding GridHeight, Mode=TwoWay}">
-				<Grid.Background>
-					<ImageBrush Source="avares://Pixed.Application/Resources/transparentBackground.png" TileMode="Tile" Stretch="Uniform" AlignmentY="Top" DestinationRect="0 0 32 32"/>
-				</Grid.Background>
-				<Image Name="image" RenderOptions.BitmapInterpolationMode="None" Source="{Binding AvaloniaImageBitmap}"/>
-				<Image Name="overlay" RenderOptions.BitmapInterpolationMode="None" Source="{Binding AvaloniaOverlayBitmap}"/>
-				<Canvas Background="{Binding GridBrush}"/>
-				<Border Name="interactionBorder" Background="Transparent"
-								PointerExited="Border_PointerExited"
-								PointerMoved="Border_PointerMoved"
-								PointerPressed="Border_PointerPressed"
-								PointerReleased="Border_PointerReleased"
-								PointerWheelChanged="Border_PointerWheelChanged"/>
-			</Grid>
+			<paz:ZoomBorder Name="zoomBorder" Stretch="None" ZoomSpeed="1.2" ClipToBounds="True">
+				<Grid Name="imageGrid" Width="{Binding GridWidth, Mode=TwoWay}" Height="{Binding GridHeight, Mode=TwoWay}">
+					<Grid.Background>
+						<ImageBrush Source="avares://Pixed.Application/Resources/transparentBackground.png" TileMode="Tile" Stretch="Uniform" AlignmentY="Top" DestinationRect="0 0 32 32"/>
+					</Grid.Background>
+					<Image Name="image" RenderOptions.BitmapInterpolationMode="None" Source="{Binding AvaloniaImageBitmap}"/>
+					<Image Name="overlay" RenderOptions.BitmapInterpolationMode="None" Source="{Binding AvaloniaOverlayBitmap}"/>
+					<Canvas Background="{Binding GridBrush}"/>
+					<Border Name="interactionBorder" Background="Transparent"
+									PointerExited="Border_PointerExited"
+									PointerMoved="Border_PointerMoved"
+									PointerPressed="Border_PointerPressed"
+									PointerReleased="Border_PointerReleased"
+									PointerWheelChanged="Border_PointerWheelChanged"/>
+				</Grid>
+			</paz:ZoomBorder>
 		</ScrollViewer>
 		<StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="5" Margin="4">
 			<Button Width="32" Height="32" Command="{Binding ZoomOutCommand}">
