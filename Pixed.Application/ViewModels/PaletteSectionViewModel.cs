@@ -24,6 +24,7 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
     private UniColor _secondaryColor = UniColor.White;
     private bool _disposedValue;
 
+    private readonly IDisposable _frameModified;
     private readonly IDisposable _layerModified;
     private readonly IDisposable _projectChanged;
     private readonly IDisposable _primaryProjectChanged;
@@ -98,6 +99,11 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
             _paletteService.SetCurrentColors();
             OnPropertyChanged(nameof(CurrentPaletteColors));
         });
+        _frameModified = Subjects.FrameModified.Subscribe(f =>
+        {
+            _paletteService.SetCurrentColors();
+            OnPropertyChanged(nameof(CurrentPaletteColors));
+        });
 
         PrimaryColor = UniColor.Black;
         SecondaryColor = UniColor.White;
@@ -121,6 +127,7 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
         {
             if (disposing)
             {
+                _frameModified?.Dispose();
                 _layerModified?.Dispose();
                 _projectChanged?.Dispose();
                 _paletteSelected?.Dispose();

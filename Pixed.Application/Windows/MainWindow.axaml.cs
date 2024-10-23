@@ -233,7 +233,6 @@ internal partial class MainWindow : PixedWindow<MainViewModel>, IDisposable
         {
             Opacity = numeric.Value;
             layer.RefreshRenderSource();
-            Subjects.LayerModified.OnNext(layer);
         }
     }
 

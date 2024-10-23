@@ -128,8 +128,6 @@ public class SelectionManager
         }
 
         frame.SetPixels(pixels);
-
-        Subjects.LayerModified.OnNext(frame.CurrentLayer);
         Subjects.FrameModified.OnNext(frame);
         _applicationData.CurrentModel.AddHistory();
     }
@@ -159,8 +157,6 @@ public class SelectionManager
 
         frame.SetPixels(pixels);
 
-        Subjects.FrameModified.OnNext(frame);
-        Subjects.LayerModified.OnNext(frame.CurrentLayer);
         Subjects.FrameModified.OnNext(frame);
         _applicationData.CurrentModel.AddHistory();
     }

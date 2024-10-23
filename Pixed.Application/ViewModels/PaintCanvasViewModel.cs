@@ -214,7 +214,12 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         _frameModified = Subjects.FrameModified.Subscribe(f =>
         {
             f.RefreshLayerRenderSources();
-            f.RefreshCurrentLayerRenderSource([]);
+            ReloadFrameRender();
+        });
+
+        _layerModified = Subjects.LayerModified.Subscribe(l =>
+        {
+            l.Rerender();
             ReloadFrameRender();
         });
 
@@ -323,7 +328,6 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         _leftPressed = true;
         _toolSelector.ToolSelected?.ApplyTool(mouseEvent.Point.X, mouseEvent.Point.Y, _frame, ref _overlayBitmap, _currentKeyState);
         DebugTouchPointer(mouseEvent);
-        Subjects.LayerModified.OnNext(_frame.CurrentLayer);
         Subjects.FrameModified.OnNext(_frame);
     }
 
@@ -343,7 +347,6 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         }
 
         DebugTouchPointer(mouseEvent);
-        Subjects.LayerModified.OnNext(_frame.CurrentLayer);
         Subjects.FrameModified.OnNext(_frame);
     }
 
@@ -375,7 +378,6 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         }
 
         DebugTouchPointer(mouseEvent);
-        Subjects.LayerModified.OnNext(_frame.CurrentLayer);
         Subjects.FrameModified.OnNext(_frame);
     }
 

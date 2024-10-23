@@ -12,7 +12,6 @@ public class ToolNoiseFill(ApplicationData applicationData) : BaseTool(applicati
     {
         ApplyToolBase(x, y, frame, ref overlay, keyState);
         PaintUtils.PaintNoiseSimiliarConnected(frame.CurrentLayer, x, y, _applicationData.PrimaryColor, _applicationData.SecondaryColor);
-        Subjects.LayerModified.OnNext(frame.CurrentLayer);
         Subjects.FrameModified.OnNext(frame);
     }
 }
