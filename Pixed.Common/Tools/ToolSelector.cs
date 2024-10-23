@@ -26,12 +26,11 @@ public class ToolSelector
         ToolPen toolPen, ToolVerticalPen toolVerticalPen, ToolBucket toolBucket, ToolColorSwap toolColorSwap, ToolEraser toolEraser,
         ToolStroke toolStroke, ToolRectangle toolRectangle, ToolCircle toolCircle, ToolMove toolMove, ToolLighten toolLighten,
         ToolDithering toolDithering, ToolColorPicker toolColorPicker, ToolNoise toolNoise, ToolNoiseFill toolNoiseFill,
-        ToolOutliner toolOutliner, ToolMoveCanvas toolMoveCanvas, ToolZoom toolZoom, ApplicationData applicationData)
+        ToolOutliner toolOutliner, ToolMoveCanvas toolMoveCanvas, ApplicationData applicationData)
     {
         _tools = new Dictionary<string, BaseTool>()
             {
             { "tool_move_canvas", toolMoveCanvas },
-            { "tool_zoom", toolZoom },
             { "tool_pen", toolPen},
             { "tool_mirror_pen", toolVerticalPen},
             { "tool_paint_bucket", toolBucket},

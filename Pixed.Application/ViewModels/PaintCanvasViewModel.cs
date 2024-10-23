@@ -172,7 +172,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
 
     public string ZoomText => GetZoomText();
 
-    public PaintCanvasViewModel(ApplicationData applicationData, ToolSelector toolSelector, ToolMoveCanvas toolMoveCanvas, ToolZoom toolZoom, SelectionManager selectionManager)
+    public PaintCanvasViewModel(ApplicationData applicationData, ToolSelector toolSelector, ToolMoveCanvas toolMoveCanvas, SelectionManager selectionManager)
     {
         selectionManager.SetOverlayAction = overlay => Overlay = overlay;
         _applicationData = applicationData;
@@ -258,9 +258,6 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         {
             _scrollViewerOffset = offset;
         };
-
-        toolZoom.SetEnabled = enabled => IsPinchEnabled = enabled;
-        toolZoom.GetZoom = () => ZoomValue;
     }
     public void RecalculateFactor(Point windowSize)
     {
