@@ -63,8 +63,6 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     public ActionCommand<MouseEvent> MiddleMouseUp { get; }
     public ActionCommand<double> MouseWheel { get; }
     public ActionCommand MouseLeave { get; }
-    public ActionCommand ZoomInCommand { get; }
-    public ActionCommand ZoomOutCommand { get; }
 
     public int ToolSize
     {
@@ -393,6 +391,11 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
             return;
         }
 
+        if (!CanProcess(mouseEvent.Point))
+        {
+            return;
+        }
+
         if (_leftPressed || _rightPressed)
         {
             _toolSelector.ToolSelected.MoveTool(mouseEvent.Point.X, mouseEvent.Point.Y, _frame, ref _overlayBitmap, _currentKeyState);
@@ -443,6 +446,16 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         double zoom = ZoomValue * 100d;
         bool needRound = zoom % 1 != 0;
         return "Zoom: " + zoom.ToString(needRound ? "#.0" : "#");
+    }
+
+    private bool CanProcess(Point point)
+    {
+        var prevX = _prevX;
+        var prevY = _prevY;
+        _prevX = point.X;
+        _prevY = point.Y;
+
+        return point.X != prevX || point.Y != prevY;
     }
 
     private void DebugTouchPointer(MouseEvent mouseEvent)

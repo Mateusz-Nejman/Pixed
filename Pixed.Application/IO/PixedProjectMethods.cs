@@ -77,7 +77,7 @@ internal class PixedProjectMethods(ApplicationData applicationData)
 
             if (serializer is PngProjectSerializer pngSerializer)
             {
-                OpenPNGWindow window = new OpenPNGWindow();
+                OpenPNGWindow window = new();
                 var success = await window.ShowDialog<bool>(MainWindow.Handle);
 
                 if (success)
@@ -209,7 +209,7 @@ internal class PixedProjectMethods(ApplicationData applicationData)
 
         if (model.Frames.Count == 1)
         {
-            ExportIconWindow window = new ExportIconWindow();
+            ExportIconWindow window = new();
             var success = await window.ShowDialog<bool>(MainWindow.Handle);
 
             if (!success)

@@ -3,6 +3,7 @@ using Avalonia.Input;
 using Pixed.Application.Input;
 using Pixed.Application.Utils;
 using Pixed.Application.ViewModels;
+using Pixed.Application.Zoom;
 using Pixed.Common;
 using Pixed.Common.Input;
 using System.Drawing;
@@ -20,7 +21,7 @@ internal partial class PaintCanvas : PixedUserControl<PaintCanvasViewModel>
         zoomBorder.ZoomChanged += ZoomBorder_ZoomChanged;
     }
 
-    private void ZoomBorder_ZoomChanged(object sender, Avalonia.Controls.PanAndZoom.ZoomChangedEventArgs e)
+    private void ZoomBorder_ZoomChanged(object sender, ZoomChangedEventArgs e)
     {
         ViewModel.ZoomValue = e.ZoomX;
         ViewModel.ZoomOffsetX = e.OffsetX;

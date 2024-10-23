@@ -12,7 +12,6 @@ public class PixedImage : IImage, IDisposable
 {
     private record class DrawOperation : ICustomDrawOperation
     {
-        private readonly object _lock = new();
         private readonly PixedImage? _image;
         public Rect Bounds { get; set; }
 
@@ -37,7 +36,7 @@ public class PixedImage : IImage, IDisposable
                 ISkiaSharpApiLease lease = leaseFeature.Lease();
                 using (lease)
                 {
-                    lock (_lock)
+                    lock (bitmap)
                     {
                         if (bitmap != null)
                         {
@@ -51,7 +50,6 @@ public class PixedImage : IImage, IDisposable
 
     private SKBitmap? _source;
     private readonly bool _canDispose = false;
-    private DrawOperation? _drawImageOperation;
     private Size _size;
 
     public Size Size => _size;
@@ -70,8 +68,6 @@ public class PixedImage : IImage, IDisposable
         {
             _size = new(size.Width, size.Height);
         }
-        _drawImageOperation?.Dispose();
-        _drawImageOperation = null;
     }
 
     public PixedImage Clone()
@@ -94,8 +90,6 @@ public class PixedImage : IImage, IDisposable
 
     public void Draw(DrawingContext context, Rect sourceRect, Rect destRect)
     {
-        _drawImageOperation ??= new DrawOperation(this);
-        _drawImageOperation.Bounds = destRect;
-        context.Custom(_drawImageOperation);
+        context.Custom(new DrawOperation(this) { Bounds = destRect});
     }
 }

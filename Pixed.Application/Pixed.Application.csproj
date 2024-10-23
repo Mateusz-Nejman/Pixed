@@ -22,7 +22,6 @@
 
   <ItemGroup>
 	<PackageReference Include="Avalonia" Version="11.1.4" />
-	<PackageReference Include="Avalonia.Controls.PanAndZoom" Version="11.1.0.1" />
 	<PackageReference Include="Avalonia.Skia" Version="11.1.4" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.1.4" />
     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.1.4" />
@@ -43,10 +42,5 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Pixed.Common\Pixed.Common.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Input\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 </Project>
