@@ -90,6 +90,6 @@ public class PixedImage : IImage, IDisposable
 
     public void Draw(DrawingContext context, Rect sourceRect, Rect destRect)
     {
-        context.Custom(new DrawOperation(this) { Bounds = destRect});
+        context.Custom(new DrawOperation(this) { Bounds = destRect });
     }
 }

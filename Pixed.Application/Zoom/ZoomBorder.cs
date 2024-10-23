@@ -58,7 +58,7 @@ internal partial class ZoomBorder : Border, IDisposable
             return;
         }
         _updating = true;
-        _matrix = MatrixHelper.ScaleAtPrepend(_matrix, ratio, ratio, x, y);
+        _matrix = MatrixHelper.ScaleAtPrepend(_matrix, ratio, x, y);
         Invalidate(skipTransitions);
 
         _updating = false;
@@ -113,7 +113,7 @@ internal partial class ZoomBorder : Border, IDisposable
     private void Border_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
         var properties = e.GetCurrentPoint(this).Properties;
-        if (!properties.IsRightButtonPressed)
+        if (!properties.IsMiddleButtonPressed)
         {
             return;
         }
@@ -187,17 +187,16 @@ internal partial class ZoomBorder : Border, IDisposable
     }
     private void RaiseZoomChanged()
     {
-        var args = new ZoomChangedEventArgs(_zoomX, _zoomY, _offsetX, _offsetY);
+        var args = new ZoomChangedEventArgs(_zoom, _offsetX, _offsetY);
         OnZoomChanged(args);
     }
 
     private void Constrain()
     {
-        var zoomX = ClampValue(_matrix.M11, MinZoomX, MaxZoomX);
-        var zoomY = ClampValue(_matrix.M22, MinZoomY, MaxZoomY);
+        var zoom = ClampValue(_matrix.M11, MinZoom, MaxZoom);
         var offsetX = ClampValue(_matrix.M31, MinOffsetX, MaxOffsetX);
         var offsetY = ClampValue(_matrix.M32, MinOffsetY, MaxOffsetY);
-        _matrix = new Matrix(zoomX, 0.0, 0.0, zoomY, offsetX, offsetY);
+        _matrix = new Matrix(zoom, 0.0, 0.0, zoom, offsetX, offsetY);
     }
     private void Invalidate(bool skipTransitions = false)
     {
@@ -214,8 +213,7 @@ internal partial class ZoomBorder : Border, IDisposable
     }
     private void InvalidateProperties()
     {
-        SetAndRaise(ZoomXProperty, ref _zoomX, _matrix.M11);
-        SetAndRaise(ZoomYProperty, ref _zoomY, _matrix.M22);
+        SetAndRaise(ZoomProperty, ref _zoom, _matrix.M11);
         SetAndRaise(OffsetXProperty, ref _offsetX, _matrix.M31);
         SetAndRaise(OffsetYProperty, ref _offsetY, _matrix.M32);
     }

@@ -7,6 +7,8 @@ namespace Pixed.Application.Zoom;
 
 internal partial class ZoomBorder
 {
+    public delegate void ZoomChangedEventHandler(object sender, ZoomChangedEventArgs e);
+
     public static readonly StyledProperty<double> ZoomSpeedProperty =
         AvaloniaProperty.Register<ZoomBorder, double>(nameof(ZoomSpeed), 1.2, false, BindingMode.TwoWay);
     public static readonly StyledProperty<double> PowerFactorProperty =
@@ -14,23 +16,17 @@ internal partial class ZoomBorder
     public static readonly StyledProperty<double> TransitionThresholdProperty =
         AvaloniaProperty.Register<ZoomBorder, double>(nameof(TransitionThreshold), 0.5, false, BindingMode.TwoWay);
 
-    public static readonly DirectProperty<ZoomBorder, double> ZoomXProperty =
-        AvaloniaProperty.RegisterDirect<ZoomBorder, double>(nameof(ZoomX), o => o.ZoomX, null, 1.0);
-    public static readonly DirectProperty<ZoomBorder, double> ZoomYProperty =
-        AvaloniaProperty.RegisterDirect<ZoomBorder, double>(nameof(ZoomY), o => o.ZoomY, null, 1.0);
+    public static readonly DirectProperty<ZoomBorder, double> ZoomProperty =
+        AvaloniaProperty.RegisterDirect<ZoomBorder, double>(nameof(Zoom), o => o.Zoom, null, 1.0);
     public static readonly DirectProperty<ZoomBorder, double> OffsetXProperty =
         AvaloniaProperty.RegisterDirect<ZoomBorder, double>(nameof(OffsetX), o => o.OffsetX, null, 0.0);
     public static readonly DirectProperty<ZoomBorder, double> OffsetYProperty =
         AvaloniaProperty.RegisterDirect<ZoomBorder, double>(nameof(OffsetY), o => o.OffsetY, null, 0.0);
 
-    public static readonly StyledProperty<double> MinZoomXProperty =
-        AvaloniaProperty.Register<ZoomBorder, double>(nameof(MinZoomX), double.NegativeInfinity, false, BindingMode.TwoWay);
-    public static readonly StyledProperty<double> MaxZoomXProperty =
-        AvaloniaProperty.Register<ZoomBorder, double>(nameof(MaxZoomX), double.PositiveInfinity, false, BindingMode.TwoWay);
-    public static readonly StyledProperty<double> MinZoomYProperty =
-        AvaloniaProperty.Register<ZoomBorder, double>(nameof(MinZoomY), double.NegativeInfinity, false, BindingMode.TwoWay);
-    public static readonly StyledProperty<double> MaxZoomYProperty =
-        AvaloniaProperty.Register<ZoomBorder, double>(nameof(MaxZoomY), double.PositiveInfinity, false, BindingMode.TwoWay);
+    public static readonly StyledProperty<double> MinZoomProperty =
+        AvaloniaProperty.Register<ZoomBorder, double>(nameof(MinZoom), double.NegativeInfinity, false, BindingMode.TwoWay);
+    public static readonly StyledProperty<double> MaxZoomProperty =
+        AvaloniaProperty.Register<ZoomBorder, double>(nameof(MaxZoom), double.PositiveInfinity, false, BindingMode.TwoWay);
     public static readonly StyledProperty<double> MinOffsetXProperty =
         AvaloniaProperty.Register<ZoomBorder, double>(nameof(MinOffsetX), double.NegativeInfinity, false, BindingMode.TwoWay);
     public static readonly StyledProperty<double> MaxOffsetXProperty =
@@ -39,21 +35,15 @@ internal partial class ZoomBorder
         AvaloniaProperty.Register<ZoomBorder, double>(nameof(MinOffsetY), double.NegativeInfinity, false, BindingMode.TwoWay);
     public static readonly StyledProperty<double> MaxOffsetYProperty =
         AvaloniaProperty.Register<ZoomBorder, double>(nameof(MaxOffsetY), double.PositiveInfinity, false, BindingMode.TwoWay);
-    public static readonly StyledProperty<bool> EnableGestureZoomProperty =
-        AvaloniaProperty.Register<ZoomBorder, bool>(nameof(EnableGestureZoom), true, false, BindingMode.TwoWay);
-    public static readonly StyledProperty<bool> EnableGestureRotationProperty =
-        AvaloniaProperty.Register<ZoomBorder, bool>(nameof(EnableGestureRotation), true, false, BindingMode.TwoWay);
-    public static readonly StyledProperty<bool> EnableGestureTranslationProperty =
-        AvaloniaProperty.Register<ZoomBorder, bool>(nameof(EnableGestureTranslation), true, false, BindingMode.TwoWay);
+    public static readonly StyledProperty<bool> GestureZoomEnabledProperty =
+        AvaloniaProperty.Register<ZoomBorder, bool>(nameof(GestureZoomEnabled), false, false, BindingMode.TwoWay);
 
     static ZoomBorder()
     {
         AffectsArrange<ZoomBorder>(
             ZoomSpeedProperty,
-            MinZoomXProperty,
-            MaxZoomXProperty,
-            MinZoomYProperty,
-            MaxZoomYProperty,
+            MinZoomProperty,
+            MaxZoomProperty,
             MinOffsetXProperty,
             MaxOffsetXProperty,
             MinOffsetYProperty,
@@ -67,8 +57,7 @@ internal partial class ZoomBorder
     private TransformOperations.Builder _transformBuilder;
     private bool _isPanning;
     private volatile bool _updating = false;
-    private double _zoomX = 1.0;
-    private double _zoomY = 1.0;
+    private double _zoom = 1.0;
     private double _offsetX = 0.0;
     private double _offsetY = 0.0;
     private bool _captured = false;
@@ -91,30 +80,19 @@ internal partial class ZoomBorder
         set => SetValue(TransitionThresholdProperty, value);
     }
     public Matrix Matrix => _matrix;
-    public double ZoomX => _zoomX;
-    public double ZoomY => _zoomY;
+    public double Zoom => _zoom;
     public double OffsetX => _offsetX;
     public double OffsetY => _offsetY;
 
-    public double MinZoomX
+    public double MinZoom
     {
-        get => GetValue(MinZoomXProperty);
-        set => SetValue(MinZoomXProperty, value);
+        get => GetValue(MinZoomProperty);
+        set => SetValue(MinZoomProperty, value);
     }
-    public double MaxZoomX
+    public double MaxZoom
     {
-        get => GetValue(MaxZoomXProperty);
-        set => SetValue(MaxZoomXProperty, value);
-    }
-    public double MinZoomY
-    {
-        get => GetValue(MinZoomYProperty);
-        set => SetValue(MinZoomYProperty, value);
-    }
-    public double MaxZoomY
-    {
-        get => GetValue(MaxZoomYProperty);
-        set => SetValue(MaxZoomYProperty, value);
+        get => GetValue(MaxZoomProperty);
+        set => SetValue(MaxZoomProperty, value);
     }
     public double MinOffsetX
     {
@@ -137,19 +115,9 @@ internal partial class ZoomBorder
         set => SetValue(MaxOffsetYProperty, value);
     }
 
-    public bool EnableGestureZoom
+    public bool GestureZoomEnabled
     {
-        get => GetValue(EnableGestureZoomProperty);
-        set => SetValue(EnableGestureZoomProperty, value);
-    }
-    public bool EnableGestureRotation
-    {
-        get => GetValue(EnableGestureRotationProperty);
-        set => SetValue(EnableGestureRotationProperty, value);
-    }
-    public bool EnableGestureTranslation
-    {
-        get => GetValue(EnableGestureTranslationProperty);
-        set => SetValue(EnableGestureTranslationProperty, value);
+        get => GetValue(GestureZoomEnabledProperty);
+        set => SetValue(GestureZoomEnabledProperty, value);
     }
 }

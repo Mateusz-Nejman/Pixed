@@ -3,24 +3,16 @@
 namespace Pixed.Application.Zoom;
 public static class MatrixHelper
 {
-    public static Matrix Translate(double offsetX, double offsetY)
-    {
-        return new Matrix(1.0, 0.0, 0.0, 1.0, offsetX, offsetY);
-    }
     public static Matrix TranslatePrepend(Matrix matrix, double offsetX, double offsetY)
     {
-        return Translate(offsetX, offsetY) * matrix;
+        return new Matrix(1.0, 0.0, 0.0, 1.0, offsetX, offsetY) * matrix;
     }
-    public static Matrix ScaleAt(double scaleX, double scaleY, double centerX, double centerY)
+    public static Matrix ScaleAtPrepend(Matrix matrix, double scale, double centerX, double centerY)
     {
-        return new Matrix(scaleX, 0, 0, scaleY, centerX - (scaleX * centerX), centerY - (scaleY * centerY));
+        return new Matrix(scale, 0, 0, scale, centerX - (scale * centerX), centerY - (scale * centerY)) * matrix;
     }
-    public static Matrix ScaleAtPrepend(Matrix matrix, double scaleX, double scaleY, double centerX, double centerY)
+    public static Matrix ScaleAndTranslate(double scale, double offsetX, double offsetY)
     {
-        return ScaleAt(scaleX, scaleY, centerX, centerY) * matrix;
-    }
-    public static Matrix ScaleAndTranslate(double scaleX, double scaleY, double offsetX, double offsetY)
-    {
-        return new Matrix(scaleX, 0.0, 0.0, scaleY, offsetX, offsetY);
+        return new Matrix(scale, 0.0, 0.0, scale, offsetX, offsetY);
     }
 }

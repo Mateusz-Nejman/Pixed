@@ -23,7 +23,7 @@ internal partial class PaintCanvas : PixedUserControl<PaintCanvasViewModel>
 
     private void ZoomBorder_ZoomChanged(object sender, ZoomChangedEventArgs e)
     {
-        ViewModel.ZoomValue = e.ZoomX;
+        ViewModel.ZoomValue = e.Zoom;
         ViewModel.ZoomOffsetX = e.OffsetX;
         ViewModel.ZoomOffsetY = e.OffsetY;
     }

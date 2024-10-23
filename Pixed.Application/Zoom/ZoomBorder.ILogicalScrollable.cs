@@ -96,7 +96,7 @@ internal partial class ZoomBorder : ILogicalScrollable
             var dy = y - value.Y;
 
             _offset = value;
-            _matrix = MatrixHelper.ScaleAndTranslate(_zoomX, _zoomY, _matrix.M31 + dx, _matrix.M32 + dy);
+            _matrix = MatrixHelper.ScaleAndTranslate(_zoom, _matrix.M31 + dx, _matrix.M32 + dy);
             Invalidate(!this.IsPointerOver);
 
             _updating = false;
