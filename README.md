@@ -1,4 +1,4 @@
-![Pixed logo](/Pixed/Resources/icon.png "Pixed logo")
+![Pixed logo](/Pixed.Application/Resources/icon.png "Pixed logo")
 Pixed
 ======
 
