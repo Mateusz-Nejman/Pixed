@@ -2,6 +2,7 @@
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Media.Transformation;
+using System;
 
 namespace Pixed.Application.Zoom;
 
@@ -24,9 +25,9 @@ internal partial class ZoomBorder
         AvaloniaProperty.RegisterDirect<ZoomBorder, double>(nameof(OffsetY), o => o.OffsetY, null, 0.0);
 
     public static readonly StyledProperty<double> MinZoomProperty =
-        AvaloniaProperty.Register<ZoomBorder, double>(nameof(MinZoom), double.NegativeInfinity, false, BindingMode.TwoWay);
+        AvaloniaProperty.Register<ZoomBorder, double>(nameof(MinZoom), 0.9, false, BindingMode.TwoWay);
     public static readonly StyledProperty<double> MaxZoomProperty =
-        AvaloniaProperty.Register<ZoomBorder, double>(nameof(MaxZoom), double.PositiveInfinity, false, BindingMode.TwoWay);
+        AvaloniaProperty.Register<ZoomBorder, double>(nameof(MaxZoom), 9000, false, BindingMode.TwoWay);
     public static readonly StyledProperty<double> MinOffsetXProperty =
         AvaloniaProperty.Register<ZoomBorder, double>(nameof(MinOffsetX), double.NegativeInfinity, false, BindingMode.TwoWay);
     public static readonly StyledProperty<double> MaxOffsetXProperty =
@@ -61,6 +62,12 @@ internal partial class ZoomBorder
     private double _offsetX = 0.0;
     private double _offsetY = 0.0;
     private bool _captured = false;
+    private readonly ZoomGestureRecognizer _zoomGestureRecognizer;
+    private readonly PanGestureRecognizer _panGestureRecognizer;
+    private bool _disposedValue;
+    private readonly IDisposable _childChanged;
+    private Matrix? _gestureMatrix;
+    private double _gestureDelta;
 
     public event ZoomChangedEventHandler? ZoomChanged;
 
@@ -83,6 +90,7 @@ internal partial class ZoomBorder
     public double Zoom => _zoom;
     public double OffsetX => _offsetX;
     public double OffsetY => _offsetY;
+    public bool GestureStarted => _gestureMatrix != null;
 
     public double MinZoom
     {

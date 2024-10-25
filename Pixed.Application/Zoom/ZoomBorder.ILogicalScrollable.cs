@@ -14,11 +14,11 @@ internal partial class ZoomBorder : ILogicalScrollable
     private bool _canVerticallyScroll;
     private EventHandler? _scrollInvalidated;
 
-    public static void CalculateScrollable(Rect source, Matrix matrix, out Size extent, out Size viewport, out Vector offset)
+    public static void CalculateScrollable(Rect source, Size borderSize, Matrix matrix, out Size extent, out Size viewport, out Vector offset)
     {
         var bounds = new Rect(0, 0, source.Width, source.Height);
 
-        viewport = bounds.Size;
+        viewport = borderSize;
 
         var transformed = bounds.TransformToAABB(matrix);
 
@@ -163,7 +163,7 @@ internal partial class ZoomBorder : ILogicalScrollable
             return;
         }
 
-        CalculateScrollable(_element.Bounds, _matrix, out var extent, out var viewport, out var offset);
+        CalculateScrollable(_element.Bounds, Bounds.Size, _matrix, out var extent, out var viewport, out var offset);
         _extent = extent;
         _offset = offset;
         _viewport = viewport;

@@ -35,4 +35,9 @@ public class ToolMoveCanvas(ApplicationData applicationData) : BaseTool(applicat
         var vector = new Avalonia.Vector(Math.Max(0, _offset.X - diffX), Math.Max(0, _offset.Y - diffY));
         MoveAction?.Invoke(vector);
     }
+
+    public override void Initialize()
+    {
+        
+    }
 }

@@ -67,6 +67,11 @@ public abstract class BaseTool(ApplicationData applicationData)
 
     }
 
+    public virtual void Initialize()
+    {
+
+    }
+
     public virtual void UpdateHighlightedPixel(int x, int y, Frame frame, ref SKBitmap overlay)
     {
         overlay ??= new SKBitmap(frame.Width, frame.Height, true);

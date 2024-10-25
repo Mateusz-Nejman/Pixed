@@ -22,9 +22,6 @@
 		HorizontalScrollBarVisibility="Visible"
 		AllowAutoHide="False"
 		Theme="{StaticResource NoGesturesScrollViewer}">
-			<ScrollViewer.GestureRecognizers>
-				<gestures:SwitchablePinchGesture IsEnabled="{Binding IsPinchEnabled}"/>
-			</ScrollViewer.GestureRecognizers>
 			<zoom:ZoomBorder Name="zoomBorder" ZoomSpeed="1.2" ClipToBounds="True">
 				<Grid Name="imageGrid" Width="{Binding GridWidth, Mode=TwoWay}" Height="{Binding GridHeight, Mode=TwoWay}">
 					<Grid.Background>

@@ -1,11 +1,13 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
+using Pixed.Application.DependencyInjection;
 using Pixed.Application.Input;
 using Pixed.Application.Utils;
 using Pixed.Application.ViewModels;
 using Pixed.Application.Zoom;
 using Pixed.Common;
 using Pixed.Common.Input;
+using Pixed.Common.Models;
 using System.Drawing;
 
 namespace Pixed.Application.Controls;
@@ -26,6 +28,9 @@ internal partial class PaintCanvas : PixedUserControl<PaintCanvasViewModel>
         ViewModel.ZoomValue = e.Zoom;
         ViewModel.ZoomOffsetX = e.OffsetX;
         ViewModel.ZoomOffsetY = e.OffsetY;
+        ViewModel.RefreshZoomText();
+        var applicationData = this.GetServiceProvider().Get<ApplicationData>();
+        zoomBorder.ConfigureOffsetBounds(applicationData.CurrentFrame.Width, applicationData.CurrentFrame.Height);
     }
 
     private void PinchHandler(object? sender, PinchEventArgs e)

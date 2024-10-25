@@ -1,6 +1,7 @@
 ﻿using Avalonia.Media;
 using Pixed.Application.Controls;
 using Pixed.Application.Input;
+using Pixed.Application.Zoom;
 using Pixed.Common;
 using Pixed.Common.Models;
 using Pixed.Common.Selection;
@@ -170,7 +171,8 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     public double ZoomOffsetX { get; set; }
     public double ZoomOffsetY { get; set; }
 
-    public string ZoomText => GetZoomText();
+    public string ZoomText { get; set; }
+    public ZoomBorder ZoomContainer { get; set; }
 
     public PaintCanvasViewModel(ApplicationData applicationData, ToolSelector toolSelector, ToolMoveCanvas toolMoveCanvas, SelectionManager selectionManager)
     {
@@ -284,6 +286,14 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
             Overlay = new SKBitmap(_frame.Width, _frame.Height, true);
         }
         AvaloniaOverlayBitmap = new PixedImage(Overlay);
+    }
+
+    public void RefreshZoomText()
+    {
+        double zoom = ZoomValue * 100d;
+        bool needRound = zoom % 1 != 0;
+        ZoomText = "Zoom: " + zoom.ToString(needRound ? "#.0" : "#") + "; OffsetX: " + ZoomOffsetX + "; OffsetY: " + ZoomOffsetY;
+        OnPropertyChanged(nameof(ZoomText));
     }
 
     protected virtual void Dispose(bool disposing)
@@ -438,13 +448,6 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
 
         _frame.RefreshCurrentLayerRenderSource(pixels);
         AvaloniaImageBitmap = new PixedImage(_frame.RenderSource.Source);
-    }
-
-    private string GetZoomText()
-    {
-        double zoom = ZoomValue * 100d;
-        bool needRound = zoom % 1 != 0;
-        return "Zoom: " + zoom.ToString(needRound ? "#.0" : "#");
     }
 
     private bool CanProcess(Point point)
