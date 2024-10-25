@@ -38,6 +38,6 @@ public class ToolMoveCanvas(ApplicationData applicationData) : BaseTool(applicat
 
     public override void Initialize()
     {
-        
+
     }
 }

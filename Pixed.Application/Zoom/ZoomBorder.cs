@@ -29,8 +29,6 @@ internal partial class ZoomBorder : Border, IDisposable
         _childChanged = this.GetObservable(ChildProperty).Subscribe(new AnonymousObserver<Control?>(ChildChanged));
         _zoomGestureRecognizer = new ZoomGestureRecognizer();
         _panGestureRecognizer = new PanGestureRecognizer(this);
-        GestureRecognizers.Add(_zoomGestureRecognizer);
-        GestureRecognizers.Add(_panGestureRecognizer);
         this.AddHandler(Gestures.PinchEvent, PinchHandler);
         this.AddHandler(Gestures.PinchEndedEvent, PinchEndedHandler);
         KeyDown += ZoomBorder_KeyDown;
@@ -39,7 +37,7 @@ internal partial class ZoomBorder : Border, IDisposable
     private void ZoomBorder_KeyDown(object? sender, KeyEventArgs e)
     {
 #if DEBUG
-        if(e.Key == Key.K)
+        if (e.Key == Key.K)
         {
             ResetMatrix();
         }
@@ -103,7 +101,7 @@ internal partial class ZoomBorder : Border, IDisposable
     }
     private void PinchHandler(object? sender, PinchEventArgs e)
     {
-        if(_gestureMatrix == null)
+        if (_gestureMatrix == null)
         {
             _captured = false;
             _isPanning = false;
@@ -248,10 +246,6 @@ internal partial class ZoomBorder : Border, IDisposable
         var zoom = ClampValue(_matrix.M11, MinZoom, MaxZoom);
         var offsetX = ClampValue(_matrix.M31, MinOffsetX, MaxOffsetX);
         var offsetY = ClampValue(_matrix.M32, MinOffsetY, MaxOffsetY);
-        if (double.IsNaN(offsetX))
-        {
-            offsetX.ToString();
-        }
         _matrix = new Matrix(zoom, 0.0, 0.0, zoom, offsetX, offsetY);
     }
     private void Invalidate(bool skipTransitions = false)
@@ -309,12 +303,12 @@ internal partial class ZoomBorder : Border, IDisposable
 
     private void AddGestureRecognizers()
     {
-        if(!GestureRecognizers.Contains(_zoomGestureRecognizer))
+        if (!GestureRecognizers.Contains(_zoomGestureRecognizer))
         {
             GestureRecognizers.Add(_zoomGestureRecognizer);
         }
 
-        if(!GestureRecognizers.Contains(_panGestureRecognizer))
+        if (!GestureRecognizers.Contains(_panGestureRecognizer))
         {
             GestureRecognizers.Add(_panGestureRecognizer);
         }

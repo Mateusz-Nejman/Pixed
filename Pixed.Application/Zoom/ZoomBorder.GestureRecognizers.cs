@@ -14,7 +14,7 @@ internal partial class ZoomBorder
 
         protected override void PointerCaptureLost(IPointer pointer)
         {
-            if(!IsEnabled) return;
+            if (!IsEnabled) return;
             ReleasePan();
         }
 
