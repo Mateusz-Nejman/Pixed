@@ -27,7 +27,7 @@ internal partial class ZoomBorder : Border, IDisposable
         DetachedFromVisualTree += PanAndZoom_DetachedFromVisualTree;
 
         _childChanged = this.GetObservable(ChildProperty).Subscribe(new AnonymousObserver<Control?>(ChildChanged));
-        _zoomGestureRecognizer = new ZoomGestureRecognizer();
+        _zoomGestureRecognizer = new ZoomGestureRecognizer(this);
         _panGestureRecognizer = new PanGestureRecognizer(this);
         this.AddHandler(Gestures.PinchEvent, PinchHandler);
         this.AddHandler(Gestures.PinchEndedEvent, PinchEndedHandler);
@@ -111,7 +111,7 @@ internal partial class ZoomBorder : Border, IDisposable
         }
 
         bool negative = e.Scale < 1;
-        ZoomDeltaTo(negative ? -((e.Scale - _gestureDelta) + 1) : (e.Scale - _gestureDelta), e.ScaleOrigin.X + OffsetX, e.ScaleOrigin.Y + OffsetY, _gestureMatrix.Value);
+        ZoomDeltaTo(negative ? -(1 - e.Scale) : e.Scale, e.ScaleOrigin.X, e.ScaleOrigin.Y, _gestureMatrix.Value);
         e.Handled = true;
     }
     private void PinchEndedHandler(object? sender, PinchEndedEventArgs e)

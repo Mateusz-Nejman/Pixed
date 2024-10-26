@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Input;
 using Avalonia.Input.GestureRecognizers;
+using Pixed.Application.Controls.Gestures;
 using System;
 
 namespace Pixed.Application.Zoom;
@@ -71,125 +72,51 @@ internal partial class ZoomBorder
         }
     }
 
-    private class ZoomGestureRecognizer : GestureRecognizer
+    private class ZoomGestureRecognizer(Visual visual) : MultiTouchGestureRecognizer(visual)
     {
         private float _initialDistance;
-        private IPointer? _firstContact;
-        private Point _firstPoint;
-        private IPointer? _secondContact;
-        private Point _secondPoint;
         private Point _origin;
         private double _previousAngle;
 
         public bool IsEnabled { get; set; } = true;
+        public override bool MultiTouchEnabled => true;
 
-        protected override void PointerCaptureLost(IPointer pointer)
+        protected override void PointersPressed(PointersPressedEventArgs e)
         {
             if (!IsEnabled) return;
-            RemoveContact(pointer);
+            _initialDistance = GetDistance(FirstPointer.Position, SecondPointer.Position);
+
+            _origin = new Point((Math.Max(FirstPointer.Position.X, SecondPointer.Position.X) - Math.Min(FirstPointer.Position.X, SecondPointer.Position.X)) / 2.0, (Math.Max(FirstPointer.Position.Y, SecondPointer.Position.Y) - Math.Min(FirstPointer.Position.Y, SecondPointer.Position.Y)) / 2.0);
+
+            _previousAngle = GetAngleDegreeFromPoints(FirstPointer.Position, SecondPointer.Position);
+
+            Capture(FirstPointer.Pointer);
+            Capture(SecondPointer.Pointer);
+            e.PreventGestureRecognition();
         }
 
-        protected override void PointerMoved(PointerEventArgs e)
+        protected override void PointersMoved(PointersMovedEventArgs e)
         {
             if (!IsEnabled) return;
-            if (Target is Visual visual)
-            {
-                if (_firstContact == e.Pointer)
-                {
-                    _firstPoint = e.GetPosition(visual);
-                }
-                else if (_secondContact == e.Pointer)
-                {
-                    _secondPoint = e.GetPosition(visual);
-                }
-                else
-                {
-                    return;
-                }
+            var distance = GetDistance(FirstPointer.Position, SecondPointer.Position);
 
-                if (_firstContact != null && _secondContact != null)
-                {
-                    var distance = GetDistance(_firstPoint, _secondPoint);
+            var scale = distance / _initialDistance;
 
-                    var scale = distance / _initialDistance;
 
-                    var degree = GetAngleDegreeFromPoints(_firstPoint, _secondPoint);
+            var degree = GetAngleDegreeFromPoints(FirstPointer.Position, SecondPointer.Position);
 
-                    var pinchEventArgs = new PinchEventArgs(scale, _origin, degree, _previousAngle - degree);
-                    _previousAngle = degree;
-                    Target?.RaiseEvent(pinchEventArgs);
-                    e.Handled = pinchEventArgs.Handled;
-                    e.PreventGestureRecognition();
-                }
-            }
+            var pinchEventArgs = new PinchEventArgs(scale, _origin, degree, _previousAngle - degree);
+            _previousAngle = degree;
+            Target?.RaiseEvent(pinchEventArgs);
+            e.Handled = pinchEventArgs.Handled;
+            e.PreventGestureRecognition();
         }
 
-        protected override void PointerPressed(PointerPressedEventArgs e)
+        protected override void PointersReleased(PointersReleasedEventArgs e)
         {
             if (!IsEnabled) return;
-            if (Target is Visual visual && (e.Pointer.Type == PointerType.Touch || e.Pointer.Type == PointerType.Pen))
-            {
-                if (_firstContact == null)
-                {
-                    _firstContact = e.Pointer;
-                    _firstPoint = e.GetPosition(visual);
-
-                    return;
-                }
-                else if (_secondContact == null && _firstContact != e.Pointer)
-                {
-                    _secondContact = e.Pointer;
-                    _secondPoint = e.GetPosition(visual);
-                }
-                else
-                {
-                    return;
-                }
-
-                if (_firstContact != null && _secondContact != null)
-                {
-                    _initialDistance = GetDistance(_firstPoint, _secondPoint);
-
-                    _origin = new Point((Math.Max(_firstPoint.X, _secondPoint.X) - Math.Min(_firstPoint.X, _secondPoint.X)) / 2.0, (Math.Max(_firstPoint.Y, _secondPoint.Y) - Math.Min(_firstPoint.Y, _secondPoint.Y)) / 2.0);
-
-                    _previousAngle = GetAngleDegreeFromPoints(_firstPoint, _secondPoint);
-
-                    Capture(_firstContact);
-                    Capture(_secondContact);
-                    e.PreventGestureRecognition();
-                }
-            }
-        }
-
-        protected override void PointerReleased(PointerReleasedEventArgs e)
-        {
-            if (!IsEnabled) return;
-            if (RemoveContact(e.Pointer))
-            {
-                e.PreventGestureRecognition();
-            }
-        }
-
-        private bool RemoveContact(IPointer pointer)
-        {
-            if (_firstContact == pointer || _secondContact == pointer)
-            {
-                if (_secondContact == pointer)
-                {
-                    _secondContact = null;
-                }
-
-                if (_firstContact == pointer)
-                {
-                    _firstContact = _secondContact;
-
-                    _secondContact = null;
-                }
-
-                Target?.RaiseEvent(new PinchEndedEventArgs());
-                return true;
-            }
-            return false;
+            Target?.RaiseEvent(new PinchEndedEventArgs());
+            e.PreventGestureRecognition();
         }
 
         private static float GetDistance(Point a, Point b)
