@@ -1,10 +1,11 @@
-﻿using Avalonia;
+﻿using System;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
-using System;
 
 namespace Pixed.Application.Zoom;
+
 internal partial class ZoomBorder : ILogicalScrollable
 {
     private Size _extent;
@@ -14,14 +15,13 @@ internal partial class ZoomBorder : ILogicalScrollable
     private bool _canVerticallyScroll;
     private EventHandler? _scrollInvalidated;
 
-    public static void CalculateScrollable(Rect source, Size borderSize, Matrix matrix, out Size extent, out Size viewport, out Vector offset)
+    public static void CalculateScrollable(Rect source, Matrix matrix, out Size extent, out Size viewport, out Vector offset)
     {
         var bounds = new Rect(0, 0, source.Width, source.Height);
 
-        viewport = borderSize;
+        viewport = bounds.Size;
 
         var transformed = bounds.TransformToAABB(matrix);
-
         var width = transformed.Size.Width;
         var height = transformed.Size.Height;
 
@@ -79,6 +79,7 @@ internal partial class ZoomBorder : ILogicalScrollable
 
         offset = new Vector(offsetX, offsetY);
     }
+
     Size IScrollable.Extent => _extent;
     Vector IScrollable.Offset
     {
@@ -163,7 +164,7 @@ internal partial class ZoomBorder : ILogicalScrollable
             return;
         }
 
-        CalculateScrollable(_element.Bounds, Bounds.Size, _matrix, out var extent, out var viewport, out var offset);
+        CalculateScrollable(_element.Bounds, _matrix, out var extent, out var viewport, out var offset);
         _extent = extent;
         _offset = offset;
         _viewport = viewport;
