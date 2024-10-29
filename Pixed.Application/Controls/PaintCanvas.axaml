@@ -18,8 +18,6 @@
 		</Grid.RowDefinitions>
 		<ScrollViewer
 		x:Name="scrollView"
-		VerticalScrollBarVisibility="Visible"
-		HorizontalScrollBarVisibility="Visible"
 		AllowAutoHide="False">
 			<zoom:ZoomBorder Name="zoomBorder" ZoomSpeed="1.2" ClipToBounds="True" GestureZoomEnabled="{Binding GestureZoomEnabled, Mode=TwoWay}">
 				<Grid Name="imageGrid" Width="{Binding GridWidth, Mode=TwoWay}" Height="{Binding GridHeight, Mode=TwoWay}">

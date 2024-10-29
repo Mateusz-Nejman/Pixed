@@ -2,6 +2,7 @@
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Media.Transformation;
+using Pixed.Application.Controls.Gestures;
 using System;
 
 namespace Pixed.Application.Zoom;
@@ -62,7 +63,7 @@ internal partial class ZoomBorder
     private double _offsetX = 0.0;
     private double _offsetY = 0.0;
     private bool _captured = false;
-    private readonly ZoomGestureRecognizer _zoomGestureRecognizer;
+    private readonly PinchGestureRecognizer _zoomGestureRecognizer;
     private readonly PanGestureRecognizer _panGestureRecognizer;
     private bool _disposedValue;
     private readonly IDisposable _childChanged;

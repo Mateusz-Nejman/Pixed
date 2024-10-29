@@ -2,12 +2,13 @@
 using Avalonia.Input;
 using Avalonia.Input.GestureRecognizers;
 using Avalonia.Interactivity;
+using Avalonia.VisualTree;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Pixed.Application.Controls.Gestures;
-internal abstract class MultiTouchGestureRecognizer(Visual visual) : GestureRecognizer
+internal abstract class MultiTouchGestureRecognizer() : GestureRecognizer
 {
     public readonly struct PointerData(IPointer pointer, PointerPoint pointerPoint, Point position)
     {
@@ -37,7 +38,7 @@ internal abstract class MultiTouchGestureRecognizer(Visual visual) : GestureReco
     {
     }
 
-    private readonly Visual _visual = visual;
+    private Visual? _visual;
     private readonly IList<PointerData> _pointers = [];
     private const int FINGER_SIZE = 3;
     public abstract bool MultiTouchEnabled { get; }
@@ -83,6 +84,11 @@ internal abstract class MultiTouchGestureRecognizer(Visual visual) : GestureReco
         if (!MultiTouchEnabled && _pointers.Count == 1)
         {
             return;
+        }
+
+        if (Target is Visual visual && visual.GetVisualRoot() is Visual visualRoot)
+        {
+            _visual = visualRoot;
         }
         PointerData data = new(e.Pointer, e.GetCurrentPoint(_visual), e.GetPosition(_visual));
         _pointers.Add(data);
