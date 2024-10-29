@@ -86,8 +86,8 @@ internal abstract class MultiTouchGestureRecognizer(Visual visual) : GestureReco
         }
         PointerData data = new(e.Pointer, e.GetCurrentPoint(_visual), e.GetPosition(_visual));
         _pointers.Add(data);
-        
-        if(MultiTouchEnabled && _pointers.Count > 1)
+
+        if (MultiTouchEnabled && _pointers.Count > 1)
         {
             PointersPressedEventArgs eventArgs = new(e.RoutedEvent, data, e.PreventGestureRecognition);
             PointersPressed(eventArgs);
@@ -100,7 +100,7 @@ internal abstract class MultiTouchGestureRecognizer(Visual visual) : GestureReco
         if (TryGetPointerData(e.Pointer.Id, out var pointerData))
         {
             _pointers.Remove(pointerData);
-            if((MultiTouchEnabled && _pointers.Count > 0) || !MultiTouchEnabled)
+            if ((MultiTouchEnabled && _pointers.Count > 0) || !MultiTouchEnabled)
             {
                 PointersReleasedEventArgs eventArgs = new(e.RoutedEvent, pointerData, e.PreventGestureRecognition);
                 PointersReleased(eventArgs);
@@ -117,7 +117,7 @@ internal abstract class MultiTouchGestureRecognizer(Visual visual) : GestureReco
     {
         var pointerData = _pointers.Where(p => p.Pointer.Id == pointerId).FirstOrDefault();
 
-        if(_pointers.Contains(pointerData))
+        if (_pointers.Contains(pointerData))
         {
             return pointerData;
         }
@@ -129,7 +129,7 @@ internal abstract class MultiTouchGestureRecognizer(Visual visual) : GestureReco
     {
         var data = GetPointerData(pointerId);
 
-        if(data.HasValue)
+        if (data.HasValue)
         {
             pointerData = data.Value;
             return true;

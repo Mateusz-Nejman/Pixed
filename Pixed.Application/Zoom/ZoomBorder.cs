@@ -313,13 +313,11 @@ internal partial class ZoomBorder : Border, IDisposable
             GestureRecognizers.Add(_panGestureRecognizer);
         }
 
-        _zoomGestureRecognizer.IsEnabled = true;
         _panGestureRecognizer.IsEnabled = true;
     }
 
     private void RemoveGestureRecognizers()
     {
-        _zoomGestureRecognizer.IsEnabled = false;
         _panGestureRecognizer.IsEnabled = false;
     }
     private static double ClampValue(double value, double minimum, double maximum)

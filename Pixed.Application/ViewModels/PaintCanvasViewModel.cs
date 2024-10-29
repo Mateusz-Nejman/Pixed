@@ -35,10 +35,10 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     private string _projectSizeText;
     private string _mouseCoordinatesText;
     private int _toolSize = 1;
-    private Avalonia.Vector _scrollViewerOffset;
     private bool _isPinchEnabled = false;
     private int _prevX = -1;
     private int _prevY = -1;
+    private bool _gestureZoomEnabled;
 
     private readonly IDisposable _projectModified;
     private readonly IDisposable _projectChanged;
@@ -167,6 +167,16 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         }
     }
 
+    public bool GestureZoomEnabled
+    {
+        get => _gestureZoomEnabled;
+        set
+        {
+            _gestureZoomEnabled = value;
+            OnPropertyChanged();
+        }
+    }
+
     public double ZoomValue { get; set; }
     public double ZoomOffsetX { get; set; }
     public double ZoomOffsetY { get; set; }
@@ -261,9 +271,9 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
             AvaloniaImageBitmap = _applicationData.CurrentFrame.RenderSource;
         });
 
-        toolMoveCanvas.MoveAction = offset =>
+        toolMoveCanvas.SetGestureEnabledAction = isEnabled =>
         {
-            _scrollViewerOffset = offset;
+            GestureZoomEnabled = isEnabled;
         };
     }
     public void RecalculateFactor(Point windowSize)

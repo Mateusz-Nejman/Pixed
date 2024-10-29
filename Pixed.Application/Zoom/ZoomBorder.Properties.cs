@@ -67,7 +67,6 @@ internal partial class ZoomBorder
     private bool _disposedValue;
     private readonly IDisposable _childChanged;
     private Matrix? _gestureMatrix;
-    private double _gestureDelta;
 
     public event ZoomChangedEventHandler? ZoomChanged;
 
@@ -126,6 +125,10 @@ internal partial class ZoomBorder
     public bool GestureZoomEnabled
     {
         get => GetValue(GestureZoomEnabledProperty);
-        set => SetValue(GestureZoomEnabledProperty, value);
+        set
+        {
+            SetValue(GestureZoomEnabledProperty, value);
+            _zoomGestureRecognizer.IsEnabled = value;
+        }
     }
 }

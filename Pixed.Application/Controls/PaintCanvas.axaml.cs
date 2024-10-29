@@ -5,7 +5,6 @@ using Pixed.Application.Input;
 using Pixed.Application.Utils;
 using Pixed.Application.ViewModels;
 using Pixed.Application.Zoom;
-using Pixed.Common;
 using Pixed.Common.Input;
 using Pixed.Common.Models;
 using System.Drawing;
@@ -19,8 +18,8 @@ internal partial class PaintCanvas : PixedUserControl<PaintCanvasViewModel>
     {
         InitializeComponent();
         SizeChanged += PaintCanvas_SizeChanged;
-        this.AddHandler(Avalonia.Input.Gestures.PinchEvent, PinchHandler);
         zoomBorder.ZoomChanged += ZoomBorder_ZoomChanged;
+        zoomBorder.GestureZoomEnabled = false;
     }
 
     private void ZoomBorder_ZoomChanged(object sender, ZoomChangedEventArgs e)
@@ -31,11 +30,6 @@ internal partial class PaintCanvas : PixedUserControl<PaintCanvasViewModel>
         ViewModel.RefreshZoomText();
         var applicationData = this.GetServiceProvider().Get<ApplicationData>();
         zoomBorder.ConfigureOffsetBounds(applicationData.CurrentFrame.Width, applicationData.CurrentFrame.Height);
-    }
-
-    private void PinchHandler(object? sender, PinchEventArgs e)
-    {
-        Subjects.ZoomChanged.OnNext(e.Scale);
     }
 
     private void PaintCanvas_SizeChanged(object? sender, SizeChangedEventArgs e)
