@@ -38,7 +38,14 @@ internal partial class ZoomBorder
     public static readonly StyledProperty<double> MaxOffsetYProperty =
         AvaloniaProperty.Register<ZoomBorder, double>(nameof(MaxOffsetY), double.PositiveInfinity, false, BindingMode.TwoWay);
     public static readonly StyledProperty<bool> GestureZoomEnabledProperty =
-        AvaloniaProperty.Register<ZoomBorder, bool>(nameof(GestureZoomEnabled), false, false, BindingMode.TwoWay);
+        AvaloniaProperty.Register<ZoomBorder, bool>(nameof(GestureZoomEnabled), false, false, BindingMode.TwoWay, null, (obj, value) =>
+        {
+            if(obj is ZoomBorder border)
+            {
+                border._zoomGestureRecognizer.IsEnabled = value;
+            }
+            return value;
+        });
 
     static ZoomBorder()
     {
@@ -129,7 +136,6 @@ internal partial class ZoomBorder
         set
         {
             SetValue(GestureZoomEnabledProperty, value);
-            _zoomGestureRecognizer.IsEnabled = value;
         }
     }
 }

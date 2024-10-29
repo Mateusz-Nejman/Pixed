@@ -18,6 +18,7 @@ public class ToolSelector
         {
             var prev = _toolSelected;
             _toolSelected = value;
+            _toolSelected?.Initialize();
             Subjects.ToolChanged.OnNext(new BaseToolPair(prev, _toolSelected));
         }
     }
