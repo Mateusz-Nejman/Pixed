@@ -18,8 +18,9 @@
 		</Grid.RowDefinitions>
 		<ScrollViewer
 		x:Name="scrollView"
-		AllowAutoHide="False">
-			<zoom:ZoomBorder Name="zoomBorder" ZoomSpeed="1.2" ClipToBounds="True" GestureZoomEnabled="{Binding GestureZoomEnabled, Mode=TwoWay}">
+		AllowAutoHide="False"
+			Theme="{StaticResource NoGesturesScrollViewer}">
+			<zoom:ZoomBorder Name="zoomBorder" ZoomSpeed="1.2" ClipToBounds="True" GestureZoomEnabled="{Binding GestureZoomEnabled, Mode=TwoWay}" BorderBrush="{StaticResource ButtonBorder}" BorderThickness="2">
 				<Grid Name="imageGrid" Width="{Binding GridWidth, Mode=TwoWay}" Height="{Binding GridHeight, Mode=TwoWay}">
 					<Grid.Background>
 						<ImageBrush Source="avares://Pixed.Application/Resources/transparentBackground.png" TileMode="Tile" Stretch="Uniform" AlignmentY="Top" DestinationRect="0 0 32 32"/>

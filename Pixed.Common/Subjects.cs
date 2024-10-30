@@ -47,49 +47,4 @@ public static class Subjects
     public static Subject<Layer> LayerModified { get; } = new Subject<Layer>();
     public static Subject<Layer> LayerRemoved { get; } = new Subject<Layer>();
     public static Subject<Layer> LayerChanged { get; } = new Subject<Layer>();
-
-    public static IDisposable[] InitDebug()
-    {
-        IDisposable[] disposables = [
-#if DEBUG
-            KeyState.DebugSubscribe(nameof(KeyState)),
-            SelectionCreated.DebugSubscribe(nameof(SelectionCreated)),
-            SelectionDismissed.DebugSubscribe(nameof(SelectionDismissed)),
-            MouseWheel.DebugSubscribe(nameof(MouseWheel)),
-            GridChanged.DebugSubscribe(nameof(GridChanged)),
-            ToolChanged.DebugSubscribe(nameof(ToolChanged)),
-            ZoomChanged.DebugSubscribe(nameof(ZoomChanged)),
-            NewInstanceHandled.DebugSubscribe(nameof(NewInstanceHandled)),
-            OverlayModified.DebugSubscribe(nameof(OverlayModified)),
-            ClipboardCopy.DebugSubscribe(nameof(ClipboardCopy)),
-            ClipboardCut.DebugSubscribe(nameof(ClipboardCut)),
-            ClipboardPaste.DebugSubscribe(nameof(ClipboardPaste)),
-            PrimaryColorChanged.DebugSubscribe(nameof(PrimaryColorChanged)),
-            PrimaryColorChange.DebugSubscribe(nameof(PrimaryColorChange)),
-            SecondaryColorChanged.DebugSubscribe(nameof(SecondaryColorChanged)),
-            SecondaryColorChange.DebugSubscribe(nameof(SecondaryColorChange)),
-            PaletteAdded.DebugSubscribe(nameof(PaletteAdded)),
-            PaletteSelected.DebugSubscribe(nameof(PaletteSelected)),
-            ProjectAdded.DebugSubscribe(nameof(ProjectAdded)),
-            ProjectChanged.DebugSubscribe(nameof(ProjectChanged)),
-            ProjectModified.DebugSubscribe(nameof(ProjectModified)),
-            ProjectRemoved.DebugSubscribe(nameof(ProjectRemoved)),
-            FrameAdded.DebugSubscribe(nameof(FrameAdded)),
-            FrameModified.DebugSubscribe(nameof(FrameModified)),
-            FrameChanged.DebugSubscribe(nameof(FrameChanged)),
-            FrameRemoved.DebugSubscribe(nameof(FrameRemoved)),
-            LayerAdded.DebugSubscribe(nameof(LayerAdded)),
-            LayerModified.DebugSubscribe(nameof(LayerModified)),
-            LayerRemoved.DebugSubscribe(nameof(LayerRemoved)),
-            LayerChanged.DebugSubscribe(nameof(LayerChanged))
-#endif
-        ];
-
-        return disposables;
-    }
-
-    public static IDisposable DebugSubscribe<T>(this Subject<T> subject, string name)
-    {
-        return subject.Subscribe(_ => Console.WriteLine(name));
-    }
 }

@@ -32,10 +32,19 @@ internal partial class ZoomBorder
         {
             if (!IsEnabled) return;
             var properties = e.GetCurrentPoint(_container).Properties;
-            if (!properties.IsMiddleButtonPressed || (_container.GestureZoomEnabled && !properties.IsLeftButtonPressed))
+
+            if(_container.GestureZoomEnabled)
+            {
+                if(!properties.IsLeftButtonPressed)
+                {
+                    return;
+                }
+            }
+            else if(!properties.IsMiddleButtonPressed)
             {
                 return;
             }
+
             if (_container._element != null && _container._captured == false && _container._isPanning == false)
             {
                 var point = e.GetPosition(_container._element);

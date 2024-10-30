@@ -3,6 +3,7 @@ using Avalonia.Input;
 using Avalonia.Input.GestureRecognizers;
 using Avalonia.Interactivity;
 using Avalonia.VisualTree;
+using Pixed.Application.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,13 +41,17 @@ internal abstract class MultiTouchGestureRecognizer() : GestureRecognizer
 
     private Visual? _visual;
     private readonly IList<PointerData> _pointers = [];
-    private const int FINGER_SIZE = 3;
     public abstract bool MultiTouchEnabled { get; }
 
     public IReadOnlyList<PointerData> Pointers => _pointers.AsReadOnly();
 
     public PointerData FirstPointer => _pointers[0];
     public PointerData SecondPointer => _pointers[1];
+
+    public void UpdateVisual(Visual visual)
+    {
+        _visual = visual;
+    }
 
     protected override void PointerCaptureLost(IPointer pointer)
     {
@@ -60,21 +65,25 @@ internal abstract class MultiTouchGestureRecognizer() : GestureRecognizer
         {
             return;
         }
+
         if (TryGetPointerData(e.Pointer.Id, out var pointerData))
         {
             var position = e.GetPosition(_visual);
             var point = e.GetCurrentPoint(_visual);
 
-            if (!IsInFingerArea(pointerData.Position, position))
+            int indexOf = _pointers.IndexOf(pointerData);
+            if (indexOf != -1)
             {
-                int indexOf = _pointers.IndexOf(pointerData);
-                if (indexOf != -1)
+                var oldPointer = _pointers[indexOf];
+
+                if(oldPointer.Position.EqualsPrecision(position, 1))
                 {
-                    _pointers[indexOf] = new PointerData(pointerData.Pointer, point, position);
-                    PointersMovedEventArgs eventArgs = new(e.RoutedEvent, _pointers[indexOf], e.PreventGestureRecognition);
-                    PointersMoved(eventArgs);
-                    e.Handled = eventArgs.Handled;
+                    return;
                 }
+                _pointers[indexOf] = new PointerData(pointerData.Pointer, point, position);
+                PointersMovedEventArgs eventArgs = new(e.RoutedEvent, _pointers[indexOf], e.PreventGestureRecognition);
+                PointersMoved(eventArgs);
+                e.Handled = eventArgs.Handled;
             }
         }
     }
@@ -86,10 +95,6 @@ internal abstract class MultiTouchGestureRecognizer() : GestureRecognizer
             return;
         }
 
-        if (Target is Visual visual && visual.GetVisualRoot() is Visual visualRoot)
-        {
-            _visual = visualRoot;
-        }
         PointerData data = new(e.Pointer, e.GetCurrentPoint(_visual), e.GetPosition(_visual));
         _pointers.Add(data);
 
@@ -143,10 +148,5 @@ internal abstract class MultiTouchGestureRecognizer() : GestureRecognizer
 
         pointerData = new PointerData();
         return false;
-    }
-
-    private static bool IsInFingerArea(Point fingerPoint, Point newPoint)
-    {
-        return newPoint.X >= fingerPoint.X - FINGER_SIZE && newPoint.X <= fingerPoint.X + FINGER_SIZE && newPoint.Y >= fingerPoint.Y - FINGER_SIZE && newPoint.Y <= fingerPoint.Y + FINGER_SIZE;
     }
 }

@@ -110,7 +110,7 @@ internal partial class ZoomBorder : Border, IDisposable
         }
 
         bool negative = e.Scale < 1;
-        ZoomDeltaTo(negative ? -(1 - e.Scale) : e.Scale, e.ScaleOrigin.X, e.ScaleOrigin.Y, _gestureMatrix.Value);
+        ZoomDeltaTo(negative ? -Math.Abs(1 - e.Scale) : e.Scale, e.ScaleOrigin.X, e.ScaleOrigin.Y, _gestureMatrix.Value);
         e.Handled = true;
     }
     private void PinchEndedHandler(object? sender, PinchEndedEventArgs e)
@@ -218,6 +218,7 @@ internal partial class ZoomBorder : Border, IDisposable
             return;
         }
         _element = element;
+        _zoomGestureRecognizer.UpdateVisual(_element);
         PointerWheelChanged += Border_PointerWheelChanged;
         AddGestureRecognizers();
     }

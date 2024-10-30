@@ -1,12 +1,14 @@
 ﻿using Avalonia;
 using Avalonia.Input;
+using Pixed.Common.Utils;
 using System;
+using System.Diagnostics;
 
 namespace Pixed.Application.Controls.Gestures;
 
 internal class PinchGestureRecognizer() : MultiTouchGestureRecognizer
 {
-    private float _initialDistance;
+    private double _initialDistance;
     private Point _origin;
     private double _previousAngle;
 
@@ -31,10 +33,7 @@ internal class PinchGestureRecognizer() : MultiTouchGestureRecognizer
     {
         if (!IsEnabled) return;
         var distance = GetDistance(FirstPointer.Position, SecondPointer.Position);
-
         var scale = distance / _initialDistance;
-
-
         var degree = GetAngleDegreeFromPoints(FirstPointer.Position, SecondPointer.Position);
 
         var pinchEventArgs = new PinchEventArgs(scale, _origin, degree, _previousAngle - degree);
@@ -51,10 +50,10 @@ internal class PinchGestureRecognizer() : MultiTouchGestureRecognizer
         e.PreventGestureRecognition();
     }
 
-    private static float GetDistance(Point a, Point b)
+    private static double GetDistance(Point a, Point b)
     {
         var length = b - a;
-        return (float)new Vector(length.X, length.Y).Length;
+        return new Vector(length.X, length.Y).Length;
     }
 
     private static double GetAngleDegreeFromPoints(Point a, Point b)
