@@ -98,6 +98,7 @@ internal partial class ZoomBorder
     public double OffsetX => _offsetX;
     public double OffsetY => _offsetY;
     public bool GestureStarted => _gestureMatrix != null;
+    public Canvas GridCanvas { get; set; }
 
     public double MinZoom
     {

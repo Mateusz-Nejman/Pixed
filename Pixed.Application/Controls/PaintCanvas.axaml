@@ -20,22 +20,24 @@
 		x:Name="scrollView"
 		AllowAutoHide="False"
 			Theme="{StaticResource NoGesturesScrollViewer}">
-			<zoom:ZoomBorder Name="zoomBorder" ZoomSpeed="1.2" ClipToBounds="True" GestureZoomEnabled="{Binding GestureZoomEnabled, Mode=TwoWay}" BorderBrush="{StaticResource ButtonBorder}" BorderThickness="2">
-				<Grid Name="imageGrid" Width="{Binding GridWidth, Mode=TwoWay}" Height="{Binding GridHeight, Mode=TwoWay}">
-					<Grid.Background>
-						<ImageBrush Source="avares://Pixed.Application/Resources/transparentBackground.png" TileMode="Tile" Stretch="Uniform" AlignmentY="Top" DestinationRect="0 0 32 32"/>
-					</Grid.Background>
-					<Image Name="image" RenderOptions.BitmapInterpolationMode="None" Source="{Binding AvaloniaImageBitmap}"/>
-					<Image Name="overlay" RenderOptions.BitmapInterpolationMode="None" Source="{Binding AvaloniaOverlayBitmap}"/>
-					<Canvas Background="{Binding GridBrush}"/>
-					<Border Name="interactionBorder" Background="Transparent"
-									PointerExited="Border_PointerExited"
-									PointerMoved="Border_PointerMoved"
-									PointerPressed="Border_PointerPressed"
-									PointerReleased="Border_PointerReleased"
-									PointerWheelChanged="Border_PointerWheelChanged"/>
-				</Grid>
-			</zoom:ZoomBorder>
+			<Grid>
+				<zoom:ZoomBorder Name="zoomBorder" ZoomSpeed="1.2" ClipToBounds="True" GestureZoomEnabled="{Binding GestureZoomEnabled, Mode=TwoWay}" BorderBrush="{StaticResource ButtonBorder}" BorderThickness="2">
+					<Grid Name="imageGrid" Width="{Binding GridWidth, Mode=TwoWay}" Height="{Binding GridHeight, Mode=TwoWay}">
+						<Grid.Background>
+							<ImageBrush Source="avares://Pixed.Application/Resources/transparentBackground.png" TileMode="Tile" Stretch="Uniform" AlignmentY="Top" DestinationRect="0 0 32 32"/>
+						</Grid.Background>
+						<Image Name="image" RenderOptions.BitmapInterpolationMode="None" Source="{Binding AvaloniaImageBitmap}"/>
+						<Image Name="overlay" RenderOptions.BitmapInterpolationMode="None" Source="{Binding AvaloniaOverlayBitmap}"/>
+						<Border Name="interactionBorder" Background="Transparent"
+										PointerExited="Border_PointerExited"
+										PointerMoved="Border_PointerMoved"
+										PointerPressed="Border_PointerPressed"
+										PointerReleased="Border_PointerReleased"
+										PointerWheelChanged="Border_PointerWheelChanged"/>
+					</Grid>
+				</zoom:ZoomBorder>
+				<Canvas Background="{Binding GridBrush}" Name="gridCanvas" IsHitTestVisible="False" Width="{Binding ScaledGridWidth}" Height="{Binding ScaledGridHeight}"/>
+			</Grid>
 		</ScrollViewer>
 		<StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="5" Margin="4">
 			<TextBlock Text="Tool size" VerticalAlignment="Center"/>

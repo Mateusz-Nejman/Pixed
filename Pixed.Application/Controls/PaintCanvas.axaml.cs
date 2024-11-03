@@ -20,6 +20,10 @@ internal partial class PaintCanvas : PixedUserControl<PaintCanvasViewModel>
         SizeChanged += PaintCanvas_SizeChanged;
         zoomBorder.ZoomChanged += ZoomBorder_ZoomChanged;
         zoomBorder.GestureZoomEnabled = false;
+        zoomBorder.GridCanvas = gridCanvas;
+        ViewModel.ZoomValue = zoomBorder.Zoom;
+        ViewModel.ZoomOffsetX = zoomBorder.OffsetX;
+        ViewModel.ZoomOffsetY = zoomBorder.OffsetY;
     }
 
     private void ZoomBorder_ZoomChanged(object sender, ZoomChangedEventArgs e)
@@ -30,6 +34,7 @@ internal partial class PaintCanvas : PixedUserControl<PaintCanvasViewModel>
         ViewModel.RefreshZoomText();
         var applicationData = this.GetServiceProvider().Get<ApplicationData>();
         zoomBorder.ConfigureOffsetBounds(applicationData.CurrentFrame.Width, applicationData.CurrentFrame.Height);
+        ViewModel.RefreshGridBrush();
     }
 
     private void PaintCanvas_SizeChanged(object? sender, SizeChangedEventArgs e)
