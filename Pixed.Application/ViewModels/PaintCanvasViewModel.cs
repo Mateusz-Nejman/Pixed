@@ -23,7 +23,6 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     private SKBitmap _overlayBitmap;
     private PixedImage _renderImage = new(null);
     private PixedImage _overlayImage = new(null);
-    private DrawingBrush? _gridBrush;
     private double _gridWidth;
     private double _gridHeight;
     private bool _leftPressed;
@@ -104,16 +103,6 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         set
         {
             _overlayImage = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public DrawingBrush? GridBrush
-    {
-        get => _gridBrush;
-        set
-        {
-            _gridBrush = value;
             OnPropertyChanged();
         }
     }
@@ -199,6 +188,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
 
     public string ZoomText { get; set; }
     public ZoomBorder ZoomContainer { get; set; }
+    public ImageGrid GridCanvas { get; set; }
 
     public PaintCanvasViewModel(ApplicationData applicationData, ToolSelector toolSelector, ToolMoveCanvas toolMoveCanvas, SelectionManager selectionManager)
     {
@@ -223,7 +213,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         {
             _frame = p.CurrentFrame;
             RecalculateFactor(_lastWindowSize);
-            RefreshGridBrush();
+            RefreshGridCanvas();
             ProjectSizeText = "[" + p.Width + "x" + p.Height + "]";
 
         });
@@ -253,12 +243,12 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
 
         _mouseWheel = Subjects.MouseWheel.Subscribe(d =>
         {
-            RefreshGridBrush();
+            RefreshGridCanvas();
         });
 
         _gridChanged = Subjects.GridChanged.Subscribe(enabled =>
         {
-            RefreshGridBrush();
+            RefreshGridCanvas();
         });
 
         _toolChanged = Subjects.ToolChanged.Subscribe(tool =>
@@ -294,7 +284,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     }
     public void RecalculateFactor(Point windowSize)
     {
-        RefreshGridBrush();
+        RefreshGridCanvas();
         _lastWindowSize = windowSize;
         ResetOverlay();
     }
@@ -318,13 +308,16 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     {
         double zoom = ZoomValue * 100d;
         bool needRound = zoom % 1 != 0;
-        ZoomText = "Zoom: " + zoom.ToString(needRound ? "#.0" : "#") + "; OffsetX: " + ZoomOffsetX + "; OffsetY: " + ZoomOffsetY;
+        ZoomText = "Zoom: " + ZoomValue + "; OffsetX: " + ZoomOffsetX + "; OffsetY: " + ZoomOffsetY;
         OnPropertyChanged(nameof(ZoomText));
     }
 
-    public void RefreshGridBrush()
+    public void RefreshGridCanvas()
     {
-        GridBrush = GetGridBrush();
+        GridCanvas.GridWidth = _applicationData.UserSettings.GridWidth;
+        GridCanvas.GridHeight = _applicationData.UserSettings.GridHeight;
+        GridCanvas.GridEnabled = _applicationData.UserSettings.GridEnabled;
+        GridCanvas.GridColor = _applicationData.UserSettings.GridColor;
     }
 
     protected virtual void Dispose(bool disposing)
@@ -461,38 +454,6 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     private void ReloadOverlay()
     {
         AvaloniaOverlayBitmap = new PixedImage(Overlay);
-    }
-
-    private DrawingBrush? GetGridBrush()
-    {
-        if (!_applicationData.UserSettings.GridEnabled)
-        {
-            return null;
-        }
-        double distX = _applicationData.UserSettings.GridWidth * ZoomValue;
-        double distY = _applicationData.UserSettings.GridHeight * ZoomValue;
-
-        LineGeometry horizontalLine = new(new Avalonia.Point(0, distY), new Avalonia.Point(distX, distY));
-        LineGeometry verticalLine = new(new Avalonia.Point(distX, 0), new Avalonia.Point(distX, distY));
-
-        GeometryGroup group = new();
-        group.Children.Add(horizontalLine);
-        group.Children.Add(verticalLine);
-
-        Avalonia.Media.Pen pen = new(new SolidColorBrush(_applicationData.UserSettings.GridColor, 0.5));
-        GeometryDrawing geometry = new()
-        {
-            Pen = pen,
-            Geometry = group
-        };
-
-        DrawingBrush brush = new()
-        {
-            TileMode = TileMode.Tile,
-            DestinationRect = new Avalonia.RelativeRect(0, 0, distX, distY, Avalonia.RelativeUnit.Absolute),
-            Drawing = geometry
-        };
-        return brush;
     }
 
     private void ReloadFrameRender()

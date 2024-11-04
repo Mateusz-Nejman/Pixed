@@ -7,6 +7,7 @@ using Pixed.Application.ViewModels;
 using Pixed.Application.Zoom;
 using Pixed.Common.Input;
 using Pixed.Common.Models;
+using System;
 using System.Drawing;
 
 namespace Pixed.Application.Controls;
@@ -20,7 +21,7 @@ internal partial class PaintCanvas : PixedUserControl<PaintCanvasViewModel>
         SizeChanged += PaintCanvas_SizeChanged;
         zoomBorder.ZoomChanged += ZoomBorder_ZoomChanged;
         zoomBorder.GestureZoomEnabled = false;
-        zoomBorder.GridCanvas = gridCanvas;
+        ViewModel.GridCanvas = gridCanvas;
         ViewModel.ZoomValue = zoomBorder.Zoom;
         ViewModel.ZoomOffsetX = zoomBorder.OffsetX;
         ViewModel.ZoomOffsetY = zoomBorder.OffsetY;
@@ -31,10 +32,11 @@ internal partial class PaintCanvas : PixedUserControl<PaintCanvasViewModel>
         ViewModel.ZoomValue = e.Zoom;
         ViewModel.ZoomOffsetX = e.OffsetX;
         ViewModel.ZoomOffsetY = e.OffsetY;
+        gridCanvas.Zoom = e.Zoom;
         ViewModel.RefreshZoomText();
         var applicationData = this.GetServiceProvider().Get<ApplicationData>();
         zoomBorder.ConfigureOffsetBounds(applicationData.CurrentFrame.Width, applicationData.CurrentFrame.Height);
-        ViewModel.RefreshGridBrush();
+        ViewModel.RefreshGridCanvas();
     }
 
     private void PaintCanvas_SizeChanged(object? sender, SizeChangedEventArgs e)

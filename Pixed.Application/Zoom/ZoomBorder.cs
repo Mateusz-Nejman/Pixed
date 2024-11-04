@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 using Avalonia.Media.Transformation;
 using Avalonia.Reactive;
 using System;
@@ -288,16 +289,6 @@ internal partial class ZoomBorder : Border, IDisposable
         _transformBuilder = new TransformOperations.Builder(1);
         _transformBuilder.AppendMatrix(_matrix);
         _element.RenderTransform = _transformBuilder.Build();
-
-        if(GridCanvas != null)
-        {
-            GridCanvas.RenderTransformOrigin = new RelativePoint(new Point(), RelativeUnit.Relative);
-            var transformBuilder = new TransformOperations.Builder(1);
-            var matrix = new Matrix(1, 0, 0, 1, _offsetX / 2, _offsetY / 2);
-            transformBuilder.AppendMatrix(matrix.Invert());
-            GridCanvas.RenderTransform = transformBuilder.Build();
-            GridCanvas.InvalidateVisual();
-        }
 
         if (skipTransitions && backupTransitions != null)
         {

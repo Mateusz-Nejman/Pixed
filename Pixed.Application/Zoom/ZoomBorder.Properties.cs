@@ -2,6 +2,7 @@
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Media.Transformation;
+using Pixed.Application.Controls;
 using Pixed.Application.Controls.Gestures;
 using System;
 
@@ -98,7 +99,6 @@ internal partial class ZoomBorder
     public double OffsetX => _offsetX;
     public double OffsetY => _offsetY;
     public bool GestureStarted => _gestureMatrix != null;
-    public Canvas GridCanvas { get; set; }
 
     public double MinZoom
     {
