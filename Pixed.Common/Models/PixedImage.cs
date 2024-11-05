@@ -40,7 +40,15 @@ public class PixedImage : IImage, IDisposable
                     {
                         if (bitmap != null)
                         {
-                            lease.SkCanvas.DrawBitmap(bitmap, SKRect.Create((float)Bounds.X, (float)Bounds.Y, (float)Bounds.Width, (float)Bounds.Height));
+                            try
+                            {
+                                lease.SkCanvas.DrawBitmap(bitmap, SKRect.Create((float)Bounds.X, (float)Bounds.Y, (float)Bounds.Width, (float)Bounds.Height));
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(ex);
+                                //Ignore exception
+                            }
                         }
                     }
                 }

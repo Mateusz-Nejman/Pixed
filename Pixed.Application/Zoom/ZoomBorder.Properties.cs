@@ -2,7 +2,6 @@
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Media.Transformation;
-using Pixed.Application.Controls;
 using Pixed.Application.Controls.Gestures;
 using System;
 
@@ -41,7 +40,7 @@ internal partial class ZoomBorder
     public static readonly StyledProperty<bool> GestureZoomEnabledProperty =
         AvaloniaProperty.Register<ZoomBorder, bool>(nameof(GestureZoomEnabled), false, false, BindingMode.TwoWay, null, (obj, value) =>
         {
-            if(obj is ZoomBorder border)
+            if (obj is ZoomBorder border)
             {
                 border._zoomGestureRecognizer.IsEnabled = value;
             }

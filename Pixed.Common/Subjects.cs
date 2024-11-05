@@ -2,7 +2,6 @@
 using Pixed.Common.Selection;
 using Pixed.Common.Services.Keyboard;
 using SkiaSharp;
-using System;
 using System.Collections.Generic;
 using System.Reactive.Subjects;
 

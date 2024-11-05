@@ -2,7 +2,6 @@
 using Avalonia.Input;
 using Avalonia.Input.GestureRecognizers;
 using Avalonia.Interactivity;
-using Avalonia.VisualTree;
 using Pixed.Application.Utils;
 using System;
 using System.Collections.Generic;
@@ -76,7 +75,7 @@ internal abstract class MultiTouchGestureRecognizer() : GestureRecognizer
             {
                 var oldPointer = _pointers[indexOf];
 
-                if(oldPointer.Position.EqualsPrecision(position, 1))
+                if (oldPointer.Position.EqualsPrecision(position, 1))
                 {
                     return;
                 }

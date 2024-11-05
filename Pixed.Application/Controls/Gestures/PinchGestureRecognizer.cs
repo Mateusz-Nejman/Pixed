@@ -1,8 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Input;
-using Pixed.Common.Utils;
 using System;
-using System.Diagnostics;
 
 namespace Pixed.Application.Controls.Gestures;
 

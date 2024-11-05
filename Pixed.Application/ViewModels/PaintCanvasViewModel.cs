@@ -1,5 +1,4 @@
-﻿using Avalonia.Media;
-using Pixed.Application.Controls;
+﻿using Pixed.Application.Controls;
 using Pixed.Application.Input;
 using Pixed.Application.Zoom;
 using Pixed.Common;
