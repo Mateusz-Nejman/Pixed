@@ -1,38 +1,24 @@
 ﻿using Pixed.Common.Models;
-using Pixed.Common.Services.Keyboard;
-using SkiaSharp;
 using System;
 
 namespace Pixed.Common.Tools;
 public class ToolMoveCanvas(ApplicationData applicationData) : BaseTool(applicationData)
 {
-    private double _startX;
-    private double _startY;
-    private Avalonia.Vector _offset;
-
     public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-move-canvas.png";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Move canvas");
     public override bool AddToHistory { get; protected set; } = false;
     public override bool GridMovement { get; protected set; } = false;
-    public Action<Avalonia.Vector>? MoveAction { get; set; }
-    public Func<Avalonia.Vector>? GetOffset { get; set; }
+    public Action<bool>? SetGestureEnabledAction { get; set; }
 
     public override bool SingleHighlightedPixel { get; protected set; } = true;
 
-    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void Initialize()
     {
-        ApplyToolBase(x, y, frame, ref overlay, keyState);
-        _startX = x;
-        _startY = y;
-        _offset = GetOffset();
+        SetGestureEnabledAction?.Invoke(true);
     }
 
-    public override void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void Reset()
     {
-        var diffX = x - _startX;
-        var diffY = y - _startY;
-
-        var vector = new Avalonia.Vector(Math.Max(0, _offset.X - diffX), Math.Max(0, _offset.Y - diffY));
-        MoveAction?.Invoke(vector);
+        SetGestureEnabledAction?.Invoke(false);
     }
 }

@@ -1,10 +1,12 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
+using Pixed.Application.DependencyInjection;
 using Pixed.Application.Input;
 using Pixed.Application.Utils;
 using Pixed.Application.ViewModels;
-using Pixed.Common;
+using Pixed.Application.Zoom;
 using Pixed.Common.Input;
+using Pixed.Common.Models;
 using System.Drawing;
 
 namespace Pixed.Application.Controls;
@@ -16,12 +18,24 @@ internal partial class PaintCanvas : PixedUserControl<PaintCanvasViewModel>
     {
         InitializeComponent();
         SizeChanged += PaintCanvas_SizeChanged;
-        this.AddHandler(Avalonia.Input.Gestures.PinchEvent, PinchHandler);
+        zoomBorder.ZoomChanged += ZoomBorder_ZoomChanged;
+        zoomBorder.GestureZoomEnabled = false;
+        ViewModel.GridCanvas = gridCanvas;
+        ViewModel.ZoomValue = zoomBorder.Zoom;
+        ViewModel.ZoomOffsetX = zoomBorder.OffsetX;
+        ViewModel.ZoomOffsetY = zoomBorder.OffsetY;
     }
 
-    private void PinchHandler(object? sender, PinchEventArgs e)
+    private void ZoomBorder_ZoomChanged(object sender, ZoomChangedEventArgs e)
     {
-        Subjects.ZoomChanged.OnNext(e.Scale);
+        ViewModel.ZoomValue = e.Zoom;
+        ViewModel.ZoomOffsetX = e.OffsetX;
+        ViewModel.ZoomOffsetY = e.OffsetY;
+        gridCanvas.Zoom = e.Zoom;
+        ViewModel.RefreshZoomText();
+        var applicationData = this.GetServiceProvider().Get<ApplicationData>();
+        zoomBorder.ConfigureOffsetBounds(applicationData.CurrentFrame.Width, applicationData.CurrentFrame.Height);
+        ViewModel.RefreshGridCanvas();
     }
 
     private void PaintCanvas_SizeChanged(object? sender, SizeChangedEventArgs e)
@@ -29,12 +43,12 @@ internal partial class PaintCanvas : PixedUserControl<PaintCanvasViewModel>
         ViewModel.RecalculateFactor(new Point((int)(e.NewSize.Width - _scrollBarSize), (int)(e.NewSize.Height - _scrollBarSize)));
     }
 
-    private void Border_PointerPressed(object? sender, PointerPressedEventArgs e)
+    private void Canvas_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (sender is Border border)
+        if (sender is Canvas canvas)
         {
-            var pos = e.GetPosition(border);
-            MouseMapper mapper = new(e, border);
+            var pos = e.GetPosition(canvas);
+            MouseMapper mapper = new(e, canvas);
 
             if (mapper.ChangedButton == MouseButton.Left && mapper.ButtonState == MouseButtonState.Pressed)
             {
@@ -51,12 +65,12 @@ internal partial class PaintCanvas : PixedUserControl<PaintCanvasViewModel>
         }
     }
 
-    private void Border_PointerReleased(object? sender, PointerReleasedEventArgs e)
+    private void Canvas_PointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        if (sender is Border border)
+        if (sender is Canvas canvas)
         {
-            var pos = e.GetPosition(border);
-            MouseMapper mapper = new(e, border);
+            var pos = e.GetPosition(canvas);
+            MouseMapper mapper = new(e, canvas);
 
             if (mapper.ChangedButton == MouseButton.Left && mapper.ButtonState == MouseButtonState.Released)
             {
@@ -73,22 +87,22 @@ internal partial class PaintCanvas : PixedUserControl<PaintCanvasViewModel>
         }
     }
 
-    private void Border_PointerWheelChanged(object? sender, PointerWheelEventArgs e)
+    private void Canvas_PointerWheelChanged(object? sender, PointerWheelEventArgs e)
     {
         ViewModel?.MouseWheel?.Execute(e.Delta.Y);
-        e.Handled = true;
+        //e.Handled = true;
     }
 
-    private void Border_PointerExited(object? sender, PointerEventArgs e)
+    private void Canvas_PointerExited(object? sender, PointerEventArgs e)
     {
         ViewModel?.MouseLeave?.Execute();
     }
 
-    private void Border_PointerMoved(object? sender, PointerEventArgs e)
+    private void Canvas_PointerMoved(object? sender, PointerEventArgs e)
     {
-        if (sender is Border border)
+        if (sender is Canvas canvas)
         {
-            var pos = e.GetPosition(border);
+            var pos = e.GetPosition(canvas);
 
             ViewModel?.MouseMove?.Execute(new MouseEvent(pos.ToSystemPoint(), e.Pointer.Type == PointerType.Touch));
         }

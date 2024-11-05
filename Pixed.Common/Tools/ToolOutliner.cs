@@ -19,7 +19,6 @@ public class ToolOutliner(ApplicationData applicationData) : BaseTool(applicatio
         var controlPressed = keyState.IsCtrl || GetProperty(PROP_FILL_CORNERS);
         var color = ToolColor;
         PaintUtils.OutlineSimiliarConnectedPixels(frame.CurrentLayer, x, y, color, controlPressed);
-        Subjects.LayerModified.OnNext(frame.CurrentLayer);
         Subjects.FrameModified.OnNext(frame);
     }
 

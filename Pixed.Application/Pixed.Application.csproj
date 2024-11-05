@@ -43,9 +43,4 @@
   <ItemGroup>
     <ProjectReference Include="..\Pixed.Common\Pixed.Common.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Input\" />
-    <Folder Include="Services\" />
-  </ItemGroup>
 </Project>

@@ -72,7 +72,6 @@ internal class ProjectsSectionViewModel : PixedViewModel, IDisposable
             }
 
             Subjects.FrameChanged.OnNext(p.CurrentFrame);
-            Subjects.LayerChanged.OnNext(p.CurrentFrame.CurrentLayer);
         });
     }
 

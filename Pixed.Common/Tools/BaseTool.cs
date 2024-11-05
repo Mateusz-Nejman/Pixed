@@ -67,6 +67,11 @@ public abstract class BaseTool(ApplicationData applicationData)
 
     }
 
+    public virtual void Initialize()
+    {
+
+    }
+
     public virtual void UpdateHighlightedPixel(int x, int y, Frame frame, ref SKBitmap overlay)
     {
         overlay ??= new SKBitmap(frame.Width, frame.Height, true);
@@ -130,7 +135,7 @@ public abstract class BaseTool(ApplicationData applicationData)
     protected static void SetPixels(Frame frame, List<Pixel> pixels)
     {
         frame.SetPixels(pixels);
-        Subjects.LayerModified.OnNext(frame.CurrentLayer);
+        Subjects.FrameModified.OnNext(frame);
     }
 
     protected static void SetPixels(Layer layer, List<Pixel> pixels)

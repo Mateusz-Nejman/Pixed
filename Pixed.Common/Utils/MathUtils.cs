@@ -148,4 +148,9 @@ public static class MathUtils
         }   // End of while loop
         return pixels;
     }
+
+    public static bool EqualsPrecision(this double value, double value1, double precision = 0.001)
+    {
+        return Math.Abs(value - value1) < precision;
+    }
 }

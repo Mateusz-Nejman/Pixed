@@ -34,7 +34,6 @@ internal partial class MainWindow : PixedWindow<MainViewModel>, IDisposable
     private readonly MenuBuilder _menuBuilder;
     private readonly IDisposable _newInstanceHandled;
     private bool _disposedValue;
-    private readonly IDisposable[] _debugDisposables;
 
     public static Window? Handle { get; private set; }
     public static ICommand? QuitCommand { get; private set; }
@@ -43,7 +42,6 @@ internal partial class MainWindow : PixedWindow<MainViewModel>, IDisposable
         ViewMenuRegister viewMenuRegister) : base(menuItemRegistry)
     {
         InjectMethods();
-        _debugDisposables = Subjects.InitDebug();
         _pixedProjectMethods = pixedProjectMethods;
         _applicationData = applicationData;
         _transformToolsMenuRegister = transformToolsMenuRegister;
@@ -97,10 +95,6 @@ internal partial class MainWindow : PixedWindow<MainViewModel>, IDisposable
         {
             if (disposing)
             {
-                foreach (var disposable in _debugDisposables)
-                {
-                    disposable.Dispose();
-                }
                 _newInstanceHandled?.Dispose();
             }
 
@@ -233,7 +227,6 @@ internal partial class MainWindow : PixedWindow<MainViewModel>, IDisposable
         {
             Opacity = numeric.Value;
             layer.RefreshRenderSource();
-            Subjects.LayerModified.OnNext(layer);
         }
     }
 

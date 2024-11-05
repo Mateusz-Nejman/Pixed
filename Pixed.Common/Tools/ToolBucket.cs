@@ -14,7 +14,6 @@ public class ToolBucket(ApplicationData applicationData) : BaseTool(applicationD
         ApplyToolBase(x, y, frame, ref overlay, keyState);
         uint color = ToolColor;
         PaintUtils.PaintSimiliarConnected(frame.CurrentLayer, x, y, color);
-        Subjects.LayerModified.OnNext(frame.CurrentLayer);
         Subjects.FrameModified.OnNext(frame);
     }
 }

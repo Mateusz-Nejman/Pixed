@@ -46,6 +46,7 @@ internal static class ExtensionsLoader
     }
     public static void Load(string extensionsFolder)
     {
+        Directory.CreateDirectory(extensionsFolder);
         var items = Directory.GetFiles(extensionsFolder);
 
         foreach (var item in items)

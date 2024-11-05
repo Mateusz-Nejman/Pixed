@@ -8,4 +8,8 @@ internal static class ConversionUtils
         return new Point((int)point.X, (int)point.Y);
     }
 
+    public static float ToFloat(this double value)
+    {
+        return (float)value;
+    }
 }

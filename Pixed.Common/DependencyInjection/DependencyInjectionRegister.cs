@@ -33,7 +33,6 @@ public class DependencyInjectionRegister : IDependencyRegister
         collection.AddScoped<ToolRectangle>();
         collection.AddScoped<ToolStroke>();
         collection.AddScoped<ToolVerticalPen>();
-        collection.AddSingleton<ToolZoom>();
 
         collection.AddScoped<LassoSelect>();
         collection.AddScoped<RectangleSelect>();
