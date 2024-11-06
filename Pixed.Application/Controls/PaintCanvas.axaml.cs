@@ -7,6 +7,7 @@ using Pixed.Application.ViewModels;
 using Pixed.Application.Zoom;
 using Pixed.Common.Input;
 using Pixed.Common.Models;
+using System;
 using System.Drawing;
 
 namespace Pixed.Application.Controls;
@@ -14,28 +15,29 @@ namespace Pixed.Application.Controls;
 internal partial class PaintCanvas : PixedUserControl<PaintCanvasViewModel>
 {
     private readonly int _scrollBarSize = 18;
+    private readonly IDisposable _zoomChanged;
     public PaintCanvas() : base()
     {
         InitializeComponent();
         SizeChanged += PaintCanvas_SizeChanged;
-        zoomBorder.ZoomChanged += ZoomBorder_ZoomChanged;
         zoomBorder.GestureZoomEnabled = false;
         ViewModel.GridCanvas = gridCanvas;
         ViewModel.ZoomValue = zoomBorder.Zoom;
         ViewModel.ZoomOffsetX = zoomBorder.OffsetX;
         ViewModel.ZoomOffsetY = zoomBorder.OffsetY;
+        Unloaded += PaintCanvas_Unloaded;
+
+        _zoomChanged = ZoomBorder.ZoomChanged.Subscribe(_ =>
+        {
+            var applicationData = this.GetServiceProvider().Get<ApplicationData>();
+            zoomBorder.ConfigureOffsetBounds(applicationData.CurrentFrame.Width, applicationData.CurrentFrame.Height);
+            ViewModel.RefreshGridCanvas();
+        });
     }
 
-    private void ZoomBorder_ZoomChanged(object sender, ZoomChangedEventArgs e)
+    private void PaintCanvas_Unloaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        ViewModel.ZoomValue = e.Zoom;
-        ViewModel.ZoomOffsetX = e.OffsetX;
-        ViewModel.ZoomOffsetY = e.OffsetY;
-        gridCanvas.Zoom = e.Zoom;
-        ViewModel.RefreshZoomText();
-        var applicationData = this.GetServiceProvider().Get<ApplicationData>();
-        zoomBorder.ConfigureOffsetBounds(applicationData.CurrentFrame.Width, applicationData.CurrentFrame.Height);
-        ViewModel.RefreshGridCanvas();
+        _zoomChanged?.Dispose();
     }
 
     private void PaintCanvas_SizeChanged(object? sender, SizeChangedEventArgs e)

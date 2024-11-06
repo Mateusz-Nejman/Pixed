@@ -15,7 +15,6 @@ public static class Subjects
     public static Subject<double> MouseWheel { get; } = new Subject<double>();
     public static Subject<bool> GridChanged { get; } = new Subject<bool>();
     public static Subject<BaseToolPair> ToolChanged { get; } = new Subject<BaseToolPair>();
-    public static Subject<double> ZoomChanged { get; } = new Subject<double>();
     public static Subject<string[]> NewInstanceHandled { get; } = new Subject<string[]>();
     public static Subject<SKBitmap> OverlayModified { get; } = new Subject<SKBitmap>();
     public static Subject<List<Pixel>> CurrentLayerRenderModified { get; } = new Subject<List<Pixel>>();
