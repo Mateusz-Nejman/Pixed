@@ -8,12 +8,16 @@
              mc:Ignorable="d"
              Width="100" Height="102"
 			 x:DataType="models:Frame">
-	<Grid Width="96" Height="96" VerticalAlignment="Center" HorizontalAlignment="Center">
-		<Grid MaxWidth="96" MaxHeight="96">
-			<Grid.Background>
-				<ImageBrush Source="avares://Pixed.Application/Resources/transparentBackground.png" TileMode="Tile" Stretch="Uniform" AlignmentY="Top" DestinationRect="0 0 32 32"/>
-			</Grid.Background>
-			<Image MaxWidth="96" MaxHeight="96" Source="{Binding RenderSource}" RenderOptions.BitmapInterpolationMode="None"/>
-		</Grid>
-	</Grid>
+  <Grid Width="96" Height="96" VerticalAlignment="Center" HorizontalAlignment="Center">
+    <Grid MaxWidth="96" MaxHeight="96" RenderOptions.BitmapInterpolationMode="None">
+      <Grid.Background>
+        <ImageBrush Source="avares://Pixed.Application/Resources/transparentBackground.png" TileMode="Tile">
+          <ImageBrush.Transform>
+            <ScaleTransform ScaleX="0.2" ScaleY="0.2"/>
+          </ImageBrush.Transform>
+        </ImageBrush>
+      </Grid.Background>
+      <Image MaxWidth="96" MaxHeight="96" Source="{Binding RenderSource}" RenderOptions.BitmapInterpolationMode="None"/>
+    </Grid>
+  </Grid>
 </UserControl>

@@ -4,12 +4,13 @@ using Avalonia.Data;
 using Avalonia.Media.Transformation;
 using Pixed.Application.Controls.Gestures;
 using System;
+using System.Reactive.Subjects;
 
 namespace Pixed.Application.Zoom;
 
 internal partial class ZoomBorder
 {
-    public delegate void ZoomChangedEventHandler(object sender, ZoomChangedEventArgs e);
+    public static Subject<ZoomEntry> ZoomChanged { get; set; } = new Subject<ZoomEntry>();
 
     public static readonly StyledProperty<double> ZoomSpeedProperty =
         AvaloniaProperty.Register<ZoomBorder, double>(nameof(ZoomSpeed), 1.2, false, BindingMode.TwoWay);
@@ -75,8 +76,6 @@ internal partial class ZoomBorder
     private bool _disposedValue;
     private readonly IDisposable _childChanged;
     private Matrix? _gestureMatrix;
-
-    public event ZoomChangedEventHandler? ZoomChanged;
 
     public double ZoomSpeed
     {

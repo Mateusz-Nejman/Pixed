@@ -73,10 +73,6 @@ internal partial class ZoomBorder : Border, IDisposable
         MaxOffsetY = yBound;
         Constrain();
     }
-    protected virtual void OnZoomChanged(ZoomChangedEventArgs e)
-    {
-        ZoomChanged?.Invoke(this, e);
-    }
 
     private void ResetMatrix()
     {
@@ -236,8 +232,7 @@ internal partial class ZoomBorder : Border, IDisposable
     }
     private void RaiseZoomChanged()
     {
-        var args = new ZoomChangedEventArgs(_zoom, _offsetX, _offsetY);
-        OnZoomChanged(args);
+        ZoomChanged.OnNext(new ZoomEntry(_zoom, _offsetX, _offsetY));
     }
 
     private void Constrain()

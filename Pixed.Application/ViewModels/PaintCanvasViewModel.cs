@@ -1,4 +1,6 @@
-﻿using Pixed.Application.Controls;
+﻿using Avalonia.Media;
+using Avalonia.Platform;
+using Pixed.Application.Controls;
 using Pixed.Application.Input;
 using Pixed.Application.Zoom;
 using Pixed.Common;
@@ -22,6 +24,8 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     private SKBitmap _overlayBitmap;
     private PixedImage _renderImage = new(null);
     private PixedImage _overlayImage = new(null);
+    private ImageBrush _transparentBrush;
+    private readonly Avalonia.Media.Imaging.Bitmap _transparentBitmap;
     private double _gridWidth;
     private double _gridHeight;
     private bool _leftPressed;
@@ -37,7 +41,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     private int _prevX = -1;
     private int _prevY = -1;
     private bool _gestureZoomEnabled;
-    private double _zoomValue;
+    private double _zoomValue = 1;
 
     private readonly IDisposable _projectModified;
     private readonly IDisposable _projectChanged;
@@ -53,6 +57,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     private readonly IDisposable _keyState;
     private readonly IDisposable _overlayChanged;
     private readonly IDisposable _currentLayerRenderModified;
+    private readonly IDisposable _zoomChanged;
 
     public ActionCommand<MouseEvent> LeftMouseDown { get; }
     public ActionCommand<MouseEvent> LeftMouseUp { get; }
@@ -188,6 +193,15 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     public string ZoomText { get; set; }
     public ZoomBorder ZoomContainer { get; set; }
     public ImageGrid GridCanvas { get; set; }
+    public ImageBrush TransparentBrush
+    {
+        get => _transparentBrush;
+        set
+        {
+            _transparentBrush = value;
+            OnPropertyChanged();
+        }
+    }
 
     public PaintCanvasViewModel(ApplicationData applicationData, ToolSelector toolSelector, ToolMoveCanvas toolMoveCanvas, SelectionManager selectionManager)
     {
@@ -201,6 +215,11 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         RightMouseUp = new ActionCommand<MouseEvent>(RightMouseUpAction);
         MouseMove = new ActionCommand<MouseEvent>(MouseMoveAction);
         MouseLeave = new ActionCommand(MouseLeaveAction);
+
+        var stream = AssetLoader.Open(new Uri("avares://Pixed.Application/Resources/transparentBackground.png"));
+        _transparentBitmap = new Avalonia.Media.Imaging.Bitmap(stream);
+
+        TransparentBrush = GetTransparentBackgroundBrush();
 
         _projectModified = Subjects.ProjectModified.Subscribe(p =>
         {
@@ -276,6 +295,19 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
             AvaloniaImageBitmap = _applicationData.CurrentFrame.RenderSource;
         });
 
+        _zoomChanged = ZoomBorder.ZoomChanged.Subscribe(entry =>
+        {
+            ZoomValue = entry.Zoom;
+            ZoomOffsetX = entry.OffsetX;
+            ZoomOffsetY = entry.OffsetY;
+            if (GridCanvas != null)
+            {
+                GridCanvas.Zoom = entry.Zoom;
+            }
+            RefreshZoomText();
+            TransparentBrush = GetTransparentBackgroundBrush();
+        });
+
         toolMoveCanvas.SetGestureEnabledAction = isEnabled =>
         {
             GestureZoomEnabled = isEnabled;
@@ -307,7 +339,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     {
         double zoom = ZoomValue * 100d;
         bool needRound = zoom % 1 != 0;
-        ZoomText = "Zoom: " + ZoomValue + "; OffsetX: " + ZoomOffsetX + "; OffsetY: " + ZoomOffsetY;
+        ZoomText = "Zoom: " + zoom.ToString(needRound ? "#.0" : "#");
         OnPropertyChanged(nameof(ZoomText));
     }
 
@@ -338,6 +370,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
                 _toolChanged?.Dispose();
                 _keyState?.Dispose();
                 _overlayChanged?.Dispose();
+                _zoomChanged?.Dispose();
                 _currentLayerRenderModified?.Dispose();
             }
 
@@ -476,6 +509,16 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         _prevY = point.Y;
 
         return point.X != prevX || point.Y != prevY;
+    }
+
+    private ImageBrush GetTransparentBackgroundBrush()
+    {
+        return new(_transparentBitmap)
+        {
+            TileMode = TileMode.Tile,
+            Transform = new ScaleTransform(0.2d / _zoomValue, 0.2d / _zoomValue)
+        };
+
     }
 
     private void DebugTouchPointer(MouseEvent mouseEvent)
