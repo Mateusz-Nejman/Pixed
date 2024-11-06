@@ -259,11 +259,6 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
             ReloadFrameRender();
         });
 
-        _mouseWheel = Subjects.MouseWheel.Subscribe(d =>
-        {
-            RefreshGridCanvas();
-        });
-
         _gridChanged = Subjects.GridChanged.Subscribe(enabled =>
         {
             RefreshGridCanvas();

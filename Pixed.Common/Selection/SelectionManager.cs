@@ -30,10 +30,6 @@ public class SelectionManager
         _applicationData = applicationData;
         _toolSelector = toolSelector;
         _currentSelection = null;
-
-        Subjects.ClipboardCopy.Subscribe(_ => Copy());
-        Subjects.ClipboardCut.Subscribe(_ => Cut());
-        Subjects.ClipboardPaste.Subscribe(_ => Paste());
         Subjects.SelectionCreated.Subscribe(OnSelectionCreated);
         Subjects.SelectionDismissed.Subscribe(OnSelectionDismissed);
         shortcutService.Add(new KeyState(Key.C, false, true, false), async () => await Copy());
