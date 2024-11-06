@@ -120,7 +120,6 @@ public struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatable
         double g = G / 255d;
         double b = B / 255d;
 
-
         double h, s, l;
 
         var min = Math.Min(Math.Min(r, g), b);
