@@ -5,6 +5,7 @@ using Pixed.Common.Utils;
 using SkiaSharp;
 using System.Collections.Generic;
 using System.Drawing;
+using Point = System.Drawing.Point;
 
 namespace Pixed.Common.Tools;
 

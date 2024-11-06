@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using Point = System.Drawing.Point;
 
 namespace Pixed.Common.Tools.Selection;
 

@@ -3,6 +3,7 @@ using Pixed.Common.Services.Keyboard;
 using SkiaSharp;
 using System.Collections.Generic;
 using System.Drawing;
+using Point = System.Drawing.Point;
 
 namespace Pixed.Common.Tools;
 public class ToolLighten(ApplicationData applicationData) : ToolPen(applicationData)

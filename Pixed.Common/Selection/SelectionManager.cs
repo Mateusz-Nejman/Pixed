@@ -11,6 +11,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Point = System.Drawing.Point;
 
 namespace Pixed.Common.Selection;
 

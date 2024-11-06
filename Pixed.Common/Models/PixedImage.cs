@@ -27,7 +27,7 @@ public class PixedImage : IImage, IDisposable
 
         public bool Equals(ICustomDrawOperation? other) => false;
 
-        public bool HitTest(Point p) => Bounds.Contains(p);
+        public bool HitTest(Avalonia.Point p) => Bounds.Contains(p);
 
         public void Render(ImmediateDrawingContext context)
         {
