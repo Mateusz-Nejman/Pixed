@@ -40,7 +40,7 @@ public static class TransformUtils
                     pixelY = layer.Height - y - 1;
                 }
 
-                pixels.Add(new Pixel(pixelX, pixelY, clone.GetPixel(x, y)));
+                pixels.Add(new Pixel(new Point(pixelX, pixelY), clone.GetPixel(new Point(x, y))));
             }
         }
 
@@ -62,6 +62,7 @@ public static class TransformUtils
         {
             for (int y = 0; y < layer.Height; y++)
             {
+                var point = new Point(x, y);
                 double newX = x + deltaX;
                 double newY = y + deltaY;
 
@@ -82,13 +83,14 @@ public static class TransformUtils
                 newX -= deltaX;
                 newY -= deltaY;
 
-                if (clone.ContainsPixel((int)newX, (int)newY))
+                var newPoint = new Point((int)newX, (int)newY);
+                if (clone.ContainsPixel(newPoint))
                 {
-                    pixels.Add(new Pixel(x, y, clone.GetPixel((int)newX, (int)newY)));
+                    pixels.Add(new Pixel(point, clone.GetPixel(newPoint)));
                 }
                 else
                 {
-                    pixels.Add(new Pixel(x, y, UniColor.Transparent));
+                    pixels.Add(new Pixel(point, UniColor.Transparent));
                 }
             }
         }
@@ -99,19 +101,18 @@ public static class TransformUtils
     public static void Center(Layer layer)
     {
         var boundaries = GetBoundaries([layer]);
+        var min = boundaries.Item1;
+        var max = boundaries.Item2;
 
-        int bw = (boundaries[2] - boundaries[0] + 1) / 2;
-        int bh = (boundaries[3] - boundaries[1] + 1) / 2;
+        int bw = (max.X - min.X + 1) / 2;
+        int bh = (max.Y - min.Y + 1) / 2;
         int fw = layer.Width / 2;
         int fh = layer.Height / 2;
 
-        int dx = fw - bw - boundaries[0];
-        int dy = fh - bh - boundaries[1];
-
-        MoveLayerFixes(layer, dx, dy);
+        MoveLayerFixes(layer, new Point(fw - bw - min.X, fh - bh - min.Y));
     }
 
-    public static void MoveLayerFixes(Layer layer, int dx, int dy)
+    public static void MoveLayerFixes(Layer layer, Point diff)
     {
         Layer clone = layer.Clone();
         List<Pixel> pixels = [];
@@ -120,16 +121,16 @@ public static class TransformUtils
         {
             for (int y = 0; y < layer.Height; y++)
             {
-                int newX = x - dx;
-                int newY = y - dy;
+                var point = new Point(x, y);
+                var newPoint = point - diff;
 
-                if (clone.ContainsPixel(newX, newY))
+                if (clone.ContainsPixel(newPoint))
                 {
-                    pixels.Add(new Pixel(x, y, clone.GetPixel(newX, newY)));
+                    pixels.Add(new Pixel(point, clone.GetPixel(newPoint)));
                 }
                 else
                 {
-                    pixels.Add(new Pixel(x, y, UniColor.Transparent));
+                    pixels.Add(new Pixel(point, UniColor.Transparent));
                 }
             }
         }
@@ -137,7 +138,7 @@ public static class TransformUtils
         layer.SetPixels(pixels);
     }
 
-    public static int[] GetBoundaries(Layer[] layers)
+    public static Tuple<Point, Point> GetBoundaries(Layer[] layers)
     {
         int minx = int.MaxValue;
         int miny = int.MaxValue;
@@ -153,7 +154,7 @@ public static class TransformUtils
             {
                 for (int y = 0; y < layer.Height; y++)
                 {
-                    uint color = layer.GetPixel(x, y);
+                    uint color = layer.GetPixel(new Point(x, y));
 
                     if (color != transparent)
                     {
@@ -166,10 +167,10 @@ public static class TransformUtils
             }
         }
 
-        return [minx, miny, maxx, maxy];
+        return new Tuple<Point, Point>(new Point(minx, miny), new Point(maxx, maxy));
     }
 
-    public static int[] GetBoundariesFromSelection(BaseSelection selection)
+    public static Tuple<Point, Point> GetBoundariesFromSelection(BaseSelection selection)
     {
         int minx = int.MaxValue;
         int miny = int.MaxValue;
@@ -182,13 +183,13 @@ public static class TransformUtils
         {
             if (pixel.Color != transparent)
             {
-                minx = Math.Min(minx, pixel.X);
-                maxx = Math.Max(maxx, pixel.X);
-                miny = Math.Min(miny, pixel.Y);
-                maxy = Math.Max(maxy, pixel.Y);
+                minx = Math.Min(minx, pixel.Position.X);
+                maxx = Math.Max(maxx, pixel.Position.X);
+                miny = Math.Min(miny, pixel.Position.Y);
+                maxy = Math.Max(maxy, pixel.Position.Y);
             }
         }
 
-        return [minx, miny, maxx, maxy];
+        return new Tuple<Point, Point>(new Point(minx, miny), new Point(maxx, maxy));
     }
 }

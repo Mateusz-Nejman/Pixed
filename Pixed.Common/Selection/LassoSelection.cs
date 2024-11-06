@@ -1,8 +1,6 @@
 ﻿using Pixed.Common.Models;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using Point = System.Drawing.Point;
 
 namespace Pixed.Common.Selection;
 
@@ -14,7 +12,7 @@ internal class LassoSelection : BaseSelection
         Pixels.Clear();
         if (pixels.Count <= 4)
         {
-            Pixels.AddRange(pixels.Select(p => new Pixel(p.X, p.Y, frame.GetPixel(p.X, p.Y))));
+            Pixels.AddRange(pixels.Select(p => new Pixel(p, frame.GetPixel(p))));
         }
         else
         {
@@ -37,7 +35,8 @@ internal class LassoSelection : BaseSelection
 
             for (int x = minX; x <= maxX; x++)
             {
-                lassoPixels.Add(new Pixel(x, y, frame.GetPixel(x, y)));
+                var point = new Point(x, y);
+                lassoPixels.Add(new Pixel(point, frame.GetPixel(point)));
             }
         }
 

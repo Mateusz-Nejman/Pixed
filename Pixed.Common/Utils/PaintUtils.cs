@@ -1,52 +1,50 @@
 ﻿using Pixed.Common.Models;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using Point = System.Drawing.Point;
 
 namespace Pixed.Common.Utils;
 
 public static class PaintUtils
 {
-    public static List<Point> GetToolPoints(int x, int y, int toolSize)
+    public static List<Point> GetToolPoints(Point point, int toolSize)
     {
         List<Point> points = [];
-        for (int y1 = 0; y1 < toolSize; y1++)
+        for (int y = 0; y < toolSize; y++)
         {
-            for (int x1 = 0; x1 < toolSize; x1++)
+            for (int x = 0; x < toolSize; x++)
             {
-                points.Add(new(x - (int)Math.Floor(toolSize / 2.0d) + x1, y - (int)Math.Floor(toolSize / 2.0d) + y1));
+                points.Add(new(point.X - (int)Math.Floor(toolSize / 2.0d) + x, point.Y - (int)Math.Floor(toolSize / 2.0d) + y));
             }
         }
 
         return points;
     }
-    public static List<Pixel> GetSimiliarConnectedPixels(Frame frame, int x, int y)
+    public static List<Pixel> GetSimiliarConnectedPixels(Frame frame, Point point)
     {
-        return GetSimiliarConnectedPixels(frame.CurrentLayer, x, y);
+        return GetSimiliarConnectedPixels(frame.CurrentLayer, point);
     }
 
-    public static List<Pixel> GetSimiliarConnectedPixels(Layer layer, int x, int y)
+    public static List<Pixel> GetSimiliarConnectedPixels(Layer layer, Point point)
     {
-        uint targetColor = layer.GetPixel(x, y);
+        uint targetColor = layer.GetPixel(point);
 
-        var points = MathUtils.FloodFill(new Point(x, y), new Point(layer.Width, layer.Height), pos => layer.GetPixel(pos.X, pos.Y) == targetColor);
-        var pixels = points.Select(point => new Pixel(point.X, point.Y, targetColor)).ToList();
+        var points = MathUtils.FloodFill(point, new Point(layer.Width, layer.Height), pos => layer.GetPixel(pos) == targetColor);
+        var pixels = points.Select(point => new Pixel(point, targetColor)).ToList();
         return pixels;
     }
 
-    public static void PaintSimiliarConnected(Layer layer, int x, int y, uint replacementColor)
+    public static void PaintSimiliarConnected(Layer layer, Point point, uint replacementColor)
     {
-        uint targetColor = layer.GetPixel(x, y);
+        uint targetColor = layer.GetPixel(point);
 
         if (targetColor == replacementColor)
         {
             return;
         }
 
-        var points = MathUtils.FloodFill(new Point(x, y), new Point(layer.Width, layer.Height), pos => layer.GetPixel(pos.X, pos.Y) == targetColor);
-        var pixels = points.Select(p => new Pixel(p.X, p.Y, replacementColor)).ToList();
+        var points = MathUtils.FloodFill(point, new Point(layer.Width, layer.Height), pos => layer.GetPixel(pos) == targetColor);
+        var pixels = points.Select(p => new Pixel(p, replacementColor)).ToList();
         layer.SetPixels(pixels);
     }
 
@@ -58,18 +56,18 @@ public static class PaintUtils
         return primary.Blend(secondary, color);
     }
 
-    public static void PaintNoiseSimiliarConnected(Layer layer, int x, int y, UniColor primaryColor, UniColor secondaryColor)
+    public static void PaintNoiseSimiliarConnected(Layer layer, Point point, UniColor primaryColor, UniColor secondaryColor)
     {
-        uint targetColor = layer.GetPixel(x, y);
+        uint targetColor = layer.GetPixel(point);
 
-        var points = MathUtils.FloodFill(new Point(x, y), new Point(layer.Width, layer.Height), pos => layer.GetPixel(pos.X, pos.Y) == targetColor);
-        var pixels = points.Select(point => new Pixel(point.X, point.Y, GetNoiseColor(primaryColor, secondaryColor))).ToList();
+        var points = MathUtils.FloodFill(point, new Point(layer.Width, layer.Height), pos => layer.GetPixel(pos) == targetColor);
+        var pixels = points.Select(p => new Pixel(p, GetNoiseColor(primaryColor, secondaryColor))).ToList();
         layer.SetPixels(pixels);
     }
 
-    public static void OutlineSimiliarConnectedPixels(Layer layer, int x, int y, uint replacementColor, bool fillCorners)
+    public static void OutlineSimiliarConnectedPixels(Layer layer, Point point, uint replacementColor, bool fillCorners)
     {
-        var targetColor = layer.GetPixel(x, y);
+        var targetColor = layer.GetPixel(point);
 
         if (targetColor == replacementColor)
         {
@@ -82,14 +80,15 @@ public static class PaintUtils
             {
                 for (int x1 = -1; x1 <= 1; x1++)
                 {
-                    if (!layer.ContainsPixel(pixel.X + x1, pixel.Y + y1))
+                    Point neighbourPoint = pixel.Position + new Point(x1, y1);
+                    if (!layer.ContainsPixel(neighbourPoint))
                     {
                         continue;
                     }
 
                     if (fillCorners || x1 == 0 || y1 == 0)
                     {
-                        var pixelColor = layer.GetPixel(pixel.X + x1, pixel.Y + y1);
+                        var pixelColor = layer.GetPixel(neighbourPoint);
 
                         if (pixelColor != targetColor)
                         {
@@ -102,8 +101,8 @@ public static class PaintUtils
             return false;
         }
 
-        var pixels = GetSimiliarConnectedPixels(layer, x, y);
-        pixels = pixels.Where(neighbourCheck).Select(p => new Pixel(p.X, p.Y, replacementColor)).ToList();
+        var pixels = GetSimiliarConnectedPixels(layer, point);
+        pixels = pixels.Where(neighbourCheck).Select(p => new Pixel(p.Position, replacementColor)).ToList();
 
         layer.SetPixels(pixels);
     }

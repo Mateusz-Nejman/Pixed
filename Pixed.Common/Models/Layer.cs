@@ -106,16 +106,16 @@ public class Layer : PropertyChangedBase, IPixedSerializer
         return _pixels.Distinct().ToArray();
     }
 
-    public void SetPixel(int x, int y, uint color)
+    public void SetPixel(Point point, uint color)
     {
-        SetPixelPrivate(x, y, color);
+        SetPixelPrivate(point, color);
     }
 
     public void SetPixels(List<Pixel> pixels)
     {
         foreach (Pixel pixel in pixels)
         {
-            SetPixelPrivate(pixel.X, pixel.Y, pixel.Color);
+            SetPixelPrivate(pixel.Position, pixel.Color);
         }
     }
 
@@ -145,14 +145,14 @@ public class Layer : PropertyChangedBase, IPixedSerializer
         }
     }
 
-    public uint GetPixel(int x, int y)
+    public uint GetPixel(Point point)
     {
-        if (x < 0 || y < 0 || x >= _width || y >= _height)
+        if(!ContainsPixel(point))
         {
             return 0;
         }
 
-        return _pixels[y * _width + x];
+        return _pixels[point.Y * _width + point.X];
     }
 
     public bool Render(out SKBitmap render, List<Pixel>? modifiedPixels = null)
@@ -163,13 +163,13 @@ public class Layer : PropertyChangedBase, IPixedSerializer
             return false;
         }
 
-        IList<uint> pixels = new List<uint>(_pixels);
+        List<uint> pixels = new(_pixels);
 
         if (modifiedPixels != null)
         {
             foreach (var pixel in modifiedPixels)
             {
-                pixels[pixel.Y * _width + pixel.X] = pixel.Color;
+                pixels[pixel.Position.Y * _width + pixel.Position.X] = pixel.Color;
             }
         }
 
@@ -183,7 +183,7 @@ public class Layer : PropertyChangedBase, IPixedSerializer
             }
         }
 
-        var bitmap = SkiaUtils.FromArray(pixels, _width, _height);
+        var bitmap = SkiaUtils.FromArray(pixels, new Point(_width, _height));
         pixels.Clear();
         _renderedBitmap = bitmap;
         _needRerender = false;
@@ -191,9 +191,9 @@ public class Layer : PropertyChangedBase, IPixedSerializer
         return true;
     }
 
-    public bool ContainsPixel(int x, int y)
+    public bool ContainsPixel(Point point)
     {
-        return x >= 0 && y >= 0 && x < Width && y < Height;
+        return point.X >= 0 && point.Y >= 0 && point.X < Width && point.Y < Height;
     }
 
     public void Serialize(Stream stream)
@@ -231,13 +231,14 @@ public class Layer : PropertyChangedBase, IPixedSerializer
         return layer;
     }
 
-    private void SetPixelPrivate(int x, int y, uint color)
+    private void SetPixelPrivate(Point point, uint color)
     {
-        if (x < 0 || y < 0 || x >= _width || y >= _height)
+        if(!ContainsPixel(point))
         {
             return;
         }
-        _pixels[y * _width + x] = color;
+
+        _pixels[point.Y * _width + point.X] = color;
         _needRerender = true;
     }
 }

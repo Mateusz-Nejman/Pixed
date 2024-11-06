@@ -1,33 +1,31 @@
 ﻿using Pixed.Common.Models;
-using System;
+using Pixed.Common.Utils;
 
 namespace Pixed.Common.Selection;
 
 internal class RectangularSelection : BaseSelection
 {
-    private int _x1;
-    private int _y1;
-    private int _x2;
-    private int _y2;
+    private Point _point1;
+    private Point _point2;
 
-    public RectangularSelection(int x1, int y1, int x2, int y2, Frame frame) : base()
+    public RectangularSelection(Point point1, Point point2, Frame frame) : base()
     {
-        SetOrderedRectangleCoordinates(x1, y1, x2, y2);
+        SetOrderedRectangleCoordinates(point1, point2);
 
-        for (int x = _x1; x <= _x2; x++)
+        for (int x = _point1.X; x <= _point2.X; x++)
         {
-            for (int y = _y1; y <= _y2; y++)
+            for (int y = _point1.Y; y <= _point2.Y; y++)
             {
-                Pixels.Add(new Pixel(x, y, frame.GetPixel(x, y)));
+                var point = new Point(x, y);
+                Pixels.Add(new Pixel(point, frame.GetPixel(point)));
             }
         }
     }
 
-    private void SetOrderedRectangleCoordinates(int x1, int y1, int x2, int y2)
+    private void SetOrderedRectangleCoordinates(Point point1, Point point2)
     {
-        _x1 = Math.Min(x1, x2);
-        _y1 = Math.Min(y1, y2);
-        _x2 = Math.Max(x2, x1);
-        _y2 = Math.Max(y2, y1);
+        var tuple = MathUtils.GetOrderedRectangle(point1, point2);
+        _point1 = tuple.Item1;
+        _point2 = tuple.Item2;
     }
 }

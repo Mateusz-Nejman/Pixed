@@ -11,15 +11,15 @@ public class ToolColorSwap(ApplicationData applicationData) : BaseTool(applicati
     public override bool ShiftHandle { get; protected set; } = true;
     public override bool ControlHandle { get; protected set; } = true;
     public override bool SingleHighlightedPixel { get; protected set; } = true;
-    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
-        ApplyToolBase(x, y, frame, ref overlay, keyState);
+        ApplyToolBase(point, frame, ref overlay, keyState);
         var shiftPressed = keyState.IsShift || GetProperty(ToolProperties.PROP_APPLY_ALL_FRAMES);
         var controlPressed = keyState.IsCtrl || GetProperty(ToolProperties.PROP_APPLY_ALL_LAYERS);
 
-        if (frame.ContainsPixel(x, y))
+        if (frame.ContainsPixel(point))
         {
-            var oldColor = frame.GetPixel(x, y);
+            var oldColor = frame.GetPixel(point);
             var newColor = ToolColor;
 
             SwapColors(oldColor, newColor, shiftPressed, controlPressed);
@@ -49,9 +49,10 @@ public class ToolColorSwap(ApplicationData applicationData) : BaseTool(applicati
         {
             for (int y = 0; y < layer.Height; y++)
             {
-                if (layer.GetPixel(x, y) == oldColor)
+                var point = new Point(x, y);
+                if (layer.GetPixel(point) == oldColor)
                 {
-                    pixels.Add(new Pixel(x, y, newColor));
+                    pixels.Add(new Pixel(point, newColor));
                 }
             }
         }

@@ -11,7 +11,7 @@ public class Crop(ApplicationData applicationData, SelectionManager selectionMan
 
     public override void ApplyTransformation(bool shiftPressed, bool controlPressed, bool altPressed)
     {
-        int[] boundaries;
+        Tuple<Point, Point> boundaries;
         if (_selectionManager.HasSelection)
         {
             boundaries = TransformUtils.GetBoundariesFromSelection(_selectionManager.Selection);
@@ -38,18 +38,18 @@ public class Crop(ApplicationData applicationData, SelectionManager selectionMan
         throw new NotImplementedException();
     }
 
-    private bool ApplyTool(int[] boundaries)
+    private bool ApplyTool(Tuple<Point, Point> boundaries)
     {
         //return [minx, miny, maxx, maxy];
 
-        if (boundaries[0] >= boundaries[2])
+        if (boundaries.Item1.X >= boundaries.Item2.X)
         {
             return false;
         }
 
         var model = _applicationData.CurrentModel;
-        int width = 1 + boundaries[2] - boundaries[0];
-        int height = 1 + boundaries[3] - boundaries[1];
+        int width = 1 + boundaries.Item2.X - boundaries.Item1.X;
+        int height = 1 + boundaries.Item2.Y - boundaries.Item1.Y;
 
         if (width == model.Width && height == model.Height)
         {
@@ -60,14 +60,14 @@ public class Crop(ApplicationData applicationData, SelectionManager selectionMan
         {
             foreach (var layer in frame.Layers)
             {
-                TransformUtils.MoveLayerFixes(layer, -boundaries[0], -boundaries[1]);
+                TransformUtils.MoveLayerFixes(layer, -boundaries.Item1);
                 Subjects.LayerModified.OnNext(layer);
             }
 
             Subjects.FrameModified.OnNext(frame);
         }
 
-        var newModel = ResizeUtils.ResizeModel(applicationData, model, 1 + boundaries[2] - boundaries[0], 1 + boundaries[3] - boundaries[1], false, ResizeUtils.Origin.TopLeft);
+        var newModel = ResizeUtils.ResizeModel(applicationData, model, new Point(1 + boundaries.Item2.X - boundaries.Item1.X, 1 + boundaries.Item2.Y - boundaries.Item1.Y), false, ResizeUtils.Origin.TopLeft);
         Subjects.SelectionDismissed.OnNext(null);
         _applicationData.Models[_applicationData.CurrentModelIndex] = newModel;
         Subjects.ProjectModified.OnNext(newModel);

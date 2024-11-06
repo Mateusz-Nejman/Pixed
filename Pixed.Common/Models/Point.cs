@@ -1,10 +1,10 @@
 ﻿using System;
 
 namespace Pixed.Common.Models;
-internal readonly struct Point(int x, int y) : IEquatable<Point>
+public struct Point(int x, int y) : IEquatable<Point>
 {
-    public int X { get; } = x;
-    public int Y { get; } = y;
+    public int X { readonly get; set; } = x;
+    public int Y { readonly get; set; } = y;
 
     public Point() : this(0, 0)
     {
@@ -31,6 +31,11 @@ internal readonly struct Point(int x, int y) : IEquatable<Point>
     public static Point operator +(Point a, Point b)
     {
         return new Point(a.X + b.X, a.Y + b.Y);
+    }
+
+    public static Point operator -(Point a, Point b)
+    {
+        return new Point(a.X - b.X, a.Y - b.Y);
     }
 
     public static double Distance(Point value1, Point value2)

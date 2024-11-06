@@ -184,7 +184,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
             if (success)
             {
                 var result = window.Result;
-                var model = ResizeUtils.ResizeModel(_applicationData, _applicationData.CurrentModel, result.Width, result.Height, result.ResizeCanvasContent, result.Anchor);
+                var model = ResizeUtils.ResizeModel(_applicationData, _applicationData.CurrentModel, new Point(result.Width, result.Height), result.ResizeCanvasContent, result.Anchor);
                 _applicationData.UserSettings.UserWidth = result.Width;
                 _applicationData.UserSettings.UserHeight = result.Height;
                 _applicationData.UserSettings.MaintainAspectRatio = result.MaintainAspectRatio;

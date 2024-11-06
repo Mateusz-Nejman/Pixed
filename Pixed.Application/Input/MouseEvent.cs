@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+﻿using Pixed.Common.Models;
 
 namespace Pixed.Application.Input
 {

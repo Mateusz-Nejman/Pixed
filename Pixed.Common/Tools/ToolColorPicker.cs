@@ -10,12 +10,12 @@ public class ToolColorPicker(ApplicationData applicationData) : BaseTool(applica
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Color picker");
     public override bool SingleHighlightedPixel { get; protected set; } = true;
     public override bool AddToHistory { get; protected set; } = false;
-    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
-        ApplyToolBase(x, y, frame, ref overlay, keyState);
-        if (frame.ContainsPixel(x, y))
+        ApplyToolBase(point, frame, ref overlay, keyState);
+        if (frame.ContainsPixel(point))
         {
-            var color = frame.GetPixel(x, y);
+            var color = frame.GetPixel(point);
 
             if (Mouse.LeftButton == MouseButtonState.Pressed)
             {

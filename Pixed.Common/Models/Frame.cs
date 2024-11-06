@@ -75,9 +75,9 @@ public class Frame : PropertyChangedBase, IPixedSerializer
         return frame;
     }
 
-    public void SetPixel(int x, int y, uint color)
+    public void SetPixel(Point point, uint color)
     {
-        CurrentLayer.SetPixel(x, y, color);
+        CurrentLayer.SetPixel(point, color);
     }
 
     public void SetPixels(List<Pixel> pixels)
@@ -85,22 +85,22 @@ public class Frame : PropertyChangedBase, IPixedSerializer
         CurrentLayer.SetPixels(pixels);
     }
 
-    public void SetPixel(int x, int y, uint color, int toolSize)
+    public void SetPixel(Point point, uint color, int toolSize)
     {
         if (toolSize <= 1)
         {
-            SetPixel(x, y, color);
+            SetPixel(point, color);
             return;
         }
 
-        var toolPoints = PaintUtils.GetToolPoints(x, y, toolSize);
-        var pixels = toolPoints.Select(p => new Pixel(p.X, p.Y, color)).ToList();
+        var toolPoints = PaintUtils.GetToolPoints(point, toolSize);
+        var pixels = toolPoints.Select(p => new Pixel(p, color)).ToList();
         SetPixels(pixels);
     }
 
-    public uint GetPixel(int x, int y)
+    public uint GetPixel(Point point)
     {
-        return CurrentLayer.GetPixel(x, y);
+        return CurrentLayer.GetPixel(point);
     }
 
     public Layer AddLayer(Layer layer)
@@ -142,9 +142,9 @@ public class Frame : PropertyChangedBase, IPixedSerializer
         return render;
     }
 
-    public bool ContainsPixel(int x, int y)
+    public bool ContainsPixel(Point point)
     {
-        return CurrentLayer.ContainsPixel(x, y);
+        return CurrentLayer.ContainsPixel(point);
     }
 
     public void MoveLayerUp()

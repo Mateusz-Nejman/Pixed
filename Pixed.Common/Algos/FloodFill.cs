@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Pixed.Common.Models;
+using System;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace Pixed.Common.Algos;
 
@@ -8,33 +8,31 @@ internal class FloodFill(Point startPosition, Point size) : IDisposable
 {
     private bool _disposedValue;
     private readonly Queue<Point> _queue = [];
-    private readonly int _startX = startPosition.X;
-    private readonly int _startY = startPosition.Y;
-    private readonly int _sizeX = size.X - 1;
-    private readonly int _sizeY = size.Y - 1;
+    private readonly Point _startPosition = startPosition;
+    private readonly Point _size = size - new Point(1);
 
-    public void Execute(Func<int, int, bool> validator, Action<int, int> action)
+    public void Execute(Func<Point, bool> validator, Action<Point> action)
     {
-        int[,] points = new int[_sizeX + 1, _sizeY + 1];
-        for (int x = 0; x <= _sizeX; x++)
+        int[,] points = new int[_size.X + 1, _size.Y + 1];
+        for (int x = 0; x <= _size.X; x++)
         {
-            for (int y = 0; y <= _sizeY; y++)
+            for (int y = 0; y <= _size.Y; y++)
             {
                 points[x, y] = int.MaxValue;
             }
         }
 
-        ProcessNeighbourIfValid(_startX, _startY, 0, ref points, validator, action);
+        ProcessNeighbourIfValid(_startPosition, 0, ref points, validator, action);
 
         while (_queue.Count > 0)
         {
             var current = _queue.Dequeue();
             int value = 1 + points[current.X, current.Y];
 
-            ProcessNeighbourIfValid(current.X, current.Y - 1, value, ref points, validator, action);
-            ProcessNeighbourIfValid(current.X, current.Y + 1, value, ref points, validator, action);
-            ProcessNeighbourIfValid(current.X - 1, current.Y, value, ref points, validator, action);
-            ProcessNeighbourIfValid(current.X + 1, current.Y, value, ref points, validator, action);
+            ProcessNeighbourIfValid(new Point(current.X, current.Y - 1), value, ref points, validator, action);
+            ProcessNeighbourIfValid(new Point(current.X, current.Y + 1), value, ref points, validator, action);
+            ProcessNeighbourIfValid(new Point(current.X - 1, current.Y), value, ref points, validator, action);
+            ProcessNeighbourIfValid(new Point(current.X + 1, current.Y), value, ref points, validator, action);
         }
 
         points = null;
@@ -58,15 +56,15 @@ internal class FloodFill(Point startPosition, Point size) : IDisposable
         GC.SuppressFinalize(this);
     }
 
-    private void ProcessNeighbourIfValid(int neighbourX, int neighbourY, int value, ref int[,] points, Func<int, int, bool> validator, Action<int, int> action)
+    private void ProcessNeighbourIfValid(Point neighbourPoint, int value, ref int[,] points, Func<Point, bool> validator, Action<Point> action)
     {
-        if (neighbourX >= 0 && neighbourX <= _sizeX && neighbourY >= 0 && neighbourY <= _sizeY
-               && points[neighbourX, neighbourY] == int.MaxValue
-               && validator(neighbourX, neighbourY))
+        if (neighbourPoint.X >= 0 && neighbourPoint.X <= _size.X && neighbourPoint.Y >= 0 && neighbourPoint.Y <= _size.Y
+               && points[neighbourPoint.X, neighbourPoint.Y] == int.MaxValue
+               && validator(neighbourPoint))
         {
-            points[neighbourX, neighbourY] = value;
-            action.Invoke(neighbourX, neighbourY);
-            _queue.Enqueue(new Point(neighbourX, neighbourY));
+            points[neighbourPoint.X, neighbourPoint.Y] = value;
+            action.Invoke(neighbourPoint);
+            _queue.Enqueue(neighbourPoint);
         }
     }
 }

@@ -19,11 +19,8 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
     }
 
     private readonly ToolSelector _toolSelector = toolSelector;
-    protected int _startX = 0;
-    protected int _startY = 0;
-
-    protected int _lastX = 0;
-    protected int _lastY = 0;
+    protected Point _start = new();
+    protected Point _last = new();
 
 
     protected BaseSelection? _selection = null;
@@ -39,75 +36,70 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
         _toolSelector.SelectTool("tool_rectangle_select");
         _hasSelection = true;
         _mode = SelectionMode.Select;
-        _selection = new RectangularSelection(0, 0, _applicationData.CurrentFrame.Width - 1, _applicationData.CurrentFrame.Height - 1, _applicationData.CurrentFrame);
+        _selection = new RectangularSelection(new Point(), new Point(_applicationData.CurrentFrame.Width - 1, _applicationData.CurrentFrame.Height - 1), _applicationData.CurrentFrame);
         overlayAction?.Invoke(CreateOverlayFromCurrentFrame());
         Subjects.SelectionCreated.OnNext(_selection);
     }
 
-    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
-        ApplyToolBase(x, y, frame, ref overlay, keyState);
-        _startX = x;
-        _startY = y;
-        _lastX = x;
-        _lastY = y;
+        ApplyToolBase(point, frame, ref overlay, keyState);
+        _start = point;
+        _last = point;
 
-        if (!IsInSelection(x, y))
+        if (!IsInSelection(point))
         {
             _mode = SelectionMode.Select;
-            OnSelectStart(x, y, frame, ref overlay);
+            OnSelectStart(point, frame, ref overlay);
         }
         else
         {
-            OnSelectionMoveStart(x, y, frame, ref overlay);
+            OnSelectionMoveStart(point, frame, ref overlay);
         }
     }
 
-    public override void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void MoveTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
         if (_mode == SelectionMode.Select)
         {
-            OnSelect(x, y, frame, ref overlay);
+            OnSelect(point, frame, ref overlay);
         }
     }
 
-    public override void ReleaseTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void ReleaseTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
         if (_mode == SelectionMode.Select)
         {
-            OnSelectEnd(x, y, frame, ref overlay);
+            OnSelectEnd(point, frame, ref overlay);
         }
 
-        ReleaseToolBase(x, y, frame, ref overlay, keyState);
+        ReleaseToolBase(point, frame, ref overlay, keyState);
     }
 
-    public override void UpdateHighlightedPixel(int x, int y, Frame frame, ref SKBitmap overlay)
+    public override void UpdateHighlightedPixel(Point point, Frame frame, ref SKBitmap overlay)
     {
         if (!_hasSelection)
         {
-            base.UpdateHighlightedPixel(x, y, frame, ref overlay);
+            base.UpdateHighlightedPixel(point, frame, ref overlay);
         }
     }
 
-    public virtual void OnSelectStart(int x, int y, Frame frame, ref SKBitmap overlay) { }
-    public virtual void OnSelect(int x, int y, Frame frame, ref SKBitmap overlay) { }
-    public virtual void OnSelectEnd(int x, int y, Frame frame, ref SKBitmap overlay) { }
-    public virtual void OnSelectionMoveStart(int x, int y, Frame frame, ref SKBitmap overlay) { }
-    public virtual void OnSelectionMove(int x, int y, Frame frame, ref SKBitmap overlay)
+    public virtual void OnSelectStart(Point point, Frame frame, ref SKBitmap overlay) { }
+    public virtual void OnSelect(Point point, Frame frame, ref SKBitmap overlay) { }
+    public virtual void OnSelectEnd(Point point, Frame frame, ref SKBitmap overlay) { }
+    public virtual void OnSelectionMoveStart(Point point, Frame frame, ref SKBitmap overlay) { }
+    public virtual void OnSelectionMove(Point point, Frame frame, ref SKBitmap overlay)
     {
-        var deltaX = x - _lastX;
-        var deltaY = y - _lastY;
-        _selection?.Move(deltaX, deltaY);
+        _selection?.Move(point - _last);
 
         overlay.Clear();
         DrawSelectionOnOverlay(ref overlay);
 
-        _lastX = x;
-        _lastY = y;
+        _last = point;
     }
-    public virtual void OnSelectionMoveEnd(int x, int y, Frame frame, ref SKBitmap overlay)
+    public virtual void OnSelectionMoveEnd(Point point, Frame frame, ref SKBitmap overlay)
     {
-        OnSelectionMove(x, y, frame, ref overlay);
+        OnSelectionMove(point, frame, ref overlay);
     }
 
     public override void Reset()
@@ -115,9 +107,9 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
         _selection?.Pixels.Clear();
     }
 
-    protected bool IsInSelection(int x, int y)
+    protected bool IsInSelection(Point point)
     {
-        return _selection != null && _selection.Pixels.Any(p => p.X == x && p.Y == y);
+        return _selection != null && _selection.Pixels.Any(p => p.Position == point);
     }
 
     protected void DrawSelectionOnOverlay(ref SKBitmap bitmap)
@@ -129,7 +121,7 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
             var pixel = pixels[i];
             var hasColor = pixel.Color != UniColor.Transparent;
 
-            if (!bitmap.ContainsPixel(pixel.X, pixel.Y))
+            if (!bitmap.ContainsPixel(pixel.Position))
             {
                 continue;
             }
@@ -143,7 +135,7 @@ internal class BaseSelect(ApplicationData applicationData, ToolSelector toolSele
                 color.A = 128;
             }
 
-            bitmap.SetPixel(pixel.X, pixel.Y, color);
+            bitmap.SetPixel(pixel.Position.X, pixel.Position.Y, color);
         }
 
         Subjects.OverlayModified.OnNext(bitmap);

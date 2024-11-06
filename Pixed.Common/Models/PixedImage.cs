@@ -83,7 +83,7 @@ public class PixedImage : IImage, IDisposable
         return new PixedImage(_source?.Copy());
     }
 
-    public PixedImage(uint[] colors, int width, int height) : this(SkiaUtils.FromArray(colors, width, height))
+    public PixedImage(uint[] colors, Point size) : this(SkiaUtils.FromArray(colors, size))
     {
         _canDispose = true;
     }

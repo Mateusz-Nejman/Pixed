@@ -4,27 +4,23 @@ using Pixed.Common.Services.Keyboard;
 using Pixed.Common.Utils;
 using SkiaSharp;
 using System.Collections.Generic;
-using System.Drawing;
-using Point = System.Drawing.Point;
 
 namespace Pixed.Common.Tools;
 
 public class ToolPen(ApplicationData applicationData) : BaseTool(applicationData)
 {
-    protected int _prevX = -1;
-    protected int _prevY = -1;
+    protected Point _prev = new(-1);
     private readonly List<Pixel> _pixels = [];
     private readonly List<Point> _modifiedPoints = [];
 
     public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-pen.png";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Simple pen");
-    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
-        ApplyToolBase(x, y, frame, ref overlay, keyState);
-        _prevX = x;
-        _prevY = y;
+        ApplyToolBase(point, frame, ref overlay, keyState);
+        _prev = point;
 
-        DrawOnOverlay(ToolColor, x, y, frame, ref overlay);
+        DrawOnOverlay(ToolColor, point, frame, ref overlay);
         Subjects.OverlayModified.OnNext(overlay);
 
         if (_pixels.Count > 0)
@@ -33,37 +29,35 @@ public class ToolPen(ApplicationData applicationData) : BaseTool(applicationData
         }
     }
 
-    public override void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void MoveTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
-        if (_prevX != x || _prevY != y)
+        if (_prev != point)
         {
-            var interpolatedPixels = BresenhamLine.Get(x, y, _prevX, _prevY);
+            var interpolatedPixels = BresenhamLine.Get(point, _prev);
 
             foreach (var pixel in interpolatedPixels)
             {
-                ApplyTool(pixel.X, pixel.Y, frame, ref overlay, keyState);
+                ApplyTool(pixel, frame, ref overlay, keyState);
             }
         }
         else
         {
-            ApplyTool(x, y, frame, ref overlay, keyState);
+            ApplyTool(point, frame, ref overlay, keyState);
         }
 
-        _prevX = x;
-        _prevY = y;
+        _prev = point;
     }
 
-    public override void ReleaseTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void ReleaseTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
         SetPixels(frame, _pixels);
         _pixels.Clear();
         _modifiedPoints.Clear();
-        _prevX = -1;
-        _prevY = -1;
+        _prev = new Point(-1);
 
         overlay.Clear();
         Subjects.OverlayModified.OnNext(overlay);
-        ReleaseToolBase(x, y, frame, ref overlay, keyState);
+        ReleaseToolBase(point, frame, ref overlay, keyState);
     }
 
     public List<Pixel> GetPixels()
@@ -76,11 +70,6 @@ public class ToolPen(ApplicationData applicationData) : BaseTool(applicationData
         return _modifiedPoints.Contains(point);
     }
 
-    protected void AddPixel(int x, int y, uint color)
-    {
-        AddPixel(new Point(x, y), color);
-    }
-
     protected void AddPixel(Point point, uint color)
     {
         if (IsPixelModified(point))
@@ -88,25 +77,25 @@ public class ToolPen(ApplicationData applicationData) : BaseTool(applicationData
             return;
         }
 
-        _pixels.Add(new Pixel(point.X, point.Y, color));
+        _pixels.Add(new Pixel(point, color));
         _modifiedPoints.Add(point);
     }
 
-    protected void DrawOnOverlay(UniColor color, int x, int y, Frame frame, ref SKBitmap overlay)
+    protected void DrawOnOverlay(UniColor color, Point point, Frame frame, ref SKBitmap overlay)
     {
         var toolSize = _applicationData.ToolSize;
-        overlay.SetPixel(x, y, color, toolSize);
+        overlay.SetPixel(point, color, toolSize);
 
         if (color == UniColor.Transparent)
         {
-            frame.SetPixel(x, y, color, toolSize);
+            frame.SetPixel(point, color, toolSize);
         }
 
-        var toolPoints = PaintUtils.GetToolPoints(x, y, toolSize);
+        var toolPoints = PaintUtils.GetToolPoints(point, toolSize);
 
         foreach (var toolPoint in toolPoints)
         {
-            if (frame.ContainsPixel(toolPoint.X, toolPoint.Y))
+            if (frame.ContainsPixel(toolPoint))
             {
                 AddPixel(toolPoint, color);
             }

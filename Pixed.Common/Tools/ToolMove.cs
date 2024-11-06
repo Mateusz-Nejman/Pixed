@@ -7,8 +7,7 @@ namespace Pixed.Common.Tools;
 public class ToolMove(ApplicationData applicationData) : BaseTool(applicationData)
 {
     private const string PROP_WRAP = "Wrap canvas borders";
-    private int _startX = -1;
-    private int _startY = -1;
+    private Point _start = new(-1);
     private Layer _currentLayer;
     private Layer _currentLayerClone;
 
@@ -19,39 +18,36 @@ public class ToolMove(ApplicationData applicationData) : BaseTool(applicationDat
     public override bool AltHandle { get; protected set; } = true;
     public override bool SingleHighlightedPixel { get; protected set; } = true;
 
-    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
-        ApplyToolBase(x, y, frame, ref overlay, keyState);
-        _startX = x;
-        _startY = y;
+        ApplyToolBase(point, frame, ref overlay, keyState);
+        _start = point;
         _currentLayer = frame.CurrentLayer;
         _currentLayerClone = _currentLayer.Clone();
     }
 
-    public override void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void MoveTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
-        int diffX = x - _startX;
-        int diffY = y - _startY;
+        var diff = point - _start;
 
-        ShiftLayer(frame.CurrentLayer, _currentLayerClone, diffX, diffY, keyState.IsAlt);
+        ShiftLayer(frame.CurrentLayer, _currentLayerClone, diff, keyState.IsAlt);
         Subjects.LayerModified.OnNext(frame.CurrentLayer);
     }
 
-    public override void ReleaseTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void ReleaseTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
         var shiftPressed = keyState.IsShift || GetProperty(ToolProperties.PROP_APPLY_ALL_FRAMES);
         var controlPressed = keyState.IsCtrl || GetProperty(ToolProperties.PROP_APPLY_ALL_LAYERS);
         var altPressed = keyState.IsAlt || GetProperty(PROP_WRAP);
-        int diffX = x - _startX;
-        int diffY = y - _startY;
+        var diff = point - _start;
 
         _applicationData.CurrentModel.Process(shiftPressed, controlPressed, (frame, layer) =>
         {
             var reference = _currentLayer == layer ? _currentLayerClone : layer.Clone();
-            ShiftLayer(layer, reference, diffX, diffY, altPressed);
+            ShiftLayer(layer, reference, diff, altPressed);
         }, _applicationData, true);
 
-        ReleaseToolBase(x, y, frame, ref overlay, keyState);
+        ReleaseToolBase(point, frame, ref overlay, keyState);
     }
 
     public override List<ToolProperty> GetToolProperties()
@@ -63,7 +59,7 @@ public class ToolMove(ApplicationData applicationData) : BaseTool(applicationDat
         ];
     }
 
-    private static void ShiftLayer(Layer layer, Layer reference, int diffX, int diffY, bool altPressed)
+    private static void ShiftLayer(Layer layer, Layer reference, Point diff, bool altPressed)
     {
         uint color;
 
@@ -72,25 +68,24 @@ public class ToolMove(ApplicationData applicationData) : BaseTool(applicationDat
         {
             for (int y = 0; y < layer.Height; y++)
             {
-                int x1 = x - diffX;
-                int y1 = y - diffY;
+                var point = new Point(x, y) - diff;
 
                 if (altPressed)
                 {
-                    x1 = (x1 + layer.Width) % layer.Width;
-                    y1 = (y1 + layer.Height) % layer.Height;
+                    point.X = (point.X + layer.Width) % layer.Width;
+                    point.Y = (point.Y + layer.Height) % layer.Height;
                 }
 
-                if (reference.ContainsPixel(x1, y1))
+                if (reference.ContainsPixel(point))
                 {
-                    color = reference.GetPixel(x1, y1);
+                    color = reference.GetPixel(point);
                 }
                 else
                 {
                     color = UniColor.Transparent;
                 }
 
-                pixels.Add(new Pixel(x, y, color));
+                pixels.Add(new Pixel(new Point(x, y), color));
             }
         }
 

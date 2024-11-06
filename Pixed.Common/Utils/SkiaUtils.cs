@@ -1,4 +1,5 @@
-﻿using Pixed.Common.Utils;
+﻿using Pixed.Common.Models;
+using Pixed.Common.Utils;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Point = Pixed.Common.Models.Point;
 
 namespace Pixed.Common.Utils;
 public static class SkiaUtils
@@ -22,11 +24,11 @@ public static class SkiaUtils
         bitmap.Save(stream, ImageFormat.Png);
         bitmap.Dispose();
     }
-    public static SKBitmap FromArray(IList<uint> array, int width, int height)
+    public static SKBitmap FromArray(IList<uint> array, Point size)
     {
-        var bitmap = new SKBitmap(width, height, true);
+        var bitmap = new SKBitmap(size.X, size.Y, true);
         var gcHandle = GCHandle.Alloc(array.ToArray(), GCHandleType.Pinned);
-        var info = new SKImageInfo(width, height, SKImageInfo.PlatformColorType, SKAlphaType.Unpremul);
+        var info = new SKImageInfo(size.X, size.Y, SKImageInfo.PlatformColorType, SKAlphaType.Unpremul);
         bitmap.InstallPixels(info, gcHandle.AddrOfPinnedObject(), info.RowBytes, delegate { gcHandle.Free(); }, null);
         return bitmap;
     }
@@ -61,30 +63,30 @@ public static class SkiaUtils
         src.InstallPixels(info, gcHandle.AddrOfPinnedObject(), info.RowBytes, delegate { gcHandle.Free(); }, null);
     }
 
-    public static bool ContainsPixel(this SKBitmap src, int x, int y)
+    public static bool ContainsPixel(this SKBitmap src, Point point)
     {
-        return x >= 0 && y >= 0 && x < src.Width && y < src.Height;
+        return point.X >= 0 && point.Y >= 0 && point.X < src.Width && point.Y < src.Height;
     }
 
-    public static void SetPixel(this SKBitmap bitmap, int x, int y, uint color, int toolSize)
+    public static void SetPixel(this SKBitmap bitmap, Point point, uint color, int toolSize)
     {
         if (toolSize <= 1)
         {
-            bitmap.SetPixel(x, y, (UniColor)color);
+            bitmap.SetPixel(point.X, point.Y, (UniColor)color);
             return;
         }
-        for (int y1 = 0; y1 < toolSize; y1++)
+        for (int y = 0; y < toolSize; y++)
         {
-            for (int x1 = 0; x1 < toolSize; x1++)
+            for (int x = 0; x < toolSize; x++)
             {
-                Point point = new(x - (int)Math.Floor(toolSize / 2.0d) + x1, y - (int)Math.Floor(toolSize / 2.0d) + y1);
+                Point toolPoint = new(point.X - (int)Math.Floor(toolSize / 2.0d) + x, point.Y - (int)Math.Floor(toolSize / 2.0d) + y);
 
-                if (!bitmap.ContainsPixel(point.X, point.Y))
+                if (!bitmap.ContainsPixel(toolPoint))
                 {
                     continue;
                 }
 
-                bitmap.SetPixel(point.X, point.Y, (UniColor)color);
+                bitmap.SetPixel(toolPoint.X, toolPoint.Y, (UniColor)color);
             }
         }
     }

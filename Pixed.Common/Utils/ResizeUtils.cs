@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing;
-using Point = System.Drawing.Point;
 
 namespace Pixed.Common.Utils;
 
@@ -22,13 +20,13 @@ public static class ResizeUtils
         BottomRight
     };
 
-    public static PixedModel ResizeModel(ApplicationData applicationData, PixedModel model, int width, int height, bool resizeContent, Origin origin)
+    public static PixedModel ResizeModel(ApplicationData applicationData, PixedModel model, Point size, bool resizeContent, Origin origin)
     {
         ObservableCollection<Frame> frames = [];
 
         foreach (var frame in model.Frames)
         {
-            frames.Add(ResizeFrame(frame, width, height, resizeContent, origin));
+            frames.Add(ResizeFrame(frame, size, resizeContent, origin));
         }
 
         var resizedModel = PixedModel.FromFrames(frames, model.FileName, applicationData);
@@ -38,13 +36,13 @@ public static class ResizeUtils
         return resizedModel;
     }
 
-    public static Frame ResizeFrame(Frame frame, int width, int height, bool resizeContent, Origin origin)
+    public static Frame ResizeFrame(Frame frame, Point size, bool resizeContent, Origin origin)
     {
         ObservableCollection<Layer> layers = [];
 
         foreach (var layer in frame.Layers)
         {
-            layers.Add(ResizeLayer(layer, width, height, resizeContent, origin));
+            layers.Add(ResizeLayer(layer, size, resizeContent, origin));
         }
 
         var resizedFrame = Frame.FromLayers(layers);
@@ -52,25 +50,25 @@ public static class ResizeUtils
         return resizedFrame;
     }
 
-    public static Layer ResizeLayer(Layer layer, int width, int height, bool resizeContent, Origin origin)
+    public static Layer ResizeLayer(Layer layer, Point size, bool resizeContent, Origin origin)
     {
         if (resizeContent)
         {
-            return LayerUtils.Resize(layer, width, height);
+            return LayerUtils.Resize(layer, size);
         }
 
-        Layer resizedLayer = new(width, height);
+        Layer resizedLayer = new(size.X, size.Y);
         List<Pixel> pixels = [];
 
         for (int x = 0; x < layer.Width; x++)
         {
             for (int y = 0; y < layer.Height; y++)
             {
-                var translated = TranslateCoordinates(x, y, layer, resizedLayer, origin);
+                var translated = TranslateCoordinates(new Point(x, y), layer, resizedLayer, origin);
 
-                if (resizedLayer.ContainsPixel(translated.X, translated.Y))
+                if (resizedLayer.ContainsPixel(translated))
                 {
-                    pixels.Add(new Pixel(translated.X, translated.Y, layer.GetPixel(x, y)));
+                    pixels.Add(new Pixel(translated, layer.GetPixel(new Point(x, y))));
                 }
             }
         }
@@ -80,9 +78,9 @@ public static class ResizeUtils
         return resizedLayer;
     }
 
-    private static Point TranslateCoordinates(int x, int y, Layer layer, Layer resizedLayer, Origin origin)
+    private static Point TranslateCoordinates(Point point, Layer layer, Layer resizedLayer, Origin origin)
     {
-        return new Point(TranslateX(x, layer.Width, resizedLayer.Width, origin), TranslateY(y, layer.Height, resizedLayer.Height, origin));
+        return new Point(TranslateX(point.X, layer.Width, resizedLayer.Width, origin), TranslateY(point.Y, layer.Height, resizedLayer.Height, origin));
     }
 
     private static int TranslateX(int x, int width, int resizedWidth, Origin origin)

@@ -7,25 +7,26 @@ public class ToolCircle(ApplicationData applicationData) : ShapeTool(application
 {
     public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-circle.png";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Circle", "Shift", "1 to 1 ratio");
-    protected override void Draw(int x, int y, uint color, bool isShift, Action<int, int, uint> setPixelAction)
+    protected override void Draw(Point point, uint color, bool isShift, Action<Point, uint> setPixelAction)
     {
-        var rectangle = MathUtils.GetOrderedRectangle(_startX, _startY, x, y);
+        var tuple = MathUtils.GetOrderedRectangle(_start, point);
+        var point1 = tuple.Item1;
+        var point2 = tuple.Item2;
 
         if (isShift)
         {
-            int width = Math.Abs(rectangle[2] - rectangle[0]);
-            int height = Math.Abs(rectangle[3] - rectangle[1]);
+            int width = Math.Abs(point2.X - point1.X);
+            int height = Math.Abs(point2.Y - point1.Y);
             int size = Math.Min(width, height);
 
-            rectangle[2] = rectangle[0] + size;
-            rectangle[3] = rectangle[1] + size;
+            point2 = point1 + new Point(size);
         }
 
-        var circle = MathUtils.GetCircle(rectangle[0], rectangle[1], rectangle[2], rectangle[3]);
+        var circle = MathUtils.GetCircle(point1, point2);
 
-        foreach (var point in circle)
+        foreach (var p in circle)
         {
-            setPixelAction?.Invoke(point.X, point.Y, color);
+            setPixelAction?.Invoke(p, color);
         }
     }
 }

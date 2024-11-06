@@ -32,7 +32,7 @@ internal class PngProjectSerializer : IPixedProjectSerializer
             {
                 for (int y = 0; y < layer.Height; y += TileHeight)
                 {
-                    Layer subLayer = Layer.FromColors(layer.GetRectangleColors(x, y, TileWidth, TileHeight), TileWidth, TileHeight, "Layer 0");
+                    Layer subLayer = Layer.FromColors(layer.GetRectangleColors(new Point(x, y), new Point(TileWidth, TileHeight)), TileWidth, TileHeight, "Layer 0");
                     Frame subFrame = Frame.FromLayers([subLayer]);
                     frames.Add(subFrame);
                 }

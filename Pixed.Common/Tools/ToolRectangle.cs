@@ -7,27 +7,29 @@ public class ToolRectangle(ApplicationData applicationData) : ShapeTool(applicat
 {
     public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-rectangle.png";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Rectangle", "Shift", "1 to 1 ratio");
-    protected override void Draw(int x, int y, uint color, bool isShift, Action<int, int, uint> setPixelAction)
+    protected override void Draw(Point point, uint color, bool isShift, Action<Point, uint> setPixelAction)
     {
-        var rectangle = MathUtils.GetOrderedRectangle(_startX, _startY, x, y);
+        var tuple = MathUtils.GetOrderedRectangle(_start, point);
+        var point1 = tuple.Item1;
+        var point2 = tuple.Item2;
 
         if (isShift)
         {
-            int width = Math.Abs(rectangle[2] - rectangle[0]);
-            int height = Math.Abs(rectangle[3] - rectangle[1]);
+            int width = Math.Abs(point2.X - point1.X);
+            int height = Math.Abs(point2.Y - point1.Y);
             int size = Math.Min(width, height);
 
-            rectangle[2] = rectangle[0] + size;
-            rectangle[3] = rectangle[1] + size;
+            point2.X = point1.X + size;
+            point2.Y = point1.Y + size;
         }
 
-        for (int rx = rectangle[0]; rx <= rectangle[2]; rx++)
+        for (int rx = point1.X; rx <= point2.X; rx++)
         {
-            for (int ry = rectangle[1]; ry <= rectangle[3]; ry++)
+            for (int ry = point1.Y; ry <= point2.Y; ry++)
             {
-                if (rx == rectangle[0] || rx == rectangle[2] || ry == rectangle[1] || ry == rectangle[3])
+                if (rx == point1.X || rx == point2.X || ry == point1.Y || ry == point2.Y)
                 {
-                    setPixelAction.Invoke(rx, ry, color);
+                    setPixelAction.Invoke(new Point(rx, ry), color);
                 }
             }
         }

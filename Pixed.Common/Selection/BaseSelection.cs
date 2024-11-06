@@ -19,13 +19,12 @@ public class BaseSelection
         Pixels.Clear();
     }
 
-    public void Move(int xDiff, int yDiff)
+    public void Move(Point diff)
     {
         for (int i = 0; i < Pixels.Count; i++)
         {
             var pixel = Pixels[i];
-            pixel.X += xDiff;
-            pixel.Y += yDiff;
+            pixel.Position += diff;
             Pixels[i] = pixel;
         }
     }
@@ -36,27 +35,27 @@ public class BaseSelection
         {
             var pixel = Pixels[i];
 
-            if (!frame.ContainsPixel(pixel.X, pixel.Y))
+            if (!frame.ContainsPixel(pixel.Position))
             {
                 continue;
             }
 
-            pixel.Color = frame.GetPixel(Pixels[i].X, Pixels[i].Y);
+            pixel.Color = frame.GetPixel(Pixels[i].Position);
         }
     }
 
     public SKBitmap ToBitmap()
     {
-        var minX = Pixels.Min(p => p.X);
-        var minY = Pixels.Min(p => p.Y);
-        var maxX = Pixels.Max(p => p.X);
-        var maxY = Pixels.Max(p => p.Y);
+        var minX = Pixels.Min(p => p.Position.X);
+        var minY = Pixels.Min(p => p.Position.Y);
+        var maxX = Pixels.Max(p => p.Position.X);
+        var maxY = Pixels.Max(p => p.Position.Y);
 
         SKBitmap bitmap = new(maxX - minX + 1, maxY - minY + 1, true);
 
         foreach (var pixel in Pixels)
         {
-            bitmap.SetPixel(pixel.X - minX, pixel.Y - minY, (UniColor)pixel.Color);
+            bitmap.SetPixel(pixel.Position.X - minX, pixel.Position.Y - minY, (UniColor)pixel.Color);
         }
 
         return bitmap;

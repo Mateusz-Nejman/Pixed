@@ -9,10 +9,10 @@ internal class ShapeSelect(ApplicationData applicationData, ToolSelector toolSel
 {
     public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-shape-select.png";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Shape selection", "Ctrl+C", "Copy the selected area", "Ctrl+V", "Paste the copied area");
-    public override void OnSelectStart(int x, int y, Frame frame, ref SKBitmap overlay)
+    public override void OnSelectStart(Point point, Frame frame, ref SKBitmap overlay)
     {
         _hasSelection = true;
-        var pixels = PaintUtils.GetSimiliarConnectedPixels(frame, x, y);
+        var pixels = PaintUtils.GetSimiliarConnectedPixels(frame, point);
         _selection = new ShapeSelection(pixels);
         Subjects.SelectionCreated.OnNext(_selection);
         DrawSelectionOnOverlay(ref overlay);

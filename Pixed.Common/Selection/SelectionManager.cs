@@ -7,11 +7,9 @@ using Pixed.Common.Tools.Selection;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Point = System.Drawing.Point;
 
 namespace Pixed.Common.Selection;
 
@@ -104,8 +102,8 @@ public class SelectionManager
 
         if (_currentSelection != null)
         {
-            int selectionX = _currentSelection.Pixels.Min(p => p.X);
-            int selectionY = _currentSelection.Pixels.Min(p => p.Y);
+            int selectionX = _currentSelection.Pixels.Min(p => p.Position.X);
+            int selectionY = _currentSelection.Pixels.Min(p => p.Position.Y);
             startPosition = new Point(selectionX, selectionY);
         }
 
@@ -116,10 +114,10 @@ public class SelectionManager
         {
             for (int y = 0; y < source.Height; y++)
             {
-                if (frame.ContainsPixel(startPosition.X + x, startPosition.Y + y))
+                if (frame.ContainsPixel(startPosition + new Point(x, y)))
                 {
                     var color = source.GetPixel(x, y);
-                    pixels.Add(new Pixel(startPosition.X + x, startPosition.Y + y, (UniColor)color));
+                    pixels.Add(new Pixel(startPosition + new Point(x, y), (UniColor)color));
                 }
             }
         }

@@ -1,7 +1,7 @@
 ﻿using Pixed.Common.Algos;
+using Pixed.Common.Models;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace Pixed.Common.Utils;
 
@@ -12,22 +12,22 @@ public static class MathUtils
         List<Point> points = [];
 
         FloodFill algorithm = new(startPosition, size);
-        bool predicateInternal(int x, int y) => predicate(new Point(x, y));
-        void action(int x, int y) => points.Add(new Point(x, y));
+        bool predicateInternal(Point point) => predicate(point);
+        void action(Point point) => points.Add(point);
         algorithm.Execute(predicateInternal, action);
 
         return points;
     }
 
-    public static List<Point> GetUniformLinePixels(int x0, int y0, int x1, int y1)
+    public static List<Point> GetUniformLinePixels(Point point1, Point point2)
     {
         List<Point> pixels = [];
 
-        var dx = Math.Abs(x1 - x0) + 1;
-        var dy = Math.Abs(y1 - y0) + 1;
+        var dx = Math.Abs(point2.X - point1.X) + 1;
+        var dy = Math.Abs(point2.Y - point1.Y) + 1;
 
-        var sx = x0 < x1 ? 1 : -1;
-        var sy = y0 < y1 ? 1 : -1;
+        var sx = point1.X < point2.X ? 1 : -1;
+        var sy = point1.Y < point2.Y ? 1 : -1;
 
         var ratio = Math.Max(dx, dy) / (double)Math.Min(dx, dy);
         var step = Math.Round(ratio);
@@ -36,17 +36,17 @@ public static class MathUtils
             step = double.MaxValue;
         }
 
-        var maxDistance = Distance(x0, y0, x1, y1);
+        var maxDistance = Point.Distance(point1, point2);
 
-        var x = x0;
-        var y = y0;
+        var x = point1.X;
+        var y = point1.Y;
         int i = 0;
 
         while (true)
         {
             i++;
             pixels.Add(new Point(x, y));
-            if (Distance(x0, y0, x, y) >= maxDistance)
+            if (Point.Distance(point1, new Point(x, y)) >= maxDistance)
             {
                 break;
             }
@@ -67,27 +67,20 @@ public static class MathUtils
         return pixels;
     }
 
-    public static double Distance(int x0, int y0, int x1, int y1)
+    public static Tuple<Point, Point> GetOrderedRectangle(Point point1, Point point2)
     {
-        var dx = Math.Abs(x1 - (double)x0);
-        var dy = Math.Abs(y1 - (double)y0);
-        return Math.Sqrt(Math.Pow(dx, 2) + Math.Pow(dy, 2));
+        return new Tuple<Point, Point>(new Point(Math.Min(point1.X, point2.X), Math.Min(point1.Y, point2.Y)), new Point(Math.Max(point1.X, point2.X), Math.Max(point1.Y, point2.Y)));
     }
 
-    public static int[] GetOrderedRectangle(int x0, int y0, int x1, int y1)
-    {
-        return [Math.Min(x0, x1), Math.Min(y0, y1), Math.Max(x0, x1), Math.Max(y0, y1)];
-    }
-
-    public static List<Point> GetCircle(int x0, int y0, int x1, int y1)
+    public static List<Point> GetCircle(Point point1, Point point2)
     {
         //https://stackoverflow.com/questions/2914807/plot-ellipse-from-rectangle
         List<Point> pixels = [];
         int centerX1, centerY1, centerX, centerY;
 
         // Calculate height
-        centerY1 = centerY = (y0 + y1) / 2;
-        int height = y1 - y0;
+        centerY1 = centerY = (point1.Y + point2.Y) / 2;
+        int height = point2.Y - point1.Y;
         int qy = height;
         int dy = height / 2;
         if (height % 2 != 0)
@@ -96,8 +89,8 @@ public static class MathUtils
         }
 
         // Calculate width
-        centerX1 = centerX = (x0 + x1) / 2;
-        int width = x1 - x0;
+        centerX1 = centerX = (point1.X + point2.X) / 2;
+        int width = point2.X - point1.X;
         int qx = width % 2;
         int dx = 0;
         long qt = (long)width * width + (long)height * height - 2L * width * width * height;
