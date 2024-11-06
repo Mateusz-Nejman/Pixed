@@ -1,5 +1,4 @@
-﻿using Pixed.Common.Models;
-using Pixed.Common.Utils;
+﻿using Pixed.Common.Utils;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;

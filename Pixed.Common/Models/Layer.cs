@@ -147,7 +147,7 @@ public class Layer : PropertyChangedBase, IPixedSerializer
 
     public uint GetPixel(Point point)
     {
-        if(!ContainsPixel(point))
+        if (!ContainsPixel(point))
         {
             return 0;
         }
@@ -233,7 +233,7 @@ public class Layer : PropertyChangedBase, IPixedSerializer
 
     private void SetPixelPrivate(Point point, uint color)
     {
-        if(!ContainsPixel(point))
+        if (!ContainsPixel(point))
         {
             return;
         }
