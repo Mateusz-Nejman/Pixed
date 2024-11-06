@@ -13,12 +13,12 @@ public class ToolOutliner(ApplicationData applicationData) : BaseTool(applicatio
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Outliner", "Ctrl", "Fill corners");
     public override bool ControlHandle { get; protected set; } = true;
     public override bool SingleHighlightedPixel { get; protected set; } = true;
-    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
-        ApplyToolBase(x, y, frame, ref overlay, keyState);
+        ApplyToolBase(point, frame, ref overlay, keyState);
         var controlPressed = keyState.IsCtrl || GetProperty(PROP_FILL_CORNERS);
         var color = ToolColor;
-        PaintUtils.OutlineSimiliarConnectedPixels(frame.CurrentLayer, x, y, color, controlPressed);
+        PaintUtils.OutlineSimiliarConnectedPixels(frame.CurrentLayer, point, color, controlPressed);
         Subjects.FrameModified.OnNext(frame);
     }
 

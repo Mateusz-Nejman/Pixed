@@ -12,16 +12,11 @@ public static class Subjects
     public static Subject<KeyState> KeyState { get; } = new Subject<KeyState>();
     public static Subject<BaseSelection> SelectionCreated { get; } = new Subject<BaseSelection>();
     public static Subject<BaseSelection> SelectionDismissed { get; } = new Subject<BaseSelection>();
-    public static Subject<double> MouseWheel { get; } = new Subject<double>();
     public static Subject<bool> GridChanged { get; } = new Subject<bool>();
     public static Subject<BaseToolPair> ToolChanged { get; } = new Subject<BaseToolPair>();
     public static Subject<string[]> NewInstanceHandled { get; } = new Subject<string[]>();
     public static Subject<SKBitmap> OverlayModified { get; } = new Subject<SKBitmap>();
     public static Subject<List<Pixel>> CurrentLayerRenderModified { get; } = new Subject<List<Pixel>>();
-
-    public static Subject<BaseSelection> ClipboardCopy { get; } = new Subject<BaseSelection>();
-    public static Subject<BaseSelection> ClipboardCut { get; } = new Subject<BaseSelection>();
-    public static Subject<BaseSelection> ClipboardPaste { get; } = new Subject<BaseSelection>();
 
     public static Subject<UniColor> PrimaryColorChanged { get; } = new Subject<UniColor>();
     public static Subject<UniColor> PrimaryColorChange { get; } = new Subject<UniColor>();

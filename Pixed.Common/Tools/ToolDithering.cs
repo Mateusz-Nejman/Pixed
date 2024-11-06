@@ -9,16 +9,15 @@ public class ToolDithering(ApplicationData applicationData) : ToolPen(applicatio
 {
     public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-dithering.png";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Dithering");
-    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
-        ApplyToolBase(x, y, frame, ref overlay, keyState);
-        _prevX = x;
-        _prevY = y;
-        var toolPoints = PaintUtils.GetToolPoints(x, y, _applicationData.ToolSize);
+        ApplyToolBase(point, frame, ref overlay, keyState);
+        _prev = point;
+        var toolPoints = PaintUtils.GetToolPoints(point, _applicationData.ToolSize);
 
         foreach (var toolPoint in toolPoints)
         {
-            if (!frame.ContainsPixel(toolPoint.X, toolPoint.Y))
+            if (!frame.ContainsPixel(toolPoint))
             {
                 continue;
             }

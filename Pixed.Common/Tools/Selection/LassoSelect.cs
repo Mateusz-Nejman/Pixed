@@ -5,68 +5,62 @@ using Pixed.Common.Utils;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 
 namespace Pixed.Common.Tools.Selection;
 
 internal class LassoSelect(ApplicationData applicationData, ToolSelector toolSelector) : AbstractDragSelect(applicationData, toolSelector)
 {
-    private int _prevX;
-    private int _prevY;
+    private Point _prev;
     private List<Point> _points = [];
 
     public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-lasso-select.png";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Lasso selection", "Ctrl+C", "Copy the selected area", "Ctrl+V", "Paste the copied area");
-    public override void OnDragSelectStart(int x, int y, Frame frame, ref SKBitmap overlay)
+    public override void OnDragSelectStart(Point point, Frame frame, ref SKBitmap overlay)
     {
         _points.Clear();
-        _points.Add(new Point(x, y));
+        _points.Add(point);
 
-        _startX = x;
-        _startY = y;
-
-        _prevX = x;
-        _prevY = y;
+        _start = point;
+        _prev = point;
     }
 
-    public override void OnDragSelect(int x, int y, Frame frame, ref SKBitmap overlay)
+    public override void OnDragSelect(Point point, Frame frame, ref SKBitmap overlay)
     {
-        AddPixel(x, y, frame);
+        AddPixel(point, frame);
         List<Pixel> pixels = [];
 
-        foreach (var point in GetLassoPixels())
+        foreach (var p in GetLassoPixels())
         {
-            pixels.Add(new Pixel(point.X, point.Y, frame.GetPixel(point.X, point.Y)));
+            pixels.Add(new Pixel(p, frame.GetPixel(p)));
         }
         BaseSelection selection = new ShapeSelection(pixels);
         SetSelection(selection, ref overlay);
     }
 
-    public override void OnDragSelectEnd(int x, int y, Frame frame, ref SKBitmap overlay)
+    public override void OnDragSelectEnd(Point point, Frame frame, ref SKBitmap overlay)
     {
-        AddPixel(x, y, frame);
+        AddPixel(point, frame);
         BaseSelection selection = new LassoSelection(GetLassoPixels(), frame);
         SetSelection(selection, ref overlay);
     }
 
     private List<Point> GetLassoPixels()
     {
-        var line = BresenhamLine.Get(_prevX, _prevY, _startX, _startY);
+        var line = BresenhamLine.Get(_prev, _start);
         return [.. _points, .. line];
     }
 
-    private void AddPixel(int x, int y, Frame frame)
+    private void AddPixel(Point point, Frame frame)
     {
-        x = Math.Clamp(x, 0, frame.Width - 1);
-        y = Math.Clamp(y, 0, frame.Height - 1);
+        point.X = Math.Clamp(point.X, 0, frame.Width - 1);
+        point.Y = Math.Clamp(point.Y, 0, frame.Height - 1);
 
-        var interpolated = BresenhamLine.Get(x, y, _prevX, _prevY);
+        var interpolated = BresenhamLine.Get(point, _prev);
         _points = [.. _points, .. interpolated];
         _points = _points.Distinct().ToList();
 
-        _prevX = x;
-        _prevY = y;
+        _prev = point;
     }
 
     private void SetSelection(BaseSelection selection, ref SKBitmap overlay)

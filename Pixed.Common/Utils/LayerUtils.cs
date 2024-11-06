@@ -6,22 +6,22 @@ namespace Pixed.Common.Utils;
 
 public static class LayerUtils
 {
-    public static Layer Resize(Layer layer, int targetWidth, int targetHeight)
+    public static Layer Resize(Layer layer, Point targetSize)
     {
         layer.Render(out SKBitmap oldBitmap);
 
-        SKBitmap newBitmap = new(targetWidth, targetHeight, true);
+        SKBitmap newBitmap = new(targetSize.X, targetSize.Y, true);
         SKCanvas canvas = new(newBitmap);
-        canvas.DrawBitmap(oldBitmap, SKRect.Create(oldBitmap.Width, oldBitmap.Height), SKRect.Create(targetWidth, targetHeight));
+        canvas.DrawBitmap(oldBitmap, SKRect.Create(oldBitmap.Width, oldBitmap.Height), SKRect.Create(targetSize.X, targetSize.Y));
         canvas.Dispose();
 
-        Layer newLayer = new(targetWidth, targetHeight);
+        Layer newLayer = new(targetSize.X, targetSize.Y);
         List<Pixel> pixels = [];
-        for (int x = 0; x < targetWidth; x++)
+        for (int x = 0; x < targetSize.X; x++)
         {
-            for (int y = 0; y < targetHeight; y++)
+            for (int y = 0; y < targetSize.Y; y++)
             {
-                pixels.Add(new Pixel(x, y, (UniColor)newBitmap.GetPixel(x, y)));
+                pixels.Add(new Pixel(new Point(x, y), (UniColor)newBitmap.GetPixel(x, y)));
             }
         }
 
@@ -30,22 +30,22 @@ public static class LayerUtils
         return newLayer;
     }
 
-    public static uint[] GetRectangleColors(this Layer layer, int x, int y, int width, int height)
+    public static uint[] GetRectangleColors(this Layer layer, Point point, Point size)
     {
         var pixels = layer.GetPixels();
 
-        if (x + width > layer.Width || y + height > layer.Height)
+        if (point.X + size.X > layer.Width || point.Y + size.Y > layer.Height)
         {
             return [];
         }
 
         IList<uint> colors = [];
 
-        for (int y1 = y; y1 < y + height; y1++)
+        for (int y = point.Y; y < point.Y + size.Y; y++)
         {
-            for (int x1 = x; x1 < x + width; x1++)
+            for (int x = point.X; x < point.X + size.X; x++)
             {
-                colors.Add(pixels[y1 * layer.Width + x1]);
+                colors.Add(pixels[y * layer.Width + x]);
             }
         }
 

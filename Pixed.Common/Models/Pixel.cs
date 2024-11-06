@@ -1,12 +1,11 @@
 ﻿namespace Pixed.Common.Models;
 
-public class Pixel(int x, int y)
+public struct Pixel(Point position)
 {
-    public int X { get; set; } = x;
-    public int Y { get; set; } = y;
+    public Point Position { get; set; } = position;
     public uint Color { get; set; } = UniColor.Transparent;
 
-    public Pixel(int x, int y, uint color) : this(x, y)
+    public Pixel(Point position, uint color) : this(position)
     {
         Color = color;
     }

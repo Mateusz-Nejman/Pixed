@@ -8,18 +8,17 @@ public class ToolNoise(ApplicationData applicationData) : ToolPen(applicationDat
 {
     public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-noise.png";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Noise");
-    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
-        ApplyToolBase(x, y, frame, ref overlay, keyState);
-        if (!frame.ContainsPixel(x, y))
+        ApplyToolBase(point, frame, ref overlay, keyState);
+        if (!frame.ContainsPixel(point))
         {
             return;
         }
 
-        _prevX = x;
-        _prevY = y;
+        _prev = point;
 
-        DrawOnOverlay(PaintUtils.GetNoiseColor(_applicationData.PrimaryColor, _applicationData.SecondaryColor), x, y, frame, ref overlay);
+        DrawOnOverlay(PaintUtils.GetNoiseColor(_applicationData.PrimaryColor, _applicationData.SecondaryColor), point, frame, ref overlay);
         Subjects.OverlayModified.OnNext(overlay);
     }
 }

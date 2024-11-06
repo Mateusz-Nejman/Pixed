@@ -5,29 +5,29 @@ namespace Pixed.Common.Tools.Selection;
 
 internal abstract class AbstractDragSelect(ApplicationData applicationData, ToolSelector toolSelector) : BaseSelect(applicationData, toolSelector)
 {
-    public override void OnSelect(int x, int y, Frame frame, ref SKBitmap overlay)
+    public override void OnSelect(Point point, Frame frame, ref SKBitmap overlay)
     {
-        if (!_hasSelection && (x != _startX || y != _startY))
+        if (!_hasSelection && point != _start)
         {
             _hasSelection = true;
-            OnDragSelectStart(x, y, frame, ref overlay);
+            OnDragSelectStart(point, frame, ref overlay);
         }
 
         if (_hasSelection)
         {
-            OnDragSelect(x, y, frame, ref overlay);
+            OnDragSelect(point, frame, ref overlay);
         }
     }
 
-    public override void OnSelectEnd(int x, int y, Frame frame, ref SKBitmap overlay)
+    public override void OnSelectEnd(Point point, Frame frame, ref SKBitmap overlay)
     {
         if (_hasSelection)
         {
-            OnDragSelectEnd(x, y, frame, ref overlay);
+            OnDragSelectEnd(point, frame, ref overlay);
         }
     }
 
-    public override void OnSelectStart(int x, int y, Frame frame, ref SKBitmap overlay)
+    public override void OnSelectStart(Point point, Frame frame, ref SKBitmap overlay)
     {
         if (_hasSelection)
         {
@@ -36,12 +36,12 @@ internal abstract class AbstractDragSelect(ApplicationData applicationData, Tool
         else
         {
             _hasSelection = true;
-            OnDragSelectStart(x, y, frame, ref overlay);
-            overlay.SetPixel(x, y, UniColor.WithAlpha(128, UniColor.CornflowerBlue));
+            OnDragSelectStart(point, frame, ref overlay);
+            overlay.SetPixel(point.X, point.Y, UniColor.WithAlpha(128, UniColor.CornflowerBlue));
         }
     }
 
-    public virtual void OnDragSelectStart(int x, int y, Frame frame, ref SKBitmap overlay) { }
-    public virtual void OnDragSelect(int x, int y, Frame frame, ref SKBitmap overlay) { }
-    public virtual void OnDragSelectEnd(int x, int y, Frame frame, ref SKBitmap overlay) { }
+    public virtual void OnDragSelectStart(Point point, Frame frame, ref SKBitmap overlay) { }
+    public virtual void OnDragSelect(Point point, Frame frame, ref SKBitmap overlay) { }
+    public virtual void OnDragSelectEnd(Point point, Frame frame, ref SKBitmap overlay) { }
 }

@@ -48,7 +48,7 @@ public class UniColorTests
     public void HslConversionTest()
     {
         var hsl = CornflowerBlue.ToHsl();
-        Assert.That(hsl, Is.EqualTo(new UniColor.Hsl(218.540150538969, 0.7919075255636313, 0.6607843158291835)));
+        Assert.That(hsl, Is.EqualTo(new UniColor.Hsl(218.54015313795884, 0.7919075144508672, 0.6607843137254902)));
     }
 
     [Test]

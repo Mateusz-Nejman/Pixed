@@ -13,37 +13,36 @@ public class ToolVerticalPen(ApplicationData applicationData) : ToolPen(applicat
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Vertical mirror pen", "Ctrl", "Use horizontal axis", "Shift", "Use horizontal and vertical axis");
     public override bool ShiftHandle { get; protected set; } = true;
     public override bool ControlHandle { get; protected set; } = true;
-    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
-        ApplyToolBase(x, y, frame, ref overlay, keyState);
+        ApplyToolBase(point, frame, ref overlay, keyState);
         var shiftPressed = keyState.IsShift || GetProperty(PROP_BOTH_AXIS);
         var controlPressed = keyState.IsCtrl || GetProperty(PROP_HORIZONTAL);
 
         var color = ToolColor;
-        DrawOnOverlay(color, x, y, frame, ref overlay);
+        DrawOnOverlay(color, point, frame, ref overlay);
 
-        int symX = GetSymmetricX(x, frame);
-        int symY = GetSymmetricY(y, frame);
+        int symX = GetSymmetricX(point.X, frame);
+        int symY = GetSymmetricY(point.Y, frame);
 
         if (!controlPressed)
         {
-            DrawOnOverlay(color, symX, y, frame, ref overlay);
+            DrawOnOverlay(color, new Point(symX, point.Y), frame, ref overlay);
         }
 
         if (shiftPressed || controlPressed)
         {
-            DrawOnOverlay(color, x, symY, frame, ref overlay);
+            DrawOnOverlay(color, new Point(point.X, symY), frame, ref overlay);
         }
 
         if (shiftPressed)
         {
-            DrawOnOverlay(color, symX, symY, frame, ref overlay);
+            DrawOnOverlay(color, new Point(symX, symY), frame, ref overlay);
         }
 
         Subjects.OverlayModified.OnNext(overlay);
 
-        _prevX = x;
-        _prevY = y;
+        _prev = point;
     }
 
     public override List<ToolProperty> GetToolProperties()

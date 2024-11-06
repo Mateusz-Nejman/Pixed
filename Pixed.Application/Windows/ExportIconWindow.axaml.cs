@@ -1,8 +1,8 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Pixed.Application.ViewModels;
+using Pixed.Common.Models;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace Pixed.Application.Windows;
 
@@ -24,7 +24,7 @@ public partial class ExportIconWindow : Window
         {
             if (isChecked)
             {
-                formats.Add(new Point(resolution, resolution));
+                formats.Add(new Point(resolution));
             }
         }
 

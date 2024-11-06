@@ -2,7 +2,6 @@
 using Pixed.Common.Services.Keyboard;
 using SkiaSharp;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace Pixed.Common.Tools;
 public class ToolLighten(ApplicationData applicationData) : ToolPen(applicationData)
@@ -14,22 +13,21 @@ public class ToolLighten(ApplicationData applicationData) : ToolPen(applicationD
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Lighten", "Ctrl", "Darken", "Shift", "Apply once per pixel");
     public override bool ShiftHandle { get; protected set; } = true;
     public override bool ControlHandle { get; protected set; } = true;
-    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
-        ApplyToolBase(x, y, frame, ref overlay, keyState);
+        ApplyToolBase(point, frame, ref overlay, keyState);
         var controlPressed = keyState.IsCtrl || GetProperty(PROP_DARKEN);
         var shiftPressed = keyState.IsShift || GetProperty(PROP_APPLY_ONCE);
 
-        if (!frame.ContainsPixel(x, y))
+        if (!frame.ContainsPixel(point))
         {
             return;
         }
 
-        _prevX = x;
-        _prevY = y;
+        _prev = point;
 
-        var modifiedColor = GetModifierColor(x, y, frame, ref overlay, shiftPressed, controlPressed);
-        DrawOnOverlay(modifiedColor, x, y, frame, ref overlay);
+        var modifiedColor = GetModifierColor(point, frame, ref overlay, shiftPressed, controlPressed);
+        DrawOnOverlay(modifiedColor, point, frame, ref overlay);
         Subjects.OverlayModified.OnNext(overlay);
     }
 
@@ -41,12 +39,12 @@ public class ToolLighten(ApplicationData applicationData) : ToolPen(applicationD
         ];
     }
 
-    private int GetModifierColor(int x, int y, Frame frame, ref SKBitmap overlay, bool oncePerPixel, bool isDarken)
+    private int GetModifierColor(Point point, Frame frame, ref SKBitmap overlay, bool oncePerPixel, bool isDarken)
     {
-        UniColor overlayColor = overlay.GetPixel(x, y);
-        UniColor frameColor = frame.GetPixel(x, y);
+        UniColor overlayColor = overlay.GetPixel(point.X, point.Y);
+        UniColor frameColor = frame.GetPixel(point);
 
-        bool isPixelModified = IsPixelModified(new Point(x, y));
+        bool isPixelModified = IsPixelModified(point);
         var pixelColor = isPixelModified ? overlayColor : frameColor;
 
         bool isTransparent = pixelColor == UniColor.Transparent;

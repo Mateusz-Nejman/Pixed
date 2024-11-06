@@ -12,8 +12,7 @@ public abstract class BaseTool(ApplicationData applicationData)
 {
     private readonly List<ToolProperty> _properties = [];
     protected readonly ApplicationData _applicationData = applicationData;
-    protected int _highlightedX = 0;
-    protected int _highlightedY = 0;
+    protected Point _highlightedPoint = new Point();
     private UniColor? _toolColor;
 
     public abstract string ImagePath { get; }
@@ -37,29 +36,29 @@ public abstract class BaseTool(ApplicationData applicationData)
         return _applicationData.PrimaryColor;
     }
 
-    protected void ApplyToolBase(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    protected void ApplyToolBase(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
         _toolColor ??= GetToolColor();
     }
 
-    public virtual void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public virtual void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
-        ApplyToolBase(x, y, frame, ref overlay, keyState);
+        ApplyToolBase(point, frame, ref overlay, keyState);
     }
 
-    public virtual void MoveTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public virtual void MoveTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
 
     }
 
-    protected void ReleaseToolBase(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    protected void ReleaseToolBase(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
         _toolColor = null;
     }
 
-    public virtual void ReleaseTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public virtual void ReleaseTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
-        ReleaseToolBase(x, y, frame, ref overlay, keyState);
+        ReleaseToolBase(point, frame, ref overlay, keyState);
     }
 
     public virtual void Reset()
@@ -72,23 +71,22 @@ public abstract class BaseTool(ApplicationData applicationData)
 
     }
 
-    public virtual void UpdateHighlightedPixel(int x, int y, Frame frame, ref SKBitmap overlay)
+    public virtual void UpdateHighlightedPixel(Point point, Frame frame, ref SKBitmap overlay)
     {
         overlay ??= new SKBitmap(frame.Width, frame.Height, true);
 
-        if (_highlightedX != x || _highlightedY != y)
+        if (_highlightedPoint != point)
         {
             overlay?.Clear();
         }
 
-        _highlightedX = x;
-        _highlightedY = y;
+        _highlightedPoint = point;
 
-        uint pixel = frame.GetPixel(x, y);
+        uint pixel = frame.GetPixel(point);
 
-        if (overlay.ContainsPixel(x, y))
+        if (overlay.ContainsPixel(point))
         {
-            overlay.SetPixel(x, y, GetHighlightColor(pixel), SingleHighlightedPixel ? 1 : _applicationData.ToolSize);
+            overlay.SetPixel(point, GetHighlightColor(pixel), SingleHighlightedPixel ? 1 : _applicationData.ToolSize);
         }
 
         Subjects.OverlayModified.OnNext(overlay);

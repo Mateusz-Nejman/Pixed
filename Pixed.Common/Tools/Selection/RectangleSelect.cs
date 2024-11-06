@@ -9,21 +9,21 @@ internal class RectangleSelect(ApplicationData applicationData, ToolSelector too
 {
     public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-rectangle-select.png";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Rectangle selection", "Ctrl+C", "Copy the selected area", "Ctrl+V", "Paste the copied area");
-    public override void OnDragSelectStart(int x, int y, Frame frame, ref SKBitmap overlay)
+    public override void OnDragSelectStart(Point point, Frame frame, ref SKBitmap overlay)
     {
         //TODO drag_start x, y
     }
-    public override void OnDragSelect(int x, int y, Frame frame, ref SKBitmap overlay)
+    public override void OnDragSelect(Point point, Frame frame, ref SKBitmap overlay)
     {
         overlay.Clear();
-        _selection = new RectangularSelection(_startX, _startY, x, y, frame);
+        _selection = new RectangularSelection(_start, point, frame);
         Subjects.SelectionCreated.OnNext(_selection);
         DrawSelectionOnOverlay(ref overlay);
     }
 
-    public override void OnDragSelectEnd(int x, int y, Frame frame, ref SKBitmap overlay)
+    public override void OnDragSelectEnd(Point point, Frame frame, ref SKBitmap overlay)
     {
-        OnSelect(x, y, frame, ref overlay);
+        OnSelect(point, frame, ref overlay);
         //TODO drag_end
     }
 }

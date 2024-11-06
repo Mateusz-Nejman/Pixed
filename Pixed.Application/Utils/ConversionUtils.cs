@@ -1,9 +1,9 @@
-﻿using System.Drawing;
+﻿using Pixed.Common.Models;
 
 namespace Pixed.Application.Utils;
 internal static class ConversionUtils
 {
-    public static Point ToSystemPoint(this Avalonia.Point point)
+    public static Point ToPixedPoint(this Avalonia.Point point)
     {
         return new Point((int)point.X, (int)point.Y);
     }
