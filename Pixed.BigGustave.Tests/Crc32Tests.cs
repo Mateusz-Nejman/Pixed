@@ -1,51 +1,45 @@
-﻿namespace BigGustave.Tests
+﻿using System.Text;
+
+namespace Pixed.BigGustave.Tests;
+
+public class Crc32Tests
 {
-    using Pixed.BigGustave;
-    using System;
-    using System.Text;
-    using Xunit;
-
-    public class Crc32Tests
+    [Test]
+    public void CalculatesCorrectCrc32ForRosettaCodeExample()
     {
-        [Fact]
-        public void CalculatesCorrectCrc32ForRosettaCodeExample()
-        {
-            var input = Encoding.ASCII.GetBytes("The quick brown fox jumps over the lazy dog");
+        var input = Encoding.ASCII.GetBytes("The quick brown fox jumps over the lazy dog");
 
-            var result = Crc32.Calculate(input);
+        var result = Crc32.Calculate(input);
+        Assert.That(result.ToString("X"), Is.EqualTo("414FA339"));
+    }
 
-            Assert.Equal("414fa339", result.ToString("X"), StringComparer.InvariantCultureIgnoreCase);
-        }
+    [Test]
+    public void ByteValueCorrect()
+    {
+        const uint expected = 2711477844;
 
-        [Fact]
-        public void ByteValueCorrect()
-        {
-            const uint expected = 2711477844;
+        var input = new byte[] { 0, 0, 177, 143 };
 
-            var input = new byte[] { 0, 0, 177, 143 };
+        Assert.That(Crc32.Calculate(input), Is.EqualTo(expected));
+    }
 
-            Assert.Equal(expected, Crc32.Calculate(input));
-        }
+    [Test]
+    public void FromTwoPartsCorrect()
+    {
+        const uint expected = 2711477844;
 
-        [Fact]
-        public void FromTwoPartsCorrect()
-        {
-            const uint expected = 2711477844;
+        var input1 = new byte[] { 0, 0 };
+        var input2 = new byte[] { 177, 143 };
 
-            var input1 = new byte[] { 0, 0 };
-            var input2 = new byte[] { 177, 143 };
+        Assert.That(Crc32.Calculate(input1, input2), Is.EqualTo(expected));
+    }
 
-            Assert.Equal(expected, Crc32.Calculate(input1, input2));
-        }
+    [Test]
+    public void SingleByteValueCorrect()
+    {
+        const uint expected = 3523407757;
 
-        [Fact]
-        public void SingleByteValueCorrect()
-        {
-            const uint expected = 3523407757;
-
-            var input = new byte[] { 0 };
-
-            Assert.Equal(expected, Crc32.Calculate(input));
-        }
+        var input = new byte[] { 0 };
+        Assert.That(Crc32.Calculate(input), Is.EqualTo(expected));
     }
 }
