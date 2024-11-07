@@ -2,9 +2,6 @@
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Point = Pixed.Common.Models.Point;
@@ -12,17 +9,6 @@ using Point = Pixed.Common.Models.Point;
 namespace Pixed.Common.Utils;
 public static class SkiaUtils
 {
-    public static void Export(this SKBitmap value, Stream stream)
-    {
-        var colors = value.ToByteArray();
-
-        Bitmap bitmap = new(value.Width, value.Height);
-        BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, value.Width, value.Height), ImageLockMode.WriteOnly, bitmap.PixelFormat);
-        Marshal.Copy(colors, 0, bitmapData.Scan0, colors.Length);
-        bitmap.UnlockBits(bitmapData);
-        bitmap.Save(stream, ImageFormat.Png);
-        bitmap.Dispose();
-    }
     public static SKBitmap FromArray(IList<uint> array, Point size)
     {
         var bitmap = new SKBitmap(size.X, size.Y, true);

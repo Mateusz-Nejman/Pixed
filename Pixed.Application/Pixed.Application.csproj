@@ -39,6 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Pixed.BigGustave\Pixed.BigGustave.csproj" />
     <ProjectReference Include="..\Pixed.Common\Pixed.Common.csproj" />
   </ItemGroup>
 </Project>

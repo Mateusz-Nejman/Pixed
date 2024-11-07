@@ -54,6 +54,7 @@ Your imagination and **Pixed**. These two things are needed for pixel-arted imag
 - LZMA SDK [Mateusz-Nejman/LZMA_SDK](https://github.com/Mateusz-Nejman/LZMA_SDK)
 - AvaloniaProgressRing [Deadpikle/AvaloniaProgressRing](https://github.com/Deadpikle/AvaloniaProgressRing)
 - SkiaSharp [mono/SkiaSharp](https://github.com/mono/SkiaSharp)
+- BigGustave (Modified in Pixed.BigGustave) [EliotJones/BigGustave](https://github.com/EliotJones/BigGustave)
 
 ## Assets
 - Icons from IcoMoon [https://icomoon.io/](https://icomoon.io/)
