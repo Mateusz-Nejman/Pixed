@@ -26,6 +26,7 @@ public struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatable
     public byte R { get; set; } = red;
     public byte B { get; set; } = blue;
     public byte G { get; set; } = green;
+    public readonly bool IsGrayscale => R == G && G == B;
     public UniColor() : this(0, 0, 0, 0)
     { }
 
