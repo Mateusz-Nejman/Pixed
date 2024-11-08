@@ -22,14 +22,13 @@ public class SelectionManager
 
     public bool HasSelection => _currentSelection != null;
     public BaseSelection? Selection => _currentSelection;
-    public Action<SKBitmap> SetOverlayAction { get; set; }
 
     public SelectionManager(ApplicationData applicationData, ShortcutService shortcutService, ToolSelector toolSelector, IClipboardHandle clipboardHandle)
     {
         _applicationData = applicationData;
         _toolSelector = toolSelector;
         _currentSelection = null;
-        Subjects.SelectionCreated.Subscribe(OnSelectionCreated);
+        Subjects.SelectionCreating.Subscribe(OnSelectionCreated);
         Subjects.SelectionDismissed.Subscribe(OnSelectionDismissed);
         shortcutService.Add(new KeyState(Key.C, false, true, false), async () => await Copy());
         shortcutService.Add(new KeyState(Key.X, false, true, false), async () => await Cut());
@@ -55,7 +54,6 @@ public class SelectionManager
         {
             _toolSelector.ToolSelected = newTool;
         }
-        ((RectangleSelect)_toolSelector.ToolSelected).SelectAll(SetOverlayAction);
     }
 
     public async Task Copy()

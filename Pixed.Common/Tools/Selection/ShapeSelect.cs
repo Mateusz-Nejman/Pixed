@@ -14,7 +14,6 @@ internal class ShapeSelect(ApplicationData applicationData, ToolSelector toolSel
         _hasSelection = true;
         var pixels = PaintUtils.GetSimiliarConnectedPixels(frame, point);
         _selection = new ShapeSelection(pixels);
-        Subjects.SelectionCreated.OnNext(_selection);
-        DrawSelectionOnOverlay(ref overlay);
+        Subjects.SelectionCreating.OnNext(_selection);
     }
 }

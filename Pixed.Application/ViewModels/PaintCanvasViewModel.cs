@@ -57,6 +57,10 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     private readonly IDisposable _overlayChanged;
     private readonly IDisposable _currentLayerRenderModified;
     private readonly IDisposable _zoomChanged;
+    private readonly IDisposable _selectionCreating;
+    private readonly IDisposable _selectionDismissed;
+    private readonly IDisposable _selectionCreated;
+    private readonly IDisposable _selectionStarted;
 
     public ActionCommand<MouseEvent> LeftMouseDown { get; }
     public ActionCommand<MouseEvent> LeftMouseUp { get; }
@@ -192,6 +196,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     public string ZoomText { get; set; }
     public ZoomBorder ZoomContainer { get; set; }
     public ImageGrid GridCanvas { get; set; }
+    public SelectionOverlay SelectionOverlay { get; set; }
     public ImageBrush TransparentBrush
     {
         get => _transparentBrush;
@@ -204,7 +209,6 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
 
     public PaintCanvasViewModel(ApplicationData applicationData, ToolSelector toolSelector, ToolMoveCanvas toolMoveCanvas, SelectionManager selectionManager)
     {
-        selectionManager.SetOverlayAction = overlay => Overlay = overlay;
         _applicationData = applicationData;
         _toolSelector = toolSelector;
         _frame = new Frame(32, 32);
@@ -298,8 +302,44 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
             {
                 GridCanvas.Zoom = entry.Zoom;
             }
+
+            if (SelectionOverlay != null)
+            {
+                SelectionOverlay.Zoom = entry.Zoom;
+            }
             RefreshZoomText();
             TransparentBrush = GetTransparentBackgroundBrush();
+        });
+
+        _selectionCreating = Subjects.SelectionCreating.Subscribe(selection =>
+        {
+            SelectionOverlay?.UpdateSelection(selection);
+        });
+
+        _selectionDismissed = Subjects.SelectionDismissed.Subscribe(_ =>
+        {
+            if (SelectionOverlay != null)
+            {
+                SelectionOverlay.UpdateSelection(null);
+                SelectionOverlay.DrawLines = false;
+            }
+        });
+
+        _selectionCreated = Subjects.SelectionCreated.Subscribe(selection =>
+        {
+            if (SelectionOverlay != null)
+            {
+                SelectionOverlay.DrawLines = true;
+                SelectionOverlay.UpdateSelection(selection);
+            }
+        });
+
+        _selectionStarted = Subjects.SelectionStarted.Subscribe(_ =>
+        {
+            if (SelectionOverlay != null)
+            {
+                SelectionOverlay.DrawLines = false;
+            }
         });
 
         toolMoveCanvas.SetGestureEnabledAction = isEnabled =>
@@ -366,6 +406,10 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
                 _overlayChanged?.Dispose();
                 _zoomChanged?.Dispose();
                 _currentLayerRenderModified?.Dispose();
+                _selectionCreated?.Dispose();
+                _selectionCreating?.Dispose();
+                _selectionDismissed?.Dispose();
+                _selectionStarted?.Dispose();
             }
 
             _disposedValue = true;
@@ -512,7 +556,6 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
             TileMode = TileMode.Tile,
             Transform = new ScaleTransform(0.2d / _zoomValue, 0.2d / _zoomValue)
         };
-
     }
 
     private void DebugTouchPointer(MouseEvent mouseEvent)

@@ -21,6 +21,7 @@ internal partial class PaintCanvas : PixedUserControl<PaintCanvasViewModel>
         SizeChanged += PaintCanvas_SizeChanged;
         zoomBorder.GestureZoomEnabled = false;
         ViewModel.GridCanvas = gridCanvas;
+        ViewModel.SelectionOverlay = selectionOverlay;
         ViewModel.ZoomValue = zoomBorder.Zoom;
         ViewModel.ZoomOffsetX = zoomBorder.OffsetX;
         ViewModel.ZoomOffsetY = zoomBorder.OffsetY;

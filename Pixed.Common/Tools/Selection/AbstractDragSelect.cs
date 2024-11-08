@@ -25,6 +25,8 @@ internal abstract class AbstractDragSelect(ApplicationData applicationData, Tool
         {
             OnDragSelectEnd(point, frame, ref overlay);
         }
+
+        Subjects.SelectionCreated.OnNext(_selection);
     }
 
     public override void OnSelectStart(Point point, Frame frame, ref SKBitmap overlay)

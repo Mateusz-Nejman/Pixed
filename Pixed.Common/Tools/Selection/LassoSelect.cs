@@ -67,7 +67,6 @@ internal class LassoSelect(ApplicationData applicationData, ToolSelector toolSel
     {
         _selection = selection;
         overlay.Clear();
-        Subjects.SelectionCreated.OnNext(selection);
-        DrawSelectionOnOverlay(ref overlay);
+        Subjects.SelectionCreating.OnNext(selection);
     }
 }
