@@ -1,14 +1,11 @@
-﻿using Avalonia.Controls;
-using Pixed.Application.Utils;
+﻿using Pixed.Application.Utils;
 using Pixed.Common;
 using Pixed.Common.Algos;
-using Pixed.Common.Models;
 using Pixed.Common.Selection;
 using Pixed.Common.Utils;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Reactive.Joins;
 
 namespace Pixed.Application.Controls;
 internal class SelectionOverlay : OverlayControl
@@ -37,7 +34,7 @@ internal class SelectionOverlay : OverlayControl
         {
             _drawLines = value;
 
-            if(!value)
+            if (!value)
             {
                 _lines.Clear();
             }
@@ -48,16 +45,16 @@ internal class SelectionOverlay : OverlayControl
     {
         _selection = selection;
 
-        if(DrawLines)
+        if (DrawLines)
         {
             UpdateLines();
         }
     }
     public override void Render(SKCanvas canvas)
     {
-        if(_selection == null) return;
+        if (_selection == null) return;
 
-        if(DrawLines)
+        if (DrawLines)
         {
             foreach (var line in _lines.ToArray())
             {
@@ -72,12 +69,12 @@ internal class SelectionOverlay : OverlayControl
 
     private void UpdateLines()
     {
-        if(_selection == null)
+        if (_selection == null)
         {
             return;
         }
 
-        if(_selection.Pixels.Count == 0)
+        if (_selection.Pixels.Count == 0)
         {
             _lines.Clear();
             return;

@@ -1,5 +1,4 @@
-﻿using Avalonia.Controls.Shapes;
-using Pixed.Common.Models;
+﻿using Pixed.Common.Models;
 using Pixed.Common.Selection;
 using SkiaSharp;
 using System;

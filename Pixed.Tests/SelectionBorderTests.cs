@@ -15,9 +15,9 @@ internal class SelectionBorderTests
 
         bool[,] map = new bool[width, height];
 
-        for(int x = 0; x < width; x++)
+        for (int x = 0; x < width; x++)
         {
-            for(int y = 0; y < height; y++)
+            for (int y = 0; y < height; y++)
             {
                 map[x, y] = true;
             }
@@ -49,7 +49,7 @@ internal class SelectionBorderTests
         int width = Math.Max(1, (maxX - minX) + 1);
         int height = Math.Max(1, (maxY - minY) + 1);
 
-        bool[] map1D = 
+        bool[] map1D =
             [
             false, false, false, false, true, true, true, false, false, false, false,
             false, false, false, true, true, true, true, true, false, false, false,
@@ -67,7 +67,7 @@ internal class SelectionBorderTests
 
         for (int x = 0; x < width; x++)
         {
-            for(int y = 0; y < height; y++)
+            for (int y = 0; y < height; y++)
             {
                 map[x, y] = map1D[y * width + x];
             }
