@@ -1,4 +1,4 @@
-﻿using Pixed.Common.Algos;
+﻿using Pixed.Common.Algorithms;
 using Pixed.Common.Models;
 using System;
 using System.Collections.Generic;

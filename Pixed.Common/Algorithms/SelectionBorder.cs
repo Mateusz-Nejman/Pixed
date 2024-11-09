@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Pixed.Common.Algos;
+namespace Pixed.Common.Algorithms;
 public static class SelectionBorder
 {
     private readonly struct FreeSides(bool top, bool bottom, bool left, bool right)

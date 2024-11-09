@@ -1,6 +1,6 @@
 ﻿using Pixed.Application.Utils;
 using Pixed.Common;
-using Pixed.Common.Algos;
+using Pixed.Common.Algorithms;
 using Pixed.Common.Selection;
 using Pixed.Common.Utils;
 using SkiaSharp;
