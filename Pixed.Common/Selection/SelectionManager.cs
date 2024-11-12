@@ -28,6 +28,7 @@ public class SelectionManager
         _applicationData = applicationData;
         _toolSelector = toolSelector;
         _currentSelection = null;
+        _clipboardHandle = clipboardHandle;
         Subjects.SelectionCreating.Subscribe(OnSelectionCreated);
         Subjects.SelectionDismissed.Subscribe(OnSelectionDismissed);
         shortcutService.Add(new KeyState(Key.C, false, true, false), async () => await Copy());
@@ -66,8 +67,7 @@ public class SelectionManager
         if (_currentSelection != null && _applicationData.CurrentFrame != null)
         {
             _currentSelection.FillSelectionFromFrame(_applicationData.CurrentFrame);
-            SKBitmap selectionBitmap = _currentSelection.ToBitmap();
-            await CopyToClipboard(selectionBitmap);
+            await _clipboardHandle.CopySelectionAsync(_currentSelection);
         }
     }
 
@@ -157,17 +157,6 @@ public class SelectionManager
     private bool IsSelectToolActive()
     {
         return _toolSelector.ToolSelected is ToolSelectBase;
-    }
-
-    private async Task CopyToClipboard(SKBitmap src)
-    {
-        DataObject clipboardObject = new();
-        MemoryStream memoryStream = new();
-        src.Encode(memoryStream, SKEncodedImageFormat.Png, 100);
-        clipboardObject.Set("PNG", memoryStream.ToArray());
-        memoryStream.Dispose();
-        await _clipboardHandle.ClearAsync();
-        await _clipboardHandle.SetDataObjectAsync(clipboardObject);
     }
 
     private async Task<SKBitmap?> CreateBitmapFromClipboard()
