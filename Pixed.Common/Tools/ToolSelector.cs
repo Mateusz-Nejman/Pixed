@@ -27,7 +27,7 @@ public class ToolSelector
         ToolPen toolPen, ToolVerticalPen toolVerticalPen, ToolBucket toolBucket, ToolColorSwap toolColorSwap, ToolEraser toolEraser,
         ToolStroke toolStroke, ToolRectangle toolRectangle, ToolCircle toolCircle, ToolMove toolMove, ToolLighten toolLighten,
         ToolDithering toolDithering, ToolColorPicker toolColorPicker, ToolNoise toolNoise, ToolNoiseFill toolNoiseFill,
-        ToolOutliner toolOutliner, ToolMoveCanvas toolMoveCanvas, ApplicationData applicationData)
+        ToolOutliner toolOutliner, ToolMoveCanvas toolMoveCanvas, ShapeSelect shapeSelect, RectangleSelect rectangleSelect, LassoSelect lassoSelect)
     {
         _tools = new Dictionary<string, BaseTool>()
             {
@@ -40,9 +40,9 @@ public class ToolSelector
             { "tool_stroke", toolStroke},
             { "tool_rectangle", toolRectangle},
             { "tool_circle", toolCircle},{ "tool_move", toolMove},
-            { "tool_shape_select", new ShapeSelect(applicationData, this)},
-            { "tool_rectangle_select", new RectangleSelect(applicationData, this)}, //TODO find better way
-            { "tool_lasso_select", new LassoSelect(applicationData, this)},
+            { "tool_shape_select", shapeSelect},
+            { "tool_rectangle_select", rectangleSelect}, //TODO find better way
+            { "tool_lasso_select", lassoSelect},
             { "tool_lighten", toolLighten},
             { "tool_dithering", toolDithering},
             { "tool_colorpicker", toolColorPicker},
