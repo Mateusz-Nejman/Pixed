@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Pixed.Common.Tools.Selection;
 
-public class LassoSelect(ApplicationData applicationData) : BaseSelect(applicationData)
+public class ToolSelectLasso(ApplicationData applicationData) : ToolSelectBase(applicationData)
 {
     private List<Point> _points = [];
     public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-lasso-select.png";

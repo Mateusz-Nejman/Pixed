@@ -4,7 +4,7 @@ using System.Reactive.Subjects;
 
 namespace Pixed.Common.Tools.Selection;
 
-public class RectangleSelect(ApplicationData applicationData) : BaseSelect(applicationData)
+public class ToolSelectRectangle(ApplicationData applicationData) : ToolSelectBase(applicationData)
 {
     public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-rectangle-select.png";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Rectangle selection", "Ctrl+C", "Copy the selected area", "Ctrl+V", "Paste the copied area");

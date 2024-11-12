@@ -2,13 +2,12 @@
 using Pixed.Common.Selection;
 using Pixed.Common.Services.Keyboard;
 using SkiaSharp;
-using System;
 using System.Linq;
 using Frame = Pixed.Common.Models.Frame;
 
 namespace Pixed.Common.Tools.Selection;
 
-public class BaseSelect(ApplicationData applicationData) : BaseTool(applicationData)
+public class ToolSelectBase(ApplicationData applicationData) : BaseTool(applicationData)
 {
     public override string ImagePath => string.Empty;
     public enum SelectionStage

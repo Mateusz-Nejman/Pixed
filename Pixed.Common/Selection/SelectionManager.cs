@@ -156,7 +156,7 @@ public class SelectionManager
 
     private bool IsSelectToolActive()
     {
-        return _toolSelector.ToolSelected is BaseSelect;
+        return _toolSelector.ToolSelected is ToolSelectBase;
     }
 
     private async Task CopyToClipboard(SKBitmap src)
