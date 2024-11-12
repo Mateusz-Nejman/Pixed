@@ -75,4 +75,22 @@ public static class SkiaUtils
             }
         }
     }
+
+    public static void DrawPatternLine(this SKCanvas canvas, SKPoint p0, SKPoint p1, float[] pattern, UniColor color)
+    {
+        SKPath path = new();
+        path.MoveTo(p0.X, p0.Y);
+        path.LineTo(p1.X, p1.Y);
+
+        var effect = SKPathEffect.CreateDash(pattern, 0);
+
+        var paint = new SKPaint
+        {
+            Color = color,
+            PathEffect = effect,
+            Style = SKPaintStyle.Stroke
+        };
+
+        canvas.DrawPath(path, paint);
+    }
 }

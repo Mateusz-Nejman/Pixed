@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Pixed.Common.Algos;
+namespace Pixed.Common.Algorithms;
 internal static class BresenhamLine
 {
     public static List<Point> Get(Point point1, Point point2)

@@ -7,7 +7,6 @@ using Pixed.Common.Tools.Selection;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,14 +21,14 @@ public class SelectionManager
 
     public bool HasSelection => _currentSelection != null;
     public BaseSelection? Selection => _currentSelection;
-    public Action<SKBitmap> SetOverlayAction { get; set; }
 
     public SelectionManager(ApplicationData applicationData, ShortcutService shortcutService, ToolSelector toolSelector, IClipboardHandle clipboardHandle)
     {
         _applicationData = applicationData;
         _toolSelector = toolSelector;
         _currentSelection = null;
-        Subjects.SelectionCreated.Subscribe(OnSelectionCreated);
+        _clipboardHandle = clipboardHandle;
+        Subjects.SelectionCreating.Subscribe(OnSelectionCreated);
         Subjects.SelectionDismissed.Subscribe(OnSelectionDismissed);
         shortcutService.Add(new KeyState(Key.C, false, true, false), async () => await Copy());
         shortcutService.Add(new KeyState(Key.X, false, true, false), async () => await Cut());
@@ -55,7 +54,6 @@ public class SelectionManager
         {
             _toolSelector.ToolSelected = newTool;
         }
-        ((RectangleSelect)_toolSelector.ToolSelected).SelectAll(SetOverlayAction);
     }
 
     public async Task Copy()
@@ -68,8 +66,7 @@ public class SelectionManager
         if (_currentSelection != null && _applicationData.CurrentFrame != null)
         {
             _currentSelection.FillSelectionFromFrame(_applicationData.CurrentFrame);
-            SKBitmap selectionBitmap = _currentSelection.ToBitmap();
-            await CopyToClipboard(selectionBitmap);
+            await _clipboardHandle.CopySelectionAsync(_currentSelection);
         }
     }
 
@@ -158,18 +155,7 @@ public class SelectionManager
 
     private bool IsSelectToolActive()
     {
-        return _toolSelector.ToolSelected is BaseSelect;
-    }
-
-    private async Task CopyToClipboard(SKBitmap src)
-    {
-        DataObject clipboardObject = new();
-        MemoryStream memoryStream = new();
-        src.Encode(memoryStream, SKEncodedImageFormat.Png, 100);
-        clipboardObject.Set("PNG", memoryStream.ToArray());
-        memoryStream.Dispose();
-        await _clipboardHandle.ClearAsync();
-        await _clipboardHandle.SetDataObjectAsync(clipboardObject);
+        return _toolSelector.ToolSelected is ToolSelectBase;
     }
 
     private async Task<SKBitmap?> CreateBitmapFromClipboard()

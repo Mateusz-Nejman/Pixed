@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Pixed.Common.Models;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Pixed.Common.Utils;
@@ -17,5 +19,21 @@ public static class CollectionUtils
         {
             collection.Add(value);
         }
+    }
+
+    public static void ForEach<T>(this T[,] array, Point start, Point size, Action<int, int, T> action)
+    {
+        for (int x = start.X; x < size.X; x++)
+        {
+            for (int y = start.Y; y < size.Y; y++)
+            {
+                action?.Invoke(x, y, array[x, y]);
+            }
+        }
+    }
+
+    public static void ForEach<T>(this T[,] array, Action<int, int, T> action)
+    {
+        ForEach(array, new Point(), new Point(array.GetLength(0), array.GetLength(1)), action);
     }
 }

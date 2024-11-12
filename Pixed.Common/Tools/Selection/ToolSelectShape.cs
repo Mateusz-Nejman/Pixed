@@ -1,20 +1,18 @@
 ﻿using Pixed.Common.Models;
 using Pixed.Common.Selection;
 using Pixed.Common.Utils;
-using SkiaSharp;
 
 namespace Pixed.Common.Tools.Selection;
 
-internal class ShapeSelect(ApplicationData applicationData, ToolSelector toolSelector) : AbstractDragSelect(applicationData, toolSelector)
+public class ToolSelectShape(ApplicationData applicationData) : ToolSelectBase(applicationData)
 {
     public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-shape-select.png";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Shape selection", "Ctrl+C", "Copy the selected area", "Ctrl+V", "Paste the copied area");
-    public override void OnSelectStart(Point point, Frame frame, ref SKBitmap overlay)
+
+    public override void OnSelectionEnd(Point startPoint, Point currentPoint, Point previousPoint, Frame frame)
     {
-        _hasSelection = true;
-        var pixels = PaintUtils.GetSimiliarConnectedPixels(frame, point);
+        var pixels = PaintUtils.GetSimiliarConnectedPixels(frame, currentPoint);
         _selection = new ShapeSelection(pixels);
         Subjects.SelectionCreated.OnNext(_selection);
-        DrawSelectionOnOverlay(ref overlay);
     }
 }

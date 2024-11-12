@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Pixed.Common.Algos;
+namespace Pixed.Common.Algorithms;
 
 internal class FloodFill(Point startPosition, Point size) : IDisposable
 {

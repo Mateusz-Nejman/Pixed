@@ -34,8 +34,8 @@ public class DependencyInjectionRegister : IDependencyRegister
         collection.AddScoped<ToolStroke>();
         collection.AddScoped<ToolVerticalPen>();
 
-        collection.AddScoped<LassoSelect>();
-        collection.AddScoped<RectangleSelect>();
-        collection.AddScoped<ShapeSelect>();
+        collection.AddScoped<ToolSelectLasso>();
+        collection.AddScoped<ToolSelectRectangle>();
+        collection.AddScoped<ToolSelectShape>();
     }
 }

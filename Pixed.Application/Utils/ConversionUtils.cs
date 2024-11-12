@@ -12,4 +12,9 @@ internal static class ConversionUtils
     {
         return (float)value;
     }
+
+    public static float ToFloat(this int value)
+    {
+        return value;
+    }
 }
