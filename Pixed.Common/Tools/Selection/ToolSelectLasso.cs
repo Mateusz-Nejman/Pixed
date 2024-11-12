@@ -22,11 +22,11 @@ public class ToolSelectLasso(ApplicationData applicationData) : ToolSelectBase(a
 
     public override void OnSelection(Point startPoint, Point currentPoint, Point previousPoint, Frame frame)
     {
-        if(Math.Abs(currentPoint.X - previousPoint.X) > 1 || Math.Abs(currentPoint.Y - previousPoint.Y) > 1)
+        if (Math.Abs(currentPoint.X - previousPoint.X) > 1 || Math.Abs(currentPoint.Y - previousPoint.Y) > 1)
         {
             var points = BresenhamLine.Get(previousPoint, currentPoint);
 
-            foreach(var point in points)
+            foreach (var point in points)
             {
                 currentPoint = point;
                 OnSelectionBase(startPoint, currentPoint, previousPoint, frame);

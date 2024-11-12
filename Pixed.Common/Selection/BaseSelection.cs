@@ -1,7 +1,5 @@
 ﻿using Pixed.Common.Models;
-using SkiaSharp;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Pixed.Common.Selection;
 public class BaseSelection

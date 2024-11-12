@@ -4,7 +4,6 @@ using Pixed.BigGustave;
 using Pixed.Common;
 using Pixed.Common.Platform;
 using Pixed.Common.Selection;
-using SkiaSharp;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
