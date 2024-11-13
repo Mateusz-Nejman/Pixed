@@ -129,7 +129,7 @@
         {
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_09C74076A4F743948167EE5DB432690F"
             {
-            "SourcePath" = "8:..\\Pixed\\Resources\\icon.ico"
+            "SourcePath" = "8:..\\Pixed.Application\\Resources\\icon.ico"
             "TargetName" = "8:icon.ico"
             "Tag" = "8:"
             "Folder" = "8:_F8C7BF363229488B968E9A7265AA89CE"
