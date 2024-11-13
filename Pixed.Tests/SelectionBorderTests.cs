@@ -1,4 +1,6 @@
-﻿namespace Pixed.Tests;
+﻿using Pixed.Common.Algorithms;
+
+namespace Pixed.Tests;
 internal class SelectionBorderTests
 {
     [Test]
