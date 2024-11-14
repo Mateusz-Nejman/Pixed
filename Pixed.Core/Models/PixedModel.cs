@@ -1,13 +1,9 @@
-﻿using Pixed.Common.IO;
-using Pixed.Common.Utils;
-using System;
-using System.Collections.Generic;
+﻿using Pixed.Core.IO;
+using Pixed.Core.Utils;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
 using System.Windows.Input;
 
-namespace Pixed.Common.Models;
+namespace Pixed.Core.Models;
 
 public class PixedModel : PropertyChangedBase, IPixedSerializer
 {
@@ -55,6 +51,17 @@ public class PixedModel : PropertyChangedBase, IPixedSerializer
     public ICommand CloseCommand { get; }
     public static Action<PixedModel> CloseCommandAction { get; set; }
 
+    public int HistoryIndex
+    {
+        get => _historyIndex;
+        set
+        {
+            _historyIndex = Math.Clamp(value, 0, _history.Count - 1);
+        }
+    }
+
+    public IReadOnlyList<byte[]> History => _history;
+
     public PixedModel(ApplicationData applicationData) : this(applicationData, applicationData.UserSettings.UserWidth, applicationData.UserSettings.UserHeight)
     {
 
@@ -96,26 +103,6 @@ public class PixedModel : PropertyChangedBase, IPixedSerializer
     public void UpdatePreview()
     {
         RenderSource = new PixedImage(Frames.First().Render());
-    }
-
-    public void Process(bool allFrames, bool allLayers, Action<Frame, Layer> action, ApplicationData applicationData, bool executeSubjects = true)
-    {
-        Frame[] frames = allFrames ? [.. Frames] : [applicationData.CurrentFrame];
-
-        foreach (Frame frame in frames)
-        {
-            Layer[] layers = allLayers ? frame.Layers.ToArray() : [frame.CurrentLayer];
-
-            foreach (Layer layer in layers)
-            {
-                action.Invoke(frame, layer);
-            }
-
-            if (executeSubjects)
-            {
-                Subjects.FrameModified.OnNext(frame);
-            }
-        }
     }
 
     public List<uint> GetAllColors()
@@ -163,47 +150,6 @@ public class PixedModel : PropertyChangedBase, IPixedSerializer
         }
 
         UnsavedChanges = true;
-    }
-
-    public void Undo()
-    {
-        _historyIndex--;
-        if (_history.Count == 1 || _historyIndex < 0)
-        {
-            return;
-        }
-
-        _historyIndex = Math.Clamp(_historyIndex, 0, _history.Count - 1);
-
-        byte[] data = _history[_historyIndex];
-        MemoryStream stream = new(data);
-        Deserialize(stream);
-        Subjects.ProjectModified.OnNext(this);
-        Subjects.FrameChanged.OnNext(CurrentFrame);
-        Subjects.LayerChanged.OnNext(CurrentFrame.CurrentLayer);
-        stream.Dispose();
-    }
-
-    public void Redo()
-    {
-        _historyIndex++;
-        if (_history.Count == 0 || _historyIndex >= _history.Count)
-        {
-            return;
-        }
-
-        if (_historyIndex < 0)
-        {
-            _historyIndex = 0;
-        }
-
-        byte[] data = _history[_historyIndex];
-        MemoryStream stream = new(data);
-        Deserialize(stream);
-        Subjects.ProjectModified.OnNext(this);
-        Subjects.FrameChanged.OnNext(CurrentFrame);
-        Subjects.LayerChanged.OnNext(CurrentFrame.CurrentLayer);
-        stream.Dispose();
     }
 
     public void Serialize(Stream stream)

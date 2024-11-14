@@ -1,4 +1,4 @@
-﻿using Pixed.Common.Algorithms;
+﻿using Pixed.Core.Algorithms;
 
 namespace Pixed.Tests;
 internal class SelectionBorderTests

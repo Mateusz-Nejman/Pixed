@@ -2,7 +2,7 @@
 using Pixed.Application.Utils;
 using Pixed.Application.Windows;
 using Pixed.Common;
-using Pixed.Common.Models;
+using Pixed.Core.Models;
 using System.IO;
 using System.Threading.Tasks;
 

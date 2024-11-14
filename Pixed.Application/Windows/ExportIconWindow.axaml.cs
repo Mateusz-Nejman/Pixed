@@ -1,7 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Pixed.Application.ViewModels;
-using Pixed.Common.Models;
+using Pixed.Core.Models;
 using System.Collections.Generic;
 
 namespace Pixed.Application.Windows;

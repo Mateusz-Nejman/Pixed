@@ -2,7 +2,7 @@
 using Avalonia.Input;
 using Avalonia.VisualTree;
 using Pixed.Application.ViewModels;
-using Pixed.Common.Models;
+using Pixed.Core.Models;
 
 namespace Pixed.Application.Input;
 

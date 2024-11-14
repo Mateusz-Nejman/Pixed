@@ -6,7 +6,7 @@ using Pixed.Application.Utils;
 using Pixed.Application.ViewModels;
 using Pixed.Application.Zoom;
 using Pixed.Common.Input;
-using Pixed.Common.Models;
+using Pixed.Core.Models;
 using System;
 
 namespace Pixed.Application.Controls;

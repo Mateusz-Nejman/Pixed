@@ -4,15 +4,16 @@ using Pixed.Application.Controls;
 using Pixed.Application.Input;
 using Pixed.Application.Zoom;
 using Pixed.Common;
-using Pixed.Common.Models;
 using Pixed.Common.Selection;
 using Pixed.Common.Services.Keyboard;
 using Pixed.Common.Tools;
-using Pixed.Common.Utils;
+using Pixed.Core;
+using Pixed.Core.Models;
+using Pixed.Core.Utils;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using Frame = Pixed.Common.Models.Frame;
+using Frame = Pixed.Core.Models.Frame;
 
 namespace Pixed.Application.ViewModels;
 

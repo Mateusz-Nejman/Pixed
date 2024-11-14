@@ -1,4 +1,4 @@
-﻿using Pixed.Common.Models;
+﻿using Pixed.Core.Models;
 
 namespace Pixed.Application.Utils;
 internal static class ConversionUtils

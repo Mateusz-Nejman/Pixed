@@ -1,7 +1,8 @@
 ﻿using Pixed.Application.Controls;
 using Pixed.Common;
 using Pixed.Common.Menu;
-using Pixed.Common.Models;
+using Pixed.Core;
+using Pixed.Core.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;

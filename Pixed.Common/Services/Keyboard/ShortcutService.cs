@@ -1,5 +1,6 @@
 ﻿using Avalonia.Input;
 using Pixed.Common.Models;
+using Pixed.Core.Models;
 using System;
 using System.Collections.Generic;
 

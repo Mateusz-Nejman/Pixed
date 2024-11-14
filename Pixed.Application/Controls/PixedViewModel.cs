@@ -1,4 +1,4 @@
-﻿using Pixed.Common;
+﻿using Pixed.Core;
 
 namespace Pixed.Application.Controls;
 internal abstract class PixedViewModel : PropertyChangedBase

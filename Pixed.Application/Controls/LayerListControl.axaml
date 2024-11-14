@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Pixed.Application.Controls"
-             xmlns:models="clr-namespace:Pixed.Common.Models;assembly=Pixed.Common"
+             xmlns:models="clr-namespace:Pixed.Core.Models;assembly=Pixed.Core"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
 			 x:DataType="models:Layer">

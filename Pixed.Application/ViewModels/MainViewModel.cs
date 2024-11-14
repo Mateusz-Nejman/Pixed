@@ -4,8 +4,8 @@ using Pixed.Application.Menu;
 using Pixed.Application.Services;
 using Pixed.Application.Windows;
 using Pixed.Common;
-using Pixed.Common.Models;
 using Pixed.Common.Services.Palette;
+using Pixed.Core.Models;
 using System;
 using System.Windows.Input;
 

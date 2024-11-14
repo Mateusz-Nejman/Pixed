@@ -1,6 +1,4 @@
-﻿using Pixed.Common;
-
-namespace Pixed.BigGustave.Tests;
+﻿namespace Pixed.BigGustave.Tests;
 
 public class PngBuilderTests
 {

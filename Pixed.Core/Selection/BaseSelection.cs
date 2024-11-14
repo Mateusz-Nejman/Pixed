@@ -1,7 +1,6 @@
-﻿using Pixed.Common.Models;
-using System.Collections.Generic;
+﻿using Pixed.Core.Models;
 
-namespace Pixed.Common.Selection;
+namespace Pixed.Core.Selection;
 public class BaseSelection
 {
     public List<Pixel> Pixels { get; }

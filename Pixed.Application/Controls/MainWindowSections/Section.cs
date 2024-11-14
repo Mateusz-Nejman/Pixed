@@ -1,6 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Media;
-using Pixed.Common;
+using Pixed.Core;
 
 namespace Pixed.Application.Controls.MainWindowSections;
 

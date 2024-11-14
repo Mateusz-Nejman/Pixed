@@ -1,9 +1,7 @@
-﻿using Pixed.Common.Models;
-using System;
-using System.Collections.Generic;
+﻿using Pixed.Core.Models;
 
-namespace Pixed.Common.Algorithms;
-internal static class BresenhamLine
+namespace Pixed.Core.Algorithms;
+public static class BresenhamLine
 {
     public static List<Point> Get(Point point1, Point point2)
     {

@@ -1,12 +1,16 @@
 ﻿using Avalonia.Input;
-using Pixed.Common.Models;
+using Pixed.BigGustave;
 using Pixed.Common.Platform;
 using Pixed.Common.Services.Keyboard;
 using Pixed.Common.Tools;
 using Pixed.Common.Tools.Selection;
+using Pixed.Core;
+using Pixed.Core.Models;
+using Pixed.Core.Selection;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -66,7 +70,7 @@ public class SelectionManager
         if (_currentSelection != null && _applicationData.CurrentFrame != null)
         {
             _currentSelection.FillSelectionFromFrame(_applicationData.CurrentFrame);
-            await _clipboardHandle.CopySelectionAsync(_currentSelection);
+            await CopySelectionAsync(_currentSelection);
         }
     }
 
@@ -173,5 +177,29 @@ public class SelectionManager
         }
 
         return null;
+    }
+
+    private async Task CopySelectionAsync(BaseSelection selection)
+    {
+        var minX = selection.Pixels.Min(p => p.Position.X);
+        var minY = selection.Pixels.Min(p => p.Position.Y);
+        var maxX = selection.Pixels.Max(p => p.Position.X);
+        var maxY = selection.Pixels.Max(p => p.Position.Y);
+        int width = maxX - minX + 1;
+        int height = maxY - minY + 1;
+        var builder = PngBuilder.Create(width, height, true);
+
+        foreach (var pixel in selection.Pixels)
+        {
+            builder.SetPixel(new UniColor(pixel.Color), pixel.Position.X - minX, pixel.Position.Y - minY);
+        }
+
+        MemoryStream memoryStream = new();
+        builder.Save(memoryStream);
+        DataObject clipboardObject = new();
+        clipboardObject.Set("PNG", memoryStream.ToArray());
+        await _clipboardHandle.ClearAsync();
+        await _clipboardHandle.SetDataObjectAsync(clipboardObject);
+        memoryStream.Dispose();
     }
 }

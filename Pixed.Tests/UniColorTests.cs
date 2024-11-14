@@ -1,4 +1,4 @@
-using Pixed.Common;
+using Pixed.Core;
 
 namespace Pixed.Tests;
 public class UniColorTests

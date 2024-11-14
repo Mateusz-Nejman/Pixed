@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace Pixed.Common.IO;
+﻿namespace Pixed.Core.IO;
 internal interface IPixedSerializer
 {
     public void Serialize(Stream stream);

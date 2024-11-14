@@ -1,12 +1,9 @@
-﻿using Pixed.Common.Utils;
+﻿using Pixed.Core.Utils;
 using SkiaSharp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using Point = Pixed.Common.Models.Point;
+using Point = Pixed.Core.Models.Point;
 
-namespace Pixed.Common.Utils;
+namespace Pixed.Core.Utils;
 public static class SkiaUtils
 {
     public static SKBitmap FromArray(IList<uint> array, Point size)

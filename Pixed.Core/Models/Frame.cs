@@ -1,13 +1,9 @@
-﻿using Pixed.Common.IO;
-using Pixed.Common.Utils;
+﻿using Pixed.Core.IO;
+using Pixed.Core.Utils;
 using SkiaSharp;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
 
-namespace Pixed.Common.Models;
+namespace Pixed.Core.Models;
 
 public class Frame : PropertyChangedBase, IPixedSerializer
 {

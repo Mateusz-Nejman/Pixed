@@ -1,8 +1,7 @@
 ﻿using Avalonia.Platform.Storage;
 using System.Collections.ObjectModel;
-using System.Linq;
 
-namespace Pixed.Common.Models;
+namespace Pixed.Core.Models;
 public class ApplicationData
 {
     private int _index = 0;

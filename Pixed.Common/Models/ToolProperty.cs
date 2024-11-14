@@ -1,4 +1,6 @@
-﻿namespace Pixed.Common.Models;
+﻿using Pixed.Core;
+
+namespace Pixed.Common.Models;
 public class ToolProperty(string name) : PropertyChangedBase
 {
     private bool _checked = false;

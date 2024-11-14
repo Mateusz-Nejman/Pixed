@@ -1,9 +1,9 @@
-﻿using Pixed.Common.Models;
-using Pixed.Common.Selection;
-using Pixed.Common.Services.Keyboard;
+﻿using Pixed.Common.Services.Keyboard;
+using Pixed.Core.Models;
+using Pixed.Core.Selection;
 using SkiaSharp;
 using System.Linq;
-using Frame = Pixed.Common.Models.Frame;
+using Frame = Pixed.Core.Models.Frame;
 
 namespace Pixed.Common.Tools.Selection;
 

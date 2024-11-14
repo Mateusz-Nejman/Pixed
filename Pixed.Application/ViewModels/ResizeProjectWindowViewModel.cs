@@ -1,5 +1,5 @@
-﻿using Pixed.Common;
-using Pixed.Common.Utils;
+﻿using Pixed.Common.Utils;
+using Pixed.Core;
 using System.Collections.Generic;
 
 namespace Pixed.Application.ViewModels;

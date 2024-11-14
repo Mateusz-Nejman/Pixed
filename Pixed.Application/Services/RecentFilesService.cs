@@ -1,8 +1,8 @@
 ﻿using Avalonia.Controls;
 using Newtonsoft.Json;
 using Pixed.Application.IO;
-using Pixed.Common;
-using Pixed.Common.Models;
+using Pixed.Core;
+using Pixed.Core.Models;
 using System.Collections.Generic;
 using System.IO;
 

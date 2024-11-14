@@ -1,5 +1,5 @@
 ﻿using Pixed.Application.Controls;
-using Pixed.Common;
+using Pixed.Core;
 using System.Diagnostics;
 using System.Windows.Input;
 
