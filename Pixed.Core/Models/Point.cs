@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Pixed.Common.Models;
+﻿namespace Pixed.Core.Models;
 public struct Point(int x, int y) : IEquatable<Point>
 {
     public int X { readonly get; set; } = x;
@@ -40,8 +38,8 @@ public struct Point(int x, int y) : IEquatable<Point>
 
     public static double Distance(Point value1, Point value2)
     {
-        double distanceSquared = ((value2.X - value1.X) * (value2.X - value1.X)) +
-                                 ((value2.Y - value1.Y) * (value2.Y - value1.Y));
+        double distanceSquared = (value2.X - value1.X) * (value2.X - value1.X) +
+                                 (value2.Y - value1.Y) * (value2.Y - value1.Y);
         return Math.Sqrt(distanceSquared);
     }
 

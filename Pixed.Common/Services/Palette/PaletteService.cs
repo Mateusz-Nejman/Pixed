@@ -1,6 +1,7 @@
 ﻿using Pixed.Common.Models;
 using Pixed.Common.Services.Palette.Readers;
 using Pixed.Common.Services.Palette.Writers;
+using Pixed.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;

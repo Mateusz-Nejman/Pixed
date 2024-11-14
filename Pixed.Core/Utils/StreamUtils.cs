@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 
-namespace Pixed.Common.Utils;
+namespace Pixed.Core.Utils;
 internal static class StreamUtils
 {
     public static int ReadInt(this Stream stream)

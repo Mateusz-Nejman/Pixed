@@ -1,6 +1,6 @@
-﻿using Pixed.Common.Models;
-using Pixed.Common.Services.Keyboard;
-using Pixed.Common.Utils;
+﻿using Pixed.Common.Services.Keyboard;
+using Pixed.Core.Models;
+using Pixed.Core.Utils;
 using SkiaSharp;
 
 namespace Pixed.Common.Tools;

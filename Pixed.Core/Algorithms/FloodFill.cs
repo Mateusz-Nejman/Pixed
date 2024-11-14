@@ -1,10 +1,8 @@
-﻿using Pixed.Common.Models;
-using System;
-using System.Collections.Generic;
+﻿using Pixed.Core.Models;
 
-namespace Pixed.Common.Algorithms;
+namespace Pixed.Core.Algorithms;
 
-internal class FloodFill(Point startPosition, Point size) : IDisposable
+public class FloodFill(Point startPosition, Point size) : IDisposable
 {
     private bool _disposedValue;
     private readonly Queue<Point> _queue = [];

@@ -1,4 +1,4 @@
-﻿using Pixed.Common.Utils;
+﻿using Pixed.Core.Utils;
 
 namespace Pixed.Tests
 {

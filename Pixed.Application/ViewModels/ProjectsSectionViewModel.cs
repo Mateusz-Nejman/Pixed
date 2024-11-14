@@ -1,6 +1,6 @@
 ﻿using Pixed.Application.Controls;
 using Pixed.Common;
-using Pixed.Common.Models;
+using Pixed.Core.Models;
 using System;
 using System.Collections.ObjectModel;
 

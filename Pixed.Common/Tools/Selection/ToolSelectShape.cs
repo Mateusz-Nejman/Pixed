@@ -1,6 +1,6 @@
-﻿using Pixed.Common.Models;
-using Pixed.Common.Selection;
-using Pixed.Common.Utils;
+﻿using Pixed.Core.Models;
+using Pixed.Core.Selection;
+using Pixed.Core.Utils;
 
 namespace Pixed.Common.Tools.Selection;
 

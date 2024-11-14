@@ -7,6 +7,8 @@ using Pixed.Common;
 using Pixed.Common.Menu;
 using Pixed.Common.Models;
 using Pixed.Common.Utils;
+using Pixed.Core;
+using Pixed.Core.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;

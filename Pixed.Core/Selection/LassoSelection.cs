@@ -1,10 +1,8 @@
-﻿using Pixed.Common.Models;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Pixed.Core.Models;
 
-namespace Pixed.Common.Selection;
+namespace Pixed.Core.Selection;
 
-internal class LassoSelection : BaseSelection
+public class LassoSelection : BaseSelection
 {
 
     public LassoSelection(List<Point> pixels, Frame frame) : base()

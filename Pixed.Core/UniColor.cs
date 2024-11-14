@@ -1,7 +1,6 @@
 ﻿using Avalonia;
-using System;
 
-namespace Pixed.Common;
+namespace Pixed.Core;
 
 public struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatable<UniColor>
 {

@@ -1,5 +1,7 @@
 ﻿using Pixed.Common.Models;
 using Pixed.Common.Services.Keyboard;
+using Pixed.Core;
+using Pixed.Core.Models;
 using SkiaSharp;
 using System.Collections.Generic;
 

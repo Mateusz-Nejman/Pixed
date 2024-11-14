@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace Pixed.Common;
+namespace Pixed.Core;
 
 public class PropertyChangedBase : ObservableObject
 {

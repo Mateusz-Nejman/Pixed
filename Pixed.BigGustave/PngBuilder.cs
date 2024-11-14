@@ -1,4 +1,4 @@
-﻿using Pixed.Common;
+﻿using Pixed.Core;
 using System.IO.Compression;
 using System.Text;
 

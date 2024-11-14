@@ -2,7 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
-using Pixed.Common.Models;
+using Pixed.Core.Models;
 
 namespace Pixed.Application.Windows;
 

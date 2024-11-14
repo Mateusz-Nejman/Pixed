@@ -1,8 +1,9 @@
 ﻿using Pixed.Application.Controls;
 using Pixed.Application.Windows;
-using Pixed.Common;
 using Pixed.Common.Models;
 using Pixed.Common.Services.Palette;
+using Pixed.Core;
+using Pixed.Core.Models;
 using SkiaSharp;
 using System;
 using System.Collections.ObjectModel;

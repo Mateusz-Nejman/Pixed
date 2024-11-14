@@ -1,4 +1,4 @@
-﻿namespace Pixed.Common.Models;
+﻿namespace Pixed.Core.Models;
 
 public struct Pixel(Point position)
 {

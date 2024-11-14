@@ -1,11 +1,8 @@
-﻿using Pixed.Common.Models;
-using Pixed.Common.Selection;
+﻿using Pixed.Core.Models;
+using Pixed.Core.Selection;
 using SkiaSharp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace Pixed.Common.Algorithms;
+namespace Pixed.Core.Algorithms;
 public static class SelectionBorder
 {
     private readonly struct FreeSides(bool top, bool bottom, bool left, bool right)
@@ -22,8 +19,8 @@ public static class SelectionBorder
         var maxX = selection.Pixels.Max(p => p.Position.X);
         var minY = selection.Pixels.Min(p => p.Position.Y);
         var maxY = selection.Pixels.Max(p => p.Position.Y);
-        int width = Math.Max(1, (maxX - minX) + 1);
-        int height = Math.Max(1, (maxY - minY) + 1);
+        int width = Math.Max(1, maxX - minX + 1);
+        int height = Math.Max(1, maxY - minY + 1);
 
         bool[,] map = new bool[width, height];
 

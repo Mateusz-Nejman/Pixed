@@ -1,8 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 
-namespace Pixed.Common;
+namespace Pixed.Core;
 
 public class ActionCommand<T> : ICommand
 {

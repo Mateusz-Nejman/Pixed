@@ -1,5 +1,5 @@
-﻿using Pixed.Common.Models;
-using Pixed.Common.Selection;
+﻿using Pixed.Core.Models;
+using Pixed.Core.Selection;
 using System.Reactive.Subjects;
 
 namespace Pixed.Common.Tools.Selection;

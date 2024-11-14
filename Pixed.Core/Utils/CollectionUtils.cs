@@ -1,9 +1,6 @@
-﻿using Pixed.Common.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Pixed.Core.Models;
 
-namespace Pixed.Common.Utils;
+namespace Pixed.Core.Utils;
 public static class CollectionUtils
 {
     public static T Pop<T>(this IList<T> list)
@@ -34,6 +31,6 @@ public static class CollectionUtils
 
     public static void ForEach<T>(this T[,] array, Action<int, int, T> action)
     {
-        ForEach(array, new Point(), new Point(array.GetLength(0), array.GetLength(1)), action);
+        array.ForEach(new Point(), new Point(array.GetLength(0), array.GetLength(1)), action);
     }
 }

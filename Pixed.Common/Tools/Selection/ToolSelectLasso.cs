@@ -1,6 +1,6 @@
-﻿using Pixed.Common.Algorithms;
-using Pixed.Common.Models;
-using Pixed.Common.Selection;
+﻿using Pixed.Core.Algorithms;
+using Pixed.Core.Models;
+using Pixed.Core.Selection;
 using System;
 using System.Collections.Generic;
 using System.Linq;

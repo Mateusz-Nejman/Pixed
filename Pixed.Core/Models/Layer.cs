@@ -1,13 +1,8 @@
-﻿using Pixed.Common.IO;
-using Pixed.Common.Utils;
+﻿using Pixed.Core.IO;
+using Pixed.Core.Utils;
 using SkiaSharp;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Input;
-namespace Pixed.Common.Models;
+namespace Pixed.Core.Models;
 
 public class Layer : PropertyChangedBase, IPixedSerializer
 {

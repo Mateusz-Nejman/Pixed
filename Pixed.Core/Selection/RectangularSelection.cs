@@ -1,9 +1,9 @@
-﻿using Pixed.Common.Models;
-using Pixed.Common.Utils;
+﻿using Pixed.Core.Models;
+using Pixed.Core.Utils;
 
-namespace Pixed.Common.Selection;
+namespace Pixed.Core.Selection;
 
-internal class RectangularSelection : BaseSelection
+public class RectangularSelection : BaseSelection
 {
     private Point _point1;
     private Point _point2;

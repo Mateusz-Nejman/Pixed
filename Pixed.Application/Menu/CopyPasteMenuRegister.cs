@@ -1,6 +1,6 @@
-﻿using Pixed.Common;
-using Pixed.Common.Menu;
+﻿using Pixed.Common.Menu;
 using Pixed.Common.Selection;
+using Pixed.Core;
 
 namespace Pixed.Application.Menu;
 internal class CopyPasteMenuRegister(IMenuItemRegistry menuItemRegistry, SelectionManager selectionManager)

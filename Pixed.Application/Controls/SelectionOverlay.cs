@@ -1,8 +1,8 @@
 ﻿using Pixed.Application.Utils;
-using Pixed.Common;
-using Pixed.Common.Algorithms;
-using Pixed.Common.Selection;
-using Pixed.Common.Utils;
+using Pixed.Core;
+using Pixed.Core.Algorithms;
+using Pixed.Core.Selection;
+using Pixed.Core.Utils;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;

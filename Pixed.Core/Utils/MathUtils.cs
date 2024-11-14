@@ -1,9 +1,7 @@
-﻿using Pixed.Common.Algorithms;
-using Pixed.Common.Models;
-using System;
-using System.Collections.Generic;
+﻿using Pixed.Core.Algorithms;
+using Pixed.Core.Models;
 
-namespace Pixed.Common.Utils;
+namespace Pixed.Core.Utils;
 
 public static class MathUtils
 {

@@ -2,6 +2,7 @@
 using Avalonia.Controls;
 using Avalonia.Media;
 using Pixed.Common;
+using Pixed.Core;
 using System;
 using System.Collections.ObjectModel;
 

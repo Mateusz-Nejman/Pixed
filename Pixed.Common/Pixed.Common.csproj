@@ -22,4 +22,9 @@
     <PackageReference Include="SkiaSharp" Version="2.88.8" />
     <PackageReference Include="System.Reactive" Version="6.0.1" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Pixed.BigGustave\Pixed.BigGustave.csproj" />
+    <ProjectReference Include="..\Pixed.Core\Pixed.Core.csproj" />
+  </ItemGroup>
 </Project>

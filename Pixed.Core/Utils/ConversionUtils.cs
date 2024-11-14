@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Pixed.Common.Utils;
+﻿namespace Pixed.Core.Utils;
 
 internal static class ConversionUtils
 {

@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Pixed.Common.Models;
 using Pixed.Common.Selection;
 using Pixed.Common.Services.Keyboard;
 using Pixed.Common.Services.Palette;
 using Pixed.Common.Tools;
 using Pixed.Common.Tools.Selection;
+using Pixed.Core.Models;
 
 namespace Pixed.Common.DependencyInjection;
 public class DependencyInjectionRegister : IDependencyRegister
