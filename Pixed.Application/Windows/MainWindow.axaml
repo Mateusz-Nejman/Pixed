@@ -4,6 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:windows="clr-namespace:Pixed.Application.Windows;assembly=Pixed.Application"
         xmlns:viewmodels="clr-namespace:Pixed.Application.ViewModels"
+        xmlns:controls="clr-namespace:Pixed.Application.Controls;assembly=Pixed.Application"
         mc:Ignorable="d" Height="600" Width="800"
         x:Class="Pixed.Application.Windows.MainWindow"
         WindowStartupLocation="CenterScreen"
@@ -15,4 +16,7 @@
         Title="Pixed"
         x:DataType="viewmodels:MainWindowViewModel"
         NativeMenu.Menu="{Binding Menu}">
+  <Panel>
+    <controls:RouterControl/>
+  </Panel>
 </Window>

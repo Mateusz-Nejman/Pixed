@@ -23,7 +23,7 @@ using System.Windows.Input;
 
 namespace Pixed.Application.Windows;
 
-internal partial class MainView : PixedUserControl<MainViewModel>, IDisposable
+internal partial class MainView : PixedPage<MainViewModel>, IDisposable
 {
     private readonly ApplicationData _applicationData;
     private readonly PixedProjectMethods _pixedProjectMethods;
@@ -38,19 +38,17 @@ internal partial class MainView : PixedUserControl<MainViewModel>, IDisposable
 
     public static Window? Handle { get; private set; }
     public static ICommand? QuitCommand { get; private set; }
-    public MainView(ApplicationData applicationData, PixedProjectMethods pixedProjectMethods, MenuBuilder builder, IMenuItemRegistry menuItemRegistry,
-        TransformMenuRegister transformToolsMenuRegister, RecentFilesService recentFilesService, ToolSelector toolSelector, CopyPasteMenuRegister copyPasteMenuRegister,
-        ViewMenuRegister viewMenuRegister) : base()
+    public MainView() : base()
     {
         InjectMethods();
-        _pixedProjectMethods = pixedProjectMethods;
-        _applicationData = applicationData;
-        _transformToolsMenuRegister = transformToolsMenuRegister;
-        _copyPasteMenuRegister = copyPasteMenuRegister;
-        _viewMenuRegister = viewMenuRegister;
-        _recentFilesService = recentFilesService;
-        _toolSelector = toolSelector;
-        _menuBuilder = builder;
+        _pixedProjectMethods = Get<PixedProjectMethods>();
+        _applicationData = Get<ApplicationData>();
+        _transformToolsMenuRegister = Get<TransformMenuRegister>();
+        _copyPasteMenuRegister = Get<CopyPasteMenuRegister>();
+        _viewMenuRegister = Get<ViewMenuRegister>();
+        _recentFilesService = Get<RecentFilesService>();
+        _toolSelector = Get<ToolSelector>();
+        _menuBuilder = Get<MenuBuilder>();
         _newInstanceHandled = Subjects.NewInstanceHandled.Subscribe(args =>
         {
             foreach (var arg in args)

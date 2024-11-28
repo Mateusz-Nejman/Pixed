@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Pixed.Application.Windows.MainView"
+﻿<Page x:Class="Pixed.Application.Windows.MainView"
         xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -15,11 +15,12 @@
         PointerPressed="Window_PointerPressed"
         PointerReleased="Window_PointerReleased"
 		DragDrop.AllowDrop="True"
-		x:DataType="viewmodels:MainViewModel">
-  <UserControl.KeyBindings>
+		x:DataType="viewmodels:MainViewModel"
+             NavigationBar.Visible="False">
+  <Page.KeyBindings>
     <KeyBinding Gesture="CTRL+Q"
 					Command="{Binding QuitCommand}"/>
-  </UserControl.KeyBindings>
+  </Page.KeyBindings>
 
   <DockPanel HorizontalAlignment="Stretch"
 			   VerticalAlignment="Stretch"
@@ -66,4 +67,4 @@
       </Grid>
     </DockPanel>
   </DockPanel>
-</UserControl>
+</Page>

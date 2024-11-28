@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Pixed.Application.Controls;
 using Pixed.Application.Extensions;
 using Pixed.Application.IO;
 using Pixed.Application.Services;
@@ -9,6 +10,7 @@ using Pixed.Common.Models;
 using Pixed.Common.Utils;
 using Pixed.Core;
 using Pixed.Core.Models;
+using ReactiveUI;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
@@ -51,11 +53,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
 
         NativeMenuItem aboutMenu = new("About")
         {
-            Command = new ActionCommand(() =>
-        {
-            AboutWindow window = new();
-            window.ShowDialog(MainWindow.Handle);
-        })
+            Command = ReactiveCommand.CreateFromTask(() => RouterControl.Navigator.NavigateAsync("/about"))
         };
 
         helpMenu.Menu = [aboutMenu];

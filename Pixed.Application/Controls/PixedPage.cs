@@ -1,12 +1,13 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
+using AvaloniaInside.Shell;
 using Pixed.Application.DependencyInjection;
 using Pixed.Common.DependencyInjection;
 using Pixed.Common.Menu;
 using System;
 
 namespace Pixed.Application.Controls;
-internal abstract class PixedUserControl<T> : UserControl
+internal abstract class PixedPage<T> : Page
 {
     protected readonly IMenuItemRegistry _menuItemRegistry;
 
@@ -14,7 +15,7 @@ internal abstract class PixedUserControl<T> : UserControl
 
     public T ViewModel => (T)DataContext;
 
-    public PixedUserControl()
+    public PixedPage()
     {
         _menuItemRegistry = Provider.Get<IMenuItemRegistry>();
         var serviceProvider = this.GetServiceProvider();
@@ -42,11 +43,11 @@ internal abstract class PixedUserControl<T> : UserControl
     {
         base.OnInitialized();
         RegisterMenuItems();
-        Unloaded += PixedUserControl_Unloaded;
-        Loaded += PixedUserControl_Loaded;
+        Unloaded += PixedPage_Unloaded;
+        Loaded += PixedPage_Loaded;
     }
 
-    private void PixedUserControl_Loaded(object? sender, RoutedEventArgs e)
+    private void PixedPage_Loaded(object? sender, RoutedEventArgs e)
     {
         OnLoaded();
         if (DataContext is PixedViewModel model)
@@ -55,7 +56,7 @@ internal abstract class PixedUserControl<T> : UserControl
         }
     }
 
-    private void PixedUserControl_Unloaded(object? sender, RoutedEventArgs e)
+    private void PixedPage_Unloaded(object? sender, RoutedEventArgs e)
     {
         if (DataContext is not IDisposable viewModel) return;
         DataContext = null;
@@ -63,7 +64,7 @@ internal abstract class PixedUserControl<T> : UserControl
     }
 }
 
-internal abstract class EmptyPixedUserControl() : UserControl
+internal abstract class EmptyPixedPage() : Page
 {
     protected override void OnInitialized()
     {

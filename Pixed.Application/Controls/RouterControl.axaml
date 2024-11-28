@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:windows="clr-namespace:Pixed.Application.Windows"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Pixed.Application.Controls.RouterControl">
+  <ShellView Name="ShellViewMain"
+	           HorizontalAlignment="Stretch"
+	           VerticalAlignment="Stretch"
+	           DefaultRoute="/main"
+             NavigationBar.Visible="False">
+
+    <Route Path="main" Page="windows:MainView"></Route>
+    <Route Path="about" Page="windows:SimpleDialog" Type="Modal"></Route>
+  </ShellView>
+</UserControl>

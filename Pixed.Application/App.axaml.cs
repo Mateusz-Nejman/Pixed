@@ -64,12 +64,9 @@ public partial class App : Avalonia.Application
         ServiceProvider provider = new(collection.BuildServiceProvider());
         this.Resources[typeof(IPixedServiceProvider)] = provider;
         ServiceProvider = provider;
-        MainWindow window = provider.Get<MainWindow>();
-        MainView mainView = provider.Get<MainView>();
-        mainView.OpenFromArgs(desktop.Args);
-        window.Content = mainView;
-        desktop.MainWindow = window;
-        window.Show();
+        //TODO open from args
+        desktop.MainWindow = provider.Get<MainWindow>();
+        desktop.MainWindow.Show();
         await Task.Delay(100);
         splash.Close();
     }
