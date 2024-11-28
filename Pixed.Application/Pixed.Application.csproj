@@ -22,6 +22,7 @@
 
   <ItemGroup>
 	<PackageReference Include="Avalonia" Version="11.2.2" />
+	<PackageReference Include="Avalonia.ReactiveUI" Version="11.2.2" />
 	<PackageReference Include="Avalonia.Skia" Version="11.2.2" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.2" />
     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.2" />
@@ -30,7 +31,6 @@
     <PackageReference Include="Avalonia.Themes.Simple" Version="11.2.2" />
     <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.2.0.1" />
     <PackageReference Include="AvaloniaInside.Shell" Version="1.2.0" />
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
     <PackageReference Include="Deadpikle.AvaloniaProgressRing" Version="0.10.10" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
