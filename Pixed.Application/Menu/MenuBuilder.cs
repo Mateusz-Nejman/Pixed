@@ -135,7 +135,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
 
         NativeMenuItem fileQuit = new("Quit")
         {
-            Command = MainWindow.QuitCommand
+            Command = MainView.QuitCommand
         };
 
         fileMenu.Menu = [fileNew, fileOpen, fileSave, fileSaveAs, fileExportPng, fileExportIco];

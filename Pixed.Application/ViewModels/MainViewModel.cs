@@ -16,21 +16,9 @@ internal class MainViewModel : PixedViewModel, IDisposable
     private readonly ApplicationData _applicationData;
     private readonly RecentFilesService _recentFilesService;
     private readonly PaletteService _paletteService;
-    private readonly IDisposable _onMenuBuilt;
     private readonly IDisposable _projectChanged;
-    private NativeMenu? _menu;
     private bool _disposedValue;
     private string _title;
-
-    public NativeMenu? Menu
-    {
-        get => _menu;
-        set
-        {
-            _menu = value;
-            OnPropertyChanged();
-        }
-    }
 
     public string Title
     {
@@ -42,16 +30,12 @@ internal class MainViewModel : PixedViewModel, IDisposable
         }
     }
 
-    public ICommand QuitCommand => MainWindow.QuitCommand;
+    public ICommand QuitCommand => MainView.QuitCommand;
     public MainViewModel(ApplicationData data, RecentFilesService recentFilesService, PaletteService paletteService, MenuBuilder menuBuilder)
     {
         _applicationData = data;
         _recentFilesService = recentFilesService;
         _paletteService = paletteService;
-        _onMenuBuilt = menuBuilder.OnMenuBuilt.Subscribe(menu =>
-        {
-            Menu = menu;
-        });
 
         _projectChanged = Subjects.ProjectChanged.Subscribe(model =>
         {
@@ -71,7 +55,6 @@ internal class MainViewModel : PixedViewModel, IDisposable
         {
             if (disposing)
             {
-                _onMenuBuilt?.Dispose();
                 _projectChanged?.Dispose();
             }
 

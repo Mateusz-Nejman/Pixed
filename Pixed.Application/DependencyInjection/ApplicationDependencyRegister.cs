@@ -15,6 +15,7 @@ internal class ApplicationDependencyRegister : IDependencyRegister
     {
         collection.AddSingleton<FramesSectionViewModel>();
         collection.AddSingleton<LayersSectionViewModel>();
+        collection.AddSingleton<MainWindowViewModel>();
         collection.AddSingleton<MainViewModel>();
         collection.AddSingleton<PaintCanvasViewModel>();
         collection.AddSingleton<PaletteSectionViewModel>();
@@ -22,6 +23,7 @@ internal class ApplicationDependencyRegister : IDependencyRegister
         collection.AddSingleton<ToolsSectionViewModel>();
 
         collection.AddSingleton<MainWindow>();
+        collection.AddSingleton<MainView>();
         collection.AddSingleton<RecentFilesService>();
         collection.AddScoped<PixedProjectMethods>();
         collection.AddSingleton<MenuBuilder>();

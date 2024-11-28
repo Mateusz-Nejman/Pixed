@@ -52,7 +52,7 @@ internal partial class CustomTitleBar : EmptyPixedUserControl
 
     private void CloseWindow(object sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        MainWindow.QuitCommand?.Execute(null);
+        MainView.QuitCommand?.Execute(null);
     }
 
     private void MaximizeWindow(object sender, Avalonia.Interactivity.RoutedEventArgs e)

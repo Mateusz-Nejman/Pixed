@@ -1,4 +1,5 @@
 ﻿using Avalonia;
+using AvaloniaInside.Shell;
 using Newtonsoft.Json;
 using Pixed.Application;
 using System;
@@ -46,5 +47,6 @@ public static void Main(string[] args) => BuildAvaloniaApp()
         => AppBuilder.Configure<App>()
             .UsePlatformDetect()
             .WithInterFont()
-            .LogToTrace();
+            .LogToTrace()
+            .UseShell();
 }
