@@ -2,10 +2,6 @@
 using Pixed.Application.Controls;
 using Pixed.Application.Menu;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pixed.Application.ViewModels;
 internal class MainWindowViewModel : PixedViewModel, IDisposable
@@ -24,8 +20,9 @@ internal class MainWindowViewModel : PixedViewModel, IDisposable
         }
     }
 
-    public MainWindowViewModel(MenuBuilder menuBuilder)
+    public MainWindowViewModel()
     {
+        var menuBuilder = App.ServiceProvider.Get<MenuBuilder>();
         _onMenuBuilt = menuBuilder.OnMenuBuilt.Subscribe(menu =>
         {
             Menu = menu;

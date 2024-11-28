@@ -7,10 +7,10 @@ using Pixed.Common.Menu;
 
 namespace Pixed.Application.Windows;
 
-internal partial class MainWindow : PixedWindow<MainWindowViewModel>
+internal partial class MainWindow : Window
 {
     public static Window Handle { get; private set; }
-    public MainWindow(IMenuItemRegistry menuItemRegistry) : base(menuItemRegistry)
+    public MainWindow()
     {
         Handle = this;
         InitializeComponent();

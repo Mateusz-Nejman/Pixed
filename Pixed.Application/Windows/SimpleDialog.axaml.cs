@@ -5,7 +5,7 @@ using AvaloniaInside.Shell;
 
 namespace Pixed.Application.Windows;
 
-public partial class SimpleDialog : Page
+public partial class SimpleDialog : PixedWindow
 {
     public SimpleDialog()
     {

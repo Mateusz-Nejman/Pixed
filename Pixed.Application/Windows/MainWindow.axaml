@@ -16,6 +16,9 @@
         Title="Pixed"
         x:DataType="viewmodels:MainWindowViewModel"
         NativeMenu.Menu="{Binding Menu}">
+	<Window.DataContext>
+		<viewmodels:MainWindowViewModel/>
+	</Window.DataContext>
   <Panel>
     <controls:RouterControl/>
   </Panel>
