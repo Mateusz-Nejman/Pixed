@@ -9,6 +9,7 @@
 	           HorizontalAlignment="Stretch"
 	           VerticalAlignment="Stretch"
 	           DefaultRoute="/main"
+             DefaultSideMenuSize="0"
              NavigationBar.Visible="False">
 
     <Route Path="main" Page="windows:MainView"></Route>
