@@ -2,7 +2,7 @@
 
 namespace Pixed.Application.Models;
 
-internal readonly struct GridSettings(int width, int height, UniColor color)
+internal readonly struct GridSettingsResult(int width, int height, UniColor color)
 {
     public int Width { get; } = width;
     public int Height { get; } = height;

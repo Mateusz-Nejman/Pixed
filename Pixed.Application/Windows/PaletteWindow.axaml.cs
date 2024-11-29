@@ -4,15 +4,15 @@ using Pixed.Common.Services.Palette;
 
 namespace Pixed.Application.Windows;
 
-internal partial class PaletteWindow : Window
+internal partial class PaletteWindow : PixedWindow
 {
     private readonly PaletteService _paletteService;
     private readonly PaletteWindowViewModel _viewModel;
-    public PaletteWindow(PaletteService paletteService)
+    public PaletteWindow()
     {
         InitializeComponent();
-        _paletteService = paletteService;
-        DataContext = _viewModel = new PaletteWindowViewModel(paletteService);
+        _paletteService = Provider.Get<PaletteService>();
+        DataContext = _viewModel = new PaletteWindowViewModel(_paletteService);
 
         if (_viewModel.Palettes.Count != 0)
         {

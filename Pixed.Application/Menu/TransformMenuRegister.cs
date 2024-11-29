@@ -5,7 +5,9 @@ using Pixed.Common.Selection;
 using Pixed.Common.Tools.Transform;
 using Pixed.Core;
 using Pixed.Core.Models;
+using ReactiveUI;
 using System;
+using System.Threading.Tasks;
 
 namespace Pixed.Application.Menu;
 internal class TransformMenuRegister(IMenuItemRegistry menuItemRegistry, SelectionManager selectionManager, ApplicationData applicationData)
@@ -20,21 +22,20 @@ internal class TransformMenuRegister(IMenuItemRegistry menuItemRegistry, Selecti
         {
             Menu = []
         };
-        AddToMenu(ref transformMenu, "Flip", () => new TransformFlipWindow(_applicationData));
-        AddToMenu(ref transformMenu, "Rotation", () => new TransformRotateWindow(_applicationData));
-        AddToMenu(ref transformMenu, "Align image to the center", () => new TransformAlignWindow(_applicationData));
+        AddToMenu(ref transformMenu, "Flip", () => RouterControl.Navigate("/transformFlip"));
+        AddToMenu(ref transformMenu, "Rotation", () => RouterControl.Navigate("/transformRotate"));
+        AddToMenu(ref transformMenu, "Align image to the center", () => RouterControl.Navigate("/transformAlign"));
         AddToMenu(ref transformMenu, "Crop to fit the content or the selection", new Crop(_applicationData, _selectionManager));
 
         _menuItemRegistry.Register(BaseMenuItem.Tools, transformMenu);
     }
 
-    private static void AddToMenu(ref NativeMenuItem menuItem, string text, Func<Window> windowCreator)
+    private static void AddToMenu(ref NativeMenuItem menuItem, string text, Func<Task> task)
     {
         menuItem.Menu ??= [];
         NativeMenuItem toolMenu = new(text)
         {
-            Command = new ActionCommand<Func<Window>>(WindowToolAction),
-            CommandParameter = windowCreator
+            Command = ReactiveCommand.CreateFromTask(task)
         };
 
         menuItem.Menu.Add(toolMenu);
@@ -50,12 +51,6 @@ internal class TransformMenuRegister(IMenuItemRegistry menuItemRegistry, Selecti
         };
 
         menuItem.Menu.Add(toolMenu);
-    }
-
-    private static void WindowToolAction(Func<Window> windowCreator)
-    {
-        var window = windowCreator();
-        window.ShowDialog(MainWindow.Handle);
     }
 
     private static void ToolAction(AbstractTransformTool tool)

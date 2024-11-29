@@ -29,7 +29,9 @@ internal partial class MainView : PixedPage<MainViewModel>, IDisposable
     private readonly PixedProjectMethods _pixedProjectMethods;
     private readonly TransformMenuRegister _transformToolsMenuRegister;
     private readonly CopyPasteMenuRegister _copyPasteMenuRegister;
+    private readonly PaletteMenuRegister _paletteMenuRegister;
     private readonly ViewMenuRegister _viewMenuRegister;
+    private readonly ToolsMenuRegister _toolsMenuRegister;
     private readonly RecentFilesService _recentFilesService;
     private readonly ToolSelector _toolSelector;
     private readonly MenuBuilder _menuBuilder;
@@ -45,7 +47,9 @@ internal partial class MainView : PixedPage<MainViewModel>, IDisposable
         _applicationData = Get<ApplicationData>();
         _transformToolsMenuRegister = Get<TransformMenuRegister>();
         _copyPasteMenuRegister = Get<CopyPasteMenuRegister>();
+        _paletteMenuRegister = Get<PaletteMenuRegister>();
         _viewMenuRegister = Get<ViewMenuRegister>();
+        _toolsMenuRegister = Get<ToolsMenuRegister>();
         _recentFilesService = Get<RecentFilesService>();
         _toolSelector = Get<ToolSelector>();
         _menuBuilder = Get<MenuBuilder>();
@@ -82,9 +86,12 @@ internal partial class MainView : PixedPage<MainViewModel>, IDisposable
     protected override void OnInitialized()
     {
         base.OnInitialized();
+        ViewModel.OnInitialized();
         _viewMenuRegister.Register();
         _transformToolsMenuRegister.Register();
         _copyPasteMenuRegister.Register();
+        _paletteMenuRegister.Register();
+        _toolsMenuRegister.Register();
         _menuBuilder.Build();
     }
 
@@ -126,21 +133,18 @@ internal partial class MainView : PixedPage<MainViewModel>, IDisposable
                         untitledIndex++;
                     }
 
-                    YesNoCancelWindow window = new()
-                    {
-                        Title = "Unsaved changes",
-                        Text = "Project " + name + " has unsaved changes. Save it now?"
-                    };
+                    var result = await RouterControl.Navigate<ButtonResult>("/unsavedChanges", name);
 
-                    var result = await window.ShowDialog<ButtonResult>(MainWindow.Handle);
-
-                    if (result == ButtonResult.Cancel)
+                    if(result.HasValue)
                     {
-                        return;
-                    }
-                    else if (result == ButtonResult.Yes)
-                    {
-                        await _pixedProjectMethods.Save(model, model.FilePath == null, _recentFilesService);
+                        if (result.Value == ButtonResult.Cancel)
+                        {
+                            return;
+                        }
+                        else if (result.Value == ButtonResult.Yes)
+                        {
+                            await _pixedProjectMethods.Save(model, model.FilePath == null, _recentFilesService);
+                        }
                     }
                 }
             }
@@ -216,15 +220,11 @@ internal partial class MainView : PixedPage<MainViewModel>, IDisposable
 
     private async Task ChangeOpacityAction(Layer layer)
     {
-        NumericPrompt numeric = new(Opacity)
-        {
-            Text = "Enter new opacity (%):"
-        };
-        var success = await numeric.ShowDialog<bool>(Handle);
+        var result = await RouterControl.Navigate<double>("/changeOpacity", layer.Opacity);
 
-        if (success)
+        if(result.HasValue)
         {
-            Opacity = numeric.Value;
+            layer.Opacity = result.Value;
             layer.RefreshRenderSource();
         }
     }

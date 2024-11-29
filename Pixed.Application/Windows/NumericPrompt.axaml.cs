@@ -4,7 +4,7 @@ using Avalonia.Interactivity;
 
 namespace Pixed.Application.Windows;
 
-public partial class NumericPrompt : Window
+internal abstract partial class NumericPrompt : PixedWindow
 {
     public string Text
     {
@@ -30,8 +30,6 @@ public partial class NumericPrompt : Window
         set { SetValue(DefaultValueProperty, value); }
     }
 
-    public double Value { get; private set; } = 0;
-
     public static readonly StyledProperty<string> TextProperty = AvaloniaProperty.Register<NumericPrompt, string>("Text", string.Empty);
     public static readonly StyledProperty<double> DefaultValueProperty = AvaloniaProperty.Register<NumericPrompt, double>("DefaultValue", 0);
     public static readonly StyledProperty<double> MinimumProperty = AvaloniaProperty.Register<NumericPrompt, double>("Minimum", double.MinValue);
@@ -45,7 +43,6 @@ public partial class NumericPrompt : Window
 
     private void Button_Click(object sender, RoutedEventArgs e)
     {
-        Value = (double)numeric.Value;
-        Close(true);
+        Close((double)numeric.Value);
     }
 }

@@ -75,16 +75,11 @@ internal class PaletteWindowViewModel : PixedViewModel
                 RemoveCommand = new ActionCommand<PaletteModel>(m => PaletteAction?.Invoke(false, m)),
                 RenameCommand = new ActionCommand<PaletteModel>(async (m) =>
                 {
-                    Prompt window = new()
-                    {
-                        Title = "Rename Palette",
-                        Text = "New name: ",
-                        DefaultValue = m.Name
-                    };
+                    var result = await RouterControl.Navigate<string>("/changePaletteName", m.Name);
 
-                    if (await window.ShowDialog<bool>(MainWindow.Handle) == true)
+                    if(result.HasValue)
                     {
-                        PaletteRenameAction?.Invoke(m, window.Value);
+                        PaletteRenameAction?.Invoke(m, result.Value);
                         Initialize();
                     }
                 })

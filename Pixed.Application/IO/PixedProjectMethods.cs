@@ -1,8 +1,10 @@
-﻿using Pixed.Application.Services;
+﻿using Pixed.Application.Models;
+using Pixed.Application.Services;
 using Pixed.Application.Utils;
 using Pixed.Application.Windows;
 using Pixed.Common;
 using Pixed.Core.Models;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -77,15 +79,14 @@ internal class PixedProjectMethods(ApplicationData applicationData)
 
             if (serializer is PngProjectSerializer pngSerializer)
             {
-                OpenPNGWindow window = new();
-                var success = await window.ShowDialog<bool>(MainWindow.Handle);
+                var result = await RouterControl.Navigate<OpenPngResult>("/openPng");
 
-                if (success)
+                if(result.HasValue)
                 {
-                    if (window.IsTileset)
+                    if(result.Value.IsTileset)
                     {
-                        pngSerializer.TileWidth = window.TileWidth;
-                        pngSerializer.TileHeight = window.TileHeight;
+                        pngSerializer.TileWidth = result.Value.TileWidth;
+                        pngSerializer.TileHeight = result.Value.TileHeight;
                     }
                 }
                 else
@@ -173,15 +174,12 @@ internal class PixedProjectMethods(ApplicationData applicationData)
         int columnsCount = 1;
         if (model.Frames.Count > 1)
         {
-            ExportPNGWindow window = new(_applicationData);
-            bool success = await window.ShowDialog<bool>(MainWindow.Handle);
+            var result = await RouterControl.Navigate<int>("/exportPng");
 
-            if (!success)
+            if(result.HasValue)
             {
-                return;
+                columnsCount = result.Value;
             }
-
-            columnsCount = window.ColumnsCount;
         }
 
         serializer.ColumnsCount = columnsCount;
@@ -209,15 +207,12 @@ internal class PixedProjectMethods(ApplicationData applicationData)
 
         if (model.Frames.Count == 1)
         {
-            ExportIconWindow window = new();
-            var success = await window.ShowDialog<bool>(MainWindow.Handle);
-
-            if (!success)
+            var result = await RouterControl.Navigate<List<Point>>("/exportIcon");
+            
+            if(result.HasValue)
             {
-                return;
+                serializer.IconFormats = result.Value;
             }
-
-            serializer.IconFormats = window.IconFormats;
         }
         var stream = await file.OpenWriteAsync();
         serializer.Serialize(stream, model, true);

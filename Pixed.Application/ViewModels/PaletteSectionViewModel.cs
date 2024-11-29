@@ -151,12 +151,6 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
 
     public override void RegisterMenuItems()
     {
-        _menuItemRegistry.Register(BaseMenuItem.Palette, "Add Primary color to palette", PaletteAddPrimaryCommand);
-        _menuItemRegistry.Register(BaseMenuItem.Palette, "Merge palette with current colors", PaletteAddCurrentCommand);
-        _menuItemRegistry.Register(BaseMenuItem.Palette, "Clear palette", PaletteClearCommand);
-        _menuItemRegistry.Register(BaseMenuItem.Palette, "Open palette from file", PaletteOpenCommand);
-        _menuItemRegistry.Register(BaseMenuItem.Palette, "Save palette to file", PaletteSaveCommand);
-        _menuItemRegistry.Register(BaseMenuItem.Palette, "Palettes list", PaletteListCommand);
     }
 
     private void PaletteAddPrimaryAction()
@@ -207,7 +201,6 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
 
     private void PaletteListAction()
     {
-        PaletteWindow window = new(_paletteService);
-        window.ShowDialog(MainWindow.Handle);
+        RouterControl.Navigate("/palettes");
     }
 }

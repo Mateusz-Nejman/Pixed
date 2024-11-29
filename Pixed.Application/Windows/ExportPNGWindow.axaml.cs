@@ -5,7 +5,7 @@ using Pixed.Core.Models;
 
 namespace Pixed.Application.Windows;
 
-internal partial class ExportPNGWindow : Window
+internal partial class ExportPNGWindow : PixedWindow
 {
     public int ColumnsCount
     {
@@ -14,14 +14,15 @@ internal partial class ExportPNGWindow : Window
     }
 
     public static readonly StyledProperty<int> ColumnsCountProperty = AvaloniaProperty.Register<ExportPNGWindow, int>("ColumnsCount", 1);
-    public ExportPNGWindow(ApplicationData applicationData)
+    public ExportPNGWindow()
     {
         InitializeComponent();
+        var applicationData = Provider.Get<ApplicationData>();
         ColumnsCount = applicationData.CurrentModel.Frames.Count;
     }
 
     private void Button_Click(object sender, RoutedEventArgs e)
     {
-        Close(true);
+        Close(ColumnsCount);
     }
 }

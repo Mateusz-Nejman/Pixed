@@ -1,13 +1,12 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Pixed.Application.Models;
 
 namespace Pixed.Application.Windows;
 
-public partial class OpenPNGWindow : Window
+internal partial class OpenPNGWindow : PixedWindow
 {
     public bool IsTileset { get; private set; }
-    public int TileWidth => (int)tileWidth.Value;
-    public int TileHeight => (int)tileHeight.Value;
     public OpenPNGWindow()
     {
         InitializeComponent();
@@ -28,6 +27,6 @@ public partial class OpenPNGWindow : Window
 
     private void Button_Click(object sender, RoutedEventArgs e)
     {
-        Close(true);
+        Close(new OpenPngResult((int)tileWidth.Value, (int)tileHeight.Value, IsTileset));
     }
 }

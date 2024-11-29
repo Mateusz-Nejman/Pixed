@@ -4,7 +4,7 @@ using Pixed.Application.IO;
 
 namespace Pixed.Application.Windows;
 
-internal partial class YesNoCancelWindow : Window
+internal abstract partial class YesNoCancelWindow : PixedWindow
 {
     public string Text
     {
@@ -20,21 +20,16 @@ internal partial class YesNoCancelWindow : Window
 
     private void YesButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        CloseWithResult(ButtonResult.Yes);
+        Close(ButtonResult.Yes);
     }
 
     private void NoButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        CloseWithResult(ButtonResult.No);
+        Close(ButtonResult.No);
     }
 
     private void CancelButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        CloseWithResult(ButtonResult.Cancel);
-    }
-
-    private void CloseWithResult(ButtonResult result)
-    {
-        Close(result);
+        Close(ButtonResult.Cancel);
     }
 }

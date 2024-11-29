@@ -1,5 +1,4 @@
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Pixed.Application.Models;
@@ -41,6 +40,6 @@ internal partial class GridSettingsWindow : PixedWindow
 
     private void Button_Click(object sender, RoutedEventArgs e)
     {
-        Close(new GridSettings(WidthValue, HeightValue, GridColor));
+        Close(new GridSettingsResult(WidthValue, HeightValue, GridColor));
     }
 }

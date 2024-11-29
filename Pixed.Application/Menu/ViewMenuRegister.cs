@@ -29,7 +29,7 @@ internal class ViewMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
 
         _menuItemRegistry.Register(BaseMenuItem.View, "Grid settings", new AsyncCommand(async () =>
         {
-            var navigateResult = await RouterControl.Navigator.Navigate<GridSettings>("/gridSettings");
+            var navigateResult = await RouterControl.Navigate<GridSettingsResult>("/gridSettings");
 
             if(navigateResult.HasValue)
             {

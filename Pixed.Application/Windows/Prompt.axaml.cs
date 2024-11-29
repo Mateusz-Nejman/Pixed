@@ -5,7 +5,7 @@ using Avalonia.Interactivity;
 
 namespace Pixed.Application.Windows;
 
-internal partial class Prompt : Window
+internal abstract partial class Prompt : PixedWindow
 {
     public string Text
     {

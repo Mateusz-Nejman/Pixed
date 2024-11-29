@@ -2,6 +2,7 @@
 using Pixed.Application.Controls;
 using Pixed.Application.Extensions;
 using Pixed.Application.IO;
+using Pixed.Application.Models;
 using Pixed.Application.Services;
 using Pixed.Application.Utils;
 using Pixed.Application.Windows;
@@ -12,6 +13,7 @@ using Pixed.Common.Utils;
 using Pixed.Core;
 using Pixed.Core.Models;
 using ReactiveUI;
+using SevenZip.Compression.LZ;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
@@ -54,7 +56,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
 
         NativeMenuItem aboutMenu = new("About")
         {
-            Command = ReactiveCommand.CreateFromTask(() => RouterControl.Navigator.Navigate("/about"))
+            Command = ReactiveCommand.CreateFromTask(() => RouterControl.Navigate("/about"))
         };
 
         helpMenu.Menu = [aboutMenu];
@@ -88,12 +90,11 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
         {
             Command = new ActionCommand(async () =>
         {
-            NewProjectWindow window = new(_applicationData);
-            var success = await window.ShowDialog<bool>(MainWindow.Handle);
+            var result = await RouterControl.Navigate<NewProjectResult>("/newProject");
 
-            if (success)
+            if(result.HasValue)
             {
-                PixedModel model = new(_applicationData, window.WidthValue, window.HeightValue)
+                PixedModel model = new(_applicationData, result.Value.Width, result.Value.Height)
                 {
                     FileName = _applicationData.GenerateName()
                 };
@@ -179,12 +180,10 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
         projectMenu.Menu = [];
         projectResize.Command = new ActionCommand(async () =>
         {
-            ResizeProjectWindow window = new(_applicationData);
-            bool success = await window.ShowDialog<bool>(MainWindow.Handle);
-
-            if (success)
+            var navigatorResult = await RouterControl.Navigate<ResizeResult>("/resizeProject");
+            if(navigatorResult.HasValue)
             {
-                var result = window.Result;
+                var result = navigatorResult.Value;
                 var model = ResizeUtils.ResizeModel(_applicationData, _applicationData.CurrentModel, new Point(result.Width, result.Height), result.ResizeCanvasContent, result.Anchor);
                 _applicationData.UserSettings.UserWidth = result.Width;
                 _applicationData.UserSettings.UserHeight = result.Height;
