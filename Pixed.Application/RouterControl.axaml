@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:windows="clr-namespace:Pixed.Application.Windows"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Pixed.Application.Controls.RouterControl">
+             x:Class="Pixed.Application.RouterControl">
   <ShellView Name="ShellViewMain"
 	           HorizontalAlignment="Stretch"
 	           VerticalAlignment="Stretch"
@@ -13,6 +13,6 @@
              NavigationBar.Visible="False">
 
     <Route Path="main" Page="windows:MainView"></Route>
-    <Route Path="about" Page="windows:SimpleDialog" Type="Modal"></Route>
+    <Route Path="about" Page="windows:AboutWindow" Type="Modal"></Route>
   </ShellView>
 </UserControl>

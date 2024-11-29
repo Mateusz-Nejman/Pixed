@@ -1,29 +1,30 @@
-<Window xmlns="https://github.com/avaloniaui"
+<local:PixedWindow xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Pixed.Application.Windows;assembly=Pixed.Application"
+        xmlns:vm="clr-namespace:Pixed.Application.ViewModels;assembly=Pixed.Application"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Pixed.Application.Windows.AboutWindow"
-		xmlns:vm="clr-namespace:Pixed.Application.ViewModels;assembly=Pixed.Application"
         Title="About"
-        ShowInTaskbar="False" SizeToContent="WidthAndHeight"
-        WindowStartupLocation="CenterOwner" CanResize="False"
 		x:DataType="vm:AboutViewModel">
-	<Window.DataContext>
+  <local:PixedWindow.DataContext>
 		<vm:AboutViewModel/>
-	</Window.DataContext>
-	<StackPanel HorizontalAlignment="Center" Spacing="20" Margin="40">
-		<Image Source="/Resources/icon.png" Width="64" Height="64"/>
-		<TextBlock Text="Pixed" FontWeight="Bold" FontSize="30" HorizontalAlignment="Center"/>
-		<TextBlock Text="{Binding AppVersion}" Name="versionText"/>
-		<TextBlock Text="Author: Mateusz Nejman"/>
-		<StackPanel Orientation="Horizontal" Spacing="10">
-			<Button Name="buttonWWW" Command="{Binding OpenUrlCommand}" CommandParameter="https://mateusz-nejman.com">
-				<Image Source="avares://Pixed.Application/Resources/Icons/sphere.png"/>
-			</Button>
-			<Button Name="buttonGithub" Command="{Binding OpenUrlCommand}" CommandParameter="https://github.com/Mateusz-Nejman/Pixed">
-				<Image Source="avares://Pixed.Application/Resources/Icons/github.png"/>
-			</Button>
-		</StackPanel>
-	</StackPanel>
-</Window>
+	</local:PixedWindow.DataContext>
+  <local:PixedWindow.Dialog>
+    <StackPanel HorizontalAlignment="Center" Spacing="20" Margin="40">
+      <Image Source="/Resources/icon.png" Width="64" Height="64"/>
+      <TextBlock Text="Pixed" FontWeight="Bold" FontSize="30" HorizontalAlignment="Center"/>
+      <TextBlock Text="{Binding AppVersion}" Name="versionText"/>
+      <TextBlock Text="Author: Mateusz Nejman"/>
+      <StackPanel Orientation="Horizontal" Spacing="10">
+        <Button Name="buttonWWW" Command="{Binding OpenUrlCommand}" CommandParameter="https://mateusz-nejman.com">
+          <Image Source="avares://Pixed.Application/Resources/Icons/sphere.png"/>
+        </Button>
+        <Button Name="buttonGithub" Command="{Binding OpenUrlCommand}" CommandParameter="https://github.com/Mateusz-Nejman/Pixed">
+          <Image Source="avares://Pixed.Application/Resources/Icons/github.png"/>
+        </Button>
+      </StackPanel>
+    </StackPanel>
+  </local:PixedWindow.Dialog>
+</local:PixedWindow>

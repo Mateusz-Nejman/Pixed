@@ -1,9 +1,6 @@
 using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using AvaloniaInside.Shell;
-using Pixed.Application.Controls;
 
 namespace Pixed.Application.Windows;
 

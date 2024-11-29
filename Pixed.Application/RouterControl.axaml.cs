@@ -1,9 +1,7 @@
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 using AvaloniaInside.Shell;
 
-namespace Pixed.Application.Controls;
+namespace Pixed.Application;
 
 public partial class RouterControl : UserControl
 {
