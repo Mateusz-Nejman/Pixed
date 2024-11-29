@@ -1,11 +1,14 @@
 using Avalonia;
 using Avalonia.Markup.Xaml;
 using AvaloniaInside.Shell;
+using Pixed.Common.DependencyInjection;
+using System.Threading.Tasks;
 
 namespace Pixed.Application.Windows;
 
 public partial class PixedWindow : Page
 {
+    public IPixedServiceProvider Provider => App.ServiceProvider;
     public object? Dialog
     {
         get { return GetValue(DialogProperty); }
@@ -25,6 +28,16 @@ public partial class PixedWindow : Page
         InitializeComponent();
     }
 
+    public Task Close()
+    {
+        return Navigator?.BackAsync();
+    }
+
+    public Task Close(object result)
+    {
+        return Navigator?.BackAsync(result);
+    }
+
     private void InitializeComponent()
     {
         AvaloniaXamlLoader.Load(this);
@@ -32,7 +45,7 @@ public partial class PixedWindow : Page
 
     private void Button_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        Navigator?.BackAsync();
+        Close();
     }
 }
 

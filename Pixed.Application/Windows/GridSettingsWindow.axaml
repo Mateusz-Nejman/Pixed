@@ -1,4 +1,4 @@
-<Window xmlns="https://github.com/avaloniaui"
+<local:PixedWindow xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -6,19 +6,17 @@
         x:Class="Pixed.Application.Windows.GridSettingsWindow"
 		xmlns:controls="clr-namespace:Pixed.Application.Controls;assembly=Pixed.Application"
 		xmlns:local="clr-namespace:Pixed.Application.Windows;assembly=Pixed.Application"
-        Title="Grid settings"
-		ShowInTaskbar="False" SizeToContent="WidthAndHeight"
-        WindowStartupLocation="CenterOwner"
-		CanResize="False"
-        Icon="avares://Pixed.Application/Resources/icon.ico">
-	<StackPanel>
-		<TextBlock Text="Grid color:" Margin="10"/>
-		<controls:FixedPortableColorPicker Width="100" Height="32" SelectedColor="{Binding GridColor, RelativeSource={RelativeSource FindAncestor, AncestorType=local:GridSettingsWindow}, Mode=TwoWay}" x:Name="colorPicker"/>
-		<TextBlock Text="Width:" Margin="10"/>
-		<NumericUpDown Margin="10" Value="{Binding WidthValue, RelativeSource={RelativeSource FindAncestor, AncestorType=local:GridSettingsWindow}, Mode=TwoWay}" Minimum="1"/>
-		<TextBlock Text="Height:" Margin="10"/>
-		<NumericUpDown Margin="10" Value="{Binding HeightValue, RelativeSource={RelativeSource FindAncestor, AncestorType=local:GridSettingsWindow}, Mode=TwoWay}" Minimum="1"/>
-		<Button Content="OK" Click="Button_Click"
-			Height="24" MinWidth="80" Padding="10,0" Margin="10"/>
-	</StackPanel>
-</Window>
+        Title="Grid settings">
+  <local:PixedWindow.Dialog>
+    <StackPanel>
+      <TextBlock Text="Grid color:" Margin="10"/>
+      <controls:FixedPortableColorPicker Width="100" Height="32" SelectedColor="{Binding GridColor, RelativeSource={RelativeSource FindAncestor, AncestorType=local:GridSettingsWindow}, Mode=TwoWay}" x:Name="colorPicker"/>
+      <TextBlock Text="Width:" Margin="10"/>
+      <NumericUpDown Margin="10" Value="{Binding WidthValue, RelativeSource={RelativeSource FindAncestor, AncestorType=local:GridSettingsWindow}, Mode=TwoWay}" Minimum="1"/>
+      <TextBlock Text="Height:" Margin="10"/>
+      <NumericUpDown Margin="10" Value="{Binding HeightValue, RelativeSource={RelativeSource FindAncestor, AncestorType=local:GridSettingsWindow}, Mode=TwoWay}" Minimum="1"/>
+      <Button Content="OK" Click="Button_Click"
+        Height="24" MinWidth="80" Padding="10,0" Margin="10"/>
+    </StackPanel>
+  </local:PixedWindow.Dialog>
+</local:PixedWindow>

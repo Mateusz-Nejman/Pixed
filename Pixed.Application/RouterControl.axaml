@@ -12,7 +12,8 @@
              DefaultSideMenuSize="0"
              NavigationBar.Visible="False">
 
-    <Route Path="main" Page="windows:MainView"></Route>
-    <Route Path="about" Page="windows:AboutWindow" Type="Modal"></Route>
+    <Route Path="main" Page="windows:MainView"/>
+    <Route Path="about" Page="windows:AboutWindow" Type="Modal"/>
+    <Route Path="gridSettings" Page="windows:GridSettingsWindow" Type="Modal"/>
   </ShellView>
 </UserControl>

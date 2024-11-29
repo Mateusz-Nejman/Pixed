@@ -3,6 +3,7 @@ using Pixed.Application.Controls;
 using Pixed.Application.Extensions;
 using Pixed.Application.IO;
 using Pixed.Application.Services;
+using Pixed.Application.Utils;
 using Pixed.Application.Windows;
 using Pixed.Common;
 using Pixed.Common.Menu;
@@ -53,7 +54,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
 
         NativeMenuItem aboutMenu = new("About")
         {
-            Command = ReactiveCommand.CreateFromTask(() => RouterControl.Navigator.NavigateAsync("/about"))
+            Command = ReactiveCommand.CreateFromTask(() => RouterControl.Navigator.Navigate("/about"))
         };
 
         helpMenu.Menu = [aboutMenu];

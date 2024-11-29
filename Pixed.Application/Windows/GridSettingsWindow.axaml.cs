@@ -2,11 +2,12 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Pixed.Application.Models;
 using Pixed.Core.Models;
 
 namespace Pixed.Application.Windows;
 
-internal partial class GridSettingsWindow : Window
+internal partial class GridSettingsWindow : PixedWindow
 {
     public int WidthValue
     {
@@ -29,9 +30,10 @@ internal partial class GridSettingsWindow : Window
     public static readonly StyledProperty<int> WidthValueProperty = AvaloniaProperty.Register<GridSettingsWindow, int>("WidthValue");
     public static readonly StyledProperty<int> HeightValueProperty = AvaloniaProperty.Register<GridSettingsWindow, int>("HeightValue");
     public static readonly StyledProperty<Color> GridColorProperty = AvaloniaProperty.Register<GridSettingsWindow, Color>("GridColor");
-    public GridSettingsWindow(ApplicationData applicationData)
+    public GridSettingsWindow()
     {
         InitializeComponent();
+        var applicationData = Provider.Get<ApplicationData>();
         GridColor = applicationData.UserSettings.GridColor;
         WidthValue = applicationData.UserSettings.GridWidth;
         HeightValue = applicationData.UserSettings.GridHeight;
@@ -39,6 +41,6 @@ internal partial class GridSettingsWindow : Window
 
     private void Button_Click(object sender, RoutedEventArgs e)
     {
-        Close(true);
+        Close(new GridSettings(WidthValue, HeightValue, GridColor));
     }
 }

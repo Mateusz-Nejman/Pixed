@@ -1,4 +1,6 @@
 ﻿using Avalonia.Controls;
+using Pixed.Application.Models;
+using Pixed.Application.Utils;
 using Pixed.Application.Windows;
 using Pixed.Common;
 using Pixed.Common.Menu;
@@ -27,13 +29,13 @@ internal class ViewMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
 
         _menuItemRegistry.Register(BaseMenuItem.View, "Grid settings", new AsyncCommand(async () =>
         {
-            GridSettingsWindow window = new(_applicationData);
-            var success = await window.ShowDialog<bool>(MainWindow.Handle);
-            if (success)
+            var navigateResult = await RouterControl.Navigator.Navigate<GridSettings>("/gridSettings");
+
+            if(navigateResult.HasValue)
             {
-                _applicationData.UserSettings.GridWidth = window.WidthValue;
-                _applicationData.UserSettings.GridHeight = window.HeightValue;
-                _applicationData.UserSettings.GridColor = window.GridColor;
+                _applicationData.UserSettings.GridWidth = navigateResult.Value.Width;
+                _applicationData.UserSettings.GridHeight = navigateResult.Value.Height;
+                _applicationData.UserSettings.GridColor = navigateResult.Value.Color;
                 _applicationData.UserSettings.GridEnabled = true;
                 _applicationData.UserSettings.Save(_applicationData.DataFolder);
                 Subjects.GridChanged.OnNext(true);
