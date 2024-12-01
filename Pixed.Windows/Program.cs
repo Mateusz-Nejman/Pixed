@@ -3,6 +3,8 @@ using Avalonia.ReactiveUI;
 using AvaloniaInside.Shell;
 using Newtonsoft.Json;
 using Pixed.Application;
+using Pixed.Application.IO;
+using Pixed.Application.Utils;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -50,5 +52,6 @@ public static void Main(string[] args) => BuildAvaloniaApp()
             .WithInterFont()
             .LogToTrace()
             .UseReactiveUI()
-            .UseShell();
+            .UseShell()
+            .SetPlatformFolder(new DefaultPlatformFolder());
 }

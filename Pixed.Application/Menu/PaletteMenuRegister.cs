@@ -5,10 +5,11 @@ using Pixed.Common.Services.Palette;
 using System.Threading.Tasks;
 
 namespace Pixed.Application.Menu;
-internal class PaletteMenuRegister(IMenuItemRegistry menuItemRegistry, PaletteService paletteService)
+internal class PaletteMenuRegister(IMenuItemRegistry menuItemRegistry, PaletteService paletteService, DialogUtils dialogUtils)
 {
     private readonly IMenuItemRegistry _menuItemRegistry = menuItemRegistry;
     private readonly PaletteService _paletteService = paletteService;
+    private readonly DialogUtils _dialogUtils = dialogUtils;
 
     public void Register()
     {
@@ -40,7 +41,7 @@ internal class PaletteMenuRegister(IMenuItemRegistry menuItemRegistry, PaletteSe
 
     private async Task PaletteOpenAction()
     {
-        var files = await DialogUtils.OpenFileDialog("All Supported (.json;.gpl)|*.json;*.gpl|Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl", _paletteService.SelectedPalette.Name);
+        var files = await _dialogUtils.OpenFileDialog("All Supported (.json;.gpl)|*.json;*.gpl|Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl", _paletteService.SelectedPalette.Name);
 
         if (files.Count == 0)
         {
@@ -58,7 +59,7 @@ internal class PaletteMenuRegister(IMenuItemRegistry menuItemRegistry, PaletteSe
             return;
         }
 
-        var file = await DialogUtils.SaveFileDialog("All Supported (.json;.gpl)|*.json;*.gpl|Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl", _paletteService.SelectedPalette.Name);
+        var file = await _dialogUtils.SaveFileDialog("All Supported (.json;.gpl)|*.json;*.gpl|Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl", _paletteService.SelectedPalette.Name);
 
         if (file != null)
         {

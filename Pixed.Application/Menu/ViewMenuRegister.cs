@@ -17,14 +17,14 @@ internal class ViewMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
     {
         _menuItemRegistry.Register(BaseMenuItem.View, "Toggle fullscreen", () =>
         {
-            if (MainWindow.Handle.WindowState == WindowState.FullScreen)
+            /*if (MainWindow.Handle.WindowState == WindowState.FullScreen)
             {
                 MainWindow.Handle.WindowState = WindowState.Maximized;
             }
             else
             {
                 MainWindow.Handle.WindowState = WindowState.FullScreen;
-            }
+            }*/
         });
 
         _menuItemRegistry.Register(BaseMenuItem.View, "Grid settings", new AsyncCommand(async () =>

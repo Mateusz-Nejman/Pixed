@@ -13,9 +13,6 @@ namespace Pixed.Application.ViewModels;
 
 internal class MainViewModel : PixedViewModel, IDisposable
 {
-    private readonly ApplicationData _applicationData;
-    private readonly RecentFilesService _recentFilesService;
-    private readonly PaletteService _paletteService;
     private readonly IDisposable _projectChanged;
     private bool _disposedValue;
     private string _title;
@@ -31,22 +28,12 @@ internal class MainViewModel : PixedViewModel, IDisposable
     }
 
     public ICommand QuitCommand => MainView.QuitCommand;
-    public MainViewModel(ApplicationData data, RecentFilesService recentFilesService, PaletteService paletteService, MenuBuilder menuBuilder)
+    public MainViewModel()
     {
-        _applicationData = data;
-        _recentFilesService = recentFilesService;
-        _paletteService = paletteService;
-
         _projectChanged = Subjects.ProjectChanged.Subscribe(model =>
         {
             Title = model.FileName + " - Pixed";
         });
-    }
-
-    public async override void OnInitialized()
-    {
-        _recentFilesService.Load();
-        _paletteService.LoadAll();
     }
 
     protected virtual void Dispose(bool disposing)

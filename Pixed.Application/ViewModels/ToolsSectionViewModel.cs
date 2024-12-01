@@ -30,12 +30,13 @@ internal class ToolsSectionViewModel(IMenuItemRegistry menuItemRegistry, ToolSel
         _radios.Clear();
         var tools = _toolSelector.GetTools();
 
-        var extensionTools = ExtensionsLoader.GetTools(MainWindow.Handle.GetServiceProvider());
+        //TODO
+        //var extensionTools = ExtensionsLoader.GetTools(MainWindow.Handle.GetServiceProvider());
 
-        foreach (var extensionTool in extensionTools)
-        {
-            tools.Add(extensionTool.Key, extensionTool.Value);
-        }
+        //foreach (var extensionTool in extensionTools)
+        //{
+        //    tools.Add(extensionTool.Key, extensionTool.Value);
+        //}
 
         foreach (var tool in tools)
         {

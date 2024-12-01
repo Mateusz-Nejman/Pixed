@@ -21,6 +21,7 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
     private readonly ApplicationData _applicationData;
     private readonly IMenuItemRegistry _menuItemRegistry;
     private readonly PaletteService _paletteService;
+    private readonly DialogUtils _dialogUtils;
 
     private UniColor _primaryColor = UniColor.Black;
     private UniColor _secondaryColor = UniColor.White;
@@ -80,11 +81,12 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
     public ICommand PaletteSaveCommand { get; }
     public ICommand PaletteClearCommand { get; }
 
-    public PaletteSectionViewModel(ApplicationData applicationData, IMenuItemRegistry menuItemRegistry, PaletteService paletteService)
+    public PaletteSectionViewModel(ApplicationData applicationData, IMenuItemRegistry menuItemRegistry, PaletteService paletteService, DialogUtils dialogUtils)
     {
         _applicationData = applicationData;
         _menuItemRegistry = menuItemRegistry;
         _paletteService = paletteService;
+        _dialogUtils = dialogUtils;
         _primaryProjectChanged = Subjects.PrimaryColorChanged.Subscribe(c => _applicationData.PrimaryColor = c);
         _secondaryProjectChanged = Subjects.SecondaryColorChanged.Subscribe(c => _applicationData.SecondaryColor = c);
         _primaryProjectChange = Subjects.PrimaryColorChange.Subscribe(c => PrimaryColor = c);
@@ -173,7 +175,7 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
 
     private async Task PaletteOpenAction()
     {
-        var files = await DialogUtils.OpenFileDialog("All Supported (.json;.gpl)|*.json;*.gpl|Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl", _paletteService.SelectedPalette.Name);
+        var files = await _dialogUtils.OpenFileDialog("All Supported (.json;.gpl)|*.json;*.gpl|Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl", _paletteService.SelectedPalette.Name);
 
         if (files.Count == 0)
         {
@@ -191,7 +193,7 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
             return;
         }
 
-        var file = await DialogUtils.SaveFileDialog("All Supported (.json;.gpl)|*.json;*.gpl|Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl", _paletteService.SelectedPalette.Name);
+        var file = await _dialogUtils.SaveFileDialog("All Supported (.json;.gpl)|*.json;*.gpl|Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl", _paletteService.SelectedPalette.Name);
 
         if (file != null)
         {

@@ -12,9 +12,4 @@ internal abstract class PixedViewModel : PropertyChangedBase
     {
 
     }
-
-    public virtual void OnInitialized()
-    {
-
-    }
 }

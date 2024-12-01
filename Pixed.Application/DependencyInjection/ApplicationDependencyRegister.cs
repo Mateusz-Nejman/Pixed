@@ -2,6 +2,7 @@
 using Pixed.Application.IO;
 using Pixed.Application.Menu;
 using Pixed.Application.Services;
+using Pixed.Application.Utils;
 using Pixed.Application.ViewModels;
 using Pixed.Application.Windows;
 using Pixed.Common.DependencyInjection;
@@ -35,5 +36,7 @@ internal class ApplicationDependencyRegister : IDependencyRegister
         collection.AddSingleton<ViewMenuRegister>();
         collection.AddSingleton<ToolsMenuRegister>();
         collection.AddSingleton<IClipboardHandle, ClipboardHandle>();
+        collection.AddSingleton<IStorageProviderHandle, StorageProviderHandle>();
+        collection.AddSingleton<DialogUtils>();
     }
 }

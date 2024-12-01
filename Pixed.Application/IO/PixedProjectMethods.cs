@@ -9,9 +9,10 @@ using System.IO;
 using System.Threading.Tasks;
 
 namespace Pixed.Application.IO;
-internal class PixedProjectMethods(ApplicationData applicationData)
+internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils dialogUtils)
 {
     private readonly ApplicationData _applicationData = applicationData;
+    private readonly DialogUtils _dialogUtils = dialogUtils;
 
     public async Task Save(PixedModel model, bool saveAs, RecentFilesService recentFilesService)
     {
@@ -34,7 +35,7 @@ internal class PixedProjectMethods(ApplicationData applicationData)
             {
                 name = info.Name.Replace(info.Extension, string.Empty);
             }
-            var file = await DialogUtils.SaveFileDialog("Pixed project (*.pixed)|*.pixed", name);
+            var file = await _dialogUtils.SaveFileDialog("Pixed project (*.pixed)|*.pixed", name);
 
             if (file == null)
             {
@@ -58,7 +59,7 @@ internal class PixedProjectMethods(ApplicationData applicationData)
 
     public async Task Open(RecentFilesService recentFilesService)
     {
-        var files = await DialogUtils.OpenFileDialog("All supported (*.pixed;*.piskel;*.png)|*.pixed;*.piskel;*.png|Pixed project (*.pixed)|*.pixed|Piskel project (*.piskel)|*.piskel|PNG images (*.png)|*.png", "Open file", true);
+        var files = await _dialogUtils.OpenFileDialog("All supported (*.pixed;*.piskel;*.png)|*.pixed;*.piskel;*.png|Pixed project (*.pixed)|*.pixed|Piskel project (*.piskel)|*.piskel|PNG images (*.png)|*.png", "Open file", true);
 
         foreach (var item in files)
         {
@@ -162,7 +163,7 @@ internal class PixedProjectMethods(ApplicationData applicationData)
         {
             name = info.Name.Replace(info.Extension, string.Empty);
         }
-        var file = await DialogUtils.SaveFileDialog("PNG image (*.png)|*.png", name);
+        var file = await _dialogUtils.SaveFileDialog("PNG image (*.png)|*.png", name);
 
         if (file == null)
         {
@@ -196,7 +197,7 @@ internal class PixedProjectMethods(ApplicationData applicationData)
         {
             name = info.Name.Replace(info.Extension, string.Empty);
         }
-        var file = await DialogUtils.SaveFileDialog("Icon (*.ico)|*.ico", name);
+        var file = await _dialogUtils.SaveFileDialog("Icon (*.ico)|*.ico", name);
 
         if (file == null)
         {

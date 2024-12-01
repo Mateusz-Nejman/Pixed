@@ -1,4 +1,5 @@
 ﻿using Avalonia.Input;
+using Avalonia.Input.Platform;
 using Pixed.Application.Windows;
 using Pixed.Common.Platform;
 using System.Threading.Tasks;
@@ -6,23 +7,28 @@ using System.Threading.Tasks;
 namespace Pixed.Application;
 internal class ClipboardHandle : IClipboardHandle
 {
+    private IClipboard _clipboard;
+    public void Initialize(IClipboard clipboard)
+    {
+        _clipboard = clipboard;
+    }
     public async Task ClearAsync()
     {
-        await MainWindow.Handle.Clipboard.ClearAsync();
+        await _clipboard.ClearAsync();
     }
 
     public async Task<object?> GetDataAsync(string format)
     {
-        return await MainWindow.Handle.Clipboard.GetDataAsync(format);
+        return await _clipboard.GetDataAsync(format);
     }
 
     public async Task<string[]> GetFormatsAsync()
     {
-        return await MainWindow.Handle.Clipboard.GetFormatsAsync();
+        return await _clipboard.GetFormatsAsync();
     }
 
     public async Task SetDataObjectAsync(IDataObject data)
     {
-        await MainWindow.Handle.Clipboard.SetDataObjectAsync(data);
+        await _clipboard.SetDataObjectAsync(data);
     }
 }

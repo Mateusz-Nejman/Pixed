@@ -1,10 +1,11 @@
 ﻿using Avalonia.Platform.Storage;
+using Pixed.Common.Platform;
 using System.Threading.Tasks;
 
-namespace Pixed.Common.Utils;
-public static class StorageProviderUtils
+namespace Pixed.Application.IO;
+public class DefaultPlatformFolder : IPlatformFolder
 {
-    public async static Task<IStorageFolder?> GetPixedFolder(this IStorageProvider provider)
+    public async Task<IStorageFolder> GetPixedFolder(IStorageProvider provider)
     {
         var documentsFolder = await provider.TryGetWellKnownFolderAsync(WellKnownFolder.Documents);
         return await documentsFolder.CreateFolderAsync("Pixed");

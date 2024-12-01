@@ -20,6 +20,8 @@ internal abstract class PixedPage<T> : Page
         _menuItemRegistry = Provider.Get<IMenuItemRegistry>();
         var serviceProvider = this.GetServiceProvider();
         this.DataContext = serviceProvider.Get<T>();
+        Unloaded += PixedPage_Unloaded;
+        Loaded += PixedPage_Loaded;
     }
 
     public TResult Get<TResult>()
@@ -37,14 +39,7 @@ internal abstract class PixedPage<T> : Page
 
     public virtual void OnLoaded()
     {
-
-    }
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
         RegisterMenuItems();
-        Unloaded += PixedPage_Unloaded;
-        Loaded += PixedPage_Loaded;
     }
 
     private void PixedPage_Loaded(object? sender, RoutedEventArgs e)

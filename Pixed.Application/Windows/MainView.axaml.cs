@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using Pixed.Application.Controls;
 using Pixed.Application.Input;
@@ -10,7 +11,9 @@ using Pixed.Application.ViewModels;
 using Pixed.Common;
 using Pixed.Common.Input;
 using Pixed.Common.Menu;
+using Pixed.Common.Platform;
 using Pixed.Common.Services.Keyboard;
+using Pixed.Common.Services.Palette;
 using Pixed.Common.Tools;
 using Pixed.Common.Utils;
 using Pixed.Core;
@@ -33,12 +36,13 @@ internal partial class MainView : PixedPage<MainViewModel>, IDisposable
     private readonly ViewMenuRegister _viewMenuRegister;
     private readonly ToolsMenuRegister _toolsMenuRegister;
     private readonly RecentFilesService _recentFilesService;
+    private readonly PaletteService _paletteService;
     private readonly ToolSelector _toolSelector;
     private readonly MenuBuilder _menuBuilder;
+    private readonly IStorageProviderHandle _storageProviderHandle;
     private readonly IDisposable _newInstanceHandled;
     private bool _disposedValue;
 
-    public static Window? Handle { get; private set; }
     public static ICommand? QuitCommand { get; private set; }
     public MainView() : base()
     {
@@ -53,6 +57,8 @@ internal partial class MainView : PixedPage<MainViewModel>, IDisposable
         _recentFilesService = Get<RecentFilesService>();
         _toolSelector = Get<ToolSelector>();
         _menuBuilder = Get<MenuBuilder>();
+        _paletteService = Get<PaletteService>();
+        _storageProviderHandle = Get<IStorageProviderHandle>();
         _newInstanceHandled = Subjects.NewInstanceHandled.Subscribe(args =>
         {
             foreach (var arg in args)
@@ -60,16 +66,30 @@ internal partial class MainView : PixedPage<MainViewModel>, IDisposable
                 Dispatcher.UIThread.Invoke(() => _pixedProjectMethods.Open(arg));
             }
         });
-        Initialize();
     }
 
-    public override void OnLoaded()
+    public override async void OnLoaded()
     {
+        var topLevel = TopLevel.GetTopLevel(this);
+        _storageProviderHandle.Initialize(topLevel.StorageProvider);
+        var clipboard = Get<IClipboardHandle>();
+        clipboard.Initialize(topLevel.Clipboard);
+        _viewMenuRegister.Register();
+        _transformToolsMenuRegister.Register();
+        _copyPasteMenuRegister.Register();
+        _paletteMenuRegister.Register();
+        _toolsMenuRegister.Register();
+        _menuBuilder.Build();
+
+        await Initialize();
         _toolSelector.SelectTool("tool_pen");
+        _recentFilesService.Load();
+        _paletteService.LoadAll();
 
         Subjects.ProjectAdded.OnNext(_applicationData.CurrentModel);
         Subjects.ProjectChanged.OnNext(_applicationData.CurrentModel);
         Subjects.FrameChanged.OnNext(_applicationData.CurrentFrame);
+        base.OnLoaded();
     }
 
     public void OpenFromArgs(string[] args)
@@ -81,18 +101,6 @@ internal partial class MainView : PixedPage<MainViewModel>, IDisposable
                 _pixedProjectMethods.Open(arg);
             }
         }
-    }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        ViewModel.OnInitialized();
-        _viewMenuRegister.Register();
-        _transformToolsMenuRegister.Register();
-        _copyPasteMenuRegister.Register();
-        _paletteMenuRegister.Register();
-        _toolsMenuRegister.Register();
-        _menuBuilder.Build();
     }
 
     protected virtual void Dispose(bool disposing)
@@ -116,7 +124,7 @@ internal partial class MainView : PixedPage<MainViewModel>, IDisposable
 
     private void InitializeBeforeUI()
     {
-        Handle = MainWindow.Handle;
+        //TODO Handle = MainWindow.Handle;
         QuitCommand = new ActionCommand(async () =>
         {
             int untitledIndex = 0;
@@ -149,7 +157,7 @@ internal partial class MainView : PixedPage<MainViewModel>, IDisposable
                 }
             }
 
-            Handle.Close();
+            //Handle.Close();
         });
     }
 
@@ -184,7 +192,7 @@ internal partial class MainView : PixedPage<MainViewModel>, IDisposable
 
     private async Task InitializeDataFolder()
     {
-        var pixedFolder = await MainWindow.Handle.StorageProvider.GetPixedFolder();
+        var pixedFolder = await _storageProviderHandle.GetPixedFolder();
         await pixedFolder.CreateFolderAsync("Palettes");
         await pixedFolder.CreateFolderAsync("Extensions");
         _applicationData.Initialize(pixedFolder);

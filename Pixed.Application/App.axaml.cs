@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Pixed.Application.DependencyInjection;
 using Pixed.Application.Extensions;
+using Pixed.Application.ViewModels;
 using Pixed.Application.Windows;
 using Pixed.Common;
 using Pixed.Common.DependencyInjection;
@@ -37,6 +38,23 @@ public partial class App : Avalonia.Application
             desktop.MainWindow = splash;
             splash.Show();
             await InitializeMainWindow(desktop, splash);
+        }
+        else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
+        {
+            BindingPlugins.DataValidators.RemoveAt(0);
+
+            IServiceCollection collection = new ServiceCollection();
+            var registers = GetDependencyRegisters();
+
+            foreach (var register in registers)
+            {
+                register.Register(ref collection);
+            }
+
+            ServiceProvider provider = new(collection.BuildServiceProvider());
+            this.Resources[typeof(IPixedServiceProvider)] = provider;
+            ServiceProvider = provider;
+            singleViewPlatform.MainView = new RouterControl();
         }
         base.OnFrameworkInitializationCompleted();
     }
@@ -88,18 +106,19 @@ public partial class App : Avalonia.Application
                 {
                     while (handle.WaitOne())
                     {
-                        var pixed = await desktop.MainWindow.StorageProvider.GetPixedFolder();
-                        var filePath = Path.Combine(pixed.Path.AbsolutePath, "instance.lock");
+                        //TODO
+                        //var pixed = await desktop.MainWindow.StorageProvider.GetPixedFolder();
+                        //var filePath = Path.Combine(pixed.Path.AbsolutePath, "instance.lock");
 
-                        if (File.Exists(filePath))
-                        {
-                            string[] args = JsonConvert.DeserializeObject<string[]>(File.ReadAllText(filePath)) ?? [];
+                        //if (File.Exists(filePath))
+                        //{
+                        //    string[] args = JsonConvert.DeserializeObject<string[]>(File.ReadAllText(filePath)) ?? [];
 
-                            if (args.Length > 0)
-                            {
-                                Subjects.NewInstanceHandled.OnNext(args);
-                            }
-                        }
+                        //    if (args.Length > 0)
+                        //    {
+                        //        Subjects.NewInstanceHandled.OnNext(args);
+                        //    }
+                        //}
                     }
                 })
             {
@@ -112,8 +131,9 @@ public partial class App : Avalonia.Application
 
         Task.Run(async () =>
         {
-            var pixed = await desktop.MainWindow.StorageProvider.GetPixedFolder();
-            File.WriteAllText(Path.Combine(pixed.Path.AbsolutePath, "instance.lock"), JsonConvert.SerializeObject(Environment.GetCommandLineArgs()));
+            //TODO
+            //var pixed = await desktop.MainWindow.StorageProvider.GetPixedFolder();
+            //File.WriteAllText(Path.Combine(pixed.Path.AbsolutePath, "instance.lock"), JsonConvert.SerializeObject(Environment.GetCommandLineArgs()));
         });
         handle.Set();
 
