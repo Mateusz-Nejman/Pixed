@@ -182,7 +182,7 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
         }
 
         var file = files[0];
-        _paletteService.Load(file.Path.AbsolutePath);
+        await _paletteService.Load(file.Path.AbsolutePath);
     }
 
     private async Task PaletteSaveAction()
@@ -196,7 +196,7 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
 
         if (file != null)
         {
-            _paletteService.Save(file.Path.AbsolutePath);
+            await _paletteService.Save(file.Path.AbsolutePath);
         }
     }
 

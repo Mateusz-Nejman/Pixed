@@ -7,6 +7,7 @@ using Pixed.Application.Windows;
 using Pixed.Common;
 using Pixed.Common.Menu;
 using Pixed.Common.Models;
+using Pixed.Common.Platform;
 using Pixed.Common.Utils;
 using Pixed.Core;
 using Pixed.Core.Models;
@@ -19,7 +20,7 @@ using System.Threading.Tasks;
 
 namespace Pixed.Application.Menu;
 
-internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods pixedProjectMethods, RecentFilesService recentFilesService)
+internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods pixedProjectMethods, RecentFilesService recentFilesService, IStorageProviderHandle storageProvider)
 {
 
     private readonly struct MenuEntry(BaseMenuItem baseMenu, NativeMenuItem menuItem)
@@ -31,6 +32,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
     private readonly ApplicationData _applicationData = applicationData;
     private readonly PixedProjectMethods _projectMethods = pixedProjectMethods;
     private readonly RecentFilesService _recentFilesService = recentFilesService;
+    private readonly IStorageProviderHandle _storageProvider = storageProvider;
     private readonly List<MenuEntry> _entries = [];
 
     public Subject<NativeMenu> OnMenuBuilt { get; } = new Subject<NativeMenu>();
@@ -185,7 +187,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
                 _applicationData.UserSettings.UserWidth = result.Width;
                 _applicationData.UserSettings.UserHeight = result.Height;
                 _applicationData.UserSettings.MaintainAspectRatio = result.MaintainAspectRatio;
-                _applicationData.UserSettings.Save(_applicationData.DataFolder);
+                _applicationData.UserSettings.Save(await _storageProvider.GetPixedFolder());
                 _applicationData.Models[_applicationData.CurrentModelIndex] = model;
                 Subjects.ProjectModified.OnNext(model);
                 Subjects.ProjectChanged.OnNext(model);

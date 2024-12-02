@@ -48,7 +48,7 @@ internal class PaletteMenuRegister(IMenuItemRegistry menuItemRegistry, PaletteSe
         }
 
         var file = files[0];
-        _paletteService.Load(file.Path.AbsolutePath);
+        await _paletteService.Load(file.Path.AbsolutePath);
     }
 
     private async Task PaletteSaveAction()
@@ -62,7 +62,7 @@ internal class PaletteMenuRegister(IMenuItemRegistry menuItemRegistry, PaletteSe
 
         if (file != null)
         {
-            _paletteService.Save(file.Path.AbsolutePath);
+            await _paletteService.Save(file.Path.AbsolutePath);
         }
     }
 

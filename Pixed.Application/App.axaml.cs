@@ -77,6 +77,8 @@ public partial class App : Avalonia.Application
             register.Register(ref collection);
         }
 
+        collection.AddSingleton(PlatformLifecycle.Lifecycle);
+
         ExtensionsLoader.Load(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Pixed", "Extensions"));
         ExtensionsLoader.RegisterTools(ref collection);
         ServiceProvider provider = new(collection.BuildServiceProvider());

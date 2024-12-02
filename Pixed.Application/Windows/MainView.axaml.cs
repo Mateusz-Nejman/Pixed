@@ -83,8 +83,8 @@ internal partial class MainView : PixedPage<MainViewModel>, IDisposable
 
         await Initialize();
         _toolSelector.SelectTool("tool_pen");
-        _recentFilesService.Load();
-        _paletteService.LoadAll();
+        await _recentFilesService.Load();
+        await _paletteService.LoadAll();
 
         Subjects.ProjectAdded.OnNext(_applicationData.CurrentModel);
         Subjects.ProjectChanged.OnNext(_applicationData.CurrentModel);
@@ -192,8 +192,12 @@ internal partial class MainView : PixedPage<MainViewModel>, IDisposable
     private async Task InitializeDataFolder()
     {
         var pixedFolder = await _storageProviderHandle.GetPixedFolder();
-        await pixedFolder.CreateFolderAsync("Palettes");
-        await pixedFolder.CreateFolderAsync("Extensions");
+        await _storageProviderHandle.GetPalettesFolder();
+
+        if(_storageProviderHandle.StorageFolder.ExtensionsEnabled)
+        {
+            await _storageProviderHandle.GetExtensionsFolder();
+        }
         _applicationData.Initialize(pixedFolder);
     }
 

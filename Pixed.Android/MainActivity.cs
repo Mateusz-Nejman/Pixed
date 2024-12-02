@@ -14,7 +14,7 @@ using Xamarin.Essentials;
 namespace Pixed.Android;
 
 [Activity(
-    Label = "Pixed.Android",
+    Label = "Pixed - Pixelart Editor",
     Theme = "@style/MyTheme.NoActionBar",
     Icon = "@drawable/icon",
     MainLauncher = true,
@@ -26,7 +26,7 @@ public class MainActivity : AvaloniaMainActivity<App>
         PlatformLifecycle.MainActivity = this;
         PlatformFolder.Context = this;
         base.OnCreate(savedInstanceState);
-        Xamarin.Essentials.Platform.Init(this, savedInstanceState);
+        Platform.Init(this, savedInstanceState);
         var permissions = await CheckPermissions();
 
         if (permissions != PermissionStatus.Granted)

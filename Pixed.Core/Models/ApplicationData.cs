@@ -5,7 +5,6 @@ namespace Pixed.Core.Models;
 public class ApplicationData
 {
     private int _index = 0;
-    public IStorageFolder? DataFolder { get; set; }
     public int CurrentModelIndex { get; set; }
     public PixedModel CurrentModel => Models[CurrentModelIndex];
     public Frame CurrentFrame => CurrentModel.CurrentFrame;
@@ -24,8 +23,7 @@ public class ApplicationData
 
     public void Initialize(IStorageFolder pixedFolder)
     {
-        DataFolder = pixedFolder;
-        UserSettings = Settings.Load(DataFolder);
+        UserSettings = Settings.Load(pixedFolder);
         Models.Add(new PixedModel(this, UserSettings.UserWidth, UserSettings.UserHeight));
         CurrentModel.FileName = GenerateName();
         CurrentModel.AddHistory(false);

@@ -1,4 +1,5 @@
 ﻿using Pixed.Common.Models;
+using Pixed.Common.Platform;
 using Pixed.Common.Services.Palette.Readers;
 using Pixed.Common.Services.Palette.Writers;
 using Pixed.Core.Models;
@@ -6,20 +7,23 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Pixed.Common.Services.Palette;
 
 public class PaletteService
 {
     private readonly ApplicationData _applicationData;
+    private readonly IStorageProviderHandle _storageProvider;
     public List<PaletteModel> Palettes { get; }
     public PaletteModel CurrentColorsPalette => Palettes[0];
     public PaletteModel SelectedPalette => Palettes[_paletteIndex];
     private int _paletteIndex => 1;
 
-    public PaletteService(ApplicationData applicationData)
+    public PaletteService(ApplicationData applicationData, IStorageProviderHandle storageProvider)
     {
         _applicationData = applicationData;
+        _storageProvider = storageProvider;
         Palettes = [];
         Palettes.Add(new PaletteModel("default") { Name = "Current colors" });
         Palettes.Add(new PaletteModel("palette") { Name = "Palette" });
@@ -91,11 +95,11 @@ public class PaletteService
         }
     }
 
-    public void Load(string filename)
+    public async Task Load(string filename)
     {
         FileInfo fileInfo = new(filename);
 
-        string paletteFileName = Path.Combine(_applicationData.DataFolder.Path.AbsolutePath, "Palettes", fileInfo.Name);
+        string paletteFileName = Path.Combine(await _storageProvider.GetPalettesFolderAbsolute(), fileInfo.Name);
         File.Copy(filename, paletteFileName, true);
 
         AbstractPaletteReader reader;
@@ -124,17 +128,17 @@ public class PaletteService
         Subjects.PaletteAdded.OnNext(Palettes[1]);
     }
 
-    public void Save(string filename)
+    public async Task Save(string filename)
     {
         var model = Palettes[_paletteIndex].ToCurrentPalette();
         model.Path = filename;
-        Save(model, true);
-        Save(model, false);
+        await Save(model, true);
+        await Save(model, false);
     }
 
-    public void LoadAll()
+    public async Task LoadAll()
     {
-        var files = Directory.GetFiles(Path.Combine(_applicationData.DataFolder.Path.AbsolutePath, "Palettes"));
+        var files = Directory.GetFiles(await _storageProvider.GetPalettesFolderAbsolute());
 
         foreach (var file in files)
         {
@@ -161,7 +165,7 @@ public class PaletteService
         }
     }
 
-    private void Save(PaletteModel model, bool appData = false)
+    private async Task Save(PaletteModel model, bool appData = false)
     {
         FileInfo fileInfo = new(model.Path);
 
@@ -178,7 +182,7 @@ public class PaletteService
 
         if (appData)
         {
-            writer.Write(model, Path.Combine(_applicationData.DataFolder.Path.AbsolutePath, "Palettes", fileInfo.Name));
+            writer.Write(model, Path.Combine(await _storageProvider.GetPalettesFolderAbsolute(), fileInfo.Name));
         }
         else
         {

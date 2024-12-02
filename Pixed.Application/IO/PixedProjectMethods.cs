@@ -50,7 +50,7 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
         {
             PixedProjectSerializer serializer = new();
             serializer.Serialize(fileStream, model, true);
-            recentFilesService.AddRecent(model.FilePath);
+            await recentFilesService.AddRecent(model.FilePath);
             model.UnsavedChanges = false;
             Subjects.ProjectChanged.OnNext(model);
         }
@@ -74,7 +74,7 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
 
             if (serializer is PixedProjectSerializer)
             {
-                recentFilesService.AddRecent(item.Path.AbsolutePath);
+                await recentFilesService.AddRecent(item.Path.AbsolutePath);
             }
 
             if (serializer is PngProjectSerializer pngSerializer)
