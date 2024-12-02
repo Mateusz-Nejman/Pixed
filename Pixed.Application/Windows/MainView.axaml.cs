@@ -6,6 +6,7 @@ using Pixed.Application.Controls;
 using Pixed.Application.Input;
 using Pixed.Application.IO;
 using Pixed.Application.Menu;
+using Pixed.Application.Platform;
 using Pixed.Application.Services;
 using Pixed.Application.ViewModels;
 using Pixed.Common;
@@ -41,6 +42,7 @@ internal partial class MainView : PixedPage<MainViewModel>, IDisposable
     private readonly MenuBuilder _menuBuilder;
     private readonly IStorageProviderHandle _storageProviderHandle;
     private readonly IDisposable _newInstanceHandled;
+    private readonly IApplicationLifecycle _lifecycle;
     private bool _disposedValue;
 
     public static ICommand? QuitCommand { get; private set; }
@@ -59,6 +61,7 @@ internal partial class MainView : PixedPage<MainViewModel>, IDisposable
         _menuBuilder = Get<MenuBuilder>();
         _paletteService = Get<PaletteService>();
         _storageProviderHandle = Get<IStorageProviderHandle>();
+        _lifecycle = Get<IApplicationLifecycle>();
         _newInstanceHandled = Subjects.NewInstanceHandled.Subscribe(args =>
         {
             foreach (var arg in args)
@@ -124,7 +127,6 @@ internal partial class MainView : PixedPage<MainViewModel>, IDisposable
 
     private void InitializeBeforeUI()
     {
-        //TODO Handle = MainWindow.Handle;
         QuitCommand = new ActionCommand(async () =>
         {
             int untitledIndex = 0;
@@ -157,7 +159,7 @@ internal partial class MainView : PixedPage<MainViewModel>, IDisposable
                 }
             }
 
-            //Handle.Close();
+            _lifecycle.Close();
         });
     }
 

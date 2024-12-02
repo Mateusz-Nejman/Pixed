@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Pixed.Application.DependencyInjection;
 using Pixed.Application.Extensions;
+using Pixed.Application.Platform;
 using Pixed.Application.ViewModels;
 using Pixed.Application.Windows;
 using Pixed.Common;
@@ -32,6 +33,7 @@ public partial class App : Avalonia.Application
 
     public async override void OnFrameworkInitializationCompleted()
     {
+        PlatformLifecycle.Lifecycle.ApplicationLifetime = ApplicationLifetime;
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             SplashWindow splash = new();
@@ -50,6 +52,8 @@ public partial class App : Avalonia.Application
             {
                 register.Register(ref collection);
             }
+
+            collection.AddSingleton(PlatformLifecycle.Lifecycle);
 
             ServiceProvider provider = new(collection.BuildServiceProvider());
             this.Resources[typeof(IPixedServiceProvider)] = provider;

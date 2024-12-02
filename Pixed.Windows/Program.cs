@@ -52,6 +52,5 @@ public static void Main(string[] args) => BuildAvaloniaApp()
             .WithInterFont()
             .LogToTrace()
             .UseReactiveUI()
-            .UseShell()
-            .SetPlatformFolder(new DefaultPlatformFolder());
+            .UseShell();
 }

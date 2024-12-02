@@ -7,6 +7,7 @@ using Avalonia.Controls;
 using Avalonia.ReactiveUI;
 using AvaloniaInside.Shell;
 using Pixed.Application;
+using Pixed.Application.Platform;
 using Pixed.Application.Utils;
 using System;
 using System.Threading.Tasks;
@@ -24,6 +25,7 @@ public class MainActivity : AvaloniaMainActivity<App>
 {
     protected override async void OnCreate(Bundle? savedInstanceState)
     {
+        PlatformLifecycle.MainActivity = this;
         PlatformFolder.Context = this;
         base.OnCreate(savedInstanceState);
         Xamarin.Essentials.Platform.Init(this, savedInstanceState);
@@ -40,7 +42,8 @@ public class MainActivity : AvaloniaMainActivity<App>
             .LogToTrace()
             .UseReactiveUI()
             .UseShell()
-            .SetPlatformFolder(new PlatformFolder());
+            .SetPlatformFolder(new PlatformFolder())
+            .SetLifecycle(new PlatformLifecycle());
     }
 
     private async Task<PermissionStatus> CheckPermissions()
