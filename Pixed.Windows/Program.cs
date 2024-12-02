@@ -3,8 +3,6 @@ using Avalonia.ReactiveUI;
 using AvaloniaInside.Shell;
 using Newtonsoft.Json;
 using Pixed.Application;
-using Pixed.Application.IO;
-using Pixed.Application.Utils;
 using System;
 using System.IO;
 using System.Threading.Tasks;

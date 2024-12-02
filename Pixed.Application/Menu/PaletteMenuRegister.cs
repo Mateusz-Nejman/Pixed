@@ -1,5 +1,4 @@
 ﻿using Pixed.Application.Utils;
-using Pixed.Application.Windows;
 using Pixed.Common.Menu;
 using Pixed.Common.Services.Palette;
 using System.Threading.Tasks;
@@ -16,8 +15,8 @@ internal class PaletteMenuRegister(IMenuItemRegistry menuItemRegistry, PaletteSe
         _menuItemRegistry.Register(BaseMenuItem.Palette, "Add Primary color to palette", PaletteAddPrimaryAction);
         _menuItemRegistry.Register(BaseMenuItem.Palette, "Merge palette with current colors", PaletteAddCurrentAction);
         _menuItemRegistry.Register(BaseMenuItem.Palette, "Clear palette", PaletteClearAction);
-        _menuItemRegistry.Register(BaseMenuItem.Palette, "Open palette from file", async() => await PaletteOpenAction());
-        _menuItemRegistry.Register(BaseMenuItem.Palette, "Save palette to file", async() => await PaletteSaveAction());
+        _menuItemRegistry.Register(BaseMenuItem.Palette, "Open palette from file", async () => await PaletteOpenAction());
+        _menuItemRegistry.Register(BaseMenuItem.Palette, "Save palette to file", async () => await PaletteSaveAction());
         _menuItemRegistry.Register(BaseMenuItem.Palette, "Palettes list", PaletteListAction);
     }
 

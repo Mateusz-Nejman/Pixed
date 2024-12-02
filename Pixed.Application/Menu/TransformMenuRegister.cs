@@ -1,5 +1,4 @@
 ﻿using Avalonia.Controls;
-using Pixed.Application.Windows;
 using Pixed.Common.Menu;
 using Pixed.Common.Selection;
 using Pixed.Common.Tools.Transform;

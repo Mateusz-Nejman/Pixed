@@ -1,5 +1,4 @@
-﻿using Avalonia.Controls;
-using Pixed.Application.ViewModels;
+﻿using Pixed.Application.ViewModels;
 using Pixed.Common.Services.Palette;
 
 namespace Pixed.Application.Windows;

@@ -1,6 +1,5 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using Pixed.Application.Controls;
 using Pixed.Application.Input;
@@ -11,12 +10,10 @@ using Pixed.Application.Services;
 using Pixed.Application.ViewModels;
 using Pixed.Common;
 using Pixed.Common.Input;
-using Pixed.Common.Menu;
 using Pixed.Common.Platform;
 using Pixed.Common.Services.Keyboard;
 using Pixed.Common.Services.Palette;
 using Pixed.Common.Tools;
-using Pixed.Common.Utils;
 using Pixed.Core;
 using Pixed.Core.Models;
 using System;
@@ -145,7 +142,7 @@ internal partial class MainView : PixedPage<MainViewModel>, IDisposable
 
                     var result = await RouterControl.Navigate<ButtonResult>("/unsavedChanges", name);
 
-                    if(result.HasValue)
+                    if (result.HasValue)
                     {
                         if (result.Value == ButtonResult.Cancel)
                         {
@@ -232,7 +229,7 @@ internal partial class MainView : PixedPage<MainViewModel>, IDisposable
     {
         var result = await RouterControl.Navigate<double>("/changeOpacity", layer.Opacity);
 
-        if(result.HasValue)
+        if (result.HasValue)
         {
             layer.Opacity = result.Value;
             layer.RefreshRenderSource();

@@ -1,5 +1,4 @@
 ﻿using Avalonia.Platform.Storage;
-using Pixed.Application.Windows;
 using Pixed.Common.Platform;
 using System.Collections.Generic;
 using System.Threading.Tasks;

@@ -1,5 +1,4 @@
-﻿using Pixed.Application.Windows;
-using Pixed.Common.Utils;
+﻿using Pixed.Common.Utils;
 
 namespace Pixed.Application.Models;
 internal readonly struct ResizeResult(int width, int height, bool resizeCanvasContent, ResizeUtils.Origin anchor, bool maintainAspectRatio)

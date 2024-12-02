@@ -1,7 +1,6 @@
 ﻿using Avalonia.Media;
 using Pixed.Application.Controls;
 using Pixed.Application.Utils;
-using Pixed.Application.Windows;
 using Pixed.Common;
 using Pixed.Common.Menu;
 using Pixed.Common.Models;

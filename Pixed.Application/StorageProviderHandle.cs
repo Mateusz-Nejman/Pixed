@@ -1,5 +1,4 @@
-﻿using Avalonia.Controls;
-using Avalonia.Platform.Storage;
+﻿using Avalonia.Platform.Storage;
 using Pixed.Application.Utils;
 using Pixed.Common.Platform;
 using System.Threading.Tasks;

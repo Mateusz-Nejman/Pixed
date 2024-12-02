@@ -6,7 +6,7 @@ public class WindowApplicationLifecycle : IApplicationLifecycle
     public IApplicationLifetime ApplicationLifetime { get; set; }
     public void Close()
     {
-        if(ApplicationLifetime is IClassicDesktopStyleApplicationLifetime lifetime)
+        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime lifetime)
         {
             lifetime.Shutdown();
         }

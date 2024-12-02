@@ -6,15 +6,10 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Styling;
 using Pixed.Application.Controls;
-using Pixed.Application.DependencyInjection;
-using Pixed.Application.Extensions;
-using Pixed.Application.Windows;
 using Pixed.Common.Menu;
 using Pixed.Common.Tools;
-using Pixed.Core;
 using System;
 using System.Collections.Generic;
-using System.Windows.Input;
 
 namespace Pixed.Application.ViewModels;
 internal class ToolsSectionViewModel(IMenuItemRegistry menuItemRegistry, ToolSelector toolSelector, PaintCanvasViewModel paintCanvas) : PixedViewModel

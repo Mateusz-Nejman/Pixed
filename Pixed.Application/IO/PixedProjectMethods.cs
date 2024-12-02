@@ -1,7 +1,6 @@
 ﻿using Pixed.Application.Models;
 using Pixed.Application.Services;
 using Pixed.Application.Utils;
-using Pixed.Application.Windows;
 using Pixed.Common;
 using Pixed.Core.Models;
 using System.Collections.Generic;
@@ -82,9 +81,9 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
             {
                 var result = await RouterControl.Navigate<OpenPngResult>("/openPng");
 
-                if(result.HasValue)
+                if (result.HasValue)
                 {
-                    if(result.Value.IsTileset)
+                    if (result.Value.IsTileset)
                     {
                         pngSerializer.TileWidth = result.Value.TileWidth;
                         pngSerializer.TileHeight = result.Value.TileHeight;
@@ -177,7 +176,7 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
         {
             var result = await RouterControl.Navigate<int>("/exportPng");
 
-            if(result.HasValue)
+            if (result.HasValue)
             {
                 columnsCount = result.Value;
             }
@@ -209,8 +208,8 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
         if (model.Frames.Count == 1)
         {
             var result = await RouterControl.Navigate<List<Point>>("/exportIcon");
-            
-            if(result.HasValue)
+
+            if (result.HasValue)
             {
                 serializer.IconFormats = result.Value;
             }

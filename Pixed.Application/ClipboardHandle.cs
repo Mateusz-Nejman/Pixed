@@ -1,6 +1,5 @@
 ﻿using Avalonia.Input;
 using Avalonia.Input.Platform;
-using Pixed.Application.Windows;
 using Pixed.Common.Platform;
 using System.Threading.Tasks;
 

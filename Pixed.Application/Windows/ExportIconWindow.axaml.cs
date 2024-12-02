@@ -1,4 +1,3 @@
-using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Pixed.Application.ViewModels;
 using Pixed.Core.Models;

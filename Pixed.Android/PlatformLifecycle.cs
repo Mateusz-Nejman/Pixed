@@ -1,7 +1,6 @@
 ﻿using Android.App;
 using Avalonia.Controls.ApplicationLifetimes;
 using Pixed.Application.Platform;
-using System;
 namespace Pixed.Android;
 internal class PlatformLifecycle : IApplicationLifecycle
 {

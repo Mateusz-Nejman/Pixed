@@ -1,5 +1,4 @@
-﻿using Avalonia.Controls;
-using Avalonia.Interactivity;
+﻿using Avalonia.Interactivity;
 using AvaloniaInside.Shell;
 using Pixed.Application.DependencyInjection;
 using Pixed.Common.DependencyInjection;

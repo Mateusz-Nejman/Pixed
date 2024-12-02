@@ -3,13 +3,11 @@ using Android.Content.PM;
 using Android.OS;
 using Avalonia;
 using Avalonia.Android;
-using Avalonia.Controls;
 using Avalonia.ReactiveUI;
 using AvaloniaInside.Shell;
 using Pixed.Application;
 using Pixed.Application.Platform;
 using Pixed.Application.Utils;
-using System;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 
@@ -59,7 +57,7 @@ public class MainActivity : AvaloniaMainActivity<App>
         storageRead = await Permissions.RequestAsync<Permissions.StorageRead>();
         storageWrite = await Permissions.RequestAsync<Permissions.StorageWrite>();
 
-        if(storageRead != PermissionStatus.Granted || storageWrite != PermissionStatus.Granted)
+        if (storageRead != PermissionStatus.Granted || storageWrite != PermissionStatus.Granted)
         {
             return PermissionStatus.Denied;
         }

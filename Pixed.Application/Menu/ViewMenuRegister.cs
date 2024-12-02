@@ -1,7 +1,4 @@
-﻿using Avalonia.Controls;
-using Pixed.Application.Models;
-using Pixed.Application.Utils;
-using Pixed.Application.Windows;
+﻿using Pixed.Application.Models;
 using Pixed.Common;
 using Pixed.Common.Menu;
 using Pixed.Core;
@@ -31,7 +28,7 @@ internal class ViewMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
         {
             var navigateResult = await RouterControl.Navigate<GridSettingsResult>("/gridSettings");
 
-            if(navigateResult.HasValue)
+            if (navigateResult.HasValue)
             {
                 _applicationData.UserSettings.GridWidth = navigateResult.Value.Width;
                 _applicationData.UserSettings.GridHeight = navigateResult.Value.Height;

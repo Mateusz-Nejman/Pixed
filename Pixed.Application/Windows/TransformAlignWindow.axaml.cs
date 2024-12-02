@@ -1,4 +1,3 @@
-using Avalonia.Controls;
 using Pixed.Common.Tools.Transform;
 using Pixed.Core.Models;
 
