@@ -43,6 +43,13 @@ internal partial class PaintCanvas : PixedUserControl<PaintCanvasViewModel>
     private void PaintCanvas_SizeChanged(object? sender, SizeChangedEventArgs e)
     {
         ViewModel.RecalculateFactor(new Point((int)(e.NewSize.Width - _scrollBarSize), (int)(e.NewSize.Height - _scrollBarSize)));
+
+        var applicationData = this.GetServiceProvider().Get<ApplicationData>();
+        int projectWidth = applicationData.CurrentModel.Width;
+        int projectHeight = applicationData.CurrentModel.Height;
+        double deltaX = e.NewSize.Width / projectWidth;
+        double deltaY = e.NewSize.Height / projectHeight;
+        zoomBorder.ZoomTo(Math.Min(deltaX, deltaY), projectWidth / 2, projectHeight / 2, Avalonia.Matrix.Identity);
     }
 
     private void Canvas_PointerPressed(object? sender, PointerPressedEventArgs e)
