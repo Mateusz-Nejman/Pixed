@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 namespace Pixed.Common.Platform;
 public interface IPlatformFolder
 {
-    public bool ExtensionsEnabled { get; }
     public Task<IStorageFolder> GetPixedFolder(IStorageProvider storageProvider);
     public Task<string> GetPixedFolderAbsolute(IStorageProvider storageProvider);
     public Task<IStorageFolder> GetPalettesFolder(IStorageProvider storageProvider);

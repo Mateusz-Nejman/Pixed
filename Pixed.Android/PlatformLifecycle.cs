@@ -6,6 +6,7 @@ internal class PlatformLifecycle : IApplicationLifecycle
 {
     public static Activity MainActivity { get; internal set; }
     public IApplicationLifetime ApplicationLifetime { get; set; }
+    public bool ExtensionsEnabled => false;
 
     public void Close()
     {

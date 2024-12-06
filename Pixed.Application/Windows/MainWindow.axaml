@@ -2,8 +2,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:windows="clr-namespace:Pixed.Application.Windows;assembly=Pixed.Application"
-        xmlns:viewmodels="clr-namespace:Pixed.Application.ViewModels"
 		xmlns:routing="clr-namespace:Pixed.Application.Routing;assembly=Pixed.Application"
         mc:Ignorable="d" Height="600" Width="800"
         x:Class="Pixed.Application.Windows.MainWindow"
@@ -13,11 +11,7 @@
         ExtendClientAreaTitleBarHeightHint="-1"
         WindowState="Maximized"
         Icon="avares://Pixed.Application/Resources/icon.ico"
-        Title="Pixed"
-        x:DataType="viewmodels:MainWindowViewModel">
-	<Window.DataContext>
-		<viewmodels:MainWindowViewModel/>
-	</Window.DataContext>
+        Title="Pixed">
   <Panel>
     <routing:RouterControl/>
   </Panel>

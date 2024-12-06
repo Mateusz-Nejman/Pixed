@@ -8,7 +8,6 @@ namespace Pixed.Android;
 internal class PlatformFolder : IPlatformFolder
 {
     public static Context Context { get; set; }
-    public bool ExtensionsEnabled => false;
 
     public async Task<IStorageFolder> GetExtensionsFolder(IStorageProvider storageProvider)
     {

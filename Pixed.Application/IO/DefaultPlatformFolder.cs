@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 namespace Pixed.Application.IO;
 public class DefaultPlatformFolder : IPlatformFolder
 {
-    public bool ExtensionsEnabled => true;
-
     public async Task<IStorageFolder> GetExtensionsFolder(IStorageProvider storageProvider)
     {
         var pixedFolder = await GetPixedFolder(storageProvider);

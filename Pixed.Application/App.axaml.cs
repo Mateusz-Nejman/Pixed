@@ -21,7 +21,7 @@ namespace Pixed.Application;
 
 public partial class App : Avalonia.Application
 {
-    private Mutex _mutex;
+    private Mutex? _mutex;
     internal static IPixedServiceProvider ServiceProvider { get; private set; }
     public override void Initialize()
     {
@@ -40,34 +40,14 @@ public partial class App : Avalonia.Application
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
-            BindingPlugins.DataValidators.RemoveAt(0);
-
-            IServiceCollection collection = new ServiceCollection();
-            var registers = GetDependencyRegisters();
-
-            foreach (var register in registers)
-            {
-                register.Register(ref collection);
-            }
-
-            collection.AddSingleton(PlatformLifecycle.Lifecycle);
-
-            ServiceProvider provider = new(collection.BuildServiceProvider());
-            this.Resources[typeof(IPixedServiceProvider)] = provider;
-            ServiceProvider = provider;
-            singleViewPlatform.MainView = new RouterControl();
+            InitializeServices();
+            singleViewPlatform.MainView = new MainView();
         }
         base.OnFrameworkInitializationCompleted();
     }
 
-    private async Task InitializeMainWindow(IClassicDesktopStyleApplicationLifetime desktop, Window splash)
+    private void InitializeServices()
     {
-        if (!HandleNewInstance(Dispatcher.UIThread, desktop))
-        {
-            splash.Close();
-            return;
-        }
-        await Task.Delay(1500);
         BindingPlugins.DataValidators.RemoveAt(0);
 
         IServiceCollection collection = new ServiceCollection();
@@ -80,11 +60,27 @@ public partial class App : Avalonia.Application
 
         collection.AddSingleton(PlatformLifecycle.Lifecycle);
 
-        ExtensionsLoader.Load(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Pixed", "Extensions"));
-        ExtensionsLoader.RegisterTools(ref collection);
+        if(PlatformLifecycle.Lifecycle.ExtensionsEnabled)
+        {
+            ExtensionsLoader.Load(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Pixed", "Extensions"));
+            ExtensionsLoader.RegisterTools(ref collection);
+        }
+
         ServiceProvider provider = new(collection.BuildServiceProvider());
         this.Resources[typeof(IPixedServiceProvider)] = provider;
         ServiceProvider = provider;
+    }
+
+    private async Task InitializeMainWindow(IClassicDesktopStyleApplicationLifetime desktop, Window splash)
+    {
+        if (!HandleNewInstance(Dispatcher.UIThread, desktop))
+        {
+            splash.Close();
+            return;
+        }
+        await Task.Delay(1500);
+        InitializeServices();
+        var provider = this.Resources[typeof(IPixedServiceProvider)] as IPixedServiceProvider;
         //TODO open from args
         desktop.MainWindow = provider.Get<MainWindow>();
         desktop.MainWindow.Show();

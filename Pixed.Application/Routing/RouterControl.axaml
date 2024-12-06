@@ -12,7 +12,7 @@
              DefaultSideMenuSize="0"
              NavigationBar.Visible="False">
 
-    <Route Path="main" Page="windows:MainView"/>
+    <Route Path="main" Page="windows:MainPage"/>
     <Route Path="about" Page="windows:AboutWindow" Type="Modal"/>
     <Route Path="gridSettings" Page="windows:GridSettingsWindow" Type="Modal"/>
     <Route Path="resizeProject" Page="windows:ResizeProjectWindow" Type="Modal"/>
