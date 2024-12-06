@@ -12,4 +12,9 @@ internal class PlatformLifecycle : IApplicationLifecycle
     {
         MainActivity?.FinishAffinity();
     }
+
+    public string GetVersion()
+    {
+        return Xamarin.Essentials.VersionTracking.CurrentVersion;
+    }
 }

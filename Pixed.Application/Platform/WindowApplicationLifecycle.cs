@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls.ApplicationLifetimes;
+using System.Diagnostics;
 
 namespace Pixed.Application.Platform;
 public class WindowApplicationLifecycle : IApplicationLifecycle
@@ -13,5 +14,12 @@ public class WindowApplicationLifecycle : IApplicationLifecycle
         {
             lifetime.Shutdown();
         }
+    }
+
+    public string GetVersion()
+    {
+        var assemblyName = Process.GetCurrentProcess().MainModule.FileName;
+        var versionInfo = FileVersionInfo.GetVersionInfo(assemblyName);
+        return versionInfo.FileVersion;
     }
 }

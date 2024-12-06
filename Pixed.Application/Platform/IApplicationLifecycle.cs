@@ -7,6 +7,7 @@ public interface IApplicationLifecycle
     public IApplicationLifetime ApplicationLifetime { get; set; }
     public bool ExtensionsEnabled { get; }
     public void Close();
+    public string GetVersion();
 }
 
 public static class PlatformLifecycle

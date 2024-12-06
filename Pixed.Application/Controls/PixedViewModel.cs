@@ -1,8 +1,10 @@
-﻿using Pixed.Core;
+﻿using Pixed.Common.DependencyInjection;
+using Pixed.Core;
 
 namespace Pixed.Application.Controls;
 internal abstract class PixedViewModel : PropertyChangedBase
 {
+    public IPixedServiceProvider Provider => App.ServiceProvider;
     public virtual void RegisterMenuItems()
     {
 
