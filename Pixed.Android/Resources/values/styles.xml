@@ -10,6 +10,6 @@
 		<item name="windowSplashScreenAnimatedIcon">@mipmap/pixed_icon</item>
 		<item name="windowSplashScreenAnimationDuration">100</item>
 		<item name="postSplashScreenTheme">@style/Theme.Main</item>
-		<item name="windowSplashScreenBehavior" tools:targetApi="33">icon_preferred</item>
+		<item name="android:windowSplashScreenBehavior" tools:targetApi="33">icon_preferred</item>
 	</style>
 </resources>
