@@ -1,8 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<resources>
-	<style name="MyTheme.NoActionBar" parent="@style/Theme.AppCompat.DayNight.NoActionBar">
+<resources xmlns:tools="http://schemas.android.com/tools">
+	<style name="Theme.Main" parent="@style/Theme.AppCompat.DayNight.NoActionBar">
 		<item name="android:windowActionBar">false</item>
 		<item name="android:windowBackground">@drawable/splash_screen</item>
 		<item name="android:windowNoTitle">true</item>
+	</style>
+	<style name="Theme.Splash" parent="Theme.SplashScreen">
+		<item name="windowSplashScreenBackground">@color/splash_background</item>
+		<item name="windowSplashScreenAnimatedIcon">@mipmap/pixed_icon</item>
+		<item name="windowSplashScreenAnimationDuration">100</item>
+		<item name="postSplashScreenTheme">@style/Theme.Main</item>
+		<item name="windowSplashScreenBehavior" tools:targetApi="33">icon_preferred</item>
 	</style>
 </resources>

@@ -15,7 +15,6 @@ namespace Pixed.Android;
 
 [Activity(
     Label = "Pixed - Pixelart Editor",
-    Theme = "@style/MyTheme.NoActionBar",
     Icon = "@mipmap/pixed_icon",
     MainLauncher = true,
     ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.ScreenSize | ConfigChanges.UiMode)]
@@ -23,6 +22,7 @@ public class MainActivity : AvaloniaMainActivity<App>
 {
     protected override async void OnCreate(Bundle? savedInstanceState)
     {
+        AndroidX.Core.SplashScreen.SplashScreen.InstallSplashScreen(this);
         PlatformLifecycle.MainActivity = this;
         PlatformFolder.Context = this;
         base.OnCreate(savedInstanceState);
