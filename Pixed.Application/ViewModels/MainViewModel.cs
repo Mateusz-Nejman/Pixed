@@ -1,7 +1,10 @@
 ﻿using Pixed.Application.Controls;
+using Pixed.Application.Menu;
 using Pixed.Application.Windows;
 using Pixed.Common;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
 
 namespace Pixed.Application.ViewModels;
@@ -9,8 +12,10 @@ namespace Pixed.Application.ViewModels;
 internal class MainViewModel : PixedViewModel, IDisposable
 {
     private readonly IDisposable _projectChanged;
+    private readonly IDisposable _menuBuilt;
     private bool _disposedValue;
     private string _title;
+    private List<Avalonia.Controls.MenuItem>? _menu;
 
     public string Title
     {
@@ -22,12 +27,27 @@ internal class MainViewModel : PixedViewModel, IDisposable
         }
     }
 
+    public List<Avalonia.Controls.MenuItem>? Menu
+    {
+        get => _menu;
+        set
+        {
+            _menu = value;
+            OnPropertyChanged();
+        }
+    }
+
     public ICommand QuitCommand => MainView.QuitCommand;
-    public MainViewModel()
+    public MainViewModel(MenuBuilder menuBuilder)
     {
         _projectChanged = Subjects.ProjectChanged.Subscribe(model =>
         {
             Title = model.FileName + " - Pixed";
+        });
+
+        _menuBuilt = menuBuilder.OnMenuBuilt.Subscribe(menu =>
+        {
+            Menu = menu.Select(m => m.ToAvaloniaMenuItem()).ToList();
         });
     }
 

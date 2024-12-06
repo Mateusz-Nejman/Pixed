@@ -9,5 +9,5 @@ public interface IMenuItemRegistry
 
     public void Register(BaseMenuItem baseMenu, string text, ICommand command, object? commandParameter = null);
 
-    public void Register(BaseMenuItem baseMenu, NativeMenuItem menuItem);
+    public void Register(BaseMenuItem baseMenu, IMenuItem menuItem);
 }

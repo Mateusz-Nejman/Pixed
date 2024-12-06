@@ -2,15 +2,17 @@
 using Pixed.Application.Controls;
 using Pixed.Application.Menu;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Pixed.Application.ViewModels;
 internal class MainWindowViewModel : PixedViewModel, IDisposable
 {
     private readonly IDisposable _onMenuBuilt;
-    private NativeMenu? _menu;
+    private List<Avalonia.Controls.MenuItem>? _menu;
     private bool _disposedValue;
 
-    public NativeMenu? Menu
+    public List<Avalonia.Controls.MenuItem>? Menu
     {
         get => _menu;
         set
@@ -25,7 +27,7 @@ internal class MainWindowViewModel : PixedViewModel, IDisposable
         var menuBuilder = App.ServiceProvider.Get<MenuBuilder>();
         _onMenuBuilt = menuBuilder.OnMenuBuilt.Subscribe(menu =>
         {
-            Menu = menu;
+            Menu = menu.Select(m => m.ToAvaloniaMenuItem()).ToList();
         });
     }
 

@@ -19,8 +19,7 @@
 				 VerticalAlignment="Center"
 				 Margin="5,0,3,0"
 				 Name="windowIcon"></Image>
-			<NativeMenuBar DockPanel.Dock="Top"
-					 HorizontalAlignment="Left"/>
+			<Menu HorizontalAlignment="Left" ItemsSource="{Binding Menu, RelativeSource={RelativeSource FindAncestor, AncestorType=local:CustomTitleBar}}"/>
 		</StackPanel>
 		<TextBlock Text="{Binding Title, RelativeSource={RelativeSource FindAncestor, AncestorType=local:CustomTitleBar}}" Grid.Column="1"
 				 FontSize="14"
@@ -32,7 +31,8 @@
 		<StackPanel Height="22" Grid.Column="2"
 			  Orientation="Horizontal"
 			  Spacing="0"
-			  VerticalAlignment="Top">
+			  VerticalAlignment="Top"
+			  Name="windowButtons">
 			<Button Width="46"
 					IsVisible="{Binding CanMinimize, RelativeSource={RelativeSource FindAncestor, AncestorType=local:CustomTitleBar}}"
 				VerticalAlignment="Stretch"

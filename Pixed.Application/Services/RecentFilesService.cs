@@ -1,6 +1,7 @@
-﻿using Avalonia.Controls;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Pixed.Application.IO;
+using Pixed.Application.Menu;
+using Pixed.Common.Menu;
 using Pixed.Common.Platform;
 using Pixed.Core;
 using Pixed.Core.Models;
@@ -40,20 +41,20 @@ namespace Pixed.Application.Services
             }
         }
 
-        public NativeMenu? BuildMenu()
+        public List<IMenuItem> BuildMenu()
         {
             if (RecentFiles.Count == 0)
             {
-                return null;
+                return [];
             }
 
-            NativeMenu menu = [];
+            List<IMenuItem> items = [];
 
             foreach (var file in RecentFiles)
             {
                 if (File.Exists(file))
                 {
-                    menu.Add(new NativeMenuItem(file)
+                    items.Add(new MenuItem(file)
                     {
                         Command = new AsyncCommand<string>(OpenProject),
                         CommandParameter = file
@@ -61,7 +62,7 @@ namespace Pixed.Application.Services
                 }
             }
 
-            return menu;
+            return items;
         }
 
         private async Task Save()

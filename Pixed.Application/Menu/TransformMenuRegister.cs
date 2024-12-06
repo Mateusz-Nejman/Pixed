@@ -18,9 +18,9 @@ internal class TransformMenuRegister(IMenuItemRegistry menuItemRegistry, Selecti
 
     public void Register()
     {
-        NativeMenuItem transformMenu = new("Transform")
+        MenuItem transformMenu = new("Transform")
         {
-            Menu = []
+            Items = []
         };
         AddToMenu(ref transformMenu, "Flip", () => Router.Navigate("/transformFlip"));
         AddToMenu(ref transformMenu, "Rotation", () => Router.Navigate("/transformRotate"));
@@ -30,27 +30,27 @@ internal class TransformMenuRegister(IMenuItemRegistry menuItemRegistry, Selecti
         _menuItemRegistry.Register(BaseMenuItem.Tools, transformMenu);
     }
 
-    private static void AddToMenu(ref NativeMenuItem menuItem, string text, Func<Task> task)
+    private static void AddToMenu(ref MenuItem menuItem, string text, Func<Task> task)
     {
-        menuItem.Menu ??= [];
-        NativeMenuItem toolMenu = new(text)
+        menuItem.Items ??= [];
+        MenuItem toolMenu = new(text)
         {
             Command = ReactiveCommand.CreateFromTask(task)
         };
 
-        menuItem.Menu.Add(toolMenu);
+        menuItem.Items.Add(toolMenu);
     }
 
-    private static void AddToMenu(ref NativeMenuItem menuItem, string text, AbstractTransformTool tool)
+    private static void AddToMenu(ref MenuItem menuItem, string text, AbstractTransformTool tool)
     {
-        menuItem.Menu ??= [];
-        NativeMenuItem toolMenu = new(text)
+        menuItem.Items ??= [];
+        MenuItem toolMenu = new(text)
         {
             Command = new ActionCommand<AbstractTransformTool>(ToolAction),
             CommandParameter = tool
         };
 
-        menuItem.Menu.Add(toolMenu);
+        menuItem.Items.Add(toolMenu);
     }
 
     private static void ToolAction(AbstractTransformTool tool)

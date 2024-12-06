@@ -16,10 +16,10 @@ internal class MenuItemRegistry(MenuBuilder menuBuilder) : IMenuItemRegistry
 
     public void Register(BaseMenuItem baseMenu, string text, ICommand command, object? commandParameter = null)
     {
-        Register(baseMenu, new NativeMenuItem(text) { Command = command, CommandParameter = commandParameter });
+        Register(baseMenu, new MenuItem(text) { Command = command, CommandParameter = commandParameter });
     }
 
-    public void Register(BaseMenuItem baseMenu, NativeMenuItem menuItem)
+    public void Register(BaseMenuItem baseMenu, IMenuItem menuItem)
     {
         _menuBuilder.AddEntry(baseMenu, menuItem);
     }

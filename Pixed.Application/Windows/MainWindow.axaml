@@ -14,8 +14,7 @@
         WindowState="Maximized"
         Icon="avares://Pixed.Application/Resources/icon.ico"
         Title="Pixed"
-        x:DataType="viewmodels:MainWindowViewModel"
-        NativeMenu.Menu="{Binding Menu}">
+        x:DataType="viewmodels:MainWindowViewModel">
 	<Window.DataContext>
 		<viewmodels:MainWindowViewModel/>
 	</Window.DataContext>

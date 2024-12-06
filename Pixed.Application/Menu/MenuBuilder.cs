@@ -24,10 +24,10 @@ namespace Pixed.Application.Menu;
 internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods pixedProjectMethods, RecentFilesService recentFilesService, IStorageProviderHandle storageProvider)
 {
 
-    private readonly struct MenuEntry(BaseMenuItem baseMenu, NativeMenuItem menuItem)
+    private readonly struct MenuEntry(BaseMenuItem baseMenu, IMenuItem menuItem)
     {
         public BaseMenuItem BaseMenu { get; } = baseMenu;
-        public NativeMenuItem MenuItem { get; } = menuItem;
+        public IMenuItem MenuItem { get; } = menuItem;
     }
 
     private readonly ApplicationData _applicationData = applicationData;
@@ -36,9 +36,9 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
     private readonly IStorageProviderHandle _storageProvider = storageProvider;
     private readonly List<MenuEntry> _entries = [];
 
-    public Subject<NativeMenu> OnMenuBuilt { get; } = new Subject<NativeMenu>();
+    public Subject<List<IMenuItem>> OnMenuBuilt { get; } = new Subject<List<IMenuItem>>();
 
-    public void AddEntry(BaseMenuItem baseMenu, NativeMenuItem menuItem)
+    public void AddEntry(BaseMenuItem baseMenu, IMenuItem menuItem)
     {
         _entries.Add(new MenuEntry(baseMenu, menuItem));
     }
@@ -46,20 +46,20 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
     public void Build(bool clear = true)
     {
         AddFromExtensions();
-        NativeMenuItem fileMenu = GetFileMenu();
-        NativeMenuItem editMenu = GetEditMenu();
-        NativeMenuItem toolsMenu = new("Tools");
-        NativeMenuItem paletteMenu = new("Palette");
-        NativeMenuItem projectMenu = GetProjectMenu();
-        NativeMenuItem viewMenu = new("View");
-        NativeMenuItem helpMenu = new("Help");
+        MenuItem fileMenu = GetFileMenu();
+        MenuItem editMenu = GetEditMenu();
+        MenuItem toolsMenu = new("Tools");
+        MenuItem paletteMenu = new("Palette");
+        MenuItem projectMenu = GetProjectMenu();
+        MenuItem viewMenu = new("View");
+        MenuItem helpMenu = new("Help");
 
-        NativeMenuItem aboutMenu = new("About")
+        MenuItem aboutMenu = new("About")
         {
             Command = ReactiveCommand.CreateFromTask(() => Router.Navigate("/about"))
         };
 
-        helpMenu.Menu = [aboutMenu];
+        helpMenu.Items = [aboutMenu];
 
         AddToMenu(ref toolsMenu, GetEntries(BaseMenuItem.Tools));
         AddToMenu(ref paletteMenu, GetEntries(BaseMenuItem.Palette));
@@ -72,21 +72,15 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
         }
 
         NativeMenu menu = [];
-        menu.Items.Add(fileMenu);
-        menu.Items.Add(editMenu);
-        menu.Items.Add(toolsMenu);
-        menu.Items.Add(paletteMenu);
-        menu.Items.Add(projectMenu);
-        menu.Items.Add(viewMenu);
-        menu.Items.Add(helpMenu);
 
-        OnMenuBuilt.OnNext(menu);
+        List<IMenuItem> items = [fileMenu, editMenu, toolsMenu, paletteMenu, projectMenu, viewMenu, helpMenu];
+        OnMenuBuilt.OnNext(items);
     }
 
-    private NativeMenuItem GetFileMenu()
+    private MenuItem GetFileMenu()
     {
-        NativeMenuItem fileMenu = new("File");
-        NativeMenuItem fileNew = new("New")
+        MenuItem fileMenu = new("File");
+        MenuItem fileNew = new("New")
         {
             Command = new ActionCommand(async () =>
         {
@@ -103,53 +97,53 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
             }
         })
         };
-        NativeMenuItem fileOpen = new("Open")
+        MenuItem fileOpen = new("Open")
         {
             Command = new ActionCommand(async () =>
         {
             await _projectMethods.Open(_recentFilesService);
         })
         };
-        NativeMenuItem fileSave = new("Save")
+        MenuItem fileSave = new("Save")
         {
             Command = new AsyncCommand<bool>(SaveAction),
             CommandParameter = false
         };
-        NativeMenuItem fileSaveAs = new("Save as")
+        MenuItem fileSaveAs = new("Save as")
         {
             Command = new AsyncCommand<bool>(SaveAction),
             CommandParameter = true
         };
-        NativeMenuItem fileExportPng = new("Export to PNG")
+        MenuItem fileExportPng = new("Export to PNG")
         {
             Command = new AsyncCommand(ExportPngAction)
         };
-        NativeMenuItem fileExportIco = new("Export to Ico")
+        MenuItem fileExportIco = new("Export to Ico")
         {
             Command = new AsyncCommand(ExportIcoAction)
         };
-        NativeMenuItem fileRecent = new("Recent")
+        MenuItem fileRecent = new("Recent")
         {
-            Menu = _recentFilesService.BuildMenu()
+            Items = _recentFilesService.BuildMenu()
         };
 
-        NativeMenuItem fileQuit = new("Quit")
+        MenuItem fileQuit = new("Quit")
         {
             Command = MainView.QuitCommand
         };
 
-        fileMenu.Menu = [fileNew, fileOpen, fileSave, fileSaveAs, fileExportPng, fileExportIco];
+        fileMenu.Items = [fileNew, fileOpen, fileSave, fileSaveAs, fileExportPng, fileExportIco];
         AddToMenu(ref fileMenu, GetEntries(BaseMenuItem.File));
 
-        fileMenu.Menu.Add(fileRecent);
-        fileMenu.Menu.Add(fileQuit);
+        fileMenu.Items.Add(fileRecent);
+        fileMenu.Items.Add(fileQuit);
         return fileMenu;
     }
 
-    private NativeMenuItem GetEditMenu()
+    private MenuItem GetEditMenu()
     {
-        NativeMenuItem editMenu = new("Edit");
-        NativeMenuItem undoMenu = new("Undo")
+        MenuItem editMenu = new("Edit");
+        MenuItem undoMenu = new("Undo")
         {
             Command = new ActionCommand(() =>
             {
@@ -157,7 +151,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
                 Subjects.ProjectModified.OnNext(_applicationData.CurrentModel);
             })
         };
-        NativeMenuItem redoMenu = new("Redo")
+        MenuItem redoMenu = new("Redo")
         {
             Command = new ActionCommand(() =>
             {
@@ -166,18 +160,18 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
             })
         };
 
-        editMenu.Menu = [undoMenu, redoMenu];
+        editMenu.Items = [undoMenu, redoMenu];
         AddToMenu(ref editMenu, GetEntries(BaseMenuItem.Edit));
 
         return editMenu;
     }
 
-    private NativeMenuItem GetProjectMenu()
+    private MenuItem GetProjectMenu()
     {
-        NativeMenuItem projectMenu = new("Project");
-        NativeMenuItem projectResize = new("Resize project");
+        MenuItem projectMenu = new("Project");
+        MenuItem projectResize = new("Resize project");
 
-        projectMenu.Menu = [];
+        projectMenu.Items = [];
         projectResize.Command = new ActionCommand(async () =>
         {
             var navigatorResult = await Router.Navigate<ResizeResult>("/resizeProject");
@@ -195,23 +189,23 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
             }
         });
 
-        projectMenu.Menu.Add(projectResize);
+        projectMenu.Items.Add(projectResize);
         AddToMenu(ref projectMenu, GetEntries(BaseMenuItem.Project));
         return projectMenu;
     }
 
-    private List<NativeMenuItem> GetEntries(BaseMenuItem baseMenu)
+    private List<IMenuItem> GetEntries(BaseMenuItem baseMenu)
     {
         return _entries.Where(e => e.BaseMenu == baseMenu).Select(e => e.MenuItem).ToList();
     }
 
-    private void AddToMenu(ref NativeMenuItem menuItem, List<NativeMenuItem> items)
+    private void AddToMenu(ref MenuItem menuItem, List<IMenuItem> items)
     {
-        menuItem.Menu ??= [];
+        menuItem.Items ??= [];
 
         foreach (var item in items)
         {
-            menuItem.Menu.Add(item);
+            menuItem.Items.Add(item);
         }
     }
 
