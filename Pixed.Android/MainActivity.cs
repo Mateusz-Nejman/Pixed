@@ -6,6 +6,7 @@ using Avalonia.Android;
 using Avalonia.ReactiveUI;
 using AvaloniaInside.Shell;
 using Pixed.Application;
+using Pixed.Application.IO;
 using Pixed.Application.Platform;
 using Pixed.Application.Utils;
 using System.Threading.Tasks;
@@ -25,6 +26,7 @@ public class MainActivity : AvaloniaMainActivity<App>
         AndroidX.Core.SplashScreen.SplashScreen.InstallSplashScreen(this);
         PlatformLifecycle.MainActivity = this;
         PlatformFolder.Context = this;
+        StreamBase.StreamBaseImpl = typeof(AndroidStream);
         base.OnCreate(savedInstanceState);
         Platform.Init(this, savedInstanceState);
         var permissions = await CheckPermissions();

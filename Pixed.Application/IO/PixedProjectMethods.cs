@@ -44,10 +44,10 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
 
             model.FilePath = file.Path.AbsolutePath;
             model.FileName = file.Name;
-            fileStream = await file.OpenWriteAsync();
+            fileStream = await file.OpenWrite();
         }
 
-        if (fileStream != null)
+        if (fileStream != null && fileStream.CanWrite)
         {
             PixedProjectSerializer serializer = new();
             serializer.Serialize(fileStream, model, true);
@@ -63,7 +63,7 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
 
         foreach (var item in files)
         {
-            var stream = await item.OpenReadAsync();
+            var stream = await item.OpenRead();
             string extension = (new FileInfo(item.Name)).Extension;
 
             IPixedProjectSerializer? serializer = GetSerializer(extension);
