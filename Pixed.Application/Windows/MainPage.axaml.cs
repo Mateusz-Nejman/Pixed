@@ -80,9 +80,9 @@ internal partial class MainPage : PixedPage<MainViewModel>, IDisposable
         _copyPasteMenuRegister.Register();
         _paletteMenuRegister.Register();
         _toolsMenuRegister.Register();
-        _menuBuilder.Build();
 
         await Initialize();
+        _menuBuilder.Build();
         _toolSelector.SelectTool("tool_pen");
         await _recentFilesService.Load();
         await _paletteService.LoadAll();

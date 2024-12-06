@@ -37,7 +37,7 @@ internal class MainViewModel : PixedViewModel, IDisposable
         }
     }
 
-    public ICommand QuitCommand => MainPage.QuitCommand;
+    public ICommand QuitCommand => MainPage.QuitCommand; //For binding
     public MainViewModel(MenuBuilder menuBuilder)
     {
         _projectChanged = Subjects.ProjectChanged.Subscribe(model =>
