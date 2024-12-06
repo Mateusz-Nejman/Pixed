@@ -1,5 +1,6 @@
 ﻿using Avalonia.Media;
 using Pixed.Application.Controls;
+using Pixed.Application.Routing;
 using Pixed.Application.Utils;
 using Pixed.Common;
 using Pixed.Common.Menu;
@@ -202,6 +203,6 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
 
     private void PaletteListAction()
     {
-        RouterControl.Navigate("/palettes");
+        Router.Navigate("/palettes");
     }
 }

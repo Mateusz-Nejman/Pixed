@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:windows="clr-namespace:Pixed.Application.Windows;assembly=Pixed.Application"
         xmlns:viewmodels="clr-namespace:Pixed.Application.ViewModels"
-        xmlns:app="clr-namespace:Pixed.Application;assembly=Pixed.Application"
+		xmlns:routing="clr-namespace:Pixed.Application.Routing;assembly=Pixed.Application"
         mc:Ignorable="d" Height="600" Width="800"
         x:Class="Pixed.Application.Windows.MainWindow"
         WindowStartupLocation="CenterScreen"
@@ -20,6 +20,6 @@
 		<viewmodels:MainWindowViewModel/>
 	</Window.DataContext>
   <Panel>
-    <app:RouterControl/>
+    <routing:RouterControl/>
   </Panel>
 </Window>

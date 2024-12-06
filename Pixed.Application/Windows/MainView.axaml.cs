@@ -6,6 +6,7 @@ using Pixed.Application.Input;
 using Pixed.Application.IO;
 using Pixed.Application.Menu;
 using Pixed.Application.Platform;
+using Pixed.Application.Routing;
 using Pixed.Application.Services;
 using Pixed.Application.ViewModels;
 using Pixed.Common;
@@ -140,7 +141,7 @@ internal partial class MainView : PixedPage<MainViewModel>, IDisposable
                         untitledIndex++;
                     }
 
-                    var result = await RouterControl.Navigate<ButtonResult>("/unsavedChanges", name);
+                    var result = await Router.Navigate<ButtonResult>("/unsavedChanges", name);
 
                     if (result.HasValue)
                     {
@@ -231,7 +232,7 @@ internal partial class MainView : PixedPage<MainViewModel>, IDisposable
 
     private async Task ChangeOpacityAction(Layer layer)
     {
-        var result = await RouterControl.Navigate<double>("/changeOpacity", layer.Opacity);
+        var result = await Router.Navigate<double>("/changeOpacity", layer.Opacity);
 
         if (result.HasValue)
         {

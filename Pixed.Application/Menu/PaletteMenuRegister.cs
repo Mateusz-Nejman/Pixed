@@ -1,4 +1,5 @@
-﻿using Pixed.Application.Utils;
+﻿using Pixed.Application.Routing;
+using Pixed.Application.Utils;
 using Pixed.Common.Menu;
 using Pixed.Common.Services.Palette;
 using System.Threading.Tasks;
@@ -68,6 +69,6 @@ internal class PaletteMenuRegister(IMenuItemRegistry menuItemRegistry, PaletteSe
 
     private void PaletteListAction()
     {
-        RouterControl.Navigate("/palettes");
+        Router.Navigate("/palettes");
     }
 }

@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:windows="clr-namespace:Pixed.Application.Windows"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Pixed.Application.RouterControl">
+             x:Class="Pixed.Application.Routing.RouterControl">
   <ShellView Name="ShellViewMain"
 	           HorizontalAlignment="Stretch"
 	           VerticalAlignment="Stretch"

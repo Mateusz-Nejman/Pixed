@@ -2,6 +2,7 @@
 using Pixed.Application.Extensions;
 using Pixed.Application.IO;
 using Pixed.Application.Models;
+using Pixed.Application.Routing;
 using Pixed.Application.Services;
 using Pixed.Application.Windows;
 using Pixed.Common;
@@ -55,7 +56,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
 
         NativeMenuItem aboutMenu = new("About")
         {
-            Command = ReactiveCommand.CreateFromTask(() => RouterControl.Navigate("/about"))
+            Command = ReactiveCommand.CreateFromTask(() => Router.Navigate("/about"))
         };
 
         helpMenu.Menu = [aboutMenu];
@@ -89,7 +90,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
         {
             Command = new ActionCommand(async () =>
         {
-            var result = await RouterControl.Navigate<NewProjectResult>("/newProject");
+            var result = await Router.Navigate<NewProjectResult>("/newProject");
 
             if (result.HasValue)
             {
@@ -179,7 +180,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
         projectMenu.Menu = [];
         projectResize.Command = new ActionCommand(async () =>
         {
-            var navigatorResult = await RouterControl.Navigate<ResizeResult>("/resizeProject");
+            var navigatorResult = await Router.Navigate<ResizeResult>("/resizeProject");
             if (navigatorResult.HasValue)
             {
                 var result = navigatorResult.Value;

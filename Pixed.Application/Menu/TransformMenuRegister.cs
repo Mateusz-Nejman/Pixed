@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Pixed.Application.Routing;
 using Pixed.Common.Menu;
 using Pixed.Common.Selection;
 using Pixed.Common.Tools.Transform;
@@ -21,9 +22,9 @@ internal class TransformMenuRegister(IMenuItemRegistry menuItemRegistry, Selecti
         {
             Menu = []
         };
-        AddToMenu(ref transformMenu, "Flip", () => RouterControl.Navigate("/transformFlip"));
-        AddToMenu(ref transformMenu, "Rotation", () => RouterControl.Navigate("/transformRotate"));
-        AddToMenu(ref transformMenu, "Align image to the center", () => RouterControl.Navigate("/transformAlign"));
+        AddToMenu(ref transformMenu, "Flip", () => Router.Navigate("/transformFlip"));
+        AddToMenu(ref transformMenu, "Rotation", () => Router.Navigate("/transformRotate"));
+        AddToMenu(ref transformMenu, "Align image to the center", () => Router.Navigate("/transformAlign"));
         AddToMenu(ref transformMenu, "Crop to fit the content or the selection", new Crop(_applicationData, _selectionManager));
 
         _menuItemRegistry.Register(BaseMenuItem.Tools, transformMenu);

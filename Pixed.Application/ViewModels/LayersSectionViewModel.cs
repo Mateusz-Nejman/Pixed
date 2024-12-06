@@ -1,4 +1,5 @@
 ﻿using Pixed.Application.Controls;
+using Pixed.Application.Routing;
 using Pixed.Common;
 using Pixed.Common.Menu;
 using Pixed.Core;
@@ -212,7 +213,7 @@ internal class LayersSectionViewModel : PixedViewModel, IDisposable
     {
         string layerName = Layers[_selectedLayer].Name;
 
-        var result = await RouterControl.Navigate<string>("/changeLayerName", layerName);
+        var result = await Router.Navigate<string>("/changeLayerName", layerName);
 
         if (result.HasValue)
         {

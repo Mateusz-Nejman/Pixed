@@ -1,4 +1,5 @@
 ﻿using Pixed.Application.Models;
+using Pixed.Application.Routing;
 using Pixed.Common;
 using Pixed.Common.Menu;
 using Pixed.Common.Platform;
@@ -29,7 +30,7 @@ internal class ViewMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
 
         _menuItemRegistry.Register(BaseMenuItem.View, "Grid settings", new AsyncCommand(async () =>
         {
-            var navigateResult = await RouterControl.Navigate<GridSettingsResult>("/gridSettings");
+            var navigateResult = await Router.Navigate<GridSettingsResult>("/gridSettings");
 
             if (navigateResult.HasValue)
             {

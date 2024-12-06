@@ -1,4 +1,5 @@
 ﻿using Pixed.Application.Controls;
+using Pixed.Application.Routing;
 using Pixed.Common.Models;
 using Pixed.Common.Services.Palette;
 using Pixed.Core;
@@ -74,7 +75,7 @@ internal class PaletteWindowViewModel : PixedViewModel
                 RemoveCommand = new ActionCommand<PaletteModel>(m => PaletteAction?.Invoke(false, m)),
                 RenameCommand = new ActionCommand<PaletteModel>(async (m) =>
                 {
-                    var result = await RouterControl.Navigate<string>("/changePaletteName", m.Name);
+                    var result = await Router.Navigate<string>("/changePaletteName", m.Name);
 
                     if (result.HasValue)
                     {

@@ -1,4 +1,5 @@
 ﻿using Pixed.Application.Models;
+using Pixed.Application.Routing;
 using Pixed.Application.Services;
 using Pixed.Application.Utils;
 using Pixed.Common;
@@ -79,7 +80,7 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
 
             if (serializer is PngProjectSerializer pngSerializer)
             {
-                var result = await RouterControl.Navigate<OpenPngResult>("/openPng");
+                var result = await Router.Navigate<OpenPngResult>("/openPng");
 
                 if (result.HasValue)
                 {
@@ -174,7 +175,7 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
         int columnsCount = 1;
         if (model.Frames.Count > 1)
         {
-            var result = await RouterControl.Navigate<int>("/exportPng");
+            var result = await Router.Navigate<int>("/exportPng");
 
             if (result.HasValue)
             {
@@ -207,7 +208,7 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
 
         if (model.Frames.Count == 1)
         {
-            var result = await RouterControl.Navigate<List<Point>>("/exportIcon");
+            var result = await Router.Navigate<List<Point>>("/exportIcon");
 
             if (result.HasValue)
             {

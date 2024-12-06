@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Pixed.Application.DependencyInjection;
 using Pixed.Application.Extensions;
 using Pixed.Application.Platform;
+using Pixed.Application.Routing;
 using Pixed.Application.Windows;
 using Pixed.Common.DependencyInjection;
 using System;
