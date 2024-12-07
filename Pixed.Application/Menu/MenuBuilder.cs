@@ -2,6 +2,7 @@
 using Pixed.Application.Extensions;
 using Pixed.Application.IO;
 using Pixed.Application.Models;
+using Pixed.Application.Platform;
 using Pixed.Application.Routing;
 using Pixed.Application.Services;
 using Pixed.Application.Windows;
@@ -21,7 +22,7 @@ using System.Threading.Tasks;
 
 namespace Pixed.Application.Menu;
 
-internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods pixedProjectMethods, RecentFilesService recentFilesService, IStorageProviderHandle storageProvider)
+internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods pixedProjectMethods, RecentFilesService recentFilesService, IStorageProviderHandle storageProvider, IApplicationLifecycle applicationLifecycle)
 {
 
     private readonly struct MenuEntry(BaseMenuItem baseMenu, IMenuItem menuItem)
@@ -34,6 +35,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
     private readonly PixedProjectMethods _projectMethods = pixedProjectMethods;
     private readonly RecentFilesService _recentFilesService = recentFilesService;
     private readonly IStorageProviderHandle _storageProvider = storageProvider;
+    private readonly IApplicationLifecycle _applicationLifecycle = applicationLifecycle;
     private readonly List<MenuEntry> _entries = [];
 
     public Subject<List<IMenuItem>> OnMenuBuilt { get; } = new Subject<List<IMenuItem>>();
@@ -135,7 +137,10 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
         fileMenu.Items = [fileNew, fileOpen, fileSave, fileSaveAs, fileExportPng, fileExportIco];
         AddToMenu(ref fileMenu, GetEntries(BaseMenuItem.File));
 
-        fileMenu.Items.Add(fileRecent);
+        if(_applicationLifecycle.RecentFilesEnabled)
+        {
+            fileMenu.Items.Add(fileRecent);
+        }
         fileMenu.Items.Add(fileQuit);
         return fileMenu;
     }
@@ -199,7 +204,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
         return _entries.Where(e => e.BaseMenu == baseMenu).Select(e => e.MenuItem).ToList();
     }
 
-    private void AddToMenu(ref MenuItem menuItem, List<IMenuItem> items)
+    private static void AddToMenu(ref MenuItem menuItem, List<IMenuItem> items)
     {
         menuItem.Items ??= [];
 

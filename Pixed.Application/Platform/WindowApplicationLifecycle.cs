@@ -7,6 +7,7 @@ public class WindowApplicationLifecycle : IApplicationLifecycle
     public IApplicationLifetime ApplicationLifetime { get; set; }
 
     public bool ExtensionsEnabled => true;
+    public bool RecentFilesEnabled => true;
 
     public void Close()
     {
