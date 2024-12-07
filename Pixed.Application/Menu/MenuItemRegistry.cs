@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Media.Imaging;
 using Pixed.Common.Menu;
 using Pixed.Core;
 using System;
@@ -14,9 +15,9 @@ internal class MenuItemRegistry(MenuBuilder menuBuilder) : IMenuItemRegistry
         Register(baseMenu, text, new ActionCommand(action));
     }
 
-    public void Register(BaseMenuItem baseMenu, string text, ICommand command, object? commandParameter = null)
+    public void Register(BaseMenuItem baseMenu, string text, ICommand command, object? commandParameter = null, Bitmap? icon = null)
     {
-        Register(baseMenu, new MenuItem(text) { Command = command, CommandParameter = commandParameter });
+        Register(baseMenu, new MenuItem(text) { Command = command, CommandParameter = commandParameter, Icon = icon });
     }
 
     public void Register(BaseMenuItem baseMenu, IMenuItem menuItem)
