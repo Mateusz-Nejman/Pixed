@@ -7,6 +7,7 @@ public interface IApplicationLifecycle
     public IApplicationLifetime ApplicationLifetime { get; set; }
     public bool ExtensionsEnabled { get; }
     public bool RecentFilesEnabled { get; }
+    public bool ExtensionsOnSave { get; }
     public void Close();
     public string GetVersion();
 }

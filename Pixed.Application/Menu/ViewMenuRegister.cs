@@ -10,12 +10,11 @@ using Pixed.Core.Models;
 using System.Runtime.InteropServices;
 
 namespace Pixed.Application.Menu;
-internal class ViewMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationData applicationData, IStorageProviderHandle storageProvider, MainWindow mainWindow)
+internal class ViewMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationData applicationData, IStorageProviderHandle storageProvider)
 {
     private readonly IMenuItemRegistry _menuItemRegistry = menuItemRegistry;
     private readonly ApplicationData _applicationData = applicationData;
     private readonly IStorageProviderHandle _storageProvider = storageProvider;
-    private readonly MainWindow _mainWindow = mainWindow;
 
     public void Register()
     {
@@ -23,13 +22,15 @@ internal class ViewMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
         {
             _menuItemRegistry.Register(BaseMenuItem.View, "Toggle fullscreen", () =>
             {
-                if (_mainWindow.WindowState == WindowState.FullScreen)
+                var serviceProvider = App.ServiceProvider;
+                var mainWindow = serviceProvider.Get<MainWindow>();
+                if (mainWindow.WindowState == WindowState.FullScreen)
                 {
-                    _mainWindow.WindowState = WindowState.Maximized;
+                    mainWindow.WindowState = WindowState.Maximized;
                 }
                 else
                 {
-                    _mainWindow.WindowState = WindowState.FullScreen;
+                    mainWindow.WindowState = WindowState.FullScreen;
                 }
             }, new("avares://Pixed.Application/Resources/Icons/enlarge-menu.png"));
         }
