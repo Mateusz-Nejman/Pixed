@@ -8,6 +8,8 @@ namespace Pixed.Common.Tools;
 public class ToolColorSwap(ApplicationData applicationData) : BaseTool(applicationData)
 {
     public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-colorswap.png";
+    public override string Name => "Paint all pixels of the same color";
+    public override string Id => "tool_colorswap";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Replace colors", "Ctrl", "Apply to all layers", "Shift", "Apply to all frames");
     public override bool ShiftHandle { get; protected set; } = true;
     public override bool ControlHandle { get; protected set; } = true;

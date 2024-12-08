@@ -5,6 +5,8 @@ namespace Pixed.Common.Tools;
 public class ToolMoveCanvas(ApplicationData applicationData) : BaseTool(applicationData)
 {
     public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-move-canvas.png";
+    public override string Name => "Move canvas";
+    public override string Id => "tool_move_canvas";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Move canvas");
     public override bool AddToHistory { get; protected set; } = false;
     public override bool GridMovement { get; protected set; } = false;

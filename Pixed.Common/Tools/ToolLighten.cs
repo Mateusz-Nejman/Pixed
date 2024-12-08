@@ -12,6 +12,8 @@ public class ToolLighten(ApplicationData applicationData) : ToolPen(applicationD
     private const string PROP_APPLY_ONCE = "Apply once per pixel";
 
     public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-lighten.png";
+    public override string Name => "Lighten tool";
+    public override string Id => "tool_lighten";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Lighten", "Ctrl", "Darken", "Shift", "Apply once per pixel");
     public override bool ShiftHandle { get; protected set; } = true;
     public override bool ControlHandle { get; protected set; } = true;

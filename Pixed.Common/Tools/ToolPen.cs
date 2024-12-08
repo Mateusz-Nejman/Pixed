@@ -15,7 +15,9 @@ public class ToolPen(ApplicationData applicationData) : BaseTool(applicationData
     private readonly List<Point> _modifiedPoints = [];
 
     public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-pen.png";
-    public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Simple pen");
+    public override string Name => "Pen tool";
+    public override string Id => "tool_pen";
+    public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Pen tool");
     public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
         ApplyToolBase(point, frame, ref overlay, keyState);

@@ -11,6 +11,8 @@ public class ToolVerticalPen(ApplicationData applicationData) : ToolPen(applicat
     private const string PROP_BOTH_AXIS = "Use horizontal and vertical axis";
 
     public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-vertical-mirror-pen.png";
+    public override string Name => "Vertical mirror pen";
+    public override string Id => "tool_mirror_pen";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Vertical mirror pen", "Ctrl", "Use horizontal axis", "Shift", "Use horizontal and vertical axis");
     public override bool ShiftHandle { get; protected set; } = true;
     public override bool ControlHandle { get; protected set; } = true;

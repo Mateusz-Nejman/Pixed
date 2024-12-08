@@ -10,12 +10,12 @@ internal class MenuItemRegistry(MenuBuilder menuBuilder) : IMenuItemRegistry
 {
     private readonly MenuBuilder _menuBuilder = menuBuilder;
 
-    public void Register(BaseMenuItem baseMenu, string text, Action action)
+    public void Register(BaseMenuItem baseMenu, string text, Action action, Uri? icon = null)
     {
-        Register(baseMenu, text, new ActionCommand(action));
+        Register(baseMenu, text, new ActionCommand(action), null, icon);
     }
 
-    public void Register(BaseMenuItem baseMenu, string text, ICommand command, object? commandParameter = null, Bitmap? icon = null)
+    public void Register(BaseMenuItem baseMenu, string text, ICommand command, object? commandParameter = null, Uri? icon = null)
     {
         Register(baseMenu, new MenuItem(text) { Command = command, CommandParameter = commandParameter, Icon = icon });
     }

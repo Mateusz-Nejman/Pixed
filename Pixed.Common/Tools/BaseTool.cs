@@ -14,10 +14,12 @@ public abstract class BaseTool(ApplicationData applicationData)
 {
     private readonly List<ToolProperty> _properties = [];
     protected readonly ApplicationData _applicationData = applicationData;
-    protected Point _highlightedPoint = new Point();
+    protected Point _highlightedPoint = new();
     private UniColor? _toolColor;
 
     public abstract string ImagePath { get; }
+    public abstract string Name { get; }
+    public abstract string Id { get; }
     public virtual ToolTooltipProperties? ToolTipProperties { get; }
     public virtual bool AddToHistory { get; protected set; } = true;
     public virtual bool ShiftHandle { get; protected set; } = false;

@@ -7,6 +7,8 @@ namespace Pixed.Common.Tools;
 public class ToolNoiseFill(ApplicationData applicationData) : BaseTool(applicationData)
 {
     public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-noise-fill.png";
+    public override string Name => "Pixelart noise fill tool";
+    public override string Id => "tool_noise_fill";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Noise fill");
     public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {

@@ -1,32 +1,38 @@
-﻿using Pixed.Application.Models;
+﻿using Avalonia.Controls;
+using Pixed.Application.Models;
 using Pixed.Application.Routing;
+using Pixed.Application.Windows;
 using Pixed.Common;
 using Pixed.Common.Menu;
 using Pixed.Common.Platform;
 using Pixed.Core;
 using Pixed.Core.Models;
+using System.Runtime.InteropServices;
 
 namespace Pixed.Application.Menu;
-internal class ViewMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationData applicationData, IStorageProviderHandle storageProvider)
+internal class ViewMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationData applicationData, IStorageProviderHandle storageProvider, MainWindow mainWindow)
 {
     private readonly IMenuItemRegistry _menuItemRegistry = menuItemRegistry;
     private readonly ApplicationData _applicationData = applicationData;
     private readonly IStorageProviderHandle _storageProvider = storageProvider;
+    private readonly MainWindow _mainWindow = mainWindow;
 
     public void Register()
     {
-        _menuItemRegistry.Register(BaseMenuItem.View, "Toggle fullscreen", () =>
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            //TODO
-            /*if (MainWindow.Handle.WindowState == WindowState.FullScreen)
+            _menuItemRegistry.Register(BaseMenuItem.View, "Toggle fullscreen", () =>
             {
-                MainWindow.Handle.WindowState = WindowState.Maximized;
-            }
-            else
-            {
-                MainWindow.Handle.WindowState = WindowState.FullScreen;
-            }*/
-        });
+                if (_mainWindow.WindowState == WindowState.FullScreen)
+                {
+                    _mainWindow.WindowState = WindowState.Maximized;
+                }
+                else
+                {
+                    _mainWindow.WindowState = WindowState.FullScreen;
+                }
+            }, new("avares://Pixed.Application/Resources/Icons/enlarge-menu.png"));
+        }
 
         _menuItemRegistry.Register(BaseMenuItem.View, "Grid settings", new AsyncCommand(async () =>
         {
@@ -41,7 +47,7 @@ internal class ViewMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
                 _applicationData.UserSettings.Save(await _storageProvider.GetPixedFolder());
                 Subjects.GridChanged.OnNext(true);
             }
-        }));
+        }), null, new("avares://Pixed.Application/Resources/Icons/cogs-menu.png"));
 
         _menuItemRegistry.Register(BaseMenuItem.View, "Toggle grid", new AsyncCommand(async () =>
         {

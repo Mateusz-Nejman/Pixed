@@ -155,25 +155,25 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
     {
     }
 
-    private void PaletteAddPrimaryAction()
+    public void PaletteAddPrimaryAction()
     {
         _paletteService.AddPrimaryColor();
         OnPropertyChanged(nameof(SelectedPaletteColors));
     }
 
-    private void PaletteAddCurrentAction()
+    public void PaletteAddCurrentAction()
     {
         _paletteService.AddColorsFromPalette(_paletteService.CurrentColorsPalette);
         OnPropertyChanged(nameof(SelectedPaletteColors));
     }
 
-    private void PaletteClearAction()
+    public void PaletteClearAction()
     {
         _paletteService.ClearPalette();
         OnPropertyChanged(nameof(SelectedPaletteColors));
     }
 
-    private async Task PaletteOpenAction()
+    public async Task PaletteOpenAction()
     {
         var files = await _dialogUtils.OpenFileDialog("All Supported (.json;.gpl)|*.json;*.gpl|Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl", _paletteService.SelectedPalette.Name);
 
@@ -186,7 +186,7 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
         await _paletteService.Load(file.Path.AbsolutePath);
     }
 
-    private async Task PaletteSaveAction()
+    public async Task PaletteSaveAction()
     {
         if (_paletteService.SelectedPalette.Colors.Count == 0)
         {
@@ -201,7 +201,7 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
         }
     }
 
-    private void PaletteListAction()
+    public void PaletteListAction()
     {
         Router.Navigate("/palettes");
     }

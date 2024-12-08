@@ -8,6 +8,8 @@ namespace Pixed.Common.Tools;
 public class ToolDithering(ApplicationData applicationData) : ToolPen(applicationData)
 {
     public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-dithering.png";
+    public override string Name => "Dithering tool";
+    public override string Id => "tool_dithering";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Dithering");
     public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
