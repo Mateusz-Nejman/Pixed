@@ -1,10 +1,8 @@
-﻿using Avalonia.Media.Imaging;
-using Avalonia.Platform;
+﻿using Avalonia.Platform;
 using Pixed.Common.Menu;
 using Pixed.Common.Tools;
 using Pixed.Core;
 using System;
-using System.Collections.Generic;
 
 namespace Pixed.Application.Menu;
 internal class ToolsMenuRegister(IMenuItemRegistry menuItemRegistry, ToolSelector toolSelector)
@@ -15,7 +13,7 @@ internal class ToolsMenuRegister(IMenuItemRegistry menuItemRegistry, ToolSelecto
     public void Register()
     {
 
-        foreach(var tool in _toolSelector.GetTools())
+        foreach (var tool in _toolSelector.GetTools())
         {
             RegisterTool(tool.Value);
         }

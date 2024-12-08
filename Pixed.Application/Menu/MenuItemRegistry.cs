@@ -1,6 +1,4 @@
-﻿using Avalonia.Controls;
-using Avalonia.Media.Imaging;
-using Pixed.Common.Menu;
+﻿using Pixed.Common.Menu;
 using Pixed.Core;
 using System;
 using System.Windows.Input;

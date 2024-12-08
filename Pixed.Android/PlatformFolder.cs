@@ -1,7 +1,6 @@
 ﻿using Android.Content;
 using Avalonia.Platform.Storage;
 using Pixed.Common.Platform;
-using System;
 using System.Threading.Tasks;
 
 namespace Pixed.Android;

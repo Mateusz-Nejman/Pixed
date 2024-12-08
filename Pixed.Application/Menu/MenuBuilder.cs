@@ -143,7 +143,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
         fileMenu.Items = [fileNew, fileOpen, fileSave, fileSaveAs, fileExportPng, fileExportIco];
         AddToMenu(ref fileMenu, GetEntries(BaseMenuItem.File));
 
-        if(_applicationLifecycle.RecentFilesEnabled)
+        if (_applicationLifecycle.RecentFilesEnabled)
         {
             fileMenu.Items.Add(fileRecent);
         }

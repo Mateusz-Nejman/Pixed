@@ -22,12 +22,12 @@ internal class MenuItem(string? header) : IMenuItem
     {
         Bitmap? bitmap = null;
 
-        if(Icon != null)
+        if (Icon != null)
         {
             var stream = AssetLoader.Open(Icon);
             bitmap = new Bitmap(stream);
             stream.Dispose();
         }
-        return new Avalonia.Controls.MenuItem() { Header = Header, Command = Command, CommandParameter = CommandParameter, Icon = new Image() { Width = 16, Height = 16, Source = bitmap}, ItemsSource = Items != null && Items.Count > 0 ? Items.Select(i => i.ToAvaloniaMenuItem()) : null };
+        return new Avalonia.Controls.MenuItem() { Header = Header, Command = Command, CommandParameter = CommandParameter, Icon = new Image() { Width = 16, Height = 16, Source = bitmap }, ItemsSource = Items != null && Items.Count > 0 ? Items.Select(i => i.ToAvaloniaMenuItem()) : null };
     }
 }

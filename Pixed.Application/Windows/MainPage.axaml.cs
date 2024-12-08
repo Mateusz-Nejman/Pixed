@@ -195,7 +195,7 @@ internal partial class MainPage : PixedPage<MainViewModel>, IDisposable
         var pixedFolder = await _storageProviderHandle.GetPixedFolder();
         await _storageProviderHandle.GetPalettesFolder();
 
-        if(_lifecycle.ExtensionsEnabled)
+        if (_lifecycle.ExtensionsEnabled)
         {
             await _storageProviderHandle.GetExtensionsFolder();
         }
