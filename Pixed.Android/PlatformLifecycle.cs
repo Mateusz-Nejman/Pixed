@@ -9,6 +9,7 @@ internal class PlatformLifecycle : IApplicationLifecycle
     public bool ExtensionsEnabled => false;
     public bool RecentFilesEnabled => false;
     public bool ExtensionsOnSave => true;
+    public bool SingleExtensionSaveDialog => true;
 
     public void Close()
     {

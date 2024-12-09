@@ -193,7 +193,7 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
             return;
         }
 
-        var file = await _dialogUtils.SaveFileDialog("All Supported (.json;.gpl)|*.json;*.gpl|Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl", _paletteService.SelectedPalette.Name);
+        var file = await _dialogUtils.SaveFileDialog("Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl", _paletteService.SelectedPalette.Name);
 
         if (file != null)
         {

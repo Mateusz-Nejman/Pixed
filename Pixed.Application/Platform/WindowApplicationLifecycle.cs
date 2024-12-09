@@ -9,6 +9,7 @@ public class WindowApplicationLifecycle : IApplicationLifecycle
     public bool ExtensionsEnabled => true;
     public bool RecentFilesEnabled => true;
     public bool ExtensionsOnSave => false;
+    public bool SingleExtensionSaveDialog => false;
 
     public void Close()
     {
