@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace Pixed.Application.Utils;
 
-internal class DialogUtils(IStorageProviderHandle storageProviderHandle, IApplicationLifecycle applicationLifecycle)
+internal class DialogUtils(IStorageProviderHandle storageProviderHandle, IPlatformSettings platformSettings)
 {
     private readonly IStorageProviderHandle _storageProviderHandle = storageProviderHandle;
-    private readonly IApplicationLifecycle _applicationLifecycle = applicationLifecycle;
+    private readonly IPlatformSettings _platformSettings = platformSettings;
 
     public async Task<IReadOnlyList<IStorageFile>> OpenFileDialog(string filter, string filename, bool allowMultiple = false)
     {
@@ -28,14 +28,14 @@ internal class DialogUtils(IStorageProviderHandle storageProviderHandle, IApplic
     public async Task<IStorageFile?> SaveFileDialog(string filter, string filename)
     {
         var filters = GetFileFilter(filter);
-        if (_applicationLifecycle.SingleExtensionSaveDialog)
+        if (_platformSettings.SingleExtensionSaveDialog)
         {
             var format = await Router.Navigate<FilePickerFileType>("saveFormat", filters);
 
             if(format.HasValue)
             {
                 var extension = format.Value.Patterns.First().Replace("*", "");
-                if(_applicationLifecycle.ExtensionsOnSave && !filename.EndsWith(extension))
+                if(_platformSettings.ExtensionsOnSave && !filename.EndsWith(extension))
                 {
                     filename += extension;
                 }

@@ -27,7 +27,7 @@ internal class AboutViewModel : PixedViewModel
 
     private string GetVersion()
     {
-        var lifecycle = Provider.Get<IApplicationLifecycle>();
+        var lifecycle = Provider.Get<IPlatformSettings>();
 
         return lifecycle.GetVersion();
     }

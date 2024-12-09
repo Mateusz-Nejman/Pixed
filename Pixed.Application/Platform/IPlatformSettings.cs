@@ -2,7 +2,7 @@
 using Avalonia.Controls.ApplicationLifetimes;
 
 namespace Pixed.Application.Platform;
-public interface IApplicationLifecycle
+public interface IPlatformSettings
 {
     public IApplicationLifetime ApplicationLifetime { get; set; }
     public bool ExtensionsEnabled { get; }
@@ -13,10 +13,10 @@ public interface IApplicationLifecycle
     public string GetVersion();
 }
 
-public static class PlatformLifecycle
+public static class PlatformSettings
 {
-    public static IApplicationLifecycle Lifecycle { get; set; } = new WindowApplicationLifecycle();
-    public static AppBuilder SetLifecycle(this AppBuilder app, IApplicationLifecycle lifecycle)
+    public static IPlatformSettings Lifecycle { get; set; } = new DefaultPlatformSettings();
+    public static AppBuilder SetSettings(this AppBuilder app, IPlatformSettings lifecycle)
     {
         Lifecycle = lifecycle;
         return app;

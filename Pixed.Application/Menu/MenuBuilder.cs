@@ -22,7 +22,7 @@ using System.Threading.Tasks;
 
 namespace Pixed.Application.Menu;
 
-internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods pixedProjectMethods, RecentFilesService recentFilesService, IStorageProviderHandle storageProvider, IApplicationLifecycle applicationLifecycle)
+internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods pixedProjectMethods, RecentFilesService recentFilesService, IStorageProviderHandle storageProvider, IPlatformSettings platformSettings)
 {
 
     private readonly struct MenuEntry(BaseMenuItem baseMenu, IMenuItem menuItem)
@@ -35,7 +35,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
     private readonly PixedProjectMethods _projectMethods = pixedProjectMethods;
     private readonly RecentFilesService _recentFilesService = recentFilesService;
     private readonly IStorageProviderHandle _storageProvider = storageProvider;
-    private readonly IApplicationLifecycle _applicationLifecycle = applicationLifecycle;
+    private readonly IPlatformSettings _platformSettings = platformSettings;
     private readonly List<MenuEntry> _entries = [];
 
     public Subject<List<IMenuItem>> OnMenuBuilt { get; } = new Subject<List<IMenuItem>>();
@@ -143,7 +143,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
         fileMenu.Items = [fileNew, fileOpen, fileSave, fileSaveAs, fileExportPng, fileExportIco];
         AddToMenu(ref fileMenu, GetEntries(BaseMenuItem.File));
 
-        if (_applicationLifecycle.RecentFilesEnabled)
+        if (_platformSettings.RecentFilesEnabled)
         {
             fileMenu.Items.Add(fileRecent);
         }

@@ -2,7 +2,7 @@
 using System.Diagnostics;
 
 namespace Pixed.Application.Platform;
-public class WindowApplicationLifecycle : IApplicationLifecycle
+public class DefaultPlatformSettings : IPlatformSettings
 {
     public IApplicationLifetime ApplicationLifetime { get; set; }
 

@@ -29,7 +29,7 @@ public partial class App : Avalonia.Application
 
     public async override void OnFrameworkInitializationCompleted()
     {
-        PlatformLifecycle.Lifecycle.ApplicationLifetime = ApplicationLifetime;
+        Platform.PlatformSettings.Lifecycle.ApplicationLifetime = ApplicationLifetime;
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             SplashWindow splash = new();
@@ -57,9 +57,9 @@ public partial class App : Avalonia.Application
             register.Register(ref collection);
         }
 
-        collection.AddSingleton(PlatformLifecycle.Lifecycle);
+        collection.AddSingleton(Platform.PlatformSettings.Lifecycle);
 
-        if (PlatformLifecycle.Lifecycle.ExtensionsEnabled)
+        if (Platform.PlatformSettings.Lifecycle.ExtensionsEnabled)
         {
             ExtensionsLoader.Load(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Pixed", "Extensions"));
             ExtensionsLoader.RegisterTools(ref collection);

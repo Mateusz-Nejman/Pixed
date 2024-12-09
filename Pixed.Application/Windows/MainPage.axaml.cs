@@ -40,7 +40,7 @@ internal partial class MainPage : PixedPage<MainViewModel>, IDisposable
     private readonly MenuBuilder _menuBuilder;
     private readonly IStorageProviderHandle _storageProviderHandle;
     private readonly IDisposable _newInstanceHandled;
-    private readonly IApplicationLifecycle _lifecycle;
+    private readonly IPlatformSettings _lifecycle;
     private bool _disposedValue;
 
     public static ICommand? QuitCommand { get; private set; }
@@ -59,7 +59,7 @@ internal partial class MainPage : PixedPage<MainViewModel>, IDisposable
         _menuBuilder = Get<MenuBuilder>();
         _paletteService = Get<PaletteService>();
         _storageProviderHandle = Get<IStorageProviderHandle>();
-        _lifecycle = Get<IApplicationLifecycle>();
+        _lifecycle = Get<IPlatformSettings>();
         _newInstanceHandled = Subjects.NewInstanceHandled.Subscribe(args =>
         {
             foreach (var arg in args)

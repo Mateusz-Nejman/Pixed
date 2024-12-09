@@ -24,7 +24,7 @@ public class MainActivity : AvaloniaMainActivity<App>
     protected override async void OnCreate(Bundle? savedInstanceState)
     {
         AndroidX.Core.SplashScreen.SplashScreen.InstallSplashScreen(this);
-        PlatformLifecycle.MainActivity = this;
+        PlatformSettings.MainActivity = this;
         PlatformFolder.Context = this;
         StreamBase.StreamBaseImpl = typeof(AndroidStream);
         base.OnCreate(savedInstanceState);
@@ -43,7 +43,7 @@ public class MainActivity : AvaloniaMainActivity<App>
             .UseReactiveUI()
             .UseShell()
             .SetPlatformFolder(new PlatformFolder())
-            .SetLifecycle(new PlatformLifecycle());
+            .SetSettings(new PlatformSettings());
     }
 
     private async Task<PermissionStatus> CheckPermissions()

@@ -2,7 +2,7 @@
 using Avalonia.Controls.ApplicationLifetimes;
 using Pixed.Application.Platform;
 namespace Pixed.Android;
-internal class PlatformLifecycle : IApplicationLifecycle
+internal class PlatformSettings : IPlatformSettings
 {
     public static Activity MainActivity { get; internal set; }
     public IApplicationLifetime ApplicationLifetime { get; set; }
