@@ -6,18 +6,22 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Styling;
 using Pixed.Application.Controls;
+using Pixed.Application.Extensions;
+using Pixed.Application.Platform;
+using Pixed.Application.Windows;
 using Pixed.Common.Menu;
 using Pixed.Common.Tools;
 using System;
 using System.Collections.Generic;
+using IPlatformSettings = Pixed.Application.Platform.IPlatformSettings;
 
 namespace Pixed.Application.ViewModels;
-internal class ToolsSectionViewModel(IMenuItemRegistry menuItemRegistry, ToolSelector toolSelector, PaintCanvasViewModel paintCanvas) : PixedViewModel
+internal class ToolsSectionViewModel(ToolSelector toolSelector, PaintCanvasViewModel paintCanvas, IPlatformSettings platformSettings) : PixedViewModel
 {
-    private readonly IMenuItemRegistry _menuItemRegistry = menuItemRegistry;
     private readonly ToolSelector _toolSelector = toolSelector;
     private readonly PaintCanvasViewModel _paintCanvas = paintCanvas;
     private readonly Dictionary<string, ToolRadioButton> _radios = [];
+    private readonly IPlatformSettings _platformSettings = platformSettings;
 
     public void InitializeTools(StackPanel stackPanel)
     {
@@ -25,13 +29,15 @@ internal class ToolsSectionViewModel(IMenuItemRegistry menuItemRegistry, ToolSel
         _radios.Clear();
         var tools = _toolSelector.GetTools();
 
-        //TODO
-        //var extensionTools = ExtensionsLoader.GetTools(MainWindow.Handle.GetServiceProvider());
+        if(_platformSettings.ExtensionsEnabled)
+        {
+            var extensionTools = ExtensionsLoader.GetTools(App.ServiceProvider);
 
-        //foreach (var extensionTool in extensionTools)
-        //{
-        //    tools.Add(extensionTool.Key, extensionTool.Value);
-        //}
+            foreach (var extensionTool in extensionTools)
+            {
+                tools.Add(extensionTool.Key, extensionTool.Value);
+            }
+        }
 
         foreach (var tool in tools)
         {

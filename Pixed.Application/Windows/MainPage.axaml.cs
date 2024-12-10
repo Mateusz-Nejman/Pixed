@@ -18,7 +18,6 @@ using Pixed.Common.Tools;
 using Pixed.Core;
 using Pixed.Core.Models;
 using System;
-using System.IO;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -91,17 +90,6 @@ internal partial class MainPage : PixedPage<MainViewModel>, IDisposable
         Subjects.ProjectChanged.OnNext(_applicationData.CurrentModel);
         Subjects.FrameChanged.OnNext(_applicationData.CurrentFrame);
         base.OnLoaded();
-    }
-
-    public void OpenFromArgs(string[] args)
-    {
-        foreach (var arg in args)
-        {
-            if (File.Exists(arg))
-            {
-                _pixedProjectMethods.Open(arg);
-            }
-        }
     }
 
     protected virtual void Dispose(bool disposing)
