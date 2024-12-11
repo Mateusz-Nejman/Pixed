@@ -41,7 +41,7 @@ public class ToolSelector
             { "tool_rectangle", toolRectangle},
             { "tool_circle", toolCircle},{ "tool_move", toolMove},
             { "tool_shape_select", shapeSelect},
-            { "tool_rectangle_select", rectangleSelect}, //TODO find better way
+            { "tool_rectangle_select", rectangleSelect},
             { "tool_lasso_select", lassoSelect},
             { "tool_lighten", toolLighten},
             { "tool_dithering", toolDithering},
