@@ -38,7 +38,7 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
                 name = info.Name.Replace(info.Extension, string.Empty);
             }
 
-            if(_platformSettings.ExtensionsOnSave)
+            if (_platformSettings.ExtensionsOnSave)
             {
                 name += ".pixed";
             }
@@ -171,7 +171,7 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
             name = info.Name.Replace(info.Extension, string.Empty);
         }
 
-        if(_platformSettings.ExtensionsOnSave)
+        if (_platformSettings.ExtensionsOnSave)
         {
             name += ".png";
         }
