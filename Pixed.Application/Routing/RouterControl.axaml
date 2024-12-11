@@ -28,6 +28,5 @@
     <Route Path="exportIcon" Page="windows:ExportIconWindow" Type="Modal"/>
     <Route Path="exportPng" Page="windows:ExportPNGWindow" Type="Modal"/>
     <Route Path="openPng" Page="windows:OpenPNGWindow" Type="Modal"/>
-    <Route Path="saveFormat" Page="windows:SaveDialogFormatSelectionWindow" Type="Modal"/>
   </ShellView>
 </UserControl>

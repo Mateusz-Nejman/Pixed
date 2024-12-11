@@ -8,7 +8,6 @@ public interface IPlatformSettings
     public bool ExtensionsEnabled { get; }
     public bool RecentFilesEnabled { get; }
     public bool ExtensionsOnSave { get; }
-    public bool SingleExtensionSaveDialog { get; }
     public void Close();
     public string GetVersion();
 }

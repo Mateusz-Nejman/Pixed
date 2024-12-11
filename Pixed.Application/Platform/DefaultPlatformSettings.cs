@@ -9,7 +9,6 @@ public class DefaultPlatformSettings : IPlatformSettings
     public bool ExtensionsEnabled => true;
     public bool RecentFilesEnabled => true;
     public bool ExtensionsOnSave => false;
-    public bool SingleExtensionSaveDialog => false;
 
     public void Close()
     {
