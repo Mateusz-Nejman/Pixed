@@ -10,7 +10,7 @@ public static class SkiaUtils
     {
         var bitmap = new SKBitmap(size.X, size.Y, true);
         var gcHandle = GCHandle.Alloc(array.ToArray(), GCHandleType.Pinned);
-        var info = new SKImageInfo(size.X, size.Y, SKImageInfo.PlatformColorType, SKAlphaType.Unpremul);
+        var info = new SKImageInfo(size.X, size.Y, SKColorType.Bgra8888, SKAlphaType.Unpremul);
         bitmap.InstallPixels(info, gcHandle.AddrOfPinnedObject(), info.RowBytes, delegate { gcHandle.Free(); }, null);
         return bitmap;
     }
@@ -41,7 +41,7 @@ public static class SkiaUtils
     public static void Fill(this SKBitmap src, IList<uint> array)
     {
         var gcHandle = GCHandle.Alloc(array.ToArray(), GCHandleType.Pinned);
-        var info = new SKImageInfo(src.Width, src.Height, SKImageInfo.PlatformColorType, SKAlphaType.Unpremul);
+        var info = new SKImageInfo(src.Width, src.Height, SKColorType.Bgra8888, SKAlphaType.Unpremul);
         src.InstallPixels(info, gcHandle.AddrOfPinnedObject(), info.RowBytes, delegate { gcHandle.Free(); }, null);
     }
 
