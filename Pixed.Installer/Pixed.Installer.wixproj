@@ -1,0 +1,18 @@
+﻿<Project Sdk="WixToolset.Sdk/5.0.2">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <WixVariables>WixUILicenseRtf=EULA.rtf</WixVariables>
+    <OutputPath>..\build</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OutputName>Pixed.Release</OutputName>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="EULA.rtf" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="WixToolset.UI.wixext" Version="5.0.2" />
+  </ItemGroup>
+</Project>
