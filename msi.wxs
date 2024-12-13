@@ -11,7 +11,7 @@
 		<MediaTemplate EmbedCab="yes" />
 		<!-- Major Upgrade Rule to disallow downgrades -->
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
-		<Icon Id="Icon.ico" SourceFile="Icon.ico"/>
+		<Icon Id="Icon.ico" SourceFile="Pixed.Application\Resources\icon.ico"/>
 		<Property Id="ARPPRODUCTICON" Value="Icon.ico"></Property>
 		<Property Id="DISABLEADVTSHORTCUTS" Value="1"></Property>
 		<UI Id="UI">
@@ -24,11 +24,11 @@
 			</Directory>
 		</StandardDirectory>
 		<Feature Id="Pixed.Msi" Title="Pixed - Pixelart Editor" Description="Installer for Pixed - Pixelart Editor" Level="1" AllowAdvertise="no" ConfigurableDirectory="INSTALLLOCATION">
-			<Files Directory="INSTALLLOCATION" Include="..\build\Pixed.Windows\Deploy\**">
-				<Exclude Files="..\build\Pixed.Windows\Deploy\Pixed.exe"/>
+			<Files Directory="INSTALLLOCATION" Include="build\Pixed.Windows\Deploy\**">
+				<Exclude Files="build\Pixed.Windows\Deploy\Pixed.exe"/>
 			</Files>
 			<Component Directory="INSTALLLOCATION">
-				<File Source="..\build\Pixed.Windows\Deploy\Pixed.exe" KeyPath="yes">
+				<File Source="build\Pixed.Windows\Deploy\Pixed.exe" KeyPath="yes">
 					<Shortcut Id="scC60EF6135229BA07A072F4333329ECAB" Name="Pixed - Pixelart Editor" Directory="DesktopFolder" Advertise="yes" />
 					<Shortcut Id="scC0F27A1BC981A2B97587AC99CDF411ED" Name="Pixed - Pixelart Editor" Directory="ProgramMenuFolder" Advertise="yes" />
 				</File>
