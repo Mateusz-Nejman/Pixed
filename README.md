@@ -55,6 +55,16 @@ Your imagination and **Pixed**. These two things are needed for pixel-arted imag
 - AvaloniaProgressRing [Deadpikle/AvaloniaProgressRing](https://github.com/Deadpikle/AvaloniaProgressRing)
 - SkiaSharp [mono/SkiaSharp](https://github.com/mono/SkiaSharp)
 - BigGustave (Modified in Pixed.BigGustave) [EliotJones/BigGustave](https://github.com/EliotJones/BigGustave)
+- WiX Toolset [wixtoolset/wix](https://github.com/wixtoolset/wix)
+
+## Build prerequisites
+For MSI Build:
+
+```
+dotnet tool install --global wix
+
+wix extension add  WixToolset.UI.wixext
+```
 
 ## Assets
 - Icons from IcoMoon [https://icomoon.io/](https://icomoon.io/)

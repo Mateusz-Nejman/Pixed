@@ -457,3 +457,5 @@ SonarScanner.bat
 .sonarqube
 
 build
+
+.wix/*

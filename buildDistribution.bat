@@ -13,8 +13,9 @@ set MSIX_STORE_PATH=%SOLUTION_PATH%build\Dist\Pixed.%VERSION%.win_x64.msixupload
 
 set MSIX_INPUT_PATH=%SOLUTION_PATH%\build\AppPackages\Pixed.MSStore_%VERSION%.0.0_Test\Pixed.MSStore_%VERSION%.0.0_x64.msixbundle
 set MSIX_STORE_INPUT_PATH=%SOLUTION_PATH%\build\AppPackages\Pixed.MSStore_%VERSION%.0.0_x64_bundle.msixupload
-set MSI_INPUT_PATH=%SOLUTION_PATH%build\Pixed.Release.msi
+set MSI_INPUT_PATH=%SOLUTION_PATH%build\Pixed.Installer.msi
 
+echo Removing old files...
 if not exist "%SOLUTION_PATH%build\Dist" (
   mkdir "%SOLUTION_PATH%build\Dist"
 )
@@ -35,11 +36,19 @@ if exist "%MSIX_STORE_PATH%" (
     del "%MSIX_STORE_PATH%"
 )
 
-cd "%SOLUTION_PATH%\build\Pixed.Windows\x64\Release\net8.0-windows"
+echo Deploying...
+dotnet publish Pixed.Windows/Pixed.Windows.csproj --framework net8.0-windows --runtime win-x64 --output build/Deploy
+
+echo Compressing files...
+
+cd "%SOLUTION_PATH%\build\Deploy"
 
 "%SOLUTION_PATH%\7za.exe" a -x"!win-x64/" "%ZIP_PATH%" -mx9 -tzip
 
 cd "%SOLUTION_PATH%"
+
+echo Creating MSI Installer...
+wix build -ext WixToolset.UI.wixext -bindvariable WixUILicenseRtf=EULA.rtf msi.wxs -out build\Pixed.Installer.msi
 
 if exist "%MSI_INPUT_PATH%" (
     copy "%MSI_INPUT_PATH%" "%MSI_PATH%"
