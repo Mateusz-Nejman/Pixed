@@ -213,7 +213,7 @@ internal class LayersSectionViewModel : PixedViewModel, IDisposable
     {
         string layerName = Layers[_selectedLayer].Name;
 
-        var result = await Router.Navigate<string>("/changeLayerName", layerName);
+        var result = await Router.Prompt("Enter new layer name", "New layer name: ", layerName);
 
         if (result.HasValue)
         {

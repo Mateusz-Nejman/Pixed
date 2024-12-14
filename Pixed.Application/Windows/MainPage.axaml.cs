@@ -129,7 +129,7 @@ internal partial class MainPage : PixedPage<MainViewModel>, IDisposable
                         untitledIndex++;
                     }
 
-                    var result = await Router.Navigate<ButtonResult>("/unsavedChanges", name);
+                    var result = await Router.Confirm("Unsaved changes", "Project " + name + " has unsaved changes. Save it now?");
 
                     if (result.HasValue)
                     {
@@ -220,7 +220,7 @@ internal partial class MainPage : PixedPage<MainViewModel>, IDisposable
 
     private async Task ChangeOpacityAction(Layer layer)
     {
-        var result = await Router.Navigate<double>("/changeOpacity", layer.Opacity);
+        var result = await Router.NumericPrompt("Change opacity", "Enter new opacity (%):", layer.Opacity);
 
         if (result.HasValue)
         {

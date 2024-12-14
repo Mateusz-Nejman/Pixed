@@ -5,6 +5,7 @@ using Pixed.Application.Services;
 using Pixed.Application.Utils;
 using Pixed.Common;
 using Pixed.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -103,7 +104,16 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
                 }
             }
 
-            PixedModel model = serializer.Deserialize(stream, _applicationData);
+            PixedModel model;
+            try
+            {
+                model = serializer.Deserialize(stream, _applicationData);
+            }
+            catch (Exception _)
+            {
+                //TODO info
+                continue;
+            }
             stream?.Dispose();
             model.FileName = item.Name.Replace(".png", ".pixed");
             model.AddHistory();
@@ -138,7 +148,16 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
         }
         Stream stream = File.OpenRead(path);
 
-        PixedModel model = serializer.Deserialize(stream, _applicationData);
+        PixedModel model;
+        try
+        {
+            model = serializer.Deserialize(stream, _applicationData);
+        }
+        catch (Exception _)
+        {
+            //TODO info
+            return;
+        }
         stream.Dispose();
         model.FileName = info.Name.Replace(".png", ".pixed");
         model.AddHistory();

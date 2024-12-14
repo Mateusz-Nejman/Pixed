@@ -7,9 +7,6 @@ using Avalonia.Platform;
 using Avalonia.Styling;
 using Pixed.Application.Controls;
 using Pixed.Application.Extensions;
-using Pixed.Application.Platform;
-using Pixed.Application.Windows;
-using Pixed.Common.Menu;
 using Pixed.Common.Tools;
 using System;
 using System.Collections.Generic;
@@ -29,7 +26,7 @@ internal class ToolsSectionViewModel(ToolSelector toolSelector, PaintCanvasViewM
         _radios.Clear();
         var tools = _toolSelector.GetTools();
 
-        if(_platformSettings.ExtensionsEnabled)
+        if (_platformSettings.ExtensionsEnabled)
         {
             var extensionTools = ExtensionsLoader.GetTools(App.ServiceProvider);
 

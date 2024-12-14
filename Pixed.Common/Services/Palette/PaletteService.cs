@@ -113,7 +113,16 @@ public class PaletteService
             reader = new GplPaletteReader(filename);
         }
 
-        PaletteModel model = reader.Read();
+        PaletteModel model;
+        try
+        {
+            model = reader.Read();
+        }
+        catch (Exception _)
+        {
+            //TODO info
+            return;
+        }
         Palettes[1] = model.ToCurrentPalette();
 
         if (Palettes.FirstOrDefault(p => p.Id == model.Id, null) == null)

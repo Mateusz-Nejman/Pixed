@@ -4,11 +4,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
 		xmlns:local="clr-namespace:Pixed.Application.Windows"
-        x:Class="Pixed.Application.Windows.YesNoCancelWindow"
-        Title="YesNoCancelWindow">
+        x:Class="Pixed.Application.Windows.ConfirmWindow"
+        Title="ConfirmWindow">
   <local:PixedWindow.Dialog>
     <StackPanel Margin="5">
-      <TextBlock Text="{Binding Text, RelativeSource={RelativeSource FindAncestor, AncestorType=local:YesNoCancelWindow}}"/>
+      <TextBlock Text="{Binding Text, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ConfirmWindow}}"/>
       <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0, 5, 0, 0">
         <Button Content="Yes" Height="24" MinWidth="80" Padding="10,0" Margin="5" Click="YesButton_Click"/>
         <Button Content="No" Height="24" MinWidth="80" Padding="10,0" Margin="5" Click="NoButton_Click"/>

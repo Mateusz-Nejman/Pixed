@@ -75,7 +75,8 @@ internal class PaletteWindowViewModel : PixedViewModel
                 RemoveCommand = new ActionCommand<PaletteModel>(m => PaletteAction?.Invoke(false, m)),
                 RenameCommand = new ActionCommand<PaletteModel>(async (m) =>
                 {
-                    var result = await Router.Navigate<string>("/changePaletteName", m.Name);
+                    var result = await Router.Prompt("Rename Palette", "New name: ", m.Name);
+                    //TODO Waiting for AvaloniaInside.Shell author fix https://github.com/AvaloniaInside/Shell/issues/64
 
                     if (result.HasValue)
                     {

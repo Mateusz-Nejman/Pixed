@@ -39,7 +39,7 @@ class Program
         File.AppendAllText("exceptions.txt", JsonConvert.SerializeObject(e) + Environment.NewLine);
     }
 #else
-public static void Main(string[] args) => BuildAvaloniaApp()
+    public static void Main(string[] args) => BuildAvaloniaApp()
         .StartWithClassicDesktopLifetime(args);
 #endif
 

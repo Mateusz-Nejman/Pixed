@@ -1,4 +1,6 @@
 ﻿using AvaloniaInside.Shell;
+using Pixed.Application.IO;
+using Pixed.Application.Models;
 using System.Threading.Tasks;
 
 namespace Pixed.Application.Routing
@@ -25,6 +27,21 @@ namespace Pixed.Application.Routing
             }
 
             return new NavigatorResult<T>(false, default);
+        }
+
+        public static async Task<NavigatorResult<ButtonResult>> Confirm(string title, string text)
+        {
+            return await Navigate<ButtonResult>("/confirm", new ConfirmModel(title, text));
+        }
+
+        public static async Task<NavigatorResult<string>> Prompt(string title, string text, string defaultValue)
+        {
+            return await Navigate<string>("/prompt", new PromptModel(title, text, defaultValue));
+        }
+
+        public static async Task<NavigatorResult<double>> NumericPrompt(string title, string text, double defaultValue)
+        {
+            return await Navigate<double>("/numericPrompt", new NumericPromptModel(title, text, defaultValue));
         }
 
         public static Task Navigate(string path)

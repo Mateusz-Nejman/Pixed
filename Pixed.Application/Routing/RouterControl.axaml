@@ -21,10 +21,9 @@
     <Route Path="transformFlip" Page="windows:TransformFlipWindow" Type="Modal"/>
     <Route Path="transformRotate" Page="windows:TransformRotateWindow" Type="Modal"/>
     <Route Path="newProject" Page="windows:NewProjectWindow" Type="Modal"/>
-    <Route Path="unsavedChanges" Page="windows:UnsavedChangesWindow" Type="Modal"/>
-    <Route Path="changeOpacity" Page="windows:ChangeOpacityWindow" Type="Modal"/>
-    <Route Path="changeLayerName" Page="windows:ChangeLayerNameWindow" Type="Modal"/>
-    <Route Path="changePaletteName" Page="windows:ChangePaletteNameWindow" Type="Modal"/>
+    <Route Path="confirm" Page="windows:ConfirmWindow" Type="Modal"/>
+	<Route Path="prompt" Page="windows:PromptWindow" Type="Modal"/>
+	<Route Path="numericPrompt" Page="windows:NumericPromptWindow" Type="Modal"/>
     <Route Path="exportIcon" Page="windows:ExportIconWindow" Type="Modal"/>
     <Route Path="exportPng" Page="windows:ExportPNGWindow" Type="Modal"/>
     <Route Path="openPng" Page="windows:OpenPNGWindow" Type="Modal"/>

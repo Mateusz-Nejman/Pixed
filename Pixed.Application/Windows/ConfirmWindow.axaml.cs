@@ -1,9 +1,12 @@
 using Avalonia;
 using Pixed.Application.IO;
+using Pixed.Application.Models;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Pixed.Application.Windows;
 
-internal abstract partial class YesNoCancelWindow : PixedWindow
+internal partial class ConfirmWindow : PixedWindow
 {
     public string Text
     {
@@ -11,10 +14,20 @@ internal abstract partial class YesNoCancelWindow : PixedWindow
         set { SetValue(TextProperty, value); }
     }
 
-    public static readonly StyledProperty<string> TextProperty = AvaloniaProperty.Register<YesNoCancelWindow, string>("Text", "Text");
-    public YesNoCancelWindow()
+    public static readonly StyledProperty<string> TextProperty = AvaloniaProperty.Register<ConfirmWindow, string>("Text", "Text");
+    public ConfirmWindow()
     {
         InitializeComponent();
+    }
+
+    public override Task ArgumentAsync(object args, CancellationToken cancellationToken)
+    {
+        if (args is ConfirmModel model)
+        {
+            Title = model.Title;
+            Text = model.Text;
+        }
+        return Task.CompletedTask;
     }
 
     private void YesButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
