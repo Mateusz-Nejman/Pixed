@@ -4,9 +4,11 @@ using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using Pixed.Application.DependencyInjection;
 using Pixed.Application.Extensions;
 using Pixed.Application.Windows;
+using Pixed.Common;
 using Pixed.Common.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -79,8 +81,9 @@ public partial class App : Avalonia.Application
         await Task.Delay(1500);
         InitializeServices();
         var provider = this.Resources[typeof(IPixedServiceProvider)] as IPixedServiceProvider;
-        //TODO open from args
-        desktop.MainWindow = provider.Get<MainWindow>();
+        var mainWindow = provider.Get<MainWindow>();
+        mainWindow.OpenFromArgs(desktop.Args);
+        desktop.MainWindow = mainWindow;
         desktop.MainWindow.Show();
         await Task.Delay(100);
         splash.Close();
@@ -89,6 +92,7 @@ public partial class App : Avalonia.Application
     private bool HandleNewInstance(Dispatcher? dispatcher, IClassicDesktopStyleApplicationLifetime desktop)
     {
         _mutex = new(true, "pixed_mutex_name", out bool isOwned);
+        var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "instance.lock");
         var handle = new EventWaitHandle(false, EventResetMode.AutoReset, "pixed_mutex_event_name");
 
         GC.KeepAlive(_mutex);
@@ -103,19 +107,15 @@ public partial class App : Avalonia.Application
                 {
                     while (handle.WaitOne())
                     {
-                        //TODO
-                        //var pixed = await desktop.MainWindow.StorageProvider.GetPixedFolder();
-                        //var filePath = Path.Combine(pixed.Path.AbsolutePath, "instance.lock");
+                        if (File.Exists(filePath))
+                        {
+                            string[] args = JsonConvert.DeserializeObject<string[]>(File.ReadAllText(filePath)) ?? [];
 
-                        //if (File.Exists(filePath))
-                        //{
-                        //    string[] args = JsonConvert.DeserializeObject<string[]>(File.ReadAllText(filePath)) ?? [];
-
-                        //    if (args.Length > 0)
-                        //    {
-                        //        Subjects.NewInstanceHandled.OnNext(args);
-                        //    }
-                        //}
+                            if (args.Length > 0)
+                            {
+                                Subjects.NewInstanceHandled.OnNext(args);
+                            }
+                        }
                     }
                 })
             {
@@ -126,11 +126,9 @@ public partial class App : Avalonia.Application
             return true;
         }
 
-        Task.Run(async () =>
+        Task.Run(() =>
         {
-            //TODO
-            //var pixed = await desktop.MainWindow.StorageProvider.GetPixedFolder();
-            //File.WriteAllText(Path.Combine(pixed.Path.AbsolutePath, "instance.lock"), JsonConvert.SerializeObject(Environment.GetCommandLineArgs()));
+            File.WriteAllText(filePath, JsonConvert.SerializeObject(Environment.GetCommandLineArgs()));
         });
         handle.Set();
 
