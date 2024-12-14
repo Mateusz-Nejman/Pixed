@@ -111,7 +111,7 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
             }
             catch (Exception _)
             {
-                //TODO info
+                await Router.Message("Opening error", "Invalid format");
                 continue;
             }
             stream?.Dispose();
@@ -137,7 +137,7 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
         }
     }
 
-    public void Open(string path)
+    public async Task Open(string path)
     {
         FileInfo info = new(path);
         IPixedProjectSerializer? serializer = GetSerializer(info.Extension);
@@ -155,7 +155,7 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
         }
         catch (Exception _)
         {
-            //TODO info
+            await Router.Message("Opening error", "Invalid format");
             return;
         }
         stream.Dispose();

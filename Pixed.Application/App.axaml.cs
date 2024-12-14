@@ -82,7 +82,7 @@ public partial class App : Avalonia.Application
         InitializeServices();
         var provider = this.Resources[typeof(IPixedServiceProvider)] as IPixedServiceProvider;
         var mainWindow = provider.Get<MainWindow>();
-        mainWindow.OpenFromArgs(desktop.Args);
+        await mainWindow.OpenFromArgs(desktop.Args);
         desktop.MainWindow = mainWindow;
         desktop.MainWindow.Show();
         await Task.Delay(100);

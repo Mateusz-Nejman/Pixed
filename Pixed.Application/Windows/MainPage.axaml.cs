@@ -63,7 +63,7 @@ internal partial class MainPage : PixedPage<MainViewModel>, IDisposable
         {
             foreach (var arg in args)
             {
-                Dispatcher.UIThread.Invoke(() => _pixedProjectMethods.Open(arg));
+                Dispatcher.UIThread.Invoke(async() => await _pixedProjectMethods.Open(arg));
             }
         });
     }
@@ -198,14 +198,14 @@ internal partial class MainPage : PixedPage<MainViewModel>, IDisposable
         AddHandler(DragDrop.DropEvent, Drop);
     }
 
-    private void Drop(object? sender, DragEventArgs e)
+    private async void Drop(object? sender, DragEventArgs e)
     {
         var files = e.Data.GetFiles();
         if (files != null)
         {
             foreach (var file in files)
             {
-                _pixedProjectMethods.Open(file.Path.AbsolutePath);
+                await _pixedProjectMethods.Open(file.Path.AbsolutePath);
             }
 
             e.Handled = true;

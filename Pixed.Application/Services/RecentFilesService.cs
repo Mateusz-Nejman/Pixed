@@ -78,7 +78,7 @@ namespace Pixed.Application.Services
             if (File.Exists(path))
             {
                 RecentFiles.Insert(0, path);
-                _projectMethods.Open(path);
+                await _projectMethods.Open(path);
             }
 
             await Save();

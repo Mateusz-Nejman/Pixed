@@ -22,7 +22,7 @@ internal partial class ConfirmWindow : PixedWindow
 
     public override Task ArgumentAsync(object args, CancellationToken cancellationToken)
     {
-        if (args is ConfirmModel model)
+        if (args is MessageModel model)
         {
             Title = model.Title;
             Text = model.Text;

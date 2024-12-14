@@ -29,14 +29,24 @@ namespace Pixed.Application.Routing
             return new NavigatorResult<T>(false, default);
         }
 
+        public static Task Navigate(string path, object? arg = null)
+        {
+            return _navigator.NavigateAsync(path, arg);
+        }
+
         public static async Task<NavigatorResult<ButtonResult>> Confirm(string title, string text)
         {
-            return await Navigate<ButtonResult>("/confirm", new ConfirmModel(title, text));
+            return await Navigate<ButtonResult>("/confirm", new MessageModel(title, text));
         }
 
         public static async Task<NavigatorResult<string>> Prompt(string title, string text, string defaultValue)
         {
             return await Navigate<string>("/prompt", new PromptModel(title, text, defaultValue));
+        }
+
+        public static Task Message(string title, string text)
+        {
+            return Navigate("/message", new MessageModel(title, text));
         }
 
         public static async Task<NavigatorResult<double>> NumericPrompt(string title, string text, double defaultValue)
