@@ -8,6 +8,7 @@ using Pixed.Application.Menu;
 using Pixed.Application.Platform;
 using Pixed.Application.Routing;
 using Pixed.Application.Services;
+using Pixed.Application.Utils;
 using Pixed.Application.ViewModels;
 using Pixed.Common;
 using Pixed.Common.Input;
@@ -182,14 +183,15 @@ internal partial class MainPage : PixedPage<MainViewModel>, IDisposable
 
     private async Task InitializeDataFolder()
     {
-        var pixedFolder = await _storageProviderHandle.GetPixedFolder();
-        await _storageProviderHandle.GetPalettesFolder();
+        _storageProviderHandle.StorageFolder.GetFiles(FolderType.Root);
+        _storageProviderHandle.StorageFolder.GetFiles(FolderType.Palettes);
 
         if (_lifecycle.ExtensionsEnabled)
         {
-            await _storageProviderHandle.GetExtensionsFolder();
+            _storageProviderHandle.StorageFolder.GetFiles(FolderType.Extensions);
         }
-        _applicationData.Initialize(pixedFolder);
+        _applicationData.UserSettings = await SettingsUtils.Load(_storageProviderHandle.StorageFolder);
+        _applicationData.Initialize();
     }
 
     private async Task Initialize()

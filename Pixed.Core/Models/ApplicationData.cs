@@ -21,9 +21,8 @@ public class ApplicationData
 
     }
 
-    public void Initialize(IStorageFolder pixedFolder)
+    public void Initialize()
     {
-        UserSettings = Settings.Load(pixedFolder);
         Models.Add(new PixedModel(this, UserSettings.UserWidth, UserSettings.UserHeight));
         CurrentModel.FileName = GenerateName();
         CurrentModel.AddHistory(false);

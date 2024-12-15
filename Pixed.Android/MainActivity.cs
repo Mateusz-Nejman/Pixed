@@ -26,7 +26,8 @@ public class MainActivity : AvaloniaMainActivity<App>
         AndroidX.Core.SplashScreen.SplashScreen.InstallSplashScreen(this);
         PlatformSettings.MainActivity = this;
         PlatformFolder.Context = this;
-        StreamBase.StreamBaseImpl = typeof(AndroidStream);
+        StreamBase.StreamReadImpl = typeof(AndroidStreamRead);
+        StreamBase.StreamWriteImpl = typeof(AndroidStreamWrite);
         base.OnCreate(savedInstanceState);
         Platform.Init(this, savedInstanceState);
         var permissions = await CheckPermissions();

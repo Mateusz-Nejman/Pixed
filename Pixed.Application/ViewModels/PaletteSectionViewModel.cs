@@ -1,12 +1,13 @@
 ﻿using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using Pixed.Application.Controls;
+using Pixed.Application.IO;
+using Pixed.Application.Platform;
 using Pixed.Application.Routing;
 using Pixed.Application.Utils;
 using Pixed.Common;
 using Pixed.Common.Menu;
 using Pixed.Common.Models;
-using Pixed.Common.Platform;
 using Pixed.Common.Services.Palette;
 using Pixed.Core;
 using Pixed.Core.Models;
@@ -217,7 +218,7 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
         var palette = _paletteService.Palettes[index];
         palette.Name = newName;
 
-        var file = await (await _storageProviderHandle.GetPalettesFolder()).CreateFileAsync(palette.Path);
+        var file = await _storageProviderHandle.StorageFolder.GetFile(palette.Path, FolderType.Palettes);
 
         if (file != null)
         {
@@ -227,38 +228,28 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
 
     public async Task LoadAll()
     {
-        var folder = await _storageProviderHandle.GetPalettesFolderAbsolute();
-        //var folder1 = await _storageProviderHandle.StorageProvider.TryGetFolderFromPathAsync(folder.Path);
-        var files1 = Directory.GetFiles(folder);
-        files1.ToArray();
-        //await foreach (var item in files)
-        //{
-        //    Stream? stream = null;
-        //    try
-        //    {
-        //        if (item is IStorageFile file)
-        //        {
-        //            stream = await file.OpenRead();
-        //            AbstractPaletteSerializer serializer = AbstractPaletteSerializer.GetFromExtension(file.GetExtension());
-        //            PaletteModel palette = serializer.Deserialize(stream, file.Name);
-        //            _paletteService.Palettes.Add(palette);
-        //        }
-        //    }
-        //    catch (Exception _)
-        //    {
-        //        stream?.Dispose();
-        //    }
-        //    finally
-        //    {
-        //        stream?.Dispose();
-        //    }
-        //}
+        var files = _storageProviderHandle.StorageFolder.GetFiles(FolderType.Palettes);
+        await foreach (var file in files)
+        {
+            Stream? stream = null;
+            try
+            {
+                stream = await file.OpenRead();
+                AbstractPaletteSerializer serializer = AbstractPaletteSerializer.GetFromExtension(file.Extension);
+                PaletteModel palette = serializer.Deserialize(stream, file.Name);
+                _paletteService.Palettes.Add(palette);
+            }
+            catch (Exception)
+            {
+                stream?.Dispose();
+            }
+        }
     }
 
     private async Task Load(IStorageFile file)
     {
         string name = file.Name;
-        var paletteFile = await (await _storageProviderHandle.GetPalettesFolder()).CreateFileAsync(name);
+        var paletteFile = await _storageProviderHandle.StorageFolder.GetFile(name, FolderType.Palettes);
 
         if (paletteFile != null)
         {
@@ -272,16 +263,13 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
         try
         {
             model = serializer.Deserialize(stream, file.Name);
+            stream.Dispose();
         }
-        catch (Exception _)
+        catch (Exception)
         {
             await Router.Message("Opening error", "Invalid format");
             stream.Dispose();
             return;
-        }
-        finally
-        {
-            stream.Dispose();
         }
         _paletteService.Palettes[1] = model.ToCurrentPalette();
 
@@ -303,7 +291,7 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
         model.Path = file.Name;
         await Save(model, file);
 
-        var paletteFile = await (await _storageProviderHandle.GetPalettesFolder()).CreateFileAsync(file.Name);
+        var paletteFile = await _storageProviderHandle.StorageFolder.GetFile(file.Name, FolderType.Palettes);
 
         if (paletteFile != null)
         {
@@ -316,6 +304,15 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
         FileInfo fileInfo = new(model.Path);
 
         AbstractPaletteSerializer serializer = AbstractPaletteSerializer.GetFromExtension(fileInfo.Extension);
+
+        var stream = await file.OpenWrite();
+        serializer.Serialize(stream, model);
+        stream.Dispose();
+    }
+
+    private async static Task Save(PaletteModel model, IStorageContainerFile file)
+    {
+        AbstractPaletteSerializer serializer = AbstractPaletteSerializer.GetFromExtension(file.Extension);
 
         var stream = await file.OpenWrite();
         serializer.Serialize(stream, model);

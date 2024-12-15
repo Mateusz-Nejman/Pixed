@@ -1,6 +1,9 @@
 ﻿using Android.Content;
 using Avalonia.Platform.Storage;
-using Pixed.Common.Platform;
+using Pixed.Application.IO;
+using Pixed.Application.Platform;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Pixed.Android;
@@ -8,43 +11,51 @@ internal class PlatformFolder : IPlatformFolder
 {
     public static Context Context { get; set; }
 
-    public async Task<IStorageFolder> GetExtensionsFolder(IStorageProvider storageProvider)
+    public IStorageContainerFile Convert(IStorageFile value)
     {
-        return null;
+        return new PlatformStorageContainerFile(value);
     }
 
-    public Task<string> GetExtensionsFolderAbsolute(IStorageProvider storageProvider)
+    public async IAsyncEnumerable<IStorageContainerFile> GetFiles(FolderType folder)
     {
-        return null;
+        string[] dirs = Directory.GetFiles(GetFolderPath(folder));
+
+        foreach (string dir in dirs)
+        {
+            yield return new PlatformStorageContainerFile(dir);
+        }
     }
 
-    public async Task<IStorageFolder> GetPalettesFolder(IStorageProvider storageProvider)
+    public Task<IStorageContainerFile> GetFile(string filename, FolderType folderType)
     {
-        return await GetFolder(storageProvider, "Palettes");
+        return Task.FromResult((IStorageContainerFile)new PlatformStorageContainerFile(Path.Combine(GetFolderPath(folderType), filename)));
     }
 
-    public Task<string> GetPalettesFolderAbsolute(IStorageProvider storageProvider)
+    public void Initialize(IStorageProvider storageProvider)
     {
-        return Task.FromResult(GetFolderAbsolute("Palettes"));
+        //Unused
     }
 
-    public async Task<IStorageFolder> GetPixedFolder(IStorageProvider storageProvider)
+    private static string GetFolderPath(FolderType type)
     {
-        return await GetFolder(storageProvider, "Pixed");
+        return type switch
+        {
+            FolderType.Root => GetPixedFolder(),
+            FolderType.Palettes => GetPalettesFolder(),
+            _ => string.Empty,
+        };
+    }
+    private static string GetPalettesFolder()
+    {
+        return GetFolderAbsolute("Palettes");
     }
 
-    public Task<string> GetPixedFolderAbsolute(IStorageProvider storageProvider)
+    private static string GetPixedFolder()
     {
-        return Task.FromResult(GetFolderAbsolute("Pixed"));
+        return GetFolderAbsolute("Pixed");
     }
 
-    private async Task<IStorageFolder> GetFolder(IStorageProvider storageProvider, string folderName)
-    {
-        GetFolderAbsolute(folderName);
-        return await storageProvider.TryGetFolderFromPathAsync("/app_" + folderName);
-    }
-
-    private string GetFolderAbsolute(string folderName)
+    private static string GetFolderAbsolute(string folderName)
     {
         return Context.GetDir(folderName, FileCreationMode.Private).AbsolutePath;
     }

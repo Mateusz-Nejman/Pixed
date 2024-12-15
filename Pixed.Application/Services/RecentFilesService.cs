@@ -1,10 +1,12 @@
 ﻿using Newtonsoft.Json;
 using Pixed.Application.IO;
 using Pixed.Application.Menu;
+using Pixed.Application.Platform;
 using Pixed.Common.Menu;
-using Pixed.Common.Platform;
 using Pixed.Core;
 using Pixed.Core.Models;
+using Pixed.Core.Utils;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -19,10 +21,19 @@ namespace Pixed.Application.Services
 
         public async Task Load()
         {
-            var filePath = Path.Combine(await _storageProvider.GetPixedFolderAbsolute(), "recent.json");
-            if (File.Exists(filePath))
+            var file = await _storageProvider.StorageFolder.GetFile("recent.json", FolderType.Root);
+
+            Stream? stream = null;
+            try
             {
-                RecentFiles = JsonConvert.DeserializeObject<List<string>>(File.ReadAllText(filePath));
+                stream = await file.OpenRead();
+                string json = stream.ReadAllText();
+                stream?.Dispose();
+                RecentFiles = JsonConvert.DeserializeObject<List<string>>(json) ?? [];
+            }
+            catch(Exception)
+            {
+                stream?.Dispose();
             }
         }
 
@@ -67,8 +78,10 @@ namespace Pixed.Application.Services
 
         private async Task Save()
         {
-            var filePath = Path.Combine(await _storageProvider.GetPixedFolderAbsolute(), "recent.json");
-            File.WriteAllText(filePath, JsonConvert.SerializeObject(RecentFiles));
+            var file = await _storageProvider.StorageFolder.GetFile("recent.json", FolderType.Root);
+            var stream = await file.OpenWrite();
+            stream.Write(JsonConvert.SerializeObject(RecentFiles));
+            stream.Dispose();
         }
 
         private async Task OpenProject(string path)

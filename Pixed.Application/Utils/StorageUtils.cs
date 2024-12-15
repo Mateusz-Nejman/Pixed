@@ -9,12 +9,12 @@ internal static class StorageUtils
 {
     public static async Task<Stream> OpenWrite(this IStorageFile file)
     {
-        return StreamBase.Create(await file.OpenWriteAsync());
+        return StreamBase.CreateWrite(await file.OpenWriteAsync());
     }
 
     public static async Task<Stream> OpenRead(this IStorageFile file)
     {
-        return StreamBase.Create(await file.OpenReadAsync());
+        return StreamBase.CreateRead(await file.OpenReadAsync());
     }
 
     public static async Task CopyTo(this IStorageFile input, IStorageFile output)
@@ -25,7 +25,26 @@ internal static class StorageUtils
         outputStream.Write(bytes);
         inputStream.Dispose();
         outputStream.Dispose();
+    }
 
+    public static async Task CopyTo(this IStorageFile input, IStorageContainerFile output)
+    {
+        var inputStream = await input.OpenRead();
+        var bytes = inputStream.ReadAllBytes();
+        var outputStream = await output.OpenWrite();
+        outputStream.Write(bytes);
+        inputStream.Dispose();
+        outputStream.Dispose();
+    }
+
+    public static async Task CopyTo(this IStorageContainerFile input, IStorageContainerFile output)
+    {
+        var inputStream = await input.OpenRead();
+        var bytes = inputStream.ReadAllBytes();
+        var outputStream = await output.OpenWrite();
+        outputStream.Write(bytes);
+        inputStream.Dispose();
+        outputStream.Dispose();
     }
 
     public static string GetExtension(this IStorageFile file)

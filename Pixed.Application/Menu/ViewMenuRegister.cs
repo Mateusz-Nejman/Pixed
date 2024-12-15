@@ -1,10 +1,11 @@
 ﻿using Avalonia.Controls;
 using Pixed.Application.Models;
+using Pixed.Application.Platform;
 using Pixed.Application.Routing;
+using Pixed.Application.Utils;
 using Pixed.Application.Windows;
 using Pixed.Common;
 using Pixed.Common.Menu;
-using Pixed.Common.Platform;
 using Pixed.Core;
 using Pixed.Core.Models;
 using System.Runtime.InteropServices;
@@ -45,7 +46,7 @@ internal class ViewMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
                 _applicationData.UserSettings.GridHeight = navigateResult.Value.Height;
                 _applicationData.UserSettings.GridColor = navigateResult.Value.Color;
                 _applicationData.UserSettings.GridEnabled = true;
-                _applicationData.UserSettings.Save(await _storageProvider.GetPixedFolder());
+                await SettingsUtils.Save(_storageProvider.StorageFolder, _applicationData);
                 Subjects.GridChanged.OnNext(true);
             }
         }), null, new("avares://Pixed.Application/Resources/Icons/cogs-menu.png"));
@@ -53,7 +54,7 @@ internal class ViewMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
         _menuItemRegistry.Register(BaseMenuItem.View, "Toggle grid", new AsyncCommand(async () =>
         {
             _applicationData.UserSettings.GridEnabled = !_applicationData.UserSettings.GridEnabled;
-            _applicationData.UserSettings.Save(await _storageProvider.GetPixedFolder());
+            await SettingsUtils.Save(_storageProvider.StorageFolder, _applicationData);
             Subjects.GridChanged.OnNext(true);
         }));
     }

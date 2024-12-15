@@ -1,6 +1,6 @@
 ﻿using Avalonia;
 using Pixed.Application.IO;
-using Pixed.Common.Platform;
+using Pixed.Application.Platform;
 
 namespace Pixed.Application.Utils;
 public static class PlatformUtils

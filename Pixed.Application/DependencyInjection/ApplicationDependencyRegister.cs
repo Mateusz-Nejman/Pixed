@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Pixed.Application.IO;
 using Pixed.Application.Menu;
+using Pixed.Application.Platform;
 using Pixed.Application.Services;
 using Pixed.Application.Utils;
 using Pixed.Application.ViewModels;

@@ -37,4 +37,10 @@ internal class DefaultStream(Stream stream) : StreamBase(stream)
     {
         _stream.Write(buffer, offset, count);
     }
+
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+        _stream?.Dispose();
+    }
 }
