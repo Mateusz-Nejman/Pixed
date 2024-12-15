@@ -40,6 +40,7 @@ internal partial class MainPage : PixedPage<MainViewModel>, IDisposable
     private readonly IStorageProviderHandle _storageProviderHandle;
     private readonly IDisposable _newInstanceHandled;
     private readonly IPlatformSettings _lifecycle;
+    private readonly PaletteSectionViewModel _paletteSectionViewModel;
     private bool _disposedValue;
 
     public static ICommand? QuitCommand { get; private set; }
@@ -59,6 +60,7 @@ internal partial class MainPage : PixedPage<MainViewModel>, IDisposable
         _paletteService = Get<PaletteService>();
         _storageProviderHandle = Get<IStorageProviderHandle>();
         _lifecycle = Get<IPlatformSettings>();
+        _paletteSectionViewModel = Get<PaletteSectionViewModel>();
         _newInstanceHandled = Subjects.NewInstanceHandled.Subscribe(args =>
         {
             foreach (var arg in args)
@@ -84,7 +86,7 @@ internal partial class MainPage : PixedPage<MainViewModel>, IDisposable
         _menuBuilder.Build();
         _toolSelector.SelectTool("tool_pen");
         await _recentFilesService.Load();
-        await _paletteService.LoadAll();
+        await _paletteSectionViewModel.LoadAll();
 
         Subjects.ProjectAdded.OnNext(_applicationData.CurrentModel);
         Subjects.ProjectChanged.OnNext(_applicationData.CurrentModel);

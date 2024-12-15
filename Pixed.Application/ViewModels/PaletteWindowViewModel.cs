@@ -1,12 +1,14 @@
 ﻿using Pixed.Application.Controls;
 using Pixed.Application.Routing;
 using Pixed.Common.Models;
+using Pixed.Common.Platform;
 using Pixed.Common.Services.Palette;
 using Pixed.Core;
 using Pixed.Core.Models;
 using SkiaSharp;
 using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Pixed.Application.ViewModels;
@@ -28,6 +30,7 @@ internal class PaletteWindowViewModel : PixedViewModel
 
     private ObservableCollection<PaletteData> _palettes;
     private readonly PaletteService _paletteService;
+    private readonly PaletteSectionViewModel _sectionViewModel;
 
     public ObservableCollection<PaletteData> Palettes
     {
@@ -39,12 +42,12 @@ internal class PaletteWindowViewModel : PixedViewModel
         }
     }
 
-    public Action<bool, PaletteModel> PaletteAction { get; set; }
-    public Action<PaletteModel, string> PaletteRenameAction { get; set; }
+    public Action CloseAction { get; set; }
 
-    public PaletteWindowViewModel(PaletteService paletteService)
+    public PaletteWindowViewModel(PaletteService paletteService, PaletteSectionViewModel paletteSectionViewModel)
     {
         _paletteService = paletteService;
+        _sectionViewModel = paletteSectionViewModel;
         _palettes = [];
         Initialize();
     }
@@ -71,8 +74,8 @@ internal class PaletteWindowViewModel : PixedViewModel
                 BitmapImage = new PixedImage(paletteBitmap),
                 BitmapWidth = paletteBitmap.Width,
                 BitmapHeight = paletteBitmap.Height,
-                SelectCommand = new ActionCommand<PaletteModel>(m => PaletteAction?.Invoke(true, m)),
-                RemoveCommand = new ActionCommand<PaletteModel>(m => PaletteAction?.Invoke(false, m)),
+                SelectCommand = new ActionCommand<PaletteModel>(m => { _paletteService.Select(m); CloseAction?.Invoke(); }),
+                RemoveCommand = new ActionCommand<PaletteModel>(_paletteService.Remove),
                 RenameCommand = new ActionCommand<PaletteModel>(async (m) =>
                 {
                     var result = await Router.Prompt("Rename Palette", "New name: ", m.Name);
@@ -80,7 +83,7 @@ internal class PaletteWindowViewModel : PixedViewModel
 
                     if (result.HasValue)
                     {
-                        PaletteRenameAction?.Invoke(m, result.Value);
+                        await _sectionViewModel.Rename(m, result.Value);
                         Initialize();
                     }
                 })

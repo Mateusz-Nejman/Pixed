@@ -1,39 +1,25 @@
 ﻿using Pixed.Common.Models;
-using Pixed.Common.Platform;
-using Pixed.Common.Services.Palette.Readers;
-using Pixed.Common.Services.Palette.Writers;
 using Pixed.Core.Models;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Pixed.Common.Services.Palette;
 
 public class PaletteService
 {
     private readonly ApplicationData _applicationData;
-    private readonly IStorageProviderHandle _storageProvider;
     public List<PaletteModel> Palettes { get; }
     public PaletteModel CurrentColorsPalette => Palettes[0];
     public PaletteModel SelectedPalette => Palettes[_paletteIndex];
     private int _paletteIndex => 1;
 
-    public PaletteService(ApplicationData applicationData, IStorageProviderHandle storageProvider)
+    public PaletteService(ApplicationData applicationData)
     {
         _applicationData = applicationData;
-        _storageProvider = storageProvider;
         Palettes = [];
         Palettes.Add(new PaletteModel("default") { Name = "Current colors" });
         Palettes.Add(new PaletteModel("palette") { Name = "Palette" });
-    }
-
-    public void Rename(PaletteModel model, string newName)
-    {
-        int index = Palettes.IndexOf(model);
-        Palettes[index].Name = newName;
-        Save(Palettes[index], true);
     }
 
     public void Select(PaletteModel model)
@@ -92,110 +78,6 @@ public class PaletteService
         {
             Palettes.Add(palette);
             Subjects.PaletteAdded.OnNext(palette);
-        }
-    }
-
-    public async Task Load(string filename)
-    {
-        FileInfo fileInfo = new(filename);
-
-        string paletteFileName = Path.Combine(await _storageProvider.GetPalettesFolderAbsolute(), fileInfo.Name);
-        File.Copy(filename, paletteFileName, true);
-
-        AbstractPaletteReader reader;
-
-        if (fileInfo.Extension == ".json")
-        {
-            reader = new BasePaletteReader(filename);
-        }
-        else
-        {
-            reader = new GplPaletteReader(filename);
-        }
-
-        PaletteModel model;
-        try
-        {
-            model = reader.Read();
-        }
-        catch (Exception _)
-        {
-            //TODO info
-            return;
-        }
-        Palettes[1] = model.ToCurrentPalette();
-
-        if (Palettes.FirstOrDefault(p => p.Id == model.Id, null) == null)
-        {
-            Palettes.Add(model);
-        }
-        else
-        {
-            Palettes[Palettes.FindIndex(p => p.Id == model.Id)] = model;
-        }
-        Subjects.PaletteSelected.OnNext(Palettes[1]);
-        Subjects.PaletteAdded.OnNext(Palettes[1]);
-    }
-
-    public async Task Save(string filename)
-    {
-        var model = Palettes[_paletteIndex].ToCurrentPalette();
-        model.Path = filename;
-        await Save(model, true);
-        await Save(model, false);
-    }
-
-    public async Task LoadAll()
-    {
-        var files = Directory.GetFiles(await _storageProvider.GetPalettesFolderAbsolute());
-
-        foreach (var file in files)
-        {
-            try
-            {
-                FileInfo fileInfo = new(file);
-
-                AbstractPaletteReader reader;
-                if (fileInfo.Extension == ".json")
-                {
-                    reader = new BasePaletteReader(file);
-                }
-                else
-                {
-                    reader = new GplPaletteReader(file);
-                }
-                PaletteModel palette = reader.Read();
-                Palettes.Add(palette);
-            }
-            catch (Exception e)
-            {
-                //ignore
-            }
-        }
-    }
-
-    private async Task Save(PaletteModel model, bool appData = false)
-    {
-        FileInfo fileInfo = new(model.Path);
-
-        IAbstractPaletteWriter writer;
-
-        if (fileInfo.Extension == ".json")
-        {
-            writer = new BasePaletteWriter();
-        }
-        else
-        {
-            writer = new GplPaletteWriter();
-        }
-
-        if (appData)
-        {
-            writer.Write(model, Path.Combine(await _storageProvider.GetPalettesFolderAbsolute(), fileInfo.Name));
-        }
-        else
-        {
-            writer.Write(model, model.Path);
         }
     }
 }

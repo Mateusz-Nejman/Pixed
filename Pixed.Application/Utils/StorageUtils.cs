@@ -1,5 +1,6 @@
 ﻿using Avalonia.Platform.Storage;
 using Pixed.Application.IO;
+using Pixed.Core.Utils;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -14,5 +15,29 @@ internal static class StorageUtils
     public static async Task<Stream> OpenRead(this IStorageFile file)
     {
         return StreamBase.Create(await file.OpenReadAsync());
+    }
+
+    public static async Task CopyTo(this IStorageFile input, IStorageFile output)
+    {
+        var inputStream = await input.OpenRead();
+        var bytes = inputStream.ReadAllBytes();
+        var outputStream = await output.OpenWrite();
+        outputStream.Write(bytes);
+        inputStream.Dispose();
+        outputStream.Dispose();
+
+    }
+
+    public static string GetExtension(this IStorageFile file)
+    {
+        string name = file.Name;
+        string[] parts = name.Split('.');
+
+        if(parts.Length >= 2)
+        {
+            return "." + parts[^1];
+        }
+
+        return string.Empty;
     }
 }

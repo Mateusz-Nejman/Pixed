@@ -1,24 +1,24 @@
 ﻿using Pixed.Common.Models;
 using Pixed.Core;
+using Pixed.Core.Utils;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Pixed.Common.Services.Palette.Readers;
-
-internal class GplPaletteReader(string filename) : AbstractPaletteReader(filename)
+namespace Pixed.Common.Services.Palette;
+internal class GplPaletteSerializer : AbstractPaletteSerializer
 {
-    public override PaletteModel Read()
+    public override PaletteModel Deserialize(Stream stream, string filename)
     {
         string lineRegex = @"^(\s*\d{1,3})(\s*\d{1,3})(\s*\d{1,3})";
         string nameRegex = @"name\s*\:\s*(.*)$";
 
-        FileInfo info = new(_filename);
-        PaletteModel model = new(info.Name)
+        PaletteModel model = new(filename)
         {
-            Path = _filename
+            Path = filename
         };
 
-        var lines = File.ReadAllLines(_filename);
+        var lines = stream.ReadAllLines();
 
         foreach (var line in lines)
         {
@@ -46,9 +46,26 @@ internal class GplPaletteReader(string filename) : AbstractPaletteReader(filenam
 
         if (model.Name == string.Empty)
         {
-            model.Name = info.Name;
+            model.Name = filename;
         }
 
         return model;
+    }
+
+    public override void Serialize(Stream stream, PaletteModel model)
+    {
+        StringBuilder builder = new();
+        builder.AppendLine("GIMP Palette");
+        builder.AppendLine("Name: " + model.Name);
+        builder.AppendLine("Description: Palette created using Pixed Editor by Mateusz Nejman");
+        builder.AppendLine("Colors: " + model.Colors.Count);
+
+        foreach (var colorInt in model.Colors)
+        {
+            UniColor color = (UniColor)colorInt;
+            builder.AppendLine(color.R.ToString().PadRight(3, ' ') + " " + color.G.ToString().PadRight(3, ' ') + " " + color.B.ToString().PadRight(3, ' ') + " " + colorInt);
+        }
+
+        stream.Write(builder.ToString());
     }
 }
