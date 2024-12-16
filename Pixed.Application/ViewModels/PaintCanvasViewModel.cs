@@ -555,7 +555,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         return new(_transparentBitmap)
         {
             TileMode = TileMode.Tile,
-            Transform = new ScaleTransform(0.2d / _zoomValue, 0.2d / _zoomValue)
+            Transform = new ScaleTransform(0.05d, 0.05d)
         };
     }
 
