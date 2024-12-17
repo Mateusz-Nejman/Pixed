@@ -10,7 +10,6 @@ using Pixed.Application.Extensions;
 using Pixed.Application.Windows;
 using Pixed.Common;
 using Pixed.Common.DependencyInjection;
-using Pixed.Common.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,7 +21,7 @@ namespace Pixed.Application;
 
 public partial class App : Avalonia.Application
 {
-    private Mutex _mutex;
+    private Mutex? _mutex;
     internal static IPixedServiceProvider ServiceProvider { get; private set; }
     public override void Initialize()
     {
@@ -31,6 +30,7 @@ public partial class App : Avalonia.Application
 
     public async override void OnFrameworkInitializationCompleted()
     {
+        Platform.PlatformSettings.Lifecycle.ApplicationLifetime = ApplicationLifetime;
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             SplashWindow splash = new();
@@ -38,17 +38,16 @@ public partial class App : Avalonia.Application
             splash.Show();
             await InitializeMainWindow(desktop, splash);
         }
+        else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
+        {
+            InitializeServices();
+            singleViewPlatform.MainView = new MainView();
+        }
         base.OnFrameworkInitializationCompleted();
     }
 
-    private async Task InitializeMainWindow(IClassicDesktopStyleApplicationLifetime desktop, Window splash)
+    private void InitializeServices()
     {
-        if (!HandleNewInstance(Dispatcher.UIThread, desktop))
-        {
-            splash.Close();
-            return;
-        }
-        await Task.Delay(1500);
         BindingPlugins.DataValidators.RemoveAt(0);
 
         IServiceCollection collection = new ServiceCollection();
@@ -59,15 +58,33 @@ public partial class App : Avalonia.Application
             register.Register(ref collection);
         }
 
-        ExtensionsLoader.Load(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Pixed", "Extensions"));
-        ExtensionsLoader.RegisterTools(ref collection);
+        collection.AddSingleton(Platform.PlatformSettings.Lifecycle);
+
+        if (Platform.PlatformSettings.Lifecycle.ExtensionsEnabled)
+        {
+            ExtensionsLoader.Load(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Pixed", "Extensions"));
+            ExtensionsLoader.RegisterTools(ref collection);
+        }
+
         ServiceProvider provider = new(collection.BuildServiceProvider());
         this.Resources[typeof(IPixedServiceProvider)] = provider;
         ServiceProvider = provider;
-        MainWindow window = provider.Get<MainWindow>();
-        window.OpenFromArgs(desktop.Args);
-        window.Show();
-        desktop.MainWindow = window;
+    }
+
+    private async Task InitializeMainWindow(IClassicDesktopStyleApplicationLifetime desktop, Window splash)
+    {
+        if (!HandleNewInstance(Dispatcher.UIThread, desktop))
+        {
+            splash.Close();
+            return;
+        }
+        await Task.Delay(1500);
+        InitializeServices();
+        var provider = this.Resources[typeof(IPixedServiceProvider)] as IPixedServiceProvider;
+        var mainWindow = provider.Get<MainWindow>();
+        await mainWindow.OpenFromArgs(desktop.Args);
+        desktop.MainWindow = mainWindow;
+        desktop.MainWindow.Show();
         await Task.Delay(100);
         splash.Close();
     }
@@ -75,6 +92,7 @@ public partial class App : Avalonia.Application
     private bool HandleNewInstance(Dispatcher? dispatcher, IClassicDesktopStyleApplicationLifetime desktop)
     {
         _mutex = new(true, "pixed_mutex_name", out bool isOwned);
+        var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "instance.lock");
         var handle = new EventWaitHandle(false, EventResetMode.AutoReset, "pixed_mutex_event_name");
 
         GC.KeepAlive(_mutex);
@@ -89,9 +107,6 @@ public partial class App : Avalonia.Application
                 {
                     while (handle.WaitOne())
                     {
-                        var pixed = await desktop.MainWindow.StorageProvider.GetPixedFolder();
-                        var filePath = Path.Combine(pixed.Path.AbsolutePath, "instance.lock");
-
                         if (File.Exists(filePath))
                         {
                             string[] args = JsonConvert.DeserializeObject<string[]>(File.ReadAllText(filePath)) ?? [];
@@ -111,10 +126,9 @@ public partial class App : Avalonia.Application
             return true;
         }
 
-        Task.Run(async () =>
+        Task.Run(() =>
         {
-            var pixed = await desktop.MainWindow.StorageProvider.GetPixedFolder();
-            File.WriteAllText(Path.Combine(pixed.Path.AbsolutePath, "instance.lock"), JsonConvert.SerializeObject(Environment.GetCommandLineArgs()));
+            File.WriteAllText(filePath, JsonConvert.SerializeObject(Environment.GetCommandLineArgs()));
         });
         handle.Set();
 

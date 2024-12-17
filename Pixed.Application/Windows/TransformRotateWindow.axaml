@@ -1,20 +1,18 @@
-<Window xmlns="https://github.com/avaloniaui"
+<local:PixedWindow xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Pixed.Application.Windows;assembly=Pixed.Application"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Pixed.Application.Windows.TransformRotateWindow"
-        Title="Rotate"
-		CanResize="False"
-		ShowInTaskbar="False"
-		SizeToContent="WidthAndHeight"
-        WindowStartupLocation="CenterOwner"
-        Icon="avares://Pixed.Application/Resources/icon.ico">
-	<StackPanel>
-		<CheckBox Content="Counter-clockwise rotation" Name="counterClockwiseRotation" Margin="10"/>
-		<CheckBox Content="Apply to all frames" Name="applyToAllFrames" Margin="10"/>
-		<CheckBox Content="Apply to all layers" Name="applyToAllLayers" Margin="10"/>
-		<Button Content="OK" Click="Button_Click"
-			Height="24" MinWidth="80" Padding="10,0" Margin="10"/>
-	</StackPanel>
-</Window>
+        Title="Rotate">
+  <local:PixedWindow.Dialog>
+    <StackPanel>
+      <CheckBox Content="Counter-clockwise rotation" Name="counterClockwiseRotation" Margin="10"/>
+      <CheckBox Content="Apply to all frames" Name="applyToAllFrames" Margin="10"/>
+      <CheckBox Content="Apply to all layers" Name="applyToAllLayers" Margin="10"/>
+      <Button Content="OK" Click="Button_Click"
+        Height="24" MinWidth="80" Padding="10,0" Margin="10"/>
+    </StackPanel>
+  </local:PixedWindow.Dialog>
+</local:PixedWindow>

@@ -1,15 +1,17 @@
 ﻿using Avalonia.Platform.Storage;
-using Pixed.Application.Windows;
+using Pixed.Application.Platform;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Pixed.Application.Utils;
 
-internal static class DialogUtils
+internal class DialogUtils(IStorageProviderHandle storageProviderHandle)
 {
-    public static async Task<IReadOnlyList<IStorageFile>> OpenFileDialog(string filter, string filename, bool allowMultiple = false)
+    private readonly IStorageProviderHandle _storageProviderHandle = storageProviderHandle;
+
+    public async Task<IReadOnlyList<IStorageFile>> OpenFileDialog(string filter, string filename, bool allowMultiple = false)
     {
-        var storage = MainWindow.Handle.StorageProvider;
+        var storage = _storageProviderHandle.StorageProvider;
         return await storage.OpenFilePickerAsync(new FilePickerOpenOptions()
         {
             AllowMultiple = allowMultiple,
@@ -19,10 +21,9 @@ internal static class DialogUtils
         });
     }
 
-    public static async Task<IStorageFile?> SaveFileDialog(string filter, string filename)
+    public async Task<IStorageFile?> SaveFileDialog(string filter, string filename)
     {
-        var storage = MainWindow.Handle.StorageProvider;
-        return await storage.SaveFilePickerAsync(new FilePickerSaveOptions()
+        return await _storageProviderHandle.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions()
         {
             FileTypeChoices = GetFileFilter(filter),
             ShowOverwritePrompt = true,

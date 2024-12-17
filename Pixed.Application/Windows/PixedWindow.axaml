@@ -1,0 +1,70 @@
+<Page xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	         xmlns:local="clr-namespace:Pixed.Application.Windows;assembly=Pixed.Application"
+             mc:Ignorable="d"
+             d:DesignWidth="800"
+             d:DesignHeight="450"
+             VerticalAlignment="Center"
+             HorizontalAlignment="Center"
+             x:Class="Pixed.Application.Windows.PixedWindow">
+	<DockPanel Background="{StaticResource BaseBackground}">
+		<Grid DockPanel.Dock="Top">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="Auto"/>
+			</Grid.ColumnDefinitions>
+			<StackPanel Orientation="Horizontal" Spacing="0">
+				<Image Source="avares://Pixed.Application/Resources/icon.png"
+					 Height="20"
+					 Width="20"
+					 VerticalAlignment="Center"
+					 Margin="5,0,3,0"
+					 Name="windowIcon"></Image>
+			</StackPanel>
+			<TextBlock Text="{Binding Title, RelativeSource={RelativeSource FindAncestor, AncestorType=local:PixedWindow}}" Grid.Column="1"
+					 FontSize="14"
+					   FontWeight="Bold"
+					 Foreground="White"
+						 HorizontalAlignment="Center"
+					 VerticalAlignment="Center"
+					 IsHitTestVisible="False"></TextBlock>
+			<StackPanel Height="22" Grid.Column="2"
+				  Orientation="Horizontal"
+				  Spacing="0"
+				  VerticalAlignment="Top">
+				<Button Width="46"
+					VerticalAlignment="Stretch"
+					BorderThickness="0"
+					Name="closeButton"
+					ToolTip.Tip="Close"
+						Click="Button_Click">
+					<Button.Resources>
+						<CornerRadius x:Key="ControlCornerRadius">0</CornerRadius>
+					</Button.Resources>
+					<Button.Styles>
+						<Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+							<Setter Property="Background" Value="Red"/>
+						</Style>
+						<Style Selector="Button:not(:pointerover) /template/ ContentPresenter#PART_ContentPresenter">
+							<Setter Property="Background" Value="Transparent"/>
+						</Style>
+						<Style Selector="Button:pointerover > Path">
+							<Setter Property="Fill" Value="White"/>
+						</Style>
+						<Style Selector="Button:not(:pointerover) > Path">
+							<Setter Property="Fill" Value="{DynamicResource SystemControlForegroundBaseHighBrush}"/>
+						</Style>
+					</Button.Styles>
+					<Path Margin="10,0,10,0"
+						Stretch="Uniform"
+						Data="M1169 1024l879 -879l-145 -145l-879 879l-879 -879l-145 145l879 879l-879 879l145 145l879 -879l879 879l145 -145z"></Path>
+				</Button>
+			</StackPanel>
+		</Grid>
+		<ContentControl DockPanel.Dock="Bottom" Content="{Binding Dialog, RelativeSource={RelativeSource FindAncestor, AncestorType=local:PixedWindow}}"/>
+	</DockPanel>
+</Page>
+

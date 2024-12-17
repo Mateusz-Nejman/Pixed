@@ -1,8 +1,5 @@
 ﻿using Pixed.Common.Models;
-using Pixed.Common.Services.Palette.Readers;
-using Pixed.Common.Services.Palette.Writers;
 using Pixed.Core.Models;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -23,13 +20,6 @@ public class PaletteService
         Palettes = [];
         Palettes.Add(new PaletteModel("default") { Name = "Current colors" });
         Palettes.Add(new PaletteModel("palette") { Name = "Palette" });
-    }
-
-    public void Rename(PaletteModel model, string newName)
-    {
-        int index = Palettes.IndexOf(model);
-        Palettes[index].Name = newName;
-        Save(Palettes[index], true);
     }
 
     public void Select(PaletteModel model)
@@ -88,101 +78,6 @@ public class PaletteService
         {
             Palettes.Add(palette);
             Subjects.PaletteAdded.OnNext(palette);
-        }
-    }
-
-    public void Load(string filename)
-    {
-        FileInfo fileInfo = new(filename);
-
-        string paletteFileName = Path.Combine(_applicationData.DataFolder.Path.AbsolutePath, "Palettes", fileInfo.Name);
-        File.Copy(filename, paletteFileName, true);
-
-        AbstractPaletteReader reader;
-
-        if (fileInfo.Extension == ".json")
-        {
-            reader = new BasePaletteReader(filename);
-        }
-        else
-        {
-            reader = new GplPaletteReader(filename);
-        }
-
-        PaletteModel model = reader.Read();
-        Palettes[1] = model.ToCurrentPalette();
-
-        if (Palettes.FirstOrDefault(p => p.Id == model.Id, null) == null)
-        {
-            Palettes.Add(model);
-        }
-        else
-        {
-            Palettes[Palettes.FindIndex(p => p.Id == model.Id)] = model;
-        }
-        Subjects.PaletteSelected.OnNext(Palettes[1]);
-        Subjects.PaletteAdded.OnNext(Palettes[1]);
-    }
-
-    public void Save(string filename)
-    {
-        var model = Palettes[_paletteIndex].ToCurrentPalette();
-        model.Path = filename;
-        Save(model, true);
-        Save(model, false);
-    }
-
-    public void LoadAll()
-    {
-        var files = Directory.GetFiles(Path.Combine(_applicationData.DataFolder.Path.AbsolutePath, "Palettes"));
-
-        foreach (var file in files)
-        {
-            try
-            {
-                FileInfo fileInfo = new(file);
-
-                AbstractPaletteReader reader;
-                if (fileInfo.Extension == ".json")
-                {
-                    reader = new BasePaletteReader(file);
-                }
-                else
-                {
-                    reader = new GplPaletteReader(file);
-                }
-                PaletteModel palette = reader.Read();
-                Palettes.Add(palette);
-            }
-            catch (Exception e)
-            {
-                //ignore
-            }
-        }
-    }
-
-    private void Save(PaletteModel model, bool appData = false)
-    {
-        FileInfo fileInfo = new(model.Path);
-
-        IAbstractPaletteWriter writer;
-
-        if (fileInfo.Extension == ".json")
-        {
-            writer = new BasePaletteWriter();
-        }
-        else
-        {
-            writer = new GplPaletteWriter();
-        }
-
-        if (appData)
-        {
-            writer.Write(model, Path.Combine(_applicationData.DataFolder.Path.AbsolutePath, "Palettes", fileInfo.Name));
-        }
-        else
-        {
-            writer.Write(model, model.Path);
         }
     }
 }

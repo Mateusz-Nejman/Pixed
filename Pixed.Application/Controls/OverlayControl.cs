@@ -12,6 +12,7 @@ internal abstract class OverlayControl : Control
 {
     class DrawOperation(Rect bounds, OverlayControl instance) : ICustomDrawOperation
     {
+        private const int MinRenderSize = 120;
         private readonly OverlayControl _instance = instance;
 
         public Rect Bounds { get; } = bounds;
@@ -24,6 +25,11 @@ internal abstract class OverlayControl : Control
         }
         public void Render(ImmediateDrawingContext context)
         {
+            if (Bounds.Width < MinRenderSize || Bounds.Height < MinRenderSize)
+            {
+                return;
+            }
+
             if (context.PlatformImpl.GetFeature<ISkiaSharpApiLeaseFeature>() is ISkiaSharpApiLeaseFeature leaseFeature)
             {
                 ISkiaSharpApiLease lease = leaseFeature.Lease();

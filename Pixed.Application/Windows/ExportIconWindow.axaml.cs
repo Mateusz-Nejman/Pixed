@@ -1,4 +1,3 @@
-using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Pixed.Application.ViewModels;
 using Pixed.Core.Models;
@@ -6,11 +5,9 @@ using System.Collections.Generic;
 
 namespace Pixed.Application.Windows;
 
-public partial class ExportIconWindow : Window
+internal partial class ExportIconWindow : PixedWindow
 {
     private readonly ExportIconWindowViewModel _viewModel;
-
-    public List<Point> IconFormats => GetIconFormats();
     public ExportIconWindow()
     {
         InitializeComponent();
@@ -40,6 +37,6 @@ public partial class ExportIconWindow : Window
 
     private void Button_Click(object sender, RoutedEventArgs e)
     {
-        Close(true);
+        Close(GetIconFormats());
     }
 }

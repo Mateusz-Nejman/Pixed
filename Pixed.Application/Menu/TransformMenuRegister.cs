@@ -1,11 +1,12 @@
-﻿using Avalonia.Controls;
-using Pixed.Application.Windows;
+﻿using Pixed.Application.Routing;
 using Pixed.Common.Menu;
 using Pixed.Common.Selection;
 using Pixed.Common.Tools.Transform;
 using Pixed.Core;
 using Pixed.Core.Models;
+using ReactiveUI;
 using System;
+using System.Threading.Tasks;
 
 namespace Pixed.Application.Menu;
 internal class TransformMenuRegister(IMenuItemRegistry menuItemRegistry, SelectionManager selectionManager, ApplicationData applicationData)
@@ -16,46 +17,41 @@ internal class TransformMenuRegister(IMenuItemRegistry menuItemRegistry, Selecti
 
     public void Register()
     {
-        NativeMenuItem transformMenu = new("Transform")
+        MenuItem transformMenu = new("Transform")
         {
-            Menu = []
+            Items = []
         };
-        AddToMenu(ref transformMenu, "Flip", () => new TransformFlipWindow(_applicationData));
-        AddToMenu(ref transformMenu, "Rotation", () => new TransformRotateWindow(_applicationData));
-        AddToMenu(ref transformMenu, "Align image to the center", () => new TransformAlignWindow(_applicationData));
-        AddToMenu(ref transformMenu, "Crop to fit the content or the selection", new Crop(_applicationData, _selectionManager));
+        AddToMenu(ref transformMenu, "Flip", () => Router.Navigate("/transformFlip"), new("avares://Pixed.Application/Resources/Icons/transform/tool-flip.png"));
+        AddToMenu(ref transformMenu, "Rotation", () => Router.Navigate("/transformRotate"), new("avares://Pixed.Application/Resources/Icons/transform/tool-rotate.png"));
+        AddToMenu(ref transformMenu, "Align image to the center", () => Router.Navigate("/transformAlign"), new("avares://Pixed.Application/Resources/Icons/transform/tool-center.png"));
+        AddToMenu(ref transformMenu, "Crop to fit the content or the selection", new Crop(_applicationData, _selectionManager), new("avares://Pixed.Application/Resources/Icons/transform/tool-crop.png"));
 
         _menuItemRegistry.Register(BaseMenuItem.Tools, transformMenu);
     }
 
-    private static void AddToMenu(ref NativeMenuItem menuItem, string text, Func<Window> windowCreator)
+    private static void AddToMenu(ref MenuItem menuItem, string text, Func<Task> task, Uri icon)
     {
-        menuItem.Menu ??= [];
-        NativeMenuItem toolMenu = new(text)
+        menuItem.Items ??= [];
+        MenuItem toolMenu = new(text)
         {
-            Command = new ActionCommand<Func<Window>>(WindowToolAction),
-            CommandParameter = windowCreator
+            Command = ReactiveCommand.CreateFromTask(task),
+            Icon = icon
         };
 
-        menuItem.Menu.Add(toolMenu);
+        menuItem.Items.Add(toolMenu);
     }
 
-    private static void AddToMenu(ref NativeMenuItem menuItem, string text, AbstractTransformTool tool)
+    private static void AddToMenu(ref MenuItem menuItem, string text, AbstractTransformTool tool, Uri icon)
     {
-        menuItem.Menu ??= [];
-        NativeMenuItem toolMenu = new(text)
+        menuItem.Items ??= [];
+        MenuItem toolMenu = new(text)
         {
             Command = new ActionCommand<AbstractTransformTool>(ToolAction),
-            CommandParameter = tool
+            CommandParameter = tool,
+            Icon = icon
         };
 
-        menuItem.Menu.Add(toolMenu);
-    }
-
-    private static void WindowToolAction(Func<Window> windowCreator)
-    {
-        var window = windowCreator();
-        window.ShowDialog(MainWindow.Handle);
+        menuItem.Items.Add(toolMenu);
     }
 
     private static void ToolAction(AbstractTransformTool tool)

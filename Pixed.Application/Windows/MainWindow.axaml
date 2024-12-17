@@ -1,76 +1,18 @@
-﻿<Window x:Class="Pixed.Application.Windows.MainWindow"
-        xmlns="https://github.com/avaloniaui"
+<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Pixed"
-        xmlns:controls="clr-namespace:Pixed.Application.Controls"
-        xmlns:mainsections="clr-namespace:Pixed.Application.Controls.MainWindowSections"
-        xmlns:dd="urn:gong-wpf-dragdrop"
-        xmlns:viewmodels="clr-namespace:Pixed.Application.ViewModels"
-        mc:Ignorable="d"
-        Title="Pixed" Height="600" Width="800"
-        Background="{StaticResource BaseBackground}" WindowState="Maximized"
-        KeyDown="Window_KeyDown"
-        KeyUp="Window_KeyUp"
-        PointerPressed="Window_PointerPressed"
-        PointerReleased="Window_PointerReleased"
-		WindowStartupLocation="CenterScreen"
-		ExtendClientAreaToDecorationsHint="True"
+		xmlns:routing="clr-namespace:Pixed.Application.Routing;assembly=Pixed.Application"
+        mc:Ignorable="d" Height="600" Width="800"
+        x:Class="Pixed.Application.Windows.MainWindow"
+        WindowStartupLocation="CenterScreen"
+        ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaChromeHints="NoChrome"
         ExtendClientAreaTitleBarHeightHint="-1"
+        WindowState="Maximized"
         Icon="avares://Pixed.Application/Resources/icon.ico"
-		NativeMenu.Menu="{Binding Menu}"
-		DragDrop.AllowDrop="True"
-		x:DataType="viewmodels:MainViewModel">
-  <Window.KeyBindings>
-    <KeyBinding Gesture="CTRL+Q"
-					Command="{Binding QuitCommand}"/>
-  </Window.KeyBindings>
-
-  <DockPanel HorizontalAlignment="Stretch"
-			   VerticalAlignment="Stretch"
-			   Name="ContentWrapper">
-    <controls:CustomTitleBar Title="{Binding Title}"/>
-    <DockPanel Background="Transparent">
-      <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-        <Grid.RowDefinitions>
-          <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="64"/>
-          <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <mainsections:ToolsSection x:Name="toolsSection"/>
-        <Grid x:Name="mainSection" Grid.Column="1">
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="124"/>
-            <ColumnDefinition Width="auto"/>
-            <!-- Open/close button-->
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="auto"/>
-            <!-- Open/close button-->
-            <ColumnDefinition Width="auto"/>
-          </Grid.ColumnDefinitions>
-
-          <mainsections:FramesSection/>
-          <Grid Name="centerPanel" Grid.Column="2">
-            <Grid.RowDefinitions>
-              <RowDefinition Height="76"/>
-              <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <mainsections:ProjectsSection/>
-            <controls:PaintCanvas Grid.Row="1" x:Name="paintCanvas"/>
-          </Grid>
-
-          <ScrollViewer Grid.Column="4" Width="242" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto" Theme="{StaticResource HandledFixScrollViewer}">
-            <StackPanel Name="rightPanel" Grid.Column="4" Width="242" HorizontalAlignment="Stretch">
-              <mainsections:PaletteSection/>
-              <mainsections:LayersSection/>
-            </StackPanel>
-          </ScrollViewer>
-        </Grid>
-      </Grid>
-    </DockPanel>
-  </DockPanel>
+        Title="Pixed">
+  <Panel>
+    <routing:RouterControl/>
+  </Panel>
 </Window>

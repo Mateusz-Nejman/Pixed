@@ -21,6 +21,11 @@ internal abstract class PixedUserControl<T> : UserControl
         this.DataContext = serviceProvider.Get<T>();
     }
 
+    public TResult Get<TResult>()
+    {
+        return Provider.Get<TResult>();
+    }
+
     public virtual void RegisterMenuItems()
     {
         if (DataContext is PixedViewModel model)
@@ -38,6 +43,16 @@ internal abstract class PixedUserControl<T> : UserControl
         base.OnInitialized();
         RegisterMenuItems();
         Unloaded += PixedUserControl_Unloaded;
+        Loaded += PixedUserControl_Loaded;
+    }
+
+    private void PixedUserControl_Loaded(object? sender, RoutedEventArgs e)
+    {
+        OnLoaded();
+        if (DataContext is PixedViewModel model)
+        {
+            model.OnLoaded();
+        }
     }
 
     private void PixedUserControl_Unloaded(object? sender, RoutedEventArgs e)

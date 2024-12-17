@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Pixed.Application.IO;
 using Pixed.Application.Menu;
+using Pixed.Application.Platform;
 using Pixed.Application.Services;
+using Pixed.Application.Utils;
 using Pixed.Application.ViewModels;
 using Pixed.Application.Windows;
 using Pixed.Common.DependencyInjection;
@@ -22,6 +24,7 @@ internal class ApplicationDependencyRegister : IDependencyRegister
         collection.AddSingleton<ToolsSectionViewModel>();
 
         collection.AddSingleton<MainWindow>();
+        collection.AddSingleton<MainPage>();
         collection.AddSingleton<RecentFilesService>();
         collection.AddScoped<PixedProjectMethods>();
         collection.AddSingleton<MenuBuilder>();
@@ -29,7 +32,11 @@ internal class ApplicationDependencyRegister : IDependencyRegister
 
         collection.AddSingleton<TransformMenuRegister>();
         collection.AddSingleton<CopyPasteMenuRegister>();
+        collection.AddSingleton<PaletteMenuRegister>();
         collection.AddSingleton<ViewMenuRegister>();
+        collection.AddSingleton<ToolsMenuRegister>();
         collection.AddSingleton<IClipboardHandle, ClipboardHandle>();
+        collection.AddSingleton<IStorageProviderHandle, StorageProviderHandle>();
+        collection.AddSingleton<DialogUtils>();
     }
 }

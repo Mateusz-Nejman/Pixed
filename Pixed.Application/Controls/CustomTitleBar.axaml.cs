@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using Pixed.Application.Windows;
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
@@ -28,18 +29,21 @@ internal partial class CustomTitleBar : EmptyPixedUserControl
         set { SetValue(CanMaximizeProperty, value); }
     }
 
+    public List<MenuItem>? Menu
+    {
+        get => GetValue(MenuProperty);
+        set => SetValue(MenuProperty, value);
+    }
+
     public static readonly StyledProperty<string> TitleProperty = AvaloniaProperty.Register<CustomTitleBar, string>("Title", "Title");
     public static readonly StyledProperty<bool> CanMinimizeProperty = AvaloniaProperty.Register<CustomTitleBar, bool>("CanMinimize", true);
     public static readonly StyledProperty<bool> CanMaximizeProperty = AvaloniaProperty.Register<CustomTitleBar, bool>("CanMaximize", true);
+    public static readonly StyledProperty<List<MenuItem>?> MenuProperty = AvaloniaProperty.Register<CustomTitleBar, List<MenuItem>?>(nameof(Menu), null);
     public CustomTitleBar() : base()
     {
         InitializeComponent();
 
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            this.IsVisible = false;
-        }
-        else
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             minimizeButton.Click += MinimizeWindow;
             maximizeButton.Click += MaximizeWindow;
@@ -48,11 +52,15 @@ internal partial class CustomTitleBar : EmptyPixedUserControl
 
             SubscribeToWindowState();
         }
+        else
+        {
+            windowButtons.IsVisible = false;
+        }
     }
 
     private void CloseWindow(object sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        MainWindow.QuitCommand?.Execute(null);
+        MainPage.QuitCommand?.Execute(null);
     }
 
     private void MaximizeWindow(object sender, Avalonia.Interactivity.RoutedEventArgs e)

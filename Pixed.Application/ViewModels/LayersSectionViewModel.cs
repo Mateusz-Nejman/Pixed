@@ -1,5 +1,5 @@
 ﻿using Pixed.Application.Controls;
-using Pixed.Application.Windows;
+using Pixed.Application.Routing;
 using Pixed.Common;
 using Pixed.Common.Menu;
 using Pixed.Core;
@@ -136,12 +136,12 @@ internal class LayersSectionViewModel : PixedViewModel, IDisposable
 
     public override void RegisterMenuItems()
     {
-        _menuItemRegistry.Register(BaseMenuItem.Project, "Add Layer to current frame", AddLayerCommand);
-        _menuItemRegistry.Register(BaseMenuItem.Project, "Edit layer name", EditLayerNameCommand);
-        _menuItemRegistry.Register(BaseMenuItem.Project, "Merge with layer below", MergeLayerCommand);
-        _menuItemRegistry.Register(BaseMenuItem.Project, "Move layer up", MoveLayerUpCommand);
-        _menuItemRegistry.Register(BaseMenuItem.Project, "Move layer down", MoveLayerDownCommand);
-        _menuItemRegistry.Register(BaseMenuItem.Project, "Remove current layer", RemoveLayerCommand);
+        _menuItemRegistry.Register(BaseMenuItem.Project, "Add Layer to current frame", AddLayerCommand, null, new("avares://Pixed.Application/Resources/Icons/plus-menu.png"));
+        _menuItemRegistry.Register(BaseMenuItem.Project, "Edit layer name", EditLayerNameCommand, null, new("avares://Pixed.Application/Resources/Icons/pencil-menu.png"));
+        _menuItemRegistry.Register(BaseMenuItem.Project, "Merge with layer below", MergeLayerCommand, null, new("avares://Pixed.Application/Resources/Icons/download2-menu.png"));
+        _menuItemRegistry.Register(BaseMenuItem.Project, "Move layer up", MoveLayerUpCommand, null, new("avares://Pixed.Application/Resources/Icons/arrow-up-menu.png"));
+        _menuItemRegistry.Register(BaseMenuItem.Project, "Move layer down", MoveLayerDownCommand, null, new("avares://Pixed.Application/Resources/Icons/arrow-down-menu.png"));
+        _menuItemRegistry.Register(BaseMenuItem.Project, "Remove current layer", RemoveLayerCommand, null, new("avares://Pixed.Application/Resources/Icons/bin-menu.png"));
     }
 
     protected virtual void Dispose(bool disposing)
@@ -213,16 +213,11 @@ internal class LayersSectionViewModel : PixedViewModel, IDisposable
     {
         string layerName = Layers[_selectedLayer].Name;
 
-        Prompt window = new()
-        {
-            Title = "Enter new layer name",
-            Text = "New layer name:",
-            DefaultValue = layerName
-        };
+        var result = await Router.Prompt("Enter new layer name", "New layer name: ", layerName);
 
-        if (await window.ShowDialog<bool>(MainWindow.Handle) == true)
+        if (result.HasValue)
         {
-            Layers[_selectedLayer].Name = window.Value;
+            Layers[_selectedLayer].Name = result.Value;
         }
 
         _applicationData.CurrentModel.AddHistory();

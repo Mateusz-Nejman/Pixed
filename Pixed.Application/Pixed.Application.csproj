@@ -21,20 +21,21 @@
   </ItemGroup>
 
   <ItemGroup>
-	<PackageReference Include="Avalonia" Version="11.1.4" />
-	<PackageReference Include="Avalonia.Skia" Version="11.1.4" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.1.4" />
-    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.1.4" />
+	<PackageReference Include="Avalonia" Version="11.2.2" />
+	<PackageReference Include="Avalonia.ReactiveUI" Version="11.2.2" />
+	<PackageReference Include="Avalonia.Skia" Version="11.2.2" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.2" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.2" />
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.1.4" />
-    <PackageReference Include="Avalonia.Themes.Simple" Version="11.1.4" />
-    <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.1.0.4" />
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
-    <PackageReference Include="Deadpikle.AvaloniaProgressRing" Version="0.10.8" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.2.2" />
+    <PackageReference Include="Avalonia.Themes.Simple" Version="11.2.2" />
+    <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.2.0.1" />
+    <PackageReference Include="AvaloniaInside.Shell" Version="1.2.0" />
+    <PackageReference Include="Deadpikle.AvaloniaProgressRing" Version="0.10.10" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="PixiEditor.ColorPicker.AvaloniaUI" Version="1.0.6" />
-    <PackageReference Include="SkiaSharp" Version="2.88.8" />
+    <PackageReference Include="SkiaSharp" Version="3.116.1" />
     <PackageReference Include="System.Reactive" Version="6.0.1" />
   </ItemGroup>
 

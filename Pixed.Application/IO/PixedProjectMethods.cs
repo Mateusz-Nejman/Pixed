@@ -1,15 +1,21 @@
-﻿using Pixed.Application.Services;
+﻿using Pixed.Application.Models;
+using Pixed.Application.Platform;
+using Pixed.Application.Routing;
+using Pixed.Application.Services;
 using Pixed.Application.Utils;
-using Pixed.Application.Windows;
 using Pixed.Common;
 using Pixed.Core.Models;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
 namespace Pixed.Application.IO;
-internal class PixedProjectMethods(ApplicationData applicationData)
+internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils dialogUtils, IPlatformSettings platformSettings)
 {
     private readonly ApplicationData _applicationData = applicationData;
+    private readonly DialogUtils _dialogUtils = dialogUtils;
+    private readonly IPlatformSettings _platformSettings = platformSettings;
 
     public async Task Save(PixedModel model, bool saveAs, RecentFilesService recentFilesService)
     {
@@ -32,7 +38,12 @@ internal class PixedProjectMethods(ApplicationData applicationData)
             {
                 name = info.Name.Replace(info.Extension, string.Empty);
             }
-            var file = await DialogUtils.SaveFileDialog("Pixed project (*.pixed)|*.pixed", name);
+
+            if (_platformSettings.ExtensionsOnSave)
+            {
+                name += ".pixed";
+            }
+            var file = await _dialogUtils.SaveFileDialog("Pixed project (*.pixed)|*.pixed", name);
 
             if (file == null)
             {
@@ -41,14 +52,14 @@ internal class PixedProjectMethods(ApplicationData applicationData)
 
             model.FilePath = file.Path.AbsolutePath;
             model.FileName = file.Name;
-            fileStream = await file.OpenWriteAsync();
+            fileStream = await file.OpenWrite();
         }
 
-        if (fileStream != null)
+        if (fileStream != null && fileStream.CanWrite)
         {
             PixedProjectSerializer serializer = new();
             serializer.Serialize(fileStream, model, true);
-            recentFilesService.AddRecent(model.FilePath);
+            await recentFilesService.AddRecent(model.FilePath);
             model.UnsavedChanges = false;
             Subjects.ProjectChanged.OnNext(model);
         }
@@ -56,11 +67,11 @@ internal class PixedProjectMethods(ApplicationData applicationData)
 
     public async Task Open(RecentFilesService recentFilesService)
     {
-        var files = await DialogUtils.OpenFileDialog("All supported (*.pixed;*.piskel;*.png)|*.pixed;*.piskel;*.png|Pixed project (*.pixed)|*.pixed|Piskel project (*.piskel)|*.piskel|PNG images (*.png)|*.png", "Open file", true);
+        var files = await _dialogUtils.OpenFileDialog("All supported (*.pixed;*.piskel;*.png)|*.pixed;*.piskel;*.png|Pixed project (*.pixed)|*.pixed|Piskel project (*.piskel)|*.piskel|PNG images (*.png)|*.png", "Open file", true);
 
         foreach (var item in files)
         {
-            var stream = await item.OpenReadAsync();
+            var stream = await item.OpenRead();
             string extension = (new FileInfo(item.Name)).Extension;
 
             IPixedProjectSerializer? serializer = GetSerializer(extension);
@@ -72,20 +83,19 @@ internal class PixedProjectMethods(ApplicationData applicationData)
 
             if (serializer is PixedProjectSerializer)
             {
-                recentFilesService.AddRecent(item.Path.AbsolutePath);
+                await recentFilesService.AddRecent(item.Path.AbsolutePath);
             }
 
             if (serializer is PngProjectSerializer pngSerializer)
             {
-                OpenPNGWindow window = new();
-                var success = await window.ShowDialog<bool>(MainWindow.Handle);
+                var result = await Router.Navigate<OpenPngResult>("/openPng");
 
-                if (success)
+                if (result.HasValue)
                 {
-                    if (window.IsTileset)
+                    if (result.Value.IsTileset)
                     {
-                        pngSerializer.TileWidth = window.TileWidth;
-                        pngSerializer.TileHeight = window.TileHeight;
+                        pngSerializer.TileWidth = result.Value.TileWidth;
+                        pngSerializer.TileHeight = result.Value.TileHeight;
                     }
                 }
                 else
@@ -94,7 +104,16 @@ internal class PixedProjectMethods(ApplicationData applicationData)
                 }
             }
 
-            PixedModel model = serializer.Deserialize(stream, _applicationData);
+            PixedModel model;
+            try
+            {
+                model = serializer.Deserialize(stream, _applicationData);
+            }
+            catch (Exception _)
+            {
+                await Router.Message("Opening error", "Invalid format");
+                continue;
+            }
             stream?.Dispose();
             model.FileName = item.Name.Replace(".png", ".pixed");
             model.AddHistory();
@@ -118,7 +137,7 @@ internal class PixedProjectMethods(ApplicationData applicationData)
         }
     }
 
-    public void Open(string path)
+    public async Task Open(string path)
     {
         FileInfo info = new(path);
         IPixedProjectSerializer? serializer = GetSerializer(info.Extension);
@@ -129,7 +148,16 @@ internal class PixedProjectMethods(ApplicationData applicationData)
         }
         Stream stream = File.OpenRead(path);
 
-        PixedModel model = serializer.Deserialize(stream, _applicationData);
+        PixedModel model;
+        try
+        {
+            model = serializer.Deserialize(stream, _applicationData);
+        }
+        catch (Exception _)
+        {
+            await Router.Message("Opening error", "Invalid format");
+            return;
+        }
         stream.Dispose();
         model.FileName = info.Name.Replace(".png", ".pixed");
         model.AddHistory();
@@ -161,7 +189,12 @@ internal class PixedProjectMethods(ApplicationData applicationData)
         {
             name = info.Name.Replace(info.Extension, string.Empty);
         }
-        var file = await DialogUtils.SaveFileDialog("PNG image (*.png)|*.png", name);
+
+        if (_platformSettings.ExtensionsOnSave)
+        {
+            name += ".png";
+        }
+        var file = await _dialogUtils.SaveFileDialog("PNG image (*.png)|*.png", name);
 
         if (file == null)
         {
@@ -173,15 +206,12 @@ internal class PixedProjectMethods(ApplicationData applicationData)
         int columnsCount = 1;
         if (model.Frames.Count > 1)
         {
-            ExportPNGWindow window = new(_applicationData);
-            bool success = await window.ShowDialog<bool>(MainWindow.Handle);
+            var result = await Router.Navigate<int>("/exportPng");
 
-            if (!success)
+            if (result.HasValue)
             {
-                return;
+                columnsCount = result.Value;
             }
-
-            columnsCount = window.ColumnsCount;
         }
 
         serializer.ColumnsCount = columnsCount;
@@ -198,7 +228,11 @@ internal class PixedProjectMethods(ApplicationData applicationData)
         {
             name = info.Name.Replace(info.Extension, string.Empty);
         }
-        var file = await DialogUtils.SaveFileDialog("Icon (*.ico)|*.ico", name);
+        if (_platformSettings.ExtensionsOnSave)
+        {
+            name += ".ico";
+        }
+        var file = await _dialogUtils.SaveFileDialog("Icon (*.ico)|*.ico", name);
 
         if (file == null)
         {
@@ -209,21 +243,18 @@ internal class PixedProjectMethods(ApplicationData applicationData)
 
         if (model.Frames.Count == 1)
         {
-            ExportIconWindow window = new();
-            var success = await window.ShowDialog<bool>(MainWindow.Handle);
+            var result = await Router.Navigate<List<Point>>("/exportIcon");
 
-            if (!success)
+            if (result.HasValue)
             {
-                return;
+                serializer.IconFormats = result.Value;
             }
-
-            serializer.IconFormats = window.IconFormats;
         }
         var stream = await file.OpenWriteAsync();
         serializer.Serialize(stream, model, true);
     }
 
-    private IPixedProjectSerializer? GetSerializer(string format)
+    private static IPixedProjectSerializer? GetSerializer(string format)
     {
         return format switch
         {

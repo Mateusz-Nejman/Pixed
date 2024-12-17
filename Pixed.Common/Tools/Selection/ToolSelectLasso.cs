@@ -11,6 +11,8 @@ public class ToolSelectLasso(ApplicationData applicationData) : ToolSelectBase(a
 {
     private List<Point> _points = [];
     public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-lasso-select.png";
+    public override string Name => "Lasso selection";
+    public override string Id => "tool_lasso_select";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Lasso selection", "Ctrl+C", "Copy the selected area", "Ctrl+V", "Paste the copied area");
     public override void OnSelectionBegin(Point startPoint, Point currentPoint, Point previousPoint, Frame frame)
     {

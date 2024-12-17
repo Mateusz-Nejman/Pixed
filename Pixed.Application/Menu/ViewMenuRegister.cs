@@ -1,50 +1,61 @@
 ﻿using Avalonia.Controls;
+using Pixed.Application.Models;
+using Pixed.Application.Platform;
+using Pixed.Application.Routing;
+using Pixed.Application.Utils;
 using Pixed.Application.Windows;
 using Pixed.Common;
 using Pixed.Common.Menu;
 using Pixed.Core;
 using Pixed.Core.Models;
+using System.Runtime.InteropServices;
 
 namespace Pixed.Application.Menu;
-internal class ViewMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationData applicationData)
+internal class ViewMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationData applicationData, IStorageProviderHandle storageProvider)
 {
     private readonly IMenuItemRegistry _menuItemRegistry = menuItemRegistry;
     private readonly ApplicationData _applicationData = applicationData;
+    private readonly IStorageProviderHandle _storageProvider = storageProvider;
 
     public void Register()
     {
-        _menuItemRegistry.Register(BaseMenuItem.View, "Toggle fullscreen", () =>
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            if (MainWindow.Handle.WindowState == WindowState.FullScreen)
+            _menuItemRegistry.Register(BaseMenuItem.View, "Toggle fullscreen", () =>
             {
-                MainWindow.Handle.WindowState = WindowState.Maximized;
-            }
-            else
-            {
-                MainWindow.Handle.WindowState = WindowState.FullScreen;
-            }
-        });
+                var serviceProvider = App.ServiceProvider;
+                var mainWindow = serviceProvider.Get<MainWindow>();
+                if (mainWindow.WindowState == WindowState.FullScreen)
+                {
+                    mainWindow.WindowState = WindowState.Maximized;
+                }
+                else
+                {
+                    mainWindow.WindowState = WindowState.FullScreen;
+                }
+            }, new("avares://Pixed.Application/Resources/Icons/enlarge-menu.png"));
+        }
 
         _menuItemRegistry.Register(BaseMenuItem.View, "Grid settings", new AsyncCommand(async () =>
         {
-            GridSettingsWindow window = new(_applicationData);
-            var success = await window.ShowDialog<bool>(MainWindow.Handle);
-            if (success)
+            var navigateResult = await Router.Navigate<GridSettingsResult>("/gridSettings");
+
+            if (navigateResult.HasValue)
             {
-                _applicationData.UserSettings.GridWidth = window.WidthValue;
-                _applicationData.UserSettings.GridHeight = window.HeightValue;
-                _applicationData.UserSettings.GridColor = window.GridColor;
+                _applicationData.UserSettings.GridWidth = navigateResult.Value.Width;
+                _applicationData.UserSettings.GridHeight = navigateResult.Value.Height;
+                _applicationData.UserSettings.GridColor = navigateResult.Value.Color;
                 _applicationData.UserSettings.GridEnabled = true;
-                _applicationData.UserSettings.Save(_applicationData.DataFolder);
+                await SettingsUtils.Save(_storageProvider.StorageFolder, _applicationData);
                 Subjects.GridChanged.OnNext(true);
             }
-        }));
+        }), null, new("avares://Pixed.Application/Resources/Icons/cogs-menu.png"));
 
-        _menuItemRegistry.Register(BaseMenuItem.View, "Toggle grid", () =>
+        _menuItemRegistry.Register(BaseMenuItem.View, "Toggle grid", new AsyncCommand(async () =>
         {
             _applicationData.UserSettings.GridEnabled = !_applicationData.UserSettings.GridEnabled;
-            _applicationData.UserSettings.Save(_applicationData.DataFolder);
+            await SettingsUtils.Save(_storageProvider.StorageFolder, _applicationData);
             Subjects.GridChanged.OnNext(true);
-        });
+        }));
     }
 }

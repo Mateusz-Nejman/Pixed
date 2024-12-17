@@ -7,6 +7,8 @@ namespace Pixed.Common.Tools;
 public class ToolBucket(ApplicationData applicationData) : BaseTool(applicationData)
 {
     public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-paint-bucket.png";
+    public override string Name => "Paint bucket tool";
+    public override string Id => "tool_paint_bucket";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Fill color");
     public override bool SingleHighlightedPixel { get; protected set; } = true;
     public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)

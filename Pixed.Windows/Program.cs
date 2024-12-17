@@ -1,4 +1,6 @@
 ﻿using Avalonia;
+using Avalonia.ReactiveUI;
+using AvaloniaInside.Shell;
 using Newtonsoft.Json;
 using Pixed.Application;
 using System;
@@ -37,7 +39,7 @@ class Program
         File.AppendAllText("exceptions.txt", JsonConvert.SerializeObject(e) + Environment.NewLine);
     }
 #else
-public static void Main(string[] args) => BuildAvaloniaApp()
+    public static void Main(string[] args) => BuildAvaloniaApp()
         .StartWithClassicDesktopLifetime(args);
 #endif
 
@@ -46,5 +48,7 @@ public static void Main(string[] args) => BuildAvaloniaApp()
         => AppBuilder.Configure<App>()
             .UsePlatformDetect()
             .WithInterFont()
-            .LogToTrace();
+            .LogToTrace()
+            .UseReactiveUI()
+            .UseShell();
 }

@@ -1,11 +1,11 @@
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Pixed.Application.Models;
 using Pixed.Core.Models;
 
 namespace Pixed.Application.Windows;
 
-internal partial class NewProjectWindow : Window
+internal partial class NewProjectWindow : PixedWindow
 {
     public int WidthValue
     {
@@ -21,15 +21,16 @@ internal partial class NewProjectWindow : Window
 
     public static readonly StyledProperty<int> WidthValueProperty = AvaloniaProperty.Register<NewProjectWindow, int>("WidthValue");
     public static readonly StyledProperty<int> HeightValueProperty = AvaloniaProperty.Register<NewProjectWindow, int>("HeightValue");
-    public NewProjectWindow(ApplicationData applicationData)
+    public NewProjectWindow()
     {
         InitializeComponent();
+        var applicationData = Provider.Get<ApplicationData>();
         WidthValue = applicationData.UserSettings.UserWidth;
         HeightValue = applicationData.UserSettings.UserHeight;
     }
 
     private void Button_Click(object sender, RoutedEventArgs e)
     {
-        Close(true);
+        Close(new NewProjectResult(WidthValue, HeightValue));
     }
 }

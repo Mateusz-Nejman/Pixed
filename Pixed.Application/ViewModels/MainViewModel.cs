@@ -1,36 +1,21 @@
-﻿using Avalonia.Controls;
-using Pixed.Application.Controls;
+﻿using Pixed.Application.Controls;
 using Pixed.Application.Menu;
-using Pixed.Application.Services;
 using Pixed.Application.Windows;
 using Pixed.Common;
-using Pixed.Common.Services.Palette;
-using Pixed.Core.Models;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
 
 namespace Pixed.Application.ViewModels;
 
 internal class MainViewModel : PixedViewModel, IDisposable
 {
-    private readonly ApplicationData _applicationData;
-    private readonly RecentFilesService _recentFilesService;
-    private readonly PaletteService _paletteService;
-    private readonly IDisposable _onMenuBuilt;
     private readonly IDisposable _projectChanged;
-    private NativeMenu? _menu;
+    private readonly IDisposable _menuBuilt;
     private bool _disposedValue;
     private string _title;
-
-    public NativeMenu? Menu
-    {
-        get => _menu;
-        set
-        {
-            _menu = value;
-            OnPropertyChanged();
-        }
-    }
+    private List<Avalonia.Controls.MenuItem>? _menu;
 
     public string Title
     {
@@ -42,27 +27,28 @@ internal class MainViewModel : PixedViewModel, IDisposable
         }
     }
 
-    public ICommand QuitCommand => MainWindow.QuitCommand;
-    public MainViewModel(ApplicationData data, RecentFilesService recentFilesService, PaletteService paletteService, MenuBuilder menuBuilder)
+    public List<Avalonia.Controls.MenuItem>? Menu
     {
-        _applicationData = data;
-        _recentFilesService = recentFilesService;
-        _paletteService = paletteService;
-        _onMenuBuilt = menuBuilder.OnMenuBuilt.Subscribe(menu =>
+        get => _menu;
+        set
         {
-            Menu = menu;
-        });
+            _menu = value;
+            OnPropertyChanged();
+        }
+    }
 
+    public ICommand QuitCommand => MainPage.QuitCommand; //For binding
+    public MainViewModel(MenuBuilder menuBuilder)
+    {
         _projectChanged = Subjects.ProjectChanged.Subscribe(model =>
         {
             Title = model.FileName + " - Pixed";
         });
-    }
 
-    public async override void OnInitialized()
-    {
-        _recentFilesService.Load();
-        _paletteService.LoadAll();
+        _menuBuilt = menuBuilder.OnMenuBuilt.Subscribe(menu =>
+        {
+            Menu = menu.Select(m => m.ToAvaloniaMenuItem()).ToList();
+        });
     }
 
     protected virtual void Dispose(bool disposing)
@@ -71,7 +57,6 @@ internal class MainViewModel : PixedViewModel, IDisposable
         {
             if (disposing)
             {
-                _onMenuBuilt?.Dispose();
                 _projectChanged?.Dispose();
             }
 

@@ -1,7 +1,10 @@
 ﻿using Avalonia.Media;
+using Avalonia.Platform.Storage;
 using Pixed.Application.Controls;
+using Pixed.Application.IO;
+using Pixed.Application.Platform;
+using Pixed.Application.Routing;
 using Pixed.Application.Utils;
-using Pixed.Application.Windows;
 using Pixed.Common;
 using Pixed.Common.Menu;
 using Pixed.Common.Models;
@@ -10,6 +13,7 @@ using Pixed.Core;
 using Pixed.Core.Models;
 using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -21,6 +25,8 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
     private readonly ApplicationData _applicationData;
     private readonly IMenuItemRegistry _menuItemRegistry;
     private readonly PaletteService _paletteService;
+    private readonly DialogUtils _dialogUtils;
+    private readonly IStorageProviderHandle _storageProviderHandle;
 
     private UniColor _primaryColor = UniColor.Black;
     private UniColor _secondaryColor = UniColor.White;
@@ -80,11 +86,13 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
     public ICommand PaletteSaveCommand { get; }
     public ICommand PaletteClearCommand { get; }
 
-    public PaletteSectionViewModel(ApplicationData applicationData, IMenuItemRegistry menuItemRegistry, PaletteService paletteService)
+    public PaletteSectionViewModel(ApplicationData applicationData, IMenuItemRegistry menuItemRegistry, PaletteService paletteService, DialogUtils dialogUtils, IStorageProviderHandle storageProviderHandle)
     {
         _applicationData = applicationData;
         _menuItemRegistry = menuItemRegistry;
         _paletteService = paletteService;
+        _dialogUtils = dialogUtils;
+        _storageProviderHandle = storageProviderHandle;
         _primaryProjectChanged = Subjects.PrimaryColorChanged.Subscribe(c => _applicationData.PrimaryColor = c);
         _secondaryProjectChanged = Subjects.SecondaryColorChanged.Subscribe(c => _applicationData.SecondaryColor = c);
         _primaryProjectChange = Subjects.PrimaryColorChange.Subscribe(c => PrimaryColor = c);
@@ -151,63 +159,162 @@ internal class PaletteSectionViewModel : PixedViewModel, IDisposable
 
     public override void RegisterMenuItems()
     {
-        _menuItemRegistry.Register(BaseMenuItem.Palette, "Add Primary color to palette", PaletteAddPrimaryCommand);
-        _menuItemRegistry.Register(BaseMenuItem.Palette, "Merge palette with current colors", PaletteAddCurrentCommand);
-        _menuItemRegistry.Register(BaseMenuItem.Palette, "Clear palette", PaletteClearCommand);
-        _menuItemRegistry.Register(BaseMenuItem.Palette, "Open palette from file", PaletteOpenCommand);
-        _menuItemRegistry.Register(BaseMenuItem.Palette, "Save palette to file", PaletteSaveCommand);
-        _menuItemRegistry.Register(BaseMenuItem.Palette, "Palettes list", PaletteListCommand);
     }
 
-    private void PaletteAddPrimaryAction()
+    public void PaletteAddPrimaryAction()
     {
         _paletteService.AddPrimaryColor();
         OnPropertyChanged(nameof(SelectedPaletteColors));
     }
 
-    private void PaletteAddCurrentAction()
+    public void PaletteAddCurrentAction()
     {
         _paletteService.AddColorsFromPalette(_paletteService.CurrentColorsPalette);
         OnPropertyChanged(nameof(SelectedPaletteColors));
     }
 
-    private void PaletteClearAction()
+    public void PaletteClearAction()
     {
         _paletteService.ClearPalette();
         OnPropertyChanged(nameof(SelectedPaletteColors));
     }
 
-    private async Task PaletteOpenAction()
+    public async Task PaletteOpenAction()
     {
-        var files = await DialogUtils.OpenFileDialog("All Supported (.json;.gpl)|*.json;*.gpl|Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl", _paletteService.SelectedPalette.Name);
+        var files = await _dialogUtils.OpenFileDialog("All Supported (.json;.gpl)|*.json;*.gpl|Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl", _paletteService.SelectedPalette.Name);
 
         if (files.Count == 0)
         {
             return;
         }
 
-        var file = files[0];
-        _paletteService.Load(file.Path.AbsolutePath);
+        await Load(files[0]);
     }
 
-    private async Task PaletteSaveAction()
+    public async Task PaletteSaveAction()
     {
         if (_paletteService.SelectedPalette.Colors.Count == 0)
         {
             return;
         }
 
-        var file = await DialogUtils.SaveFileDialog("All Supported (.json;.gpl)|*.json;*.gpl|Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl", _paletteService.SelectedPalette.Name);
+        var file = await _dialogUtils.SaveFileDialog("Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl", _paletteService.SelectedPalette.Name);
 
         if (file != null)
         {
-            _paletteService.Save(file.Path.AbsolutePath);
+            await Save(file);
         }
     }
 
-    private void PaletteListAction()
+    public void PaletteListAction()
     {
-        PaletteWindow window = new(_paletteService);
-        window.ShowDialog(MainWindow.Handle);
+        Router.Navigate("/palettes");
+    }
+
+    public async Task Rename(PaletteModel model, string newName)
+    {
+        int index = _paletteService.Palettes.IndexOf(model);
+        var palette = _paletteService.Palettes[index];
+        palette.Name = newName;
+
+        var file = await _storageProviderHandle.StorageFolder.GetFile(palette.Path, FolderType.Palettes);
+
+        if (file != null)
+        {
+            await Save(palette, file);
+        }
+    }
+
+    public async Task LoadAll()
+    {
+        var files = _storageProviderHandle.StorageFolder.GetFiles(FolderType.Palettes);
+        await foreach (var file in files)
+        {
+            Stream? stream = null;
+            try
+            {
+                stream = await file.OpenRead();
+                AbstractPaletteSerializer serializer = AbstractPaletteSerializer.GetFromExtension(file.Extension);
+                PaletteModel palette = serializer.Deserialize(stream, file.Name);
+                _paletteService.Palettes.Add(palette);
+            }
+            catch (Exception)
+            {
+                stream?.Dispose();
+            }
+        }
+    }
+
+    private async Task Load(IStorageFile file)
+    {
+        string name = file.Name;
+        var paletteFile = await _storageProviderHandle.StorageFolder.GetFile(name, FolderType.Palettes);
+
+        if (paletteFile != null)
+        {
+            await file.CopyTo(paletteFile);
+        }
+
+        var stream = await file.OpenRead();
+        AbstractPaletteSerializer serializer = AbstractPaletteSerializer.GetFromExtension(file.GetExtension());
+
+        PaletteModel model;
+        try
+        {
+            model = serializer.Deserialize(stream, file.Name);
+            stream.Dispose();
+        }
+        catch (Exception)
+        {
+            await Router.Message("Opening error", "Invalid format");
+            stream.Dispose();
+            return;
+        }
+        _paletteService.Palettes[1] = model.ToCurrentPalette();
+
+        if (_paletteService.Palettes.FirstOrDefault(p => p.Id == model.Id, null) == null)
+        {
+            _paletteService.Palettes.Add(model);
+        }
+        else
+        {
+            _paletteService.Palettes[_paletteService.Palettes.FindIndex(p => p.Id == model.Id)] = model;
+        }
+        Subjects.PaletteSelected.OnNext(_paletteService.Palettes[1]);
+        Subjects.PaletteAdded.OnNext(_paletteService.Palettes[1]);
+    }
+
+    private async Task Save(IStorageFile file)
+    {
+        var model = _paletteService.Palettes[1].ToCurrentPalette();
+        model.Path = file.Name;
+        await Save(model, file);
+
+        var paletteFile = await _storageProviderHandle.StorageFolder.GetFile(file.Name, FolderType.Palettes);
+
+        if (paletteFile != null)
+        {
+            await Save(model, paletteFile);
+        }
+    }
+
+    private async static Task Save(PaletteModel model, IStorageFile file)
+    {
+        FileInfo fileInfo = new(model.Path);
+
+        AbstractPaletteSerializer serializer = AbstractPaletteSerializer.GetFromExtension(fileInfo.Extension);
+
+        var stream = await file.OpenWrite();
+        serializer.Serialize(stream, model);
+        stream.Dispose();
+    }
+
+    private async static Task Save(PaletteModel model, IStorageContainerFile file)
+    {
+        AbstractPaletteSerializer serializer = AbstractPaletteSerializer.GetFromExtension(file.Extension);
+
+        var stream = await file.OpenWrite();
+        serializer.Serialize(stream, model);
+        stream.Dispose();
     }
 }

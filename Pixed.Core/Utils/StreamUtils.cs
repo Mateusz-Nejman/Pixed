@@ -1,7 +1,7 @@
 ﻿using System.Text;
 
 namespace Pixed.Core.Utils;
-internal static class StreamUtils
+public static class StreamUtils
 {
     public static int ReadInt(this Stream stream)
     {
@@ -84,7 +84,34 @@ internal static class StreamUtils
         stream.Write(Encoding.UTF8.GetBytes(value));
     }
 
+    public static void Write(this Stream stream, string value)
+    {
+        stream.Write(Encoding.UTF8.GetBytes(value));
+    }
+
+    public static string ReadAllText(this Stream stream)
+    {
+        return Encoding.UTF8.GetString(ReadAllBytes(stream));
+    }
+
+    public static string[] ReadAllLines(this Stream stream)
+    {
+        return ReadAllText(stream).Split('\n');
+    }
+
+    public static byte[] ReadAllBytes(this Stream stream)
+    {
+        return stream.Read(stream.Length);
+    }
+
     private static byte[] Read(this Stream stream, int size)
+    {
+        byte[] buffer = new byte[size];
+        stream.Read(buffer, 0, buffer.Length);
+        return buffer;
+    }
+
+    private static byte[] Read(this Stream stream, long size)
     {
         byte[] buffer = new byte[size];
         stream.Read(buffer, 0, buffer.Length);

@@ -11,6 +11,8 @@ public class ToolOutliner(ApplicationData applicationData) : BaseTool(applicatio
     private const string PROP_FILL_CORNERS = "Fill corners";
 
     public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-outliner.png";
+    public override string Name => "Outliner tool";
+    public override string Id => "tool_outliner_tool";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Outliner", "Ctrl", "Fill corners");
     public override bool ControlHandle { get; protected set; } = true;
     public override bool SingleHighlightedPixel { get; protected set; } = true;

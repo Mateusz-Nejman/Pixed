@@ -1,7 +1,11 @@
 ﻿using Avalonia.Controls;
 using Pixed.Application.Extensions;
 using Pixed.Application.IO;
+using Pixed.Application.Models;
+using Pixed.Application.Platform;
+using Pixed.Application.Routing;
 using Pixed.Application.Services;
+using Pixed.Application.Utils;
 using Pixed.Application.Windows;
 using Pixed.Common;
 using Pixed.Common.Menu;
@@ -9,6 +13,7 @@ using Pixed.Common.Models;
 using Pixed.Common.Utils;
 using Pixed.Core;
 using Pixed.Core.Models;
+using ReactiveUI;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
@@ -17,23 +22,25 @@ using System.Threading.Tasks;
 
 namespace Pixed.Application.Menu;
 
-internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods pixedProjectMethods, RecentFilesService recentFilesService)
+internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods pixedProjectMethods, RecentFilesService recentFilesService, IStorageProviderHandle storageProvider, IPlatformSettings platformSettings)
 {
 
-    private readonly struct MenuEntry(BaseMenuItem baseMenu, NativeMenuItem menuItem)
+    private readonly struct MenuEntry(BaseMenuItem baseMenu, IMenuItem menuItem)
     {
         public BaseMenuItem BaseMenu { get; } = baseMenu;
-        public NativeMenuItem MenuItem { get; } = menuItem;
+        public IMenuItem MenuItem { get; } = menuItem;
     }
 
     private readonly ApplicationData _applicationData = applicationData;
     private readonly PixedProjectMethods _projectMethods = pixedProjectMethods;
     private readonly RecentFilesService _recentFilesService = recentFilesService;
+    private readonly IStorageProviderHandle _storageProvider = storageProvider;
+    private readonly IPlatformSettings _platformSettings = platformSettings;
     private readonly List<MenuEntry> _entries = [];
 
-    public Subject<NativeMenu> OnMenuBuilt { get; } = new Subject<NativeMenu>();
+    public Subject<List<IMenuItem>> OnMenuBuilt { get; } = new Subject<List<IMenuItem>>();
 
-    public void AddEntry(BaseMenuItem baseMenu, NativeMenuItem menuItem)
+    public void AddEntry(BaseMenuItem baseMenu, IMenuItem menuItem)
     {
         _entries.Add(new MenuEntry(baseMenu, menuItem));
     }
@@ -41,24 +48,21 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
     public void Build(bool clear = true)
     {
         AddFromExtensions();
-        NativeMenuItem fileMenu = GetFileMenu();
-        NativeMenuItem editMenu = GetEditMenu();
-        NativeMenuItem toolsMenu = new("Tools");
-        NativeMenuItem paletteMenu = new("Palette");
-        NativeMenuItem projectMenu = GetProjectMenu();
-        NativeMenuItem viewMenu = new("View");
-        NativeMenuItem helpMenu = new("Help");
+        MenuItem fileMenu = GetFileMenu();
+        MenuItem editMenu = GetEditMenu();
+        MenuItem toolsMenu = new("Tools");
+        MenuItem paletteMenu = new("Palette");
+        MenuItem projectMenu = GetProjectMenu();
+        MenuItem viewMenu = new("View");
+        MenuItem helpMenu = new("Help");
 
-        NativeMenuItem aboutMenu = new("About")
+        MenuItem aboutMenu = new("About")
         {
-            Command = new ActionCommand(() =>
-        {
-            AboutWindow window = new();
-            window.ShowDialog(MainWindow.Handle);
-        })
+            Command = ReactiveCommand.CreateFromTask(() => Router.Navigate("/about")),
+            Icon = new("avares://Pixed.Application/Resources/icon.png")
         };
 
-        helpMenu.Menu = [aboutMenu];
+        helpMenu.Items = [aboutMenu];
 
         AddToMenu(ref toolsMenu, GetEntries(BaseMenuItem.Tools));
         AddToMenu(ref paletteMenu, GetEntries(BaseMenuItem.Palette));
@@ -71,149 +75,150 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
         }
 
         NativeMenu menu = [];
-        menu.Items.Add(fileMenu);
-        menu.Items.Add(editMenu);
-        menu.Items.Add(toolsMenu);
-        menu.Items.Add(paletteMenu);
-        menu.Items.Add(projectMenu);
-        menu.Items.Add(viewMenu);
-        menu.Items.Add(helpMenu);
 
-        OnMenuBuilt.OnNext(menu);
+        List<IMenuItem> items = [fileMenu, editMenu, toolsMenu, paletteMenu, projectMenu, viewMenu, helpMenu];
+        OnMenuBuilt.OnNext(items);
     }
 
-    private NativeMenuItem GetFileMenu()
+    private MenuItem GetFileMenu()
     {
-        NativeMenuItem fileMenu = new("File");
-        NativeMenuItem fileNew = new("New")
+        MenuItem fileMenu = new("File");
+        MenuItem fileNew = new("New")
         {
             Command = new ActionCommand(async () =>
         {
-            NewProjectWindow window = new(_applicationData);
-            var success = await window.ShowDialog<bool>(MainWindow.Handle);
+            var result = await Router.Navigate<NewProjectResult>("/newProject");
 
-            if (success)
+            if (result.HasValue)
             {
-                PixedModel model = new(_applicationData, window.WidthValue, window.HeightValue)
+                PixedModel model = new(_applicationData, result.Value.Width, result.Value.Height)
                 {
                     FileName = _applicationData.GenerateName()
                 };
                 _applicationData.Models.Add(model);
                 Subjects.ProjectAdded.OnNext(model);
             }
-        })
+        }),
+            Icon = new("avares://Pixed.Application/Resources/Icons/file-empty-menu.png")
         };
-        NativeMenuItem fileOpen = new("Open")
+        MenuItem fileOpen = new("Open")
         {
             Command = new ActionCommand(async () =>
         {
             await _projectMethods.Open(_recentFilesService);
-        })
+        }),
+            Icon = new("avares://Pixed.Application/Resources/Icons/folder-open-menu.png")
         };
-        NativeMenuItem fileSave = new("Save")
+        MenuItem fileSave = new("Save")
         {
             Command = new AsyncCommand<bool>(SaveAction),
-            CommandParameter = false
+            CommandParameter = false,
+            Icon = new("avares://Pixed.Application/Resources/Icons/floppy-disk-menu.png")
         };
-        NativeMenuItem fileSaveAs = new("Save as")
+        MenuItem fileSaveAs = new("Save as")
         {
             Command = new AsyncCommand<bool>(SaveAction),
-            CommandParameter = true
+            CommandParameter = true,
+            Icon = new("avares://Pixed.Application/Resources/Icons/floppy-disk-menu.png")
         };
-        NativeMenuItem fileExportPng = new("Export to PNG")
+        MenuItem fileExportPng = new("Export to PNG")
         {
             Command = new AsyncCommand(ExportPngAction)
         };
-        NativeMenuItem fileExportIco = new("Export to Ico")
+        MenuItem fileExportIco = new("Export to Ico")
         {
             Command = new AsyncCommand(ExportIcoAction)
         };
-        NativeMenuItem fileRecent = new("Recent")
+        MenuItem fileRecent = new("Recent")
         {
-            Menu = _recentFilesService.BuildMenu()
+            Items = _recentFilesService.BuildMenu()
         };
 
-        NativeMenuItem fileQuit = new("Quit")
+        MenuItem fileQuit = new("Quit")
         {
-            Command = MainWindow.QuitCommand
+            Command = MainPage.QuitCommand,
+            Icon = new("avares://Pixed.Application/Resources/Icons/cross-menu.png")
         };
 
-        fileMenu.Menu = [fileNew, fileOpen, fileSave, fileSaveAs, fileExportPng, fileExportIco];
+        fileMenu.Items = [fileNew, fileOpen, fileSave, fileSaveAs, fileExportPng, fileExportIco];
         AddToMenu(ref fileMenu, GetEntries(BaseMenuItem.File));
 
-        fileMenu.Menu.Add(fileRecent);
-        fileMenu.Menu.Add(fileQuit);
+        if (_platformSettings.RecentFilesEnabled)
+        {
+            fileMenu.Items.Add(fileRecent);
+        }
+        fileMenu.Items.Add(fileQuit);
         return fileMenu;
     }
 
-    private NativeMenuItem GetEditMenu()
+    private MenuItem GetEditMenu()
     {
-        NativeMenuItem editMenu = new("Edit");
-        NativeMenuItem undoMenu = new("Undo")
+        MenuItem editMenu = new("Edit");
+        MenuItem undoMenu = new("Undo")
         {
             Command = new ActionCommand(() =>
             {
                 _applicationData.CurrentModel.Undo();
                 Subjects.ProjectModified.OnNext(_applicationData.CurrentModel);
-            })
+            }),
+            Icon = new("avares://Pixed.Application/Resources/Icons/undo2-menu.png")
         };
-        NativeMenuItem redoMenu = new("Redo")
+        MenuItem redoMenu = new("Redo")
         {
             Command = new ActionCommand(() =>
             {
                 _applicationData.CurrentModel.Redo();
                 Subjects.ProjectModified.OnNext(_applicationData.CurrentModel);
-            })
+            }),
+            Icon = new("avares://Pixed.Application/Resources/Icons/redo2-menu.png")
         };
 
-        editMenu.Menu = [undoMenu, redoMenu];
+        editMenu.Items = [undoMenu, redoMenu];
         AddToMenu(ref editMenu, GetEntries(BaseMenuItem.Edit));
 
         return editMenu;
     }
 
-    private NativeMenuItem GetProjectMenu()
+    private MenuItem GetProjectMenu()
     {
-        NativeMenuItem projectMenu = new("Project");
-        NativeMenuItem projectResize = new("Resize project");
+        MenuItem projectMenu = new("Project");
+        MenuItem projectResize = new("Resize project");
 
-        projectMenu.Menu = [];
+        projectMenu.Items = [];
         projectResize.Command = new ActionCommand(async () =>
         {
-            ResizeProjectWindow window = new(_applicationData);
-            bool success = await window.ShowDialog<bool>(MainWindow.Handle);
-
-            if (success)
+            var navigatorResult = await Router.Navigate<ResizeResult>("/resizeProject");
+            if (navigatorResult.HasValue)
             {
-                var result = window.Result;
+                var result = navigatorResult.Value;
                 var model = ResizeUtils.ResizeModel(_applicationData, _applicationData.CurrentModel, new Point(result.Width, result.Height), result.ResizeCanvasContent, result.Anchor);
                 _applicationData.UserSettings.UserWidth = result.Width;
                 _applicationData.UserSettings.UserHeight = result.Height;
                 _applicationData.UserSettings.MaintainAspectRatio = result.MaintainAspectRatio;
-                _applicationData.UserSettings.Save(_applicationData.DataFolder);
+                await SettingsUtils.Save(_storageProvider.StorageFolder, _applicationData);
                 _applicationData.Models[_applicationData.CurrentModelIndex] = model;
                 Subjects.ProjectModified.OnNext(model);
                 Subjects.ProjectChanged.OnNext(model);
             }
         });
 
-        projectMenu.Menu.Add(projectResize);
+        projectMenu.Items.Add(projectResize);
         AddToMenu(ref projectMenu, GetEntries(BaseMenuItem.Project));
         return projectMenu;
     }
 
-    private List<NativeMenuItem> GetEntries(BaseMenuItem baseMenu)
+    private List<IMenuItem> GetEntries(BaseMenuItem baseMenu)
     {
         return _entries.Where(e => e.BaseMenu == baseMenu).Select(e => e.MenuItem).ToList();
     }
 
-    private void AddToMenu(ref NativeMenuItem menuItem, List<NativeMenuItem> items)
+    private static void AddToMenu(ref MenuItem menuItem, List<IMenuItem> items)
     {
-        menuItem.Menu ??= [];
+        menuItem.Items ??= [];
 
         foreach (var item in items)
         {
-            menuItem.Menu.Add(item);
+            menuItem.Items.Add(item);
         }
     }
 

@@ -1,4 +1,5 @@
 ﻿using Pixed.Application.Controls;
+using Pixed.Application.Platform;
 using Pixed.Core;
 using System.Diagnostics;
 using System.Windows.Input;
@@ -24,10 +25,10 @@ internal class AboutViewModel : PixedViewModel
         Process.Start(psi);
     }
 
-    private static string GetVersion()
+    private string GetVersion()
     {
-        var assemblyName = Process.GetCurrentProcess().MainModule.FileName;
-        var versionInfo = FileVersionInfo.GetVersionInfo(assemblyName);
-        return versionInfo.FileVersion;
+        var lifecycle = Provider.Get<IPlatformSettings>();
+
+        return lifecycle.GetVersion();
     }
 }

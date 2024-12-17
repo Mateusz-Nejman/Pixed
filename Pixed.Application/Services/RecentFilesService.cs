@@ -1,28 +1,43 @@
-﻿using Avalonia.Controls;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Pixed.Application.IO;
+using Pixed.Application.Menu;
+using Pixed.Application.Platform;
+using Pixed.Common.Menu;
 using Pixed.Core;
 using Pixed.Core.Models;
+using Pixed.Core.Utils;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Pixed.Application.Services
 {
-    internal class RecentFilesService(ApplicationData applicationData, PixedProjectMethods pixedProjectMethods)
+    internal class RecentFilesService(ApplicationData applicationData, PixedProjectMethods pixedProjectMethods, IStorageProviderHandle storageProvider)
     {
         private readonly PixedProjectMethods _projectMethods = pixedProjectMethods;
-        private string FilePath => Path.Combine(applicationData.DataFolder.Path.AbsolutePath, "recent.json");
+        private readonly IStorageProviderHandle _storageProvider = storageProvider;
         public List<string> RecentFiles { get; private set; } = [];
 
-        public void Load()
+        public async Task Load()
         {
-            if (File.Exists(FilePath))
+            var file = await _storageProvider.StorageFolder.GetFile("recent.json", FolderType.Root);
+
+            Stream? stream = null;
+            try
             {
-                RecentFiles = JsonConvert.DeserializeObject<List<string>>(File.ReadAllText(FilePath));
+                stream = await file.OpenRead();
+                string json = stream.ReadAllText();
+                stream?.Dispose();
+                RecentFiles = JsonConvert.DeserializeObject<List<string>>(json) ?? [];
+            }
+            catch (Exception)
+            {
+                stream?.Dispose();
             }
         }
 
-        public void AddRecent(string file)
+        public async Task AddRecent(string file)
         {
             if (!RecentFiles.Contains(file))
             {
@@ -33,50 +48,53 @@ namespace Pixed.Application.Services
                     RecentFiles.RemoveAt(RecentFiles.Count - 1);
                 }
 
-                Save();
+                await Save();
             }
         }
 
-        public NativeMenu? BuildMenu()
+        public List<IMenuItem> BuildMenu()
         {
             if (RecentFiles.Count == 0)
             {
-                return null;
+                return [];
             }
 
-            NativeMenu menu = [];
+            List<IMenuItem> items = [];
 
             foreach (var file in RecentFiles)
             {
                 if (File.Exists(file))
                 {
-                    menu.Add(new NativeMenuItem(file)
+                    items.Add(new MenuItem(file)
                     {
-                        Command = new ActionCommand<string>(OpenProject),
+                        Command = new AsyncCommand<string>(OpenProject),
                         CommandParameter = file
                     });
                 }
             }
 
-            return menu;
+            return items;
         }
 
-        private void Save()
+        private async Task Save()
         {
-            File.WriteAllText(FilePath, JsonConvert.SerializeObject(RecentFiles));
+            var file = await _storageProvider.StorageFolder.GetFile("recent.json", FolderType.Root);
+            var stream = await file.OpenWrite();
+            stream.Write(JsonConvert.SerializeObject(RecentFiles));
+            stream.Dispose();
         }
 
-        private void OpenProject(string path)
+        private async Task OpenProject(string path)
         {
             RecentFiles.Remove(path);
 
             if (File.Exists(path))
             {
                 RecentFiles.Insert(0, path);
-                _projectMethods.Open(path);
+                await _projectMethods.Open(path);
             }
 
-            Save();
+            await Save();
         }
     }
 }

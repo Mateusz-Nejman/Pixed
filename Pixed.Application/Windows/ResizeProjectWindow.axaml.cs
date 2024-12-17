@@ -1,29 +1,17 @@
-using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Pixed.Application.Models;
 using Pixed.Application.ViewModels;
-using Pixed.Common.Utils;
 using Pixed.Core.Models;
 
 namespace Pixed.Application.Windows;
 
-internal partial class ResizeProjectWindow : Window
+internal partial class ResizeProjectWindow : PixedWindow
 {
-    public readonly struct ResizeResult(int width, int height, bool resizeCanvasContent, ResizeUtils.Origin anchor, bool maintainAspectRatio)
-    {
-        public int Width { get; } = width;
-        public int Height { get; } = height;
-        public bool ResizeCanvasContent { get; } = resizeCanvasContent;
-        public ResizeUtils.Origin Anchor { get; } = anchor;
-        public bool MaintainAspectRatio { get; } = maintainAspectRatio;
-    }
     private readonly ResizeProjectWindowViewModel _viewModel;
-    private readonly ApplicationData _applicationData;
-
-    public ResizeResult Result { get; private set; }
-    public ResizeProjectWindow(ApplicationData applicationData)
+    public ResizeProjectWindow()
     {
         InitializeComponent();
-        _applicationData = applicationData;
+        var applicationData = Provider.Get<ApplicationData>();
         _viewModel = DataContext as ResizeProjectWindowViewModel;
         _viewModel.Width = applicationData.CurrentModel.Width;
         _viewModel.Height = applicationData.CurrentModel.Height;
@@ -32,7 +20,6 @@ internal partial class ResizeProjectWindow : Window
 
     private void Button_Click(object sender, RoutedEventArgs e)
     {
-        Result = new ResizeResult(_viewModel.Width, _viewModel.Height, _viewModel.ResizeCanvasContent, _viewModel.AnchorEnum, _viewModel.MaintainAspectRatio);
-        Close(true);
+        Close(new ResizeResult(_viewModel.Width, _viewModel.Height, _viewModel.ResizeCanvasContent, _viewModel.AnchorEnum, _viewModel.MaintainAspectRatio));
     }
 }

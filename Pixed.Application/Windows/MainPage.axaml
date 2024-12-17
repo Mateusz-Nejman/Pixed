@@ -1,0 +1,70 @@
+﻿<Page x:Class="Pixed.Application.Windows.MainPage"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Pixed"
+        xmlns:controls="clr-namespace:Pixed.Application.Controls"
+        xmlns:mainsections="clr-namespace:Pixed.Application.Controls.MainWindowSections"
+        xmlns:dd="urn:gong-wpf-dragdrop"
+        xmlns:viewmodels="clr-namespace:Pixed.Application.ViewModels"
+        mc:Ignorable="d"
+        Background="{StaticResource BaseBackground}"
+        KeyDown="Window_KeyDown"
+        KeyUp="Window_KeyUp"
+        PointerPressed="Window_PointerPressed"
+        PointerReleased="Window_PointerReleased"
+		DragDrop.AllowDrop="True"
+		x:DataType="viewmodels:MainViewModel"
+             NavigationBar.Visible="False">
+  <Page.KeyBindings>
+    <KeyBinding Gesture="CTRL+Q"
+					Command="{Binding QuitCommand}"/>
+  </Page.KeyBindings>
+
+  <DockPanel HorizontalAlignment="Stretch"
+			   VerticalAlignment="Stretch"
+			   Name="ContentWrapper">
+    <controls:CustomTitleBar Title="{Binding Title}" Menu="{Binding Menu}"/>
+    <DockPanel Background="Transparent">
+      <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="64"/>
+          <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <mainsections:ToolsSection x:Name="toolsSection"/>
+        <Grid x:Name="mainSection" Grid.Column="1">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="124"/>
+            <ColumnDefinition Width="auto"/>
+            <!-- Open/close button-->
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+            <!-- Open/close button-->
+            <ColumnDefinition Width="auto"/>
+          </Grid.ColumnDefinitions>
+
+          <mainsections:FramesSection/>
+          <Grid Name="centerPanel" Grid.Column="2">
+            <Grid.RowDefinitions>
+              <RowDefinition Height="76"/>
+              <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <mainsections:ProjectsSection/>
+            <controls:PaintCanvas Grid.Row="1" x:Name="paintCanvas"/>
+          </Grid>
+
+          <ScrollViewer Grid.Column="4" Width="242" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto" Theme="{StaticResource HandledFixScrollViewer}">
+            <StackPanel Name="rightPanel" Grid.Column="4" Width="242" HorizontalAlignment="Stretch">
+              <mainsections:PaletteSection/>
+              <mainsections:LayersSection/>
+            </StackPanel>
+          </ScrollViewer>
+        </Grid>
+      </Grid>
+    </DockPanel>
+  </DockPanel>
+</Page>

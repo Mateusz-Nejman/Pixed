@@ -74,6 +74,26 @@ internal partial class ZoomBorder : Border, IDisposable
         Constrain();
     }
 
+    public void ZoomTo(double ratio, double x, double y, Matrix matrix, bool skipTransitions = false)
+    {
+        if (_updating)
+        {
+            return;
+        }
+        _updating = true;
+
+        if ((Zoom >= MaxZoom && ratio > 1) || (Zoom <= MinZoom && ratio < 1))
+        {
+            _updating = false;
+            return;
+        }
+
+        _matrix = MatrixHelper.ScaleAtPrepend(matrix, ratio, x, y);
+        Invalidate(skipTransitions);
+
+        _updating = false;
+    }
+
     private void ResetMatrix()
     {
         ResetMatrix(false);
@@ -116,25 +136,6 @@ internal partial class ZoomBorder : Border, IDisposable
         e.Handled = true;
     }
 
-    private void ZoomTo(double ratio, double x, double y, Matrix matrix, bool skipTransitions = false)
-    {
-        if (_updating)
-        {
-            return;
-        }
-        _updating = true;
-
-        if ((Zoom >= MaxZoom && ratio > 1) || (Zoom <= MinZoom && ratio < 1))
-        {
-            _updating = false;
-            return;
-        }
-
-        _matrix = MatrixHelper.ScaleAtPrepend(matrix, ratio, x, y);
-        Invalidate(skipTransitions);
-
-        _updating = false;
-    }
     private void ZoomDeltaTo(double delta, double x, double y, bool skipTransitions = false)
     {
         ZoomDeltaTo(delta, x, y, _matrix, skipTransitions);

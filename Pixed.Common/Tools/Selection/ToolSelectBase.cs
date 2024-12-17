@@ -7,9 +7,8 @@ using Frame = Pixed.Core.Models.Frame;
 
 namespace Pixed.Common.Tools.Selection;
 
-public class ToolSelectBase(ApplicationData applicationData) : BaseTool(applicationData)
+public abstract class ToolSelectBase(ApplicationData applicationData) : BaseTool(applicationData)
 {
-    public override string ImagePath => string.Empty;
     public enum SelectionStage
     {
         None,

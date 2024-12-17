@@ -1,7 +1,4 @@
-﻿using Avalonia.Platform.Storage;
-using Newtonsoft.Json;
-
-namespace Pixed.Core.Models;
+﻿namespace Pixed.Core.Models;
 
 public class Settings
 {
@@ -12,22 +9,4 @@ public class Settings
     public int GridHeight { get; set; } = 1;
     public bool GridEnabled { get; set; } = true;
     public bool MaintainAspectRatio { get; set; } = false;
-
-    public void Save(IStorageFolder dataFolder)
-    {
-        string path = Path.Combine(dataFolder.Path.AbsolutePath, "settings.json");
-        File.WriteAllText(path, JsonConvert.SerializeObject(this));
-    }
-
-    public static Settings Load(IStorageFolder dataFolder)
-    {
-        string path = Path.Combine(dataFolder.Path.AbsolutePath, "settings.json");
-
-        if (File.Exists(path))
-        {
-            return JsonConvert.DeserializeObject<Settings>(File.ReadAllText(path));
-        }
-
-        return new Settings();
-    }
 }

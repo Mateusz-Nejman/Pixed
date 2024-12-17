@@ -1,16 +1,15 @@
-using Avalonia.Controls;
 using Pixed.Common.Tools.Transform;
 using Pixed.Core.Models;
 
 namespace Pixed.Application.Windows;
 
-internal partial class TransformRotateWindow : Window
+internal partial class TransformRotateWindow : PixedWindow
 {
     private readonly ApplicationData _applicationData;
-    public TransformRotateWindow(ApplicationData applicationData)
+    public TransformRotateWindow()
     {
         InitializeComponent();
-        _applicationData = applicationData;
+        _applicationData = Provider.Get<ApplicationData>();
     }
 
     private void Button_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
