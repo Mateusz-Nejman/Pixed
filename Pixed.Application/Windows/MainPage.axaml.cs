@@ -66,7 +66,7 @@ internal partial class MainPage : PixedPage<MainViewModel>, IDisposable
         {
             foreach (var arg in args)
             {
-                Dispatcher.UIThread.Invoke(async() => await _pixedProjectMethods.Open(arg));
+                Dispatcher.UIThread.Invoke(async () => await _pixedProjectMethods.Open(arg));
             }
         });
     }

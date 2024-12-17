@@ -8,7 +8,7 @@ public abstract class AbstractPaletteSerializer
 
     public static AbstractPaletteSerializer GetFromExtension(string extension)
     {
-        if(extension == ".gpl")
+        if (extension == ".gpl")
         {
             return new GplPaletteSerializer();
         }

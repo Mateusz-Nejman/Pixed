@@ -1,6 +1,5 @@
 ﻿using Avalonia.Platform.Storage;
 using Pixed.Application.Utils;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace Pixed.Application.IO;

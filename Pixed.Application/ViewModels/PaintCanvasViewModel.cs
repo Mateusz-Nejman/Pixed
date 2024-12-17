@@ -555,7 +555,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         double defaultValue = 2d;
 
         double delta = defaultValue;
-        if(ZoomContainer != null)
+        if (ZoomContainer != null)
         {
             Avalonia.Matrix matrix = ZoomContainer.Matrix.Invert();
             delta = matrix.Prepend(new Avalonia.Matrix(defaultValue, 0, 0, defaultValue, 0, 0)).M11;

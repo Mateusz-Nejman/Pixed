@@ -25,7 +25,7 @@ internal abstract class OverlayControl : Control
         }
         public void Render(ImmediateDrawingContext context)
         {
-            if(Bounds.Width < MinRenderSize || Bounds.Height < MinRenderSize)
+            if (Bounds.Width < MinRenderSize || Bounds.Height < MinRenderSize)
             {
                 return;
             }

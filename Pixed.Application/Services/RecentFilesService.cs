@@ -31,7 +31,7 @@ namespace Pixed.Application.Services
                 stream?.Dispose();
                 RecentFiles = JsonConvert.DeserializeObject<List<string>>(json) ?? [];
             }
-            catch(Exception)
+            catch (Exception)
             {
                 stream?.Dispose();
             }

@@ -1,14 +1,12 @@
 ﻿using Pixed.Application.Controls;
 using Pixed.Application.Routing;
 using Pixed.Common.Models;
-using Pixed.Common.Platform;
 using Pixed.Common.Services.Palette;
 using Pixed.Core;
 using Pixed.Core.Models;
 using SkiaSharp;
 using System;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Pixed.Application.ViewModels;

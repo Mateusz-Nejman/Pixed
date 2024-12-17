@@ -1,8 +1,6 @@
 ﻿using Avalonia.Platform.Storage;
-using Pixed.Application.IO;
 using Pixed.Application.Platform;
 using Pixed.Application.Utils;
-using System.Threading.Tasks;
 namespace Pixed.Application;
 internal class StorageProviderHandle : IStorageProviderHandle
 {

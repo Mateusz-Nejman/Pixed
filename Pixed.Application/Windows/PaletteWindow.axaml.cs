@@ -15,6 +15,6 @@ internal partial class PaletteWindow : PixedWindow
         {
             noPalettesInfo.IsVisible = false;
         }
-        _viewModel.CloseAction = async() => await Close();
+        _viewModel.CloseAction = async () => await Close();
     }
 }

@@ -1,8 +1,4 @@
-﻿using Avalonia.Platform.Storage;
-using Newtonsoft.Json;
-using Pixed.Core.Utils;
-
-namespace Pixed.Core.Models;
+﻿namespace Pixed.Core.Models;
 
 public class Settings
 {

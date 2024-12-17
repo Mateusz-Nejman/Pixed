@@ -52,7 +52,7 @@ internal static class StorageUtils
         string name = file.Name;
         string[] parts = name.Split('.');
 
-        if(parts.Length >= 2)
+        if (parts.Length >= 2)
         {
             return "." + parts[^1];
         }
