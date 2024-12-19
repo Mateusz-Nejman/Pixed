@@ -42,6 +42,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     private int _prevY = -1;
     private bool _gestureZoomEnabled;
     private double _zoomValue = 1;
+    private bool _overlayVisible = false;
 
     private readonly IDisposable _projectModified;
     private readonly IDisposable _projectChanged;
@@ -84,17 +85,6 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         }
     }
 
-    public SKBitmap Overlay
-    {
-        get => _overlayBitmap;
-        set
-        {
-            _overlayBitmap = value;
-            OnPropertyChanged();
-            AvaloniaOverlayBitmap = new PixedImage(_overlayBitmap);
-        }
-    }
-
     public PixedImage AvaloniaImageBitmap
     {
         get => _renderImage;
@@ -111,6 +101,16 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         set
         {
             _overlayImage = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool OverlayVisible
+    {
+        get => _overlayVisible;
+        set
+        {
+            _overlayVisible = value;
             OnPropertyChanged();
         }
     }
@@ -245,8 +245,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
             _frame = f;
             _frame.RefreshLayerRenderSources();
             ReloadFrameRender();
-            Overlay.Clear();
-            AvaloniaOverlayBitmap = new PixedImage(Overlay);
+            ClearOverlay();
             GridWidth = _frame.Width;
             GridHeight = _frame.Height;
         });
@@ -274,7 +273,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
             {
                 tool.Previous.Reset();
                 tool.Previous.ResetProperties();
-                ResetOverlay();
+                ClearOverlay();
             }
         });
 
@@ -286,6 +285,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         _overlayChanged = Subjects.OverlayModified.Subscribe(overlay =>
         {
             ReloadOverlay();
+            OverlayVisible = true;
         });
 
         _currentLayerRenderModified = Subjects.CurrentLayerRenderModified.Subscribe(pixels =>
@@ -352,30 +352,29 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     {
         RefreshGridCanvas();
         _lastWindowSize = windowSize;
-        ResetOverlay();
+        ClearOverlay();
     }
-
-    public void ResetOverlay()
-    {
-        Overlay ??= new SKBitmap(_frame.Width, _frame.Height, true);
-
-        if (Overlay.Width == _frame.Width && Overlay.Height == _frame.Height)
-        {
-            Overlay.Clear();
-        }
-        else
-        {
-            Overlay = new SKBitmap(_frame.Width, _frame.Height, true);
-        }
-        AvaloniaOverlayBitmap = new PixedImage(Overlay);
-    }
-
     public void RefreshZoomText()
     {
         double zoom = ZoomValue * 100d;
         bool needRound = zoom % 1 != 0;
         ZoomText = "Zoom: " + zoom.ToString(needRound ? "#.0" : "#");
         OnPropertyChanged(nameof(ZoomText));
+    }
+    public void ClearOverlay()
+    {
+        OverlayVisible = false;
+        if (_overlayBitmap == null || _overlayBitmap.Width != _frame.Width || _overlayBitmap.Height != _frame.Height)
+        {
+            _overlayBitmap?.Dispose();
+            _overlayBitmap = new SKBitmap(_frame.Width, _frame.Height, true);
+        }
+        else
+        {
+            _overlayBitmap.Clear();
+        }
+
+        AvaloniaOverlayBitmap.UpdateBitmap(_overlayBitmap);
     }
 
     public void RefreshGridCanvas()
@@ -432,7 +431,6 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
 
         _leftPressed = true;
         _toolSelector.ToolSelected?.ApplyTool(mouseEvent.Point, _frame, ref _overlayBitmap, _currentKeyState);
-        DebugTouchPointer(mouseEvent);
         Subjects.FrameModified.OnNext(_frame);
     }
 
@@ -451,7 +449,6 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
             _applicationData.CurrentModel.AddHistory();
         }
 
-        DebugTouchPointer(mouseEvent);
         Subjects.FrameModified.OnNext(_frame);
     }
 
@@ -464,7 +461,6 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
 
         _rightPressed = true;
         _toolSelector.ToolSelected?.ApplyTool(mouseEvent.Point, _frame, ref _overlayBitmap, _currentKeyState);
-        DebugTouchPointer(mouseEvent);
     }
 
     private void RightMouseUpAction(MouseEvent mouseEvent)
@@ -482,7 +478,6 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
             _applicationData.CurrentModel.AddHistory();
         }
 
-        DebugTouchPointer(mouseEvent);
         Subjects.FrameModified.OnNext(_frame);
     }
 
@@ -524,7 +519,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
 
     private void ReloadOverlay()
     {
-        AvaloniaOverlayBitmap = new PixedImage(Overlay);
+        AvaloniaOverlayBitmap.UpdateBitmap(_overlayBitmap);
     }
 
     private void ReloadFrameRender()
@@ -537,7 +532,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         }
 
         _frame.RefreshCurrentLayerRenderSource(pixels);
-        AvaloniaImageBitmap = new PixedImage(_frame.RenderSource.Source);
+        AvaloniaImageBitmap.UpdateBitmap(_frame.RenderSource.Source);
     }
 
     private bool CanProcess(Point point)
@@ -565,15 +560,5 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
             TileMode = TileMode.Tile,
             Transform = new ScaleTransform(delta, delta)
         };
-    }
-
-    private void DebugTouchPointer(MouseEvent mouseEvent)
-    {
-#if DEBUG
-        int imageX = (int)(mouseEvent.Point.X);
-        int imageY = (int)(mouseEvent.Point.Y);
-        _overlayBitmap.SetPixel(imageX, imageY, UniColor.Black);
-        Overlay = _overlayBitmap;
-#endif
     }
 }
