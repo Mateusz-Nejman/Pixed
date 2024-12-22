@@ -9,8 +9,7 @@
 	<Grid
             x:Name="titleBar"
             Grid.Row="0"
-            HorizontalAlignment="Left"
-            ColumnDefinitions="Auto,*,Auto">
+            ColumnDefinitions="Auto,Auto,*">
 		<Image
 			x:Name="icon"
 			Grid.Column="0"
@@ -26,17 +25,14 @@
 		<DockPanel Grid.Column="1" HorizontalAlignment="Left">
 			<Menu VerticalAlignment="Center" DockPanel.Dock="Left" ItemsSource="{Binding Menu, RelativeSource={RelativeSource FindAncestor, AncestorType=local:TitleBar}}"/>
 		</DockPanel>
-		<Grid
-			x:Name="dragRegion"
-			Grid.Column="2"
-			MinWidth="188">
-			<TextBlock Text="{Binding Title, RelativeSource={RelativeSource FindAncestor, AncestorType=local:TitleBar}}"
+		<TextBlock Text="{Binding Title, RelativeSource={RelativeSource FindAncestor, AncestorType=local:TitleBar}}"
 				 FontSize="14"
 				 FontWeight="Bold"
 				 Foreground="White"
-				 HorizontalAlignment="Center"
+				 HorizontalAlignment="Stretch"
+				 TextAlignment="Center"
 				 VerticalAlignment="Center"
-				 IsHitTestVisible="False"/>
-		</Grid>
+				 IsHitTestVisible="False"
+				 Grid.Column="2"/>
 	</Grid>
 </UserControl>

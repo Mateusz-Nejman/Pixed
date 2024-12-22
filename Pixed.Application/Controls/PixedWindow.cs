@@ -1,12 +1,14 @@
-﻿using Avalonia.Interactivity;
+﻿using Avalonia.Controls;
+using Avalonia.Interactivity;
 using AvaloniaInside.Shell;
 using Pixed.Application.DependencyInjection;
+using Pixed.Application.Windows;
 using Pixed.Common.DependencyInjection;
 using Pixed.Common.Menu;
 using System;
 
 namespace Pixed.Application.Controls;
-internal abstract class PixedPage<T> : Page
+internal abstract class PixedWindow<T> : Window
 {
     protected readonly IMenuItemRegistry _menuItemRegistry;
 
@@ -14,13 +16,13 @@ internal abstract class PixedPage<T> : Page
 
     public T ViewModel => (T)DataContext;
 
-    public PixedPage()
+    public PixedWindow()
     {
         _menuItemRegistry = Provider.Get<IMenuItemRegistry>();
         var serviceProvider = this.GetServiceProvider();
         this.DataContext = serviceProvider.Get<T>();
-        Unloaded += PixedPage_Unloaded;
-        Loaded += PixedPage_Loaded;
+        Unloaded += PixedWindow_Unloaded;
+        Loaded += PixedWindow_Loaded;
     }
 
     public TResult Get<TResult>()
@@ -41,7 +43,7 @@ internal abstract class PixedPage<T> : Page
         RegisterMenuItems();
     }
 
-    private void PixedPage_Loaded(object? sender, RoutedEventArgs e)
+    private void PixedWindow_Loaded(object? sender, RoutedEventArgs e)
     {
         OnLoaded();
         if (DataContext is PixedViewModel model)
@@ -50,7 +52,7 @@ internal abstract class PixedPage<T> : Page
         }
     }
 
-    private void PixedPage_Unloaded(object? sender, RoutedEventArgs e)
+    private void PixedWindow_Unloaded(object? sender, RoutedEventArgs e)
     {
         if (DataContext is not IDisposable viewModel) return;
         DataContext = null;
@@ -58,15 +60,15 @@ internal abstract class PixedPage<T> : Page
     }
 }
 
-internal abstract class EmptyPixedPage : Page
+internal abstract class EmptyPixedWindow : Window
 {
     protected readonly IMenuItemRegistry _menuItemRegistry;
     protected static IPixedServiceProvider Provider => App.ServiceProvider;
-    public EmptyPixedPage() : base()
+    public EmptyPixedWindow() : base()
     {
         _menuItemRegistry = Provider.Get<IMenuItemRegistry>();
-        Unloaded += EmptyPixedUserControl_Unloaded;
-        Loaded += EmptyPixedUserControl_Loaded;
+        Unloaded += PixedWindow_Unloaded;
+        Loaded += PixedWindow_Loaded;
     }
 
     public TResult Get<TResult>()
@@ -87,7 +89,7 @@ internal abstract class EmptyPixedPage : Page
         RegisterMenuItems();
     }
 
-    private void EmptyPixedUserControl_Loaded(object? sender, RoutedEventArgs e)
+    private void PixedWindow_Loaded(object? sender, RoutedEventArgs e)
     {
         OnLoaded();
         if (DataContext is PixedViewModel model)
@@ -96,7 +98,7 @@ internal abstract class EmptyPixedPage : Page
         }
     }
 
-    private void EmptyPixedUserControl_Unloaded(object? sender, RoutedEventArgs e)
+    private void PixedWindow_Unloaded(object? sender, RoutedEventArgs e)
     {
         if (DataContext is not IDisposable viewModel) return;
         DataContext = null;

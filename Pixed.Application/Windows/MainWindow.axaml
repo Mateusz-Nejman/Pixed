@@ -4,6 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:routing="clr-namespace:Pixed.Application.Routing;assembly=Pixed.Application"
 		xmlns:controls="clr-namespace:Pixed.Application.Controls"
+		xmlns:viewmodels="clr-namespace:Pixed.Application.ViewModels"
         mc:Ignorable="d" Height="600" Width="800"
         x:Class="Pixed.Application.Windows.MainWindow"
         WindowStartupLocation="CenterScreen"
@@ -12,10 +13,16 @@
         ExtendClientAreaToDecorationsHint="True"
         WindowState="Maximized"
         Icon="avares://Pixed.Application/Resources/icon.ico"
-        Title="Pixed">
+        Title="Pixed"
+		x:DataType="viewmodels:MainViewModel"
+		Background="{StaticResource BaseBackground}">
+	<Window.KeyBindings>
+		<KeyBinding Gesture="CTRL+Q"
+						Command="{Binding QuitCommand}"/>
+	</Window.KeyBindings>
 
 	<Grid RowDefinitions="Auto,*">
-		<controls:TitleBar Title="Title"/>
+		<controls:TitleBar Title="{Binding Title}" Menu="{Binding Menu}"/>
 		<routing:RouterControl Grid.Row="1"/>
 	</Grid>
 </Window>
