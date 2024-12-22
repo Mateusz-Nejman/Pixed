@@ -25,7 +25,7 @@
   <DockPanel HorizontalAlignment="Stretch"
 			   VerticalAlignment="Stretch"
 			   Name="ContentWrapper">
-    <controls:CustomTitleBar Title="{Binding Title}" Menu="{Binding Menu}"/>
+    <controls:TitleBar Title="{Binding Title}" Menu="{Binding Menu}"/>
     <DockPanel Background="Transparent">
       <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid.RowDefinitions>

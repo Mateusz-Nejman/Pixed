@@ -3,16 +3,19 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:routing="clr-namespace:Pixed.Application.Routing;assembly=Pixed.Application"
+		xmlns:controls="clr-namespace:Pixed.Application.Controls"
         mc:Ignorable="d" Height="600" Width="800"
         x:Class="Pixed.Application.Windows.MainWindow"
         WindowStartupLocation="CenterScreen"
+		Padding="6"
+        ExtendClientAreaTitleBarHeightHint="38"
         ExtendClientAreaToDecorationsHint="True"
-        ExtendClientAreaChromeHints="NoChrome"
-        ExtendClientAreaTitleBarHeightHint="-1"
         WindowState="Maximized"
         Icon="avares://Pixed.Application/Resources/icon.ico"
         Title="Pixed">
-  <Panel>
-    <routing:RouterControl/>
-  </Panel>
+
+	<Grid RowDefinitions="Auto,*">
+		<controls:TitleBar Title="Title"/>
+		<routing:RouterControl Grid.Row="1"/>
+	</Grid>
 </Window>
