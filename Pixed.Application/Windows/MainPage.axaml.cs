@@ -25,7 +25,7 @@ using System.Windows.Input;
 
 namespace Pixed.Application.Windows;
 
-internal partial class MainPage : PixedPage<MainViewModel>, IDisposable
+internal partial class MainPage : EmptyPixedPage, IDisposable
 {
     private readonly ApplicationData _applicationData;
     private readonly PixedProjectMethods _pixedProjectMethods;

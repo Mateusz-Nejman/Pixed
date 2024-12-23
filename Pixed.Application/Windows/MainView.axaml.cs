@@ -1,8 +1,9 @@
-using Avalonia.Controls;
+using Pixed.Application.Controls;
+using Pixed.Application.ViewModels;
 
 namespace Pixed.Application;
 
-public partial class MainView : UserControl
+internal partial class MainView : PixedUserControl<MainViewModel>
 {
     public MainView()
     {

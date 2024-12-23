@@ -14,4 +14,5 @@
 	<Color x:Key="Accent">#0c548b</Color>
 	<Color x:Key="ButtonBackground">#3f3f3f</Color>
 	<Color x:Key="SystemAccentColor">#0c548b</Color>
+	<SolidColorBrush x:Key="CaptionButtonBackground" Color="#ff373737" />
 </ResourceDictionary>
