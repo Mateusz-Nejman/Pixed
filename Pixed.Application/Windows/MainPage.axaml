@@ -15,7 +15,8 @@
         PointerPressed="Window_PointerPressed"
         PointerReleased="Window_PointerReleased"
 		DragDrop.AllowDrop="True"
-             NavigationBar.Visible="False">
+        NavigationBar.Visible="False"
+	    Theme="{StaticResource MainPage}">
 	<Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*"/>
