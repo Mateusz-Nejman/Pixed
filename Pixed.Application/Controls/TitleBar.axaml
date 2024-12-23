@@ -9,7 +9,7 @@
 	<Grid
             x:Name="titleBar"
             Grid.Row="0"
-            ColumnDefinitions="Auto,Auto,*">
+            ColumnDefinitions="Auto,Auto,*,Auto">
 		<Image
 			x:Name="icon"
 			Grid.Column="0"
@@ -34,5 +34,6 @@
 				 VerticalAlignment="Center"
 				 IsHitTestVisible="False"
 				 Grid.Column="2"/>
+		<Grid Width="140" Grid.Column="3" IsVisible="{OnPlatform Windows=True, Default=False}"/>
 	</Grid>
 </UserControl>

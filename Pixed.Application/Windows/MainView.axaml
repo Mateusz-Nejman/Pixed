@@ -3,9 +3,19 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:routing="clr-namespace:Pixed.Application.Routing;assembly=Pixed.Application"
+			 xmlns:controls="clr-namespace:Pixed.Application.Controls"
+			 xmlns:viewmodels="clr-namespace:Pixed.Application.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Pixed.Application.MainView">
-	<Panel>
-		<routing:RouterControl/>
-	</Panel>
+             x:Class="Pixed.Application.MainView"
+			 x:DataType="viewmodels:MainViewModel"
+			 Background="{StaticResource BaseBackground}">
+	<UserControl.KeyBindings>
+		<KeyBinding Gesture="CTRL+Q"
+						Command="{Binding QuitCommand}"/>
+	</UserControl.KeyBindings>
+
+	<Grid RowDefinitions="Auto,*">
+		<controls:TitleBar Title="{Binding Title}" Menu="{Binding Menu}"/>
+		<routing:RouterControl Grid.Row="1"/>
+	</Grid>
 </UserControl>
