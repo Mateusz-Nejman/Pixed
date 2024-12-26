@@ -383,6 +383,8 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         }
 
         AvaloniaOverlayBitmap.UpdateBitmap(_overlayBitmap);
+        OverlayVisible = true;
+        OnPropertyChanged(nameof(AvaloniaOverlayBitmap));
     }
 
     public void RefreshGridCanvas()
@@ -529,6 +531,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     private void ReloadOverlay()
     {
         AvaloniaOverlayBitmap.UpdateBitmap(_overlayBitmap);
+        OnPropertyChanged(nameof(AvaloniaOverlayBitmap));
     }
 
     private void ReloadFrameRender()
@@ -542,6 +545,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
 
         _frame.RefreshCurrentLayerRenderSource(pixels);
         AvaloniaImageBitmap.UpdateBitmap(_frame.RenderSource.Source);
+        OnPropertyChanged(nameof(AvaloniaImageBitmap));
     }
 
     private bool CanProcess(Point point)
