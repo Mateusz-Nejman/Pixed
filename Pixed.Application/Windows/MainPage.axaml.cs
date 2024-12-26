@@ -95,6 +95,45 @@ internal partial class MainPage : EmptyPixedPage, IDisposable
         base.OnLoaded();
     }
 
+    public async static Task<bool> Close()
+    {
+        var applicationData = Provider.Get<ApplicationData>();
+        var pixedProjectMethods = Provider.Get<PixedProjectMethods>();
+        var recentFilesService = Provider.Get<RecentFilesService>();
+
+        int untitledIndex = 0;
+
+        foreach (var model in applicationData.Models)
+        {
+            if (model.UnsavedChanges)
+            {
+                var name = model.FileName;
+
+                if (string.IsNullOrEmpty(name))
+                {
+                    name = "Untitled-" + untitledIndex;
+                    untitledIndex++;
+                }
+
+                var result = await Router.Confirm("Unsaved changes", "Project " + name + " has unsaved changes. Save it now?");
+
+                if (result.HasValue)
+                {
+                    if (result.Value == ButtonResult.Cancel)
+                    {
+                        return false;
+                    }
+                    else if (result.Value == ButtonResult.Yes)
+                    {
+                        await pixedProjectMethods.Save(model, model.FilePath == null, recentFilesService);
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
     protected virtual void Dispose(bool disposing)
     {
         if (!_disposedValue)
@@ -118,37 +157,12 @@ internal partial class MainPage : EmptyPixedPage, IDisposable
     {
         QuitCommand = new ActionCommand(async () =>
         {
-            int untitledIndex = 0;
-
-            foreach (var model in _applicationData.Models)
+            var canQuit = await Close();
+            
+            if(canQuit)
             {
-                if (model.UnsavedChanges)
-                {
-                    var name = model.FileName;
-
-                    if (string.IsNullOrEmpty(name))
-                    {
-                        name = "Untitled-" + untitledIndex;
-                        untitledIndex++;
-                    }
-
-                    var result = await Router.Confirm("Unsaved changes", "Project " + name + " has unsaved changes. Save it now?");
-
-                    if (result.HasValue)
-                    {
-                        if (result.Value == ButtonResult.Cancel)
-                        {
-                            return;
-                        }
-                        else if (result.Value == ButtonResult.Yes)
-                        {
-                            await _pixedProjectMethods.Save(model, model.FilePath == null, _recentFilesService);
-                        }
-                    }
-                }
+                _lifecycle.Close();
             }
-
-            _lifecycle.Close();
         });
     }
 
@@ -192,6 +206,7 @@ internal partial class MainPage : EmptyPixedPage, IDisposable
         }
         _applicationData.UserSettings = await SettingsUtils.Load(_storageProviderHandle.StorageFolder);
         _applicationData.Initialize();
+        Subjects.AnimationPreviewChanged.OnNext(_applicationData.UserSettings.AnimationPreviewVisible);
     }
 
     private async Task Initialize()

@@ -57,5 +57,13 @@ internal class ViewMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
             await SettingsUtils.Save(_storageProvider.StorageFolder, _applicationData);
             Subjects.GridChanged.OnNext(true);
         }));
+
+        _menuItemRegistry.Register(BaseMenuItem.View, "Toggle animation preview", async() =>
+        {
+            bool value = !_applicationData.UserSettings.AnimationPreviewVisible;
+            Subjects.AnimationPreviewChanged.OnNext(value);
+            _applicationData.UserSettings.AnimationPreviewVisible = value;
+            await SettingsUtils.Save(_storageProvider.StorageFolder, _applicationData);
+        }, new("avares://Pixed.Application/Resources/Icons/film-menu.png"));
     }
 }

@@ -49,6 +49,7 @@
 
 			<ScrollViewer Grid.Column="4" Width="242" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto" Theme="{StaticResource HandledFixScrollViewer}">
 				<StackPanel Name="rightPanel" Grid.Column="4" Width="242" HorizontalAlignment="Stretch">
+					<mainsections:AnimationSection/>
 					<mainsections:PaletteSection/>
 					<mainsections:LayersSection/>
 				</StackPanel>
