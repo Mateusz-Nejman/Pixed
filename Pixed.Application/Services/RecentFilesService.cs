@@ -6,7 +6,6 @@ using Pixed.Common.Menu;
 using Pixed.Core;
 using Pixed.Core.Models;
 using Pixed.Core.Utils;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -23,18 +22,15 @@ namespace Pixed.Application.Services
         {
             var file = await _storageProvider.StorageFolder.GetFile("recent.json", FolderType.Root);
 
-            Stream? stream = null;
-            try
+            if (!file.Exists)
             {
-                stream = await file.OpenRead();
-                string json = stream.ReadAllText();
-                stream?.Dispose();
-                RecentFiles = JsonConvert.DeserializeObject<List<string>>(json) ?? [];
+                return;
             }
-            catch (Exception)
-            {
-                stream?.Dispose();
-            }
+
+            Stream stream = await file.OpenRead();
+            string json = stream.ReadAllText();
+            stream.Dispose();
+            RecentFiles = JsonConvert.DeserializeObject<List<string>>(json) ?? [];
         }
 
         public async Task AddRecent(string file)
