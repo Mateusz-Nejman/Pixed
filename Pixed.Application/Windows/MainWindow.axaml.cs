@@ -26,4 +26,14 @@ internal partial class MainWindow : PixedWindow<MainViewModel>
             }
         }
     }
+
+    protected override async void OnClosing(WindowClosingEventArgs e)
+    {
+        var canQuit = await MainPage.Close();
+
+        if(!canQuit)
+        {
+            e.Cancel = true;
+        }
+    }
 }

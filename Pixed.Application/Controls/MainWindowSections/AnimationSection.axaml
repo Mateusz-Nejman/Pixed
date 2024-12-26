@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 xmlns:local="clr-namespace:Pixed.Application.Controls.MainWindowSections"
+			 xmlns:controls="clr-namespace:Pixed.Application.Controls"
+             x:Class="Pixed.Application.Controls.MainWindowSections.AnimationSection">
+	<local:Section>
+		<Grid RenderOptions.BitmapInterpolationMode="None" Width="220" Height="220" Margin="2">
+			<Grid.Background>
+				<ImageBrush Source="avares://Pixed.Application/Resources/transparentBackground.png" TileMode="Tile">
+					<ImageBrush.Transform>
+						<ScaleTransform ScaleX="0.2" ScaleY="0.2"/>
+					</ImageBrush.Transform>
+				</ImageBrush>
+			</Grid.Background>
+			<controls:ProjectAnimation Width="220" Height="220" Name="projectAnimation"/>
+		</Grid>
+	</local:Section>
+</UserControl>

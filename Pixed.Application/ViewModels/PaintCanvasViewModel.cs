@@ -46,6 +46,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
 
     private readonly IDisposable _projectModified;
     private readonly IDisposable _projectChanged;
+    private readonly IDisposable _projectAdded;
     private readonly IDisposable _frameChanged;
     private readonly IDisposable _frameModified;
     private readonly IDisposable _layerRemoved;
@@ -237,7 +238,14 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
             RecalculateFactor(_lastWindowSize);
             RefreshGridCanvas();
             ProjectSizeText = "[" + p.Width + "x" + p.Height + "]";
+        });
 
+        _projectAdded = Subjects.ProjectAdded.Subscribe(p =>
+        {
+            foreach(var frame in p.Frames)
+            {
+                frame.RefreshCurrentLayerRenderSource([]);
+            }
         });
 
         _frameChanged = Subjects.FrameChanged.Subscribe(f =>
@@ -391,6 +399,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         {
             if (disposing)
             {
+                _projectAdded?.Dispose();
                 _projectModified?.Dispose();
                 _projectChanged?.Dispose();
                 _frameChanged?.Dispose();

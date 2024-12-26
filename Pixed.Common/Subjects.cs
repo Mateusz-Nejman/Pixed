@@ -17,6 +17,7 @@ public static class Subjects
     public static Subject<BaseSelection> SelectionCreated { get; } = new Subject<BaseSelection>();
     public static Subject<BaseSelection> SelectionStarted { get; } = new Subject<BaseSelection>();
     public static Subject<bool> GridChanged { get; } = new Subject<bool>();
+    public static Subject<bool> AnimationPreviewChanged { get; } = new Subject<bool>();
     public static Subject<BaseToolPair> ToolChanged { get; } = new Subject<BaseToolPair>();
     public static Subject<string[]> NewInstanceHandled { get; } = new Subject<string[]>();
     public static Subject<SKBitmap> OverlayModified { get; } = new Subject<SKBitmap>();

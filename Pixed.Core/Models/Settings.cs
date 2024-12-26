@@ -9,4 +9,5 @@ public class Settings
     public int GridHeight { get; set; } = 1;
     public bool GridEnabled { get; set; } = true;
     public bool MaintainAspectRatio { get; set; } = false;
+    public bool AnimationPreviewVisible { get; set; } = false;
 }
