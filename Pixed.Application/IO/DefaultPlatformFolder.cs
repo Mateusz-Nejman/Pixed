@@ -28,7 +28,16 @@ public class DefaultPlatformFolder : IPlatformFolder
     public async Task<IStorageContainerFile> GetFile(string filename, FolderType folderType)
     {
         var folder = await GetFolder(folderType);
-        return new DefaultStorageContainerFile(await _storageProvider.TryGetFileFromPathAsync(Path.Combine(folder.Path.AbsolutePath, filename)));
+        var filepath = Path.Combine(folder.Path.AbsolutePath, filename);
+
+        IStorageFile? file = await _storageProvider.TryGetFileFromPathAsync(filepath);
+
+        if (file == null)
+        {
+            return new PathStorageContainerFile(filepath);
+        }
+
+        return new DefaultStorageContainerFile(file);
     }
 
     public void Initialize(IStorageProvider storageProvider)

@@ -21,20 +21,16 @@ internal static class SettingsUtils
 
     public static async Task<Settings> Load(IPlatformFolder platformFolder)
     {
-        Stream? stream = null;
-        try
+        var file = await platformFolder.GetFile("settings.json", FolderType.Root);
+
+        if (!file.Exists)
         {
-            var file = await platformFolder.GetFile("settings.json", FolderType.Root);
-            stream = await file.OpenRead();
-            string json = stream.ReadAllText();
-            stream.Dispose();
-            return JsonConvert.DeserializeObject<Settings>(json) ?? new Settings();
-        }
-        catch (Exception)
-        {
-            stream?.Dispose();
+            return new();
         }
 
-        return new Settings();
+        Stream stream = await file.OpenRead();
+        string json = stream.ReadAllText();
+        stream.Dispose();
+        return JsonConvert.DeserializeObject<Settings>(json) ?? new Settings();
     }
 }

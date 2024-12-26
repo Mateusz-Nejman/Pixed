@@ -13,7 +13,7 @@ internal class PlatformFolder : IPlatformFolder
 
     public IStorageContainerFile Convert(IStorageFile value)
     {
-        return new PlatformStorageContainerFile(value);
+        return new PathStorageContainerFile(value.Path.AbsolutePath);
     }
 
     public async IAsyncEnumerable<IStorageContainerFile> GetFiles(FolderType folder)
@@ -22,13 +22,13 @@ internal class PlatformFolder : IPlatformFolder
 
         foreach (string dir in dirs)
         {
-            yield return new PlatformStorageContainerFile(dir);
+            yield return new PathStorageContainerFile(dir);
         }
     }
 
     public Task<IStorageContainerFile> GetFile(string filename, FolderType folderType)
     {
-        return Task.FromResult((IStorageContainerFile)new PlatformStorageContainerFile(Path.Combine(GetFolderPath(folderType), filename)));
+        return Task.FromResult((IStorageContainerFile)new PathStorageContainerFile(Path.Combine(GetFolderPath(folderType), filename)));
     }
 
     public void Initialize(IStorageProvider storageProvider)
