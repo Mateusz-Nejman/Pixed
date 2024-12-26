@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Pixed.Application.Controls;
 using Pixed.Application.IO;
+using Pixed.Application.Platform;
 using Pixed.Application.ViewModels;
 using System.IO;
 using System.Threading.Tasks;
@@ -10,10 +11,12 @@ namespace Pixed.Application.Windows;
 internal partial class MainWindow : PixedWindow<MainViewModel>
 {
     private readonly PixedProjectMethods _pixedProjectMethods;
-    public MainWindow(PixedProjectMethods pixedProjectMethods) : base()
+    private readonly IPlatformSettings _lifecycle;
+    public MainWindow(PixedProjectMethods pixedProjectMethods, IPlatformSettings lifecycle) : base()
     {
         InitializeComponent();
         _pixedProjectMethods = pixedProjectMethods;
+        _lifecycle = lifecycle;
     }
 
     public async Task OpenFromArgs(string[] args)
@@ -29,11 +32,12 @@ internal partial class MainWindow : PixedWindow<MainViewModel>
 
     protected override async void OnClosing(WindowClosingEventArgs e)
     {
+        e.Cancel = true;
         var canQuit = await MainPage.Close();
 
-        if(!canQuit)
+        if(canQuit)
         {
-            e.Cancel = true;
+            _lifecycle.Close();
         }
     }
 }
