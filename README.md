@@ -33,6 +33,7 @@ Your imagination and **Pixed**. These two things are needed for pixel-arted imag
 - Piskel from [piskelapp/piskel](https://github.com/piskelapp/piskel) (only open)
 - PNG (open/save)
 - ICO (only open)
+- SVG (only open)
 - JSON custom palette format
 - GPL palette format
 

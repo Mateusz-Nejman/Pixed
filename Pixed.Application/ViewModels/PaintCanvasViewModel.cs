@@ -242,7 +242,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
 
         _projectAdded = Subjects.ProjectAdded.Subscribe(p =>
         {
-            foreach(var frame in p.Frames)
+            foreach (var frame in p.Frames)
             {
                 frame.RefreshCurrentLayerRenderSource([]);
             }

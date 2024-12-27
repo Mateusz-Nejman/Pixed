@@ -5,6 +5,7 @@ using Pixed.Application.Services;
 using Pixed.Application.Utils;
 using Pixed.Common;
 using Pixed.Core.Models;
+using Svg.Skia;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -67,7 +68,7 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
 
     public async Task Open(RecentFilesService recentFilesService)
     {
-        var files = await _dialogUtils.OpenFileDialog("All supported (*.pixed;*.piskel;*.png)|*.pixed;*.piskel;*.png|Pixed project (*.pixed)|*.pixed|Piskel project (*.piskel)|*.piskel|PNG images (*.png)|*.png", "Open file", true);
+        var files = await _dialogUtils.OpenFileDialog("All supported (*.pixed;*.piskel;*.png;*.svg)|*.pixed;*.piskel;*.png|Pixed project (*.pixed)|*.pixed|Piskel project (*.piskel)|*.piskel|PNG images (*.png)|*.png|SVG images (*.svg)|*.svg", "Open file", true);
 
         foreach (var item in files)
         {
@@ -104,6 +105,24 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
                 }
             }
 
+            if (serializer is SvgProjectSerializer svgSerializer)
+            {
+                SKSvg svg = SKSvg.CreateFromStream(stream);
+                stream.Dispose();
+                stream = await item.OpenRead();
+                var result = await Router.Navigate<OpenSvgResult>("/openSvg", svg);
+
+                if (result.HasValue)
+                {
+                    svgSerializer.Width = result.Value.Width;
+                    svgSerializer.Height = result.Value.Height;
+                }
+                else
+                {
+                    continue;
+                }
+            }
+
             PixedModel model;
             try
             {
@@ -115,7 +134,7 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
                 continue;
             }
             stream?.Dispose();
-            model.FileName = item.Name.Replace(".png", ".pixed");
+            model.FileName = item.Name.Replace(item.GetExtension(), ".pixed");
             model.AddHistory();
 
             if (serializer is PixedProjectSerializer)
@@ -262,6 +281,7 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
             ".png" => new PngProjectSerializer(),
             ".piskel" => new PiskelProjectSerializer(),
             ".ico" => new IconProjectSerializer(),
+            ".svg" => new SvgProjectSerializer(),
             _ => null,
         };
     }
