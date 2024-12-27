@@ -238,6 +238,8 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
             RecalculateFactor(_lastWindowSize);
             RefreshGridCanvas();
             ProjectSizeText = "[" + p.Width + "x" + p.Height + "]";
+            AvaloniaImageBitmap = _frame.RenderSource.Clone();
+            AvaloniaOverlayBitmap = new PixedImage(_overlayBitmap);
         });
 
         _projectAdded = Subjects.ProjectAdded.Subscribe(p =>
