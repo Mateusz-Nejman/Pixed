@@ -2,9 +2,9 @@ using Avalonia;
 using Avalonia.Interactivity;
 using Pixed.Application.Models;
 using Pixed.Core.Models;
-using System.Threading.Tasks;
-using System.Threading;
 using Svg.Skia;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Pixed.Application.Windows;
 

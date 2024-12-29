@@ -35,7 +35,7 @@ internal partial class MainWindow : PixedWindow<MainViewModel>
         e.Cancel = true;
         var canQuit = await MainPage.Close();
 
-        if(canQuit)
+        if (canQuit)
         {
             _lifecycle.Close();
         }

@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:Pixed.Application.ViewModels"
+			 xmlns:controls="clr-namespace:Pixed.Application.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Pixed.Application.Controls.MainWindowSections.ProjectsSection"
 			 x:DataType="vm:ProjectsSectionViewModel">
@@ -27,7 +28,7 @@
                     </ImageBrush.Transform>
                   </ImageBrush>
                 </Grid.Background>
-                <Image MaxWidth="64" MaxHeight="64" Source="{Binding RenderSource}" RenderOptions.BitmapInterpolationMode="None"/>
+                <controls:SkiaImage MaxWidth="64" MaxHeight="64" Source="{Binding RenderSource}" RenderOptions.BitmapInterpolationMode="None"/>
               </Grid>
             </Grid>
             <Button Grid.Column="1" Theme="{StaticResource BaseButton}" Command="{Binding CloseCommand}">

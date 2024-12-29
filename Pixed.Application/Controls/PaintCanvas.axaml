@@ -33,8 +33,8 @@
 							  PointerWheelChanged="Canvas_PointerWheelChanged"
 				  RenderOptions.BitmapInterpolationMode="None"
 				  Background="{Binding TransparentBrush}">
-					<Image Name="image" RenderOptions.BitmapInterpolationMode="None" Source="{Binding AvaloniaImageBitmap}"/>
-					<Image Name="overlay" RenderOptions.BitmapInterpolationMode="None" Source="{Binding AvaloniaOverlayBitmap}"/>
+					<controls:SkiaImage Name="image" RenderOptions.BitmapInterpolationMode="None" Source="{Binding RenderBitmap}"/>
+					<controls:SkiaImage Name="overlay" RenderOptions.BitmapInterpolationMode="None" Source="{Binding OverlayBitmap}"/>
 					<controls:ImageGrid Width="{Binding ScaledGridWidth}" Height="{Binding ScaledGridHeight}" Name="gridCanvas" IsHitTestVisible="False"/>
 					<controls:SelectionOverlay Width="{Binding ScaledGridWidth}" Height="{Binding ScaledGridHeight}" Name="selectionOverlay" IsHitTestVisible="False" IsVisible="{Binding OverlayVisible}"/>
 				</Canvas>

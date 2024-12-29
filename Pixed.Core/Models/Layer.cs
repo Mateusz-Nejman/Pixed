@@ -9,11 +9,10 @@ public class Layer : PropertyChangedBase, IPixedSerializer
     private uint[] _pixels;
     private int _width;
     private int _height;
-    private SKBitmap _renderedBitmap = null;
+    private SKBitmap? _renderSource = null;
     private bool _needRerender = true;
     private double _opacity = 100.0d;
     private string _name = string.Empty;
-    private PixedImage _renderSource = new(null);
     private readonly string _id;
 
     public double Opacity
@@ -36,7 +35,7 @@ public class Layer : PropertyChangedBase, IPixedSerializer
         }
     }
 
-    public PixedImage RenderSource
+    public SKBitmap? RenderSource
     {
         get => _renderSource;
         set
@@ -87,7 +86,7 @@ public class Layer : PropertyChangedBase, IPixedSerializer
             Name = Name,
             _needRerender = true
         };
-        layer.RenderSource.UpdateBitmap(_renderedBitmap);
+        layer.RenderSource = _renderSource;
         return layer;
     }
 
@@ -136,7 +135,7 @@ public class Layer : PropertyChangedBase, IPixedSerializer
     {
         if (Render(out SKBitmap bitmap, pixels))
         {
-            RenderSource.UpdateBitmap(bitmap);
+            RenderSource = bitmap;
         }
     }
 
@@ -152,7 +151,7 @@ public class Layer : PropertyChangedBase, IPixedSerializer
 
     public bool Render(out SKBitmap render, List<Pixel>? modifiedPixels = null)
     {
-        render = _renderedBitmap;
+        render = _renderSource;
         if (!_needRerender && (modifiedPixels == null || modifiedPixels.Count == 0))
         {
             return false;
@@ -180,7 +179,7 @@ public class Layer : PropertyChangedBase, IPixedSerializer
 
         var bitmap = SkiaUtils.FromArray(pixels, new Point(_width, _height));
         pixels.Clear();
-        _renderedBitmap = bitmap;
+        RenderSource = bitmap;
         _needRerender = false;
         render = bitmap;
         return true;

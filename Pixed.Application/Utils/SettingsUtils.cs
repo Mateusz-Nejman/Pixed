@@ -3,7 +3,6 @@ using Pixed.Application.IO;
 using Pixed.Application.Platform;
 using Pixed.Core.Models;
 using Pixed.Core.Utils;
-using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;

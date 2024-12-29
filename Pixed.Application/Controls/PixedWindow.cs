@@ -1,8 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
-using AvaloniaInside.Shell;
 using Pixed.Application.DependencyInjection;
-using Pixed.Application.Windows;
 using Pixed.Common.DependencyInjection;
 using Pixed.Common.Menu;
 using System;

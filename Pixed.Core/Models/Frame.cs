@@ -10,7 +10,7 @@ public class Frame : PropertyChangedBase, IPixedSerializer
     private readonly ObservableCollection<Layer> _layers;
     private int _selectedLayer = 0;
     private readonly string _id;
-    private PixedImage _renderSource = new(null);
+    private SKBitmap? _renderSource = null;
 
     public int Width => Layers[0].Width;
     public int Height => Layers[0].Height;
@@ -25,7 +25,7 @@ public class Frame : PropertyChangedBase, IPixedSerializer
         }
     }
 
-    public PixedImage RenderSource
+    public SKBitmap? RenderSource
     {
         get => _renderSource;
         set
@@ -120,7 +120,7 @@ public class Frame : PropertyChangedBase, IPixedSerializer
     public void RefreshCurrentLayerRenderSource(List<Pixel> pixels)
     {
         RenderSource?.Dispose();
-        RenderSource = new PixedImage(Render(pixels));
+        RenderSource = Render(pixels);
     }
 
     public SKBitmap Render(List<Pixel>? pixels = null)

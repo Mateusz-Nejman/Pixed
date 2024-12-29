@@ -3,7 +3,6 @@ using Pixed.Application.Routing;
 using Pixed.Common.Models;
 using Pixed.Common.Services.Palette;
 using Pixed.Core;
-using Pixed.Core.Models;
 using SkiaSharp;
 using System;
 using System.Collections.ObjectModel;
@@ -15,7 +14,7 @@ internal class PaletteWindowViewModel : PixedViewModel
 {
     public struct PaletteData
     {
-        public PixedImage BitmapImage { get; set; }
+        public SKBitmap? BitmapImage { get; set; }
         public int BitmapWidth { get; set; }
         public int BitmapHeight { get; set; }
         public string Name { get; set; }
@@ -69,7 +68,7 @@ internal class PaletteWindowViewModel : PixedViewModel
                 Name = model.Name,
                 Path = model.Path,
                 Model = model,
-                BitmapImage = new PixedImage(paletteBitmap),
+                BitmapImage = paletteBitmap,
                 BitmapWidth = paletteBitmap.Width,
                 BitmapHeight = paletteBitmap.Height,
                 SelectCommand = new ActionCommand<PaletteModel>(m => { _paletteService.Select(m); CloseAction?.Invoke(); }),
@@ -77,7 +76,6 @@ internal class PaletteWindowViewModel : PixedViewModel
                 RenameCommand = new ActionCommand<PaletteModel>(async (m) =>
                 {
                     var result = await Router.Prompt("Rename Palette", "New name: ", m.Name);
-                    //TODO Waiting for AvaloniaInside.Shell author fix https://github.com/AvaloniaInside/Shell/issues/64
 
                     if (result.HasValue)
                     {

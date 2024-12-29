@@ -158,8 +158,8 @@ internal partial class MainPage : EmptyPixedPage, IDisposable
         QuitCommand = new ActionCommand(async () =>
         {
             var canQuit = await Close();
-            
-            if(canQuit)
+
+            if (canQuit)
             {
                 _lifecycle.Close();
             }
