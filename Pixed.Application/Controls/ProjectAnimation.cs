@@ -7,6 +7,7 @@ using Avalonia.Skia;
 using Avalonia.Threading;
 using Pixed.Application.Utils;
 using Pixed.Core.Models;
+using Pixed.Core.Utils;
 using SkiaSharp;
 using System;
 using System.Reactive.Linq;
@@ -38,6 +39,8 @@ internal class ProjectAnimation : Control
             {
                 return;
             }
+
+            var renderSource = frameBitmap.RenderSource;
             if (context.PlatformImpl.GetFeature<ISkiaSharpApiLeaseFeature>() is ISkiaSharpApiLeaseFeature leaseFeature)
             {
                 ISkiaSharpApiLease lease = leaseFeature.Lease();
@@ -46,7 +49,11 @@ internal class ProjectAnimation : Control
                     var canvas = lease.SkCanvas;
                     double ratio = Bounds.Width / _width;
                     double height = _height * ratio;
-                    canvas.DrawBitmap(frameBitmap.RenderSource, SKRect.Create(Bounds.X.ToFloat(), Bounds.Y.ToFloat(), Bounds.Width.ToFloat(), height.ToFloat()));
+                    
+                    if(!SkiaUtils.IsNull(renderSource))
+                    {
+                        canvas.DrawBitmap(renderSource, new Rect(Bounds.X, Bounds.Y, Bounds.Width, height));
+                    }
                 }
             }
         }

@@ -13,6 +13,7 @@ using Pixed.Core.Utils;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
+using System.Reactive.Linq;
 using Frame = Pixed.Core.Models.Frame;
 
 namespace Pixed.Application.ViewModels;
@@ -23,6 +24,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     private readonly ToolSelector _toolSelector;
     private SKBitmap? _overlayBitmap;
     private SKBitmap? _renderBitmap;
+    private SKBitmap? _imageBitmap;
     private ImageBrush _transparentBrush;
     private readonly Avalonia.Media.Imaging.Bitmap _transparentBitmap;
     private double _gridWidth;
@@ -63,6 +65,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
     private readonly IDisposable _selectionDismissed;
     private readonly IDisposable _selectionCreated;
     private readonly IDisposable _selectionStarted;
+    private readonly IDisposable _renderInterval;
 
     public ActionCommand<MouseEvent> LeftMouseDown { get; }
     public ActionCommand<MouseEvent> LeftMouseUp { get; }
@@ -101,6 +104,16 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         set
         {
             _overlayBitmap = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public SKBitmap? ImageBitmap
+    {
+        get => _imageBitmap;
+        set
+        {
+            _imageBitmap = value;
             OnPropertyChanged();
         }
     }
@@ -293,7 +306,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
 
         _overlayChanged = Subjects.OverlayModified.Subscribe(overlay =>
         {
-            ReloadOverlay();
+            OverlayBitmap = overlay;
             OverlayVisible = true;
         });
 
@@ -356,6 +369,21 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         {
             GestureZoomEnabled = isEnabled;
         };
+
+        _renderInterval = Observable.Interval(TimeSpan.FromMilliseconds(100)).Subscribe(l =>
+        {
+            if(_renderBitmap == null)
+            {
+                return;
+            }
+            SKBitmap image = new(_renderBitmap.Width, _renderBitmap.Height, true);
+            SKCanvas canvas = new(image);
+            canvas.Clear(SKColors.Transparent);
+            canvas.DrawBitmap(_renderBitmap, SKPoint.Empty);
+            canvas.DrawBitmap(_overlayBitmap, SKPoint.Empty);
+            canvas.Dispose();
+            ImageBitmap = image;
+        });
     }
     public void RecalculateFactor(Point windowSize)
     {
@@ -420,6 +448,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
                 _selectionCreating?.Dispose();
                 _selectionDismissed?.Dispose();
                 _selectionStarted?.Dispose();
+                _renderInterval?.Dispose();
             }
 
             _disposedValue = true;
@@ -525,11 +554,6 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
         }
         _rightPressed = false;
         _leftPressed = false;
-    }
-
-    private void ReloadOverlay()
-    {
-        OverlayBitmap = _overlayBitmap;
     }
 
     private void ReloadFrameRender()

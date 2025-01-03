@@ -66,21 +66,7 @@ internal class SkiaImage : Control
                 ISkiaSharpApiLease lease = leaseFeature.Lease();
                 using (lease)
                 {
-                    lock (bitmap)
-                    {
-                        if (bitmap != null)
-                        {
-                            try
-                            {
-                                lease.SkCanvas.DrawBitmap(bitmap, SKRect.Create((float)Bounds.X, (float)Bounds.Y, (float)Bounds.Width, (float)Bounds.Height));
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine(ex);
-                                //Ignore exception
-                            }
-                        }
-                    }
+                    lease.SkCanvas.DrawBitmap(bitmap, Bounds);
                 }
             }
         }
