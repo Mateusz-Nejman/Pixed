@@ -34,6 +34,11 @@ internal class ProjectAnimation : Control
         }
         public void Render(ImmediateDrawingContext context)
         {
+            if(_frameIndex >= _applicationData.CurrentModel.Frames.Count)
+            {
+                return;
+            }
+
             var frameBitmap = _applicationData.CurrentModel.Frames[_frameIndex] ?? null;
             if (frameBitmap == null || frameBitmap.RenderSource == null)
             {

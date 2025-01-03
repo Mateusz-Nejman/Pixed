@@ -25,14 +25,14 @@ public class ToolSelectRectangle(ApplicationData applicationData) : ToolSelectBa
         CreateAndSubject(startPoint, currentPoint, frame, Subjects.SelectionCreated);
     }
 
+    public static RectangularSelection Create(Point from, Point to, Frame frame)
+    {
+        return new RectangularSelection(from, to, frame);
+    }
+
     private void CreateAndSubject(Point startPoint, Point currentPoint, Frame frame, Subject<BaseSelection> subject)
     {
         _selection = Create(startPoint, currentPoint, frame);
         subject.OnNext(_selection);
-    }
-
-    private static RectangularSelection Create(Point startPoint, Point currentPoint, Frame frame)
-    {
-        return new RectangularSelection(startPoint, currentPoint, frame);
     }
 }
