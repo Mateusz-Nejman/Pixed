@@ -10,10 +10,6 @@
         xmlns:viewmodels="clr-namespace:Pixed.Application.ViewModels"
         mc:Ignorable="d"
         Background="{StaticResource BaseBackground}"
-        KeyDown="Window_KeyDown"
-        KeyUp="Window_KeyUp"
-        PointerPressed="Window_PointerPressed"
-        PointerReleased="Window_PointerReleased"
 		DragDrop.AllowDrop="True"
         NavigationBar.Visible="False"
 	    Theme="{StaticResource MainPage}">

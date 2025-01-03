@@ -52,15 +52,11 @@ public class SelectionManager
 
     public void SelectAll()
     {
-        var tool = _toolSelector.GetTool("tool_rectangle_select");
-
-        if (_toolSelector.ToolSelected != tool)
-        {
-            _toolSelector.ToolSelected = tool;
-        }
-
+        _toolSelector.SelectTool("tool_rectangle_select");
         var selection = ToolSelectRectangle.Create(new Point(), new Point(_applicationData.CurrentModel.Width - 1, _applicationData.CurrentModel.Height - 1), _applicationData.CurrentFrame);
+        Subjects.SelectionCreating.OnNext(selection);
         Subjects.SelectionCreated.OnNext(selection);
+        Subjects.OverlayModified.OnNext(null);
     }
 
     public async Task Copy()

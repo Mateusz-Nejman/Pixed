@@ -14,6 +14,10 @@
         WindowState="Maximized"
         Icon="avares://Pixed.Application/Resources/icon.ico"
         Title="Pixed"
+		KeyDown="Window_KeyDown"
+        KeyUp="Window_KeyUp"
+        PointerPressed="Window_PointerPressed"
+        PointerReleased="Window_PointerReleased"
 		x:DataType="viewmodels:MainViewModel"
 		Background="{StaticResource BaseBackground}">
 	<Window.KeyBindings>

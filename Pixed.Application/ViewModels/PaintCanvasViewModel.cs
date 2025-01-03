@@ -306,7 +306,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
 
         _overlayChanged = Subjects.OverlayModified.Subscribe(overlay =>
         {
-            OverlayBitmap = overlay;
+            OverlayBitmap = _overlayBitmap;
             OverlayVisible = true;
         });
 

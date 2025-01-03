@@ -166,35 +166,6 @@ internal partial class MainPage : EmptyPixedPage, IDisposable
         });
     }
 
-    private void Window_KeyUp(object? sender, KeyEventArgs e)
-    {
-        Keyboard.Modifiers = e.KeyModifiers;
-        Keyboard.ProcessReleased(e.Key);
-    }
-
-    private void Window_KeyDown(object? sender, KeyEventArgs e)
-    {
-        Keyboard.Modifiers = e.KeyModifiers;
-        Keyboard.ProcessPressed(e.Key);
-        Subjects.KeyState.OnNext(new KeyState(
-                e.Key,
-                Keyboard.Modifiers.HasFlag(KeyModifiers.Shift),
-                Keyboard.Modifiers.HasFlag(KeyModifiers.Control),
-                Keyboard.Modifiers.HasFlag(KeyModifiers.Alt)));
-    }
-
-    private void Window_PointerPressed(object? sender, PointerPressedEventArgs e)
-    {
-        var point = e.GetCurrentPoint(sender as Control);
-        Mouse.ProcessPoint(point);
-    }
-
-    private void Window_PointerReleased(object? sender, PointerReleasedEventArgs e)
-    {
-        var point = e.GetCurrentPoint(sender as Control);
-        Mouse.ProcessPoint(point);
-    }
-
     private async Task InitializeDataFolder()
     {
         _storageProviderHandle.StorageFolder.GetFiles(FolderType.Root);
