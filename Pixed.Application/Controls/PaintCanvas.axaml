@@ -34,9 +34,8 @@
 				  RenderOptions.BitmapInterpolationMode="None"
 				  Background="{Binding TransparentBrush}">
 					<controls:SkiaImage Name="image" RenderOptions.BitmapInterpolationMode="None" Source="{Binding ImageBitmap}"/>
-					<controls:SkiaImage Name="overlay" RenderOptions.BitmapInterpolationMode="None"/>
 					<controls:ImageGrid Width="{Binding ScaledGridWidth}" Height="{Binding ScaledGridHeight}" Name="gridCanvas" IsHitTestVisible="False"/>
-					<controls:SelectionOverlay Width="{Binding ScaledGridWidth}" Height="{Binding ScaledGridHeight}" Name="selectionOverlay" IsHitTestVisible="False" IsVisible="{Binding OverlayVisible}"/>
+					<controls:SelectionOverlay Width="{Binding ScaledGridWidth}" Height="{Binding ScaledGridHeight}" Name="selectionOverlay" IsHitTestVisible="False"/>
 				</Canvas>
 			</zoom:ZoomBorder>
 		</Border>

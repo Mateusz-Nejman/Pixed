@@ -98,32 +98,12 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
         }
     }
 
-    public SKBitmap? OverlayBitmap
-    {
-        get => _overlayBitmap;
-        set
-        {
-            _overlayBitmap = value;
-            OnPropertyChanged();
-        }
-    }
-
     public SKBitmap? ImageBitmap
     {
         get => _imageBitmap;
         set
         {
             _imageBitmap = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public bool OverlayVisible
-    {
-        get => _overlayVisible;
-        set
-        {
-            _overlayVisible = value;
             OnPropertyChanged();
         }
     }
@@ -251,7 +231,6 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
             RefreshGridCanvas();
             ProjectSizeText = "[" + p.Width + "x" + p.Height + "]";
             RenderBitmap = _frame.RenderSource?.Copy();
-            OverlayBitmap = _overlayBitmap;
         });
 
         _projectAdded = Subjects.ProjectAdded.Subscribe(p =>
@@ -306,8 +285,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
 
         _overlayChanged = Subjects.OverlayModified.Subscribe(overlay =>
         {
-            OverlayBitmap = overlay;
-            OverlayVisible = true;
+            _overlayBitmap = overlay;
         });
 
         _currentLayerRenderModified = Subjects.CurrentLayerRenderModified.Subscribe(pixels =>
@@ -354,6 +332,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
             {
                 SelectionOverlay.DrawLines = true;
                 SelectionOverlay.UpdateSelection(selection);
+                Subjects.OverlayModified.OnNext(null);
             }
         });
 
@@ -380,7 +359,10 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
             SKCanvas canvas = new(image);
             canvas.Clear(SKColors.Transparent);
             canvas.DrawBitmap(_renderBitmap, SKPoint.Empty);
-            canvas.DrawBitmap(_overlayBitmap, SKPoint.Empty);
+            if(_overlayBitmap != null)
+            {
+                canvas.DrawBitmap(_overlayBitmap, SKPoint.Empty);
+            }
             canvas.Dispose();
             ImageBitmap = image;
         });
@@ -400,7 +382,6 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
     }
     public void ClearOverlay()
     {
-        OverlayVisible = false;
         if (_overlayBitmap == null || _overlayBitmap.Width != _frame.Width || _overlayBitmap.Height != _frame.Height)
         {
             _overlayBitmap?.Dispose();
@@ -410,8 +391,6 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
         {
             _overlayBitmap.Clear();
         }
-
-        OverlayBitmap = _overlayBitmap;
     }
 
     public void RefreshGridCanvas()

@@ -56,7 +56,6 @@ public class SelectionManager
         var selection = ToolSelectRectangle.Create(new Point(), new Point(_applicationData.CurrentModel.Width - 1, _applicationData.CurrentModel.Height - 1), _applicationData.CurrentFrame);
         Subjects.SelectionCreating.OnNext(selection);
         Subjects.SelectionCreated.OnNext(selection);
-        Subjects.OverlayModified.OnNext(null);
     }
 
     public async Task Copy()

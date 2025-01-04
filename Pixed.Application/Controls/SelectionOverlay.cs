@@ -56,10 +56,6 @@ internal class SelectionOverlay : OverlayControl
 
         if (DrawLines)
         {
-            if (_lines.Count > 0)
-            {
-                _lines.Count.ToString();
-            }
             foreach (var line in _lines.ToArray())
             {
                 canvas.DrawLine(line.Item1, line.Item2, UniColor.Black);
