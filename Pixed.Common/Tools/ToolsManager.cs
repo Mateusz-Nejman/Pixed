@@ -5,25 +5,25 @@ using System.Collections.Generic;
 
 namespace Pixed.Common.Tools;
 
-public class ToolSelector
+public class ToolsManager
 {
     private readonly Dictionary<string, BaseTool> _tools;
-    private BaseTool? _toolSelected;
+    private BaseTool? _selectedTool;
 
     public Action<string>? SelectToolAction { get; set; } //TODO
-    public BaseTool? ToolSelected
+    public BaseTool? SelectedTool
     {
-        get => _toolSelected;
+        get => _selectedTool;
         set
         {
-            var prev = _toolSelected;
-            _toolSelected = value;
-            _toolSelected?.Initialize();
-            Subjects.ToolChanged.OnNext(new BaseToolPair(prev, _toolSelected));
+            var prev = _selectedTool;
+            _selectedTool = value;
+            _selectedTool?.Initialize();
+            Subjects.ToolChanged.OnNext(new BaseToolPair(prev, _selectedTool));
         }
     }
 
-    public ToolSelector(
+    public ToolsManager(
         ToolPen toolPen, ToolVerticalPen toolVerticalPen, ToolBucket toolBucket, ToolColorSwap toolColorSwap, ToolEraser toolEraser,
         ToolStroke toolStroke, ToolRectangle toolRectangle, ToolCircle toolCircle, ToolMove toolMove, ToolLighten toolLighten,
         ToolDithering toolDithering, ToolColorPicker toolColorPicker, ToolNoise toolNoise, ToolNoiseFill toolNoiseFill,

@@ -5,10 +5,10 @@ using Pixed.Core;
 using System;
 
 namespace Pixed.Application.Menu;
-internal class ToolsMenuRegister(IMenuItemRegistry menuItemRegistry, ToolSelector toolSelector)
+internal class ToolsMenuRegister(IMenuItemRegistry menuItemRegistry, ToolsManager toolSelector)
 {
     private readonly IMenuItemRegistry _menuItemRegistry = menuItemRegistry;
-    private readonly ToolSelector _toolSelector = toolSelector;
+    private readonly ToolsManager _toolSelector = toolSelector;
 
     public void Register()
     {

@@ -33,7 +33,7 @@ internal partial class Main : EmptyPixedPage, IDisposable
     private readonly ToolsMenuRegister _toolsMenuRegister;
     private readonly RecentFilesService _recentFilesService;
     private readonly PaletteService _paletteService;
-    private readonly ToolSelector _toolSelector;
+    private readonly ToolsManager _toolSelector;
     private readonly MenuBuilder _menuBuilder;
     private readonly IStorageProviderHandle _storageProviderHandle;
     private readonly IDisposable _newInstanceHandled;
@@ -53,7 +53,7 @@ internal partial class Main : EmptyPixedPage, IDisposable
         _viewMenuRegister = Get<ViewMenuRegister>();
         _toolsMenuRegister = Get<ToolsMenuRegister>();
         _recentFilesService = Get<RecentFilesService>();
-        _toolSelector = Get<ToolSelector>();
+        _toolSelector = Get<ToolsManager>();
         _menuBuilder = Get<MenuBuilder>();
         _paletteService = Get<PaletteService>();
         _storageProviderHandle = Get<IStorageProviderHandle>();

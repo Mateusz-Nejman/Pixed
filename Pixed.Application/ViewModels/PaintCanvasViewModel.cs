@@ -4,7 +4,6 @@ using Pixed.Application.Controls;
 using Pixed.Application.Input;
 using Pixed.Application.Zoom;
 using Pixed.Common;
-using Pixed.Common.Selection;
 using Pixed.Common.Services.Keyboard;
 using Pixed.Common.Tools;
 using Pixed.Core;
@@ -21,7 +20,7 @@ namespace Pixed.Application.ViewModels;
 internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
 {
     private readonly ApplicationData _applicationData;
-    private readonly ToolSelector _toolSelector;
+    private readonly ToolsManager _toolSelector;
     private SKBitmap? _overlayBitmap;
     private SKBitmap? _renderBitmap;
     private SKBitmap? _imageBitmap;
@@ -201,7 +200,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
         }
     }
 
-    public PaintCanvasViewModel(ApplicationData applicationData, ToolSelector toolSelector, ToolMoveCanvas toolMoveCanvas, SelectionManager selectionManager)
+    public PaintCanvasViewModel(ApplicationData applicationData, ToolsManager toolSelector, ToolMoveCanvas toolMoveCanvas, SelectionManager selectionManager)
     {
         _applicationData = applicationData;
         _toolSelector = toolSelector;
@@ -442,27 +441,27 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
 
     private void LeftMouseDownAction(MouseEvent mouseEvent)
     {
-        if (!_frame.ContainsPixel(mouseEvent.Point) || _toolSelector.ToolSelected == null)
+        if (!_frame.ContainsPixel(mouseEvent.Point) || _toolSelector.SelectedTool == null)
         {
             return;
         }
 
         _leftPressed = true;
-        _toolSelector.ToolSelected?.ApplyTool(mouseEvent.Point, _frame, ref _overlayBitmap, _currentKeyState);
+        _toolSelector.SelectedTool?.ApplyTool(mouseEvent.Point, _frame, ref _overlayBitmap, _currentKeyState);
         Subjects.FrameModified.OnNext(_frame);
     }
 
     private void LeftMouseUpAction(MouseEvent mouseEvent)
     {
-        if (!_frame.ContainsPixel(mouseEvent.Point) || _toolSelector.ToolSelected == null)
+        if (!_frame.ContainsPixel(mouseEvent.Point) || _toolSelector.SelectedTool == null)
         {
             return;
         }
 
         _leftPressed = false;
-        _toolSelector.ToolSelected?.ReleaseTool(mouseEvent.Point, _frame, ref _overlayBitmap, _currentKeyState);
+        _toolSelector.SelectedTool?.ReleaseTool(mouseEvent.Point, _frame, ref _overlayBitmap, _currentKeyState);
 
-        if (_toolSelector.ToolSelected != null && _toolSelector.ToolSelected.AddToHistory)
+        if (_toolSelector.SelectedTool != null && _toolSelector.SelectedTool.AddToHistory)
         {
             _applicationData.CurrentModel.AddHistory();
         }
@@ -472,26 +471,26 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
 
     private void RightMouseDownAction(MouseEvent mouseEvent)
     {
-        if (!_frame.ContainsPixel(mouseEvent.Point) || _toolSelector.ToolSelected == null)
+        if (!_frame.ContainsPixel(mouseEvent.Point) || _toolSelector.SelectedTool == null)
         {
             return;
         }
 
         _rightPressed = true;
-        _toolSelector.ToolSelected?.ApplyTool(mouseEvent.Point, _frame, ref _overlayBitmap, _currentKeyState);
+        _toolSelector.SelectedTool?.ApplyTool(mouseEvent.Point, _frame, ref _overlayBitmap, _currentKeyState);
     }
 
     private void RightMouseUpAction(MouseEvent mouseEvent)
     {
-        if (!_frame.ContainsPixel(mouseEvent.Point) || _toolSelector.ToolSelected == null)
+        if (!_frame.ContainsPixel(mouseEvent.Point) || _toolSelector.SelectedTool == null)
         {
             return;
         }
 
         _rightPressed = false;
-        _toolSelector.ToolSelected?.ReleaseTool(mouseEvent.Point, _frame, ref _overlayBitmap, _currentKeyState);
+        _toolSelector.SelectedTool?.ReleaseTool(mouseEvent.Point, _frame, ref _overlayBitmap, _currentKeyState);
 
-        if (_toolSelector.ToolSelected != null && _toolSelector.ToolSelected.AddToHistory)
+        if (_toolSelector.SelectedTool != null && _toolSelector.SelectedTool.AddToHistory)
         {
             _applicationData.CurrentModel.AddHistory();
         }
@@ -503,7 +502,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
     {
         MouseCoordinatesText = "[" + mouseEvent.Point.X + "x" + mouseEvent.Point.Y + "]";
 
-        if (!_frame.ContainsPixel(mouseEvent.Point) || _toolSelector.ToolSelected == null)
+        if (!_frame.ContainsPixel(mouseEvent.Point) || _toolSelector.SelectedTool == null)
         {
             return;
         }
@@ -515,11 +514,11 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
 
         if (_leftPressed || _rightPressed)
         {
-            _toolSelector.ToolSelected.MoveTool(mouseEvent.Point, _frame, ref _overlayBitmap, _currentKeyState);
+            _toolSelector.SelectedTool.MoveTool(mouseEvent.Point, _frame, ref _overlayBitmap, _currentKeyState);
         }
         else
         {
-            _toolSelector.ToolSelected.UpdateHighlightedPixel(mouseEvent.Point, _frame, ref _overlayBitmap);
+            _toolSelector.SelectedTool.UpdateHighlightedPixel(mouseEvent.Point, _frame, ref _overlayBitmap);
         }
 
 
@@ -529,7 +528,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
     {
         if (_rightPressed || _leftPressed)
         {
-            _toolSelector.ToolSelected?.ReleaseTool(new Point(), _frame, ref _overlayBitmap, _currentKeyState);
+            _toolSelector.SelectedTool?.ReleaseTool(new Point(), _frame, ref _overlayBitmap, _currentKeyState);
         }
         _rightPressed = false;
         _leftPressed = false;
@@ -539,7 +538,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
     {
         List<Pixel>? pixels = null;
 
-        if (_toolSelector.ToolSelected is ToolPen pen)
+        if (_toolSelector.SelectedTool is ToolPen pen)
         {
             pixels = pen.GetPixels();
         }

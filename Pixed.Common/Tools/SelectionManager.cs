@@ -2,7 +2,6 @@
 using Pixed.BigGustave;
 using Pixed.Common.Platform;
 using Pixed.Common.Services.Keyboard;
-using Pixed.Common.Tools;
 using Pixed.Common.Tools.Selection;
 using Pixed.Core;
 using Pixed.Core.Models;
@@ -14,19 +13,19 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Pixed.Common.Selection;
+namespace Pixed.Common.Tools;
 
 public class SelectionManager
 {
     private readonly ApplicationData _applicationData;
-    private readonly ToolSelector _toolSelector;
+    private readonly ToolsManager _toolSelector;
     private readonly IClipboardHandle _clipboardHandle;
     private BaseSelection? _currentSelection;
 
     public bool HasSelection => _currentSelection != null;
     public BaseSelection? Selection => _currentSelection;
 
-    public SelectionManager(ApplicationData applicationData, ShortcutService shortcutService, ToolSelector toolSelector, IClipboardHandle clipboardHandle)
+    public SelectionManager(ApplicationData applicationData, ShortcutService shortcutService, ToolsManager toolSelector, IClipboardHandle clipboardHandle)
     {
         _applicationData = applicationData;
         _toolSelector = toolSelector;
@@ -86,9 +85,9 @@ public class SelectionManager
     {
         var newTool = _toolSelector.GetTool("tool_rectangle_select");
 
-        if (_toolSelector.ToolSelected != newTool)
+        if (_toolSelector.SelectedTool != newTool)
         {
-            _toolSelector.ToolSelected = newTool;
+            _toolSelector.SelectedTool = newTool;
         }
         SKBitmap? source = await CreateBitmapFromClipboard();
 
@@ -157,7 +156,7 @@ public class SelectionManager
 
     private bool IsSelectToolActive()
     {
-        return _toolSelector.ToolSelected is ToolSelectBase;
+        return _toolSelector.SelectedTool is ToolSelectBase;
     }
 
     private async Task<SKBitmap?> CreateBitmapFromClipboard()

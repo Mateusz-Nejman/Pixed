@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Pixed.Common.Selection;
 using Pixed.Common.Services.Keyboard;
 using Pixed.Common.Services.Palette;
 using Pixed.Common.Tools;
@@ -13,7 +12,7 @@ public class DependencyInjectionRegister : IDependencyRegister
     {
         collection.AddSingleton<ApplicationData>();
         collection.AddSingleton<SelectionManager>();
-        collection.AddSingleton<ToolSelector>();
+        collection.AddSingleton<ToolsManager>();
         collection.AddSingleton<ShortcutService>();
         collection.AddSingleton<PaletteService>();
 
