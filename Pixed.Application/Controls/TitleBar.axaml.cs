@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Pixed.Application.Controls;
 
-internal partial class TitleBar : EmptyPixedUserControl
+internal partial class TitleBar : EmptyExtendedControl
 {
     public string Title
     {

@@ -20,7 +20,7 @@ using System.Windows.Input;
 
 namespace Pixed.Application.ViewModels;
 
-internal class PaletteSectionViewModel : PixedViewModel, IDisposable
+internal class PaletteSectionViewModel : ExtendedViewModel, IDisposable
 {
     private readonly ApplicationData _applicationData;
     private readonly IMenuItemRegistry _menuItemRegistry;

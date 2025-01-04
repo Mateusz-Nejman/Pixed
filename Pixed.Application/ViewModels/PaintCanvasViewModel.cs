@@ -18,7 +18,7 @@ using Frame = Pixed.Core.Models.Frame;
 
 namespace Pixed.Application.ViewModels;
 
-internal class PaintCanvasViewModel : PixedViewModel, IDisposable
+internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
 {
     private readonly ApplicationData _applicationData;
     private readonly ToolSelector _toolSelector;

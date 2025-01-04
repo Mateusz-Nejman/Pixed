@@ -6,7 +6,7 @@ using Pixed.Common.Menu;
 using System;
 
 namespace Pixed.Application.Controls;
-internal abstract class PixedUserControl<T> : UserControl
+internal abstract class ExtendedControl<T> : UserControl
 {
     protected readonly IMenuItemRegistry _menuItemRegistry;
 
@@ -14,7 +14,7 @@ internal abstract class PixedUserControl<T> : UserControl
 
     public T ViewModel => (T)DataContext;
 
-    public PixedUserControl()
+    public ExtendedControl()
     {
         _menuItemRegistry = Provider.Get<IMenuItemRegistry>();
         var serviceProvider = this.GetServiceProvider();
@@ -28,7 +28,7 @@ internal abstract class PixedUserControl<T> : UserControl
 
     public virtual void RegisterMenuItems()
     {
-        if (DataContext is PixedViewModel model)
+        if (DataContext is ExtendedViewModel model)
         {
             model.RegisterMenuItems();
         }
@@ -49,7 +49,7 @@ internal abstract class PixedUserControl<T> : UserControl
     private void PixedUserControl_Loaded(object? sender, RoutedEventArgs e)
     {
         OnLoaded();
-        if (DataContext is PixedViewModel model)
+        if (DataContext is ExtendedViewModel model)
         {
             model.OnLoaded();
         }
@@ -63,7 +63,7 @@ internal abstract class PixedUserControl<T> : UserControl
     }
 }
 
-internal abstract class EmptyPixedUserControl() : UserControl
+internal abstract class EmptyExtendedControl() : UserControl
 {
     protected override void OnInitialized()
     {

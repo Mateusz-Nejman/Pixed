@@ -11,7 +11,7 @@ using System;
 
 namespace Pixed.Application.Controls;
 
-internal partial class PaintCanvas : PixedUserControl<PaintCanvasViewModel>
+internal partial class PaintCanvas : ExtendedControl<PaintCanvasViewModel>
 {
     private readonly int _scrollBarSize = 18;
     private readonly IDisposable _zoomChanged;

@@ -30,7 +30,7 @@ internal abstract class PixedPage<T> : Page
 
     public virtual void RegisterMenuItems()
     {
-        if (DataContext is PixedViewModel model)
+        if (DataContext is ExtendedViewModel model)
         {
             model.RegisterMenuItems();
         }
@@ -44,7 +44,7 @@ internal abstract class PixedPage<T> : Page
     private void PixedPage_Loaded(object? sender, RoutedEventArgs e)
     {
         OnLoaded();
-        if (DataContext is PixedViewModel model)
+        if (DataContext is ExtendedViewModel model)
         {
             model.OnLoaded();
         }
@@ -76,7 +76,7 @@ internal abstract class EmptyPixedPage : Page
 
     public virtual void RegisterMenuItems()
     {
-        if (DataContext is PixedViewModel model)
+        if (DataContext is ExtendedViewModel model)
         {
             model.RegisterMenuItems();
         }
@@ -90,7 +90,7 @@ internal abstract class EmptyPixedPage : Page
     private void EmptyPixedUserControl_Loaded(object? sender, RoutedEventArgs e)
     {
         OnLoaded();
-        if (DataContext is PixedViewModel model)
+        if (DataContext is ExtendedViewModel model)
         {
             model.OnLoaded();
         }

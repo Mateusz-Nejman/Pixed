@@ -10,7 +10,7 @@ using System.Windows.Input;
 
 namespace Pixed.Application.ViewModels;
 
-internal class PaletteListViewModel : PixedViewModel
+internal class PaletteListViewModel : ExtendedViewModel
 {
     public struct PaletteData
     {

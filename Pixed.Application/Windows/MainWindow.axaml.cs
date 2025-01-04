@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Pixed.Application.Windows;
 
-internal partial class MainWindow : Modal<MainViewModel>
+internal partial class MainWindow : ExtendedWindow<MainViewModel>
 {
     private readonly PixedProjectMethods _pixedProjectMethods;
     private readonly IPlatformSettings _lifecycle;

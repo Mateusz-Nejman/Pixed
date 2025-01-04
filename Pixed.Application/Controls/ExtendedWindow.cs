@@ -6,7 +6,7 @@ using Pixed.Common.Menu;
 using System;
 
 namespace Pixed.Application.Controls;
-internal abstract class Modal<T> : Window
+internal abstract class ExtendedWindow<T> : Window
 {
     protected readonly IMenuItemRegistry _menuItemRegistry;
 
@@ -14,7 +14,7 @@ internal abstract class Modal<T> : Window
 
     public T ViewModel => (T)DataContext;
 
-    public Modal()
+    public ExtendedWindow()
     {
         _menuItemRegistry = Provider.Get<IMenuItemRegistry>();
         var serviceProvider = this.GetServiceProvider();
@@ -30,7 +30,7 @@ internal abstract class Modal<T> : Window
 
     public virtual void RegisterMenuItems()
     {
-        if (DataContext is PixedViewModel model)
+        if (DataContext is ExtendedViewModel model)
         {
             model.RegisterMenuItems();
         }
@@ -44,7 +44,7 @@ internal abstract class Modal<T> : Window
     private void PixedWindow_Loaded(object? sender, RoutedEventArgs e)
     {
         OnLoaded();
-        if (DataContext is PixedViewModel model)
+        if (DataContext is ExtendedViewModel model)
         {
             model.OnLoaded();
         }
@@ -58,11 +58,11 @@ internal abstract class Modal<T> : Window
     }
 }
 
-internal abstract class EmptyPixedWindow : Window
+internal abstract class EmptyExtendedWindow : Window
 {
     protected readonly IMenuItemRegistry _menuItemRegistry;
     protected static IPixedServiceProvider Provider => App.ServiceProvider;
-    public EmptyPixedWindow() : base()
+    public EmptyExtendedWindow() : base()
     {
         _menuItemRegistry = Provider.Get<IMenuItemRegistry>();
         Unloaded += PixedWindow_Unloaded;
@@ -76,7 +76,7 @@ internal abstract class EmptyPixedWindow : Window
 
     public virtual void RegisterMenuItems()
     {
-        if (DataContext is PixedViewModel model)
+        if (DataContext is ExtendedViewModel model)
         {
             model.RegisterMenuItems();
         }
@@ -90,7 +90,7 @@ internal abstract class EmptyPixedWindow : Window
     private void PixedWindow_Loaded(object? sender, RoutedEventArgs e)
     {
         OnLoaded();
-        if (DataContext is PixedViewModel model)
+        if (DataContext is ExtendedViewModel model)
         {
             model.OnLoaded();
         }

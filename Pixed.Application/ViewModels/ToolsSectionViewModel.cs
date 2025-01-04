@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using IPlatformSettings = Pixed.Application.Platform.IPlatformSettings;
 
 namespace Pixed.Application.ViewModels;
-internal class ToolsSectionViewModel(ToolSelector toolSelector, PaintCanvasViewModel paintCanvas, IPlatformSettings platformSettings) : PixedViewModel
+internal class ToolsSectionViewModel(ToolSelector toolSelector, PaintCanvasViewModel paintCanvas, IPlatformSettings platformSettings) : ExtendedViewModel
 {
     private readonly ToolSelector _toolSelector = toolSelector;
     private readonly PaintCanvasViewModel _paintCanvas = paintCanvas;

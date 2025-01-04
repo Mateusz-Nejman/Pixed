@@ -9,7 +9,7 @@ using System.Windows.Input;
 
 namespace Pixed.Application.ViewModels;
 
-internal class MainViewModel : PixedViewModel, IDisposable
+internal class MainViewModel : ExtendedViewModel, IDisposable
 {
     private readonly IDisposable _projectChanged;
     private readonly IDisposable _menuBuilt;

@@ -1,6 +1,6 @@
 ﻿namespace Pixed.Application.Controls;
 
-internal partial class LayerListControl : EmptyPixedUserControl
+internal partial class LayerListControl : EmptyExtendedControl
 {
     public LayerListControl() : base()
     {

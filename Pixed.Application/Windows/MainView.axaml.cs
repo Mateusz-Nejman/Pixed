@@ -3,7 +3,7 @@ using Pixed.Application.ViewModels;
 
 namespace Pixed.Application;
 
-internal partial class MainView : PixedUserControl<MainViewModel>
+internal partial class MainView : ExtendedControl<MainViewModel>
 {
     public MainView()
     {

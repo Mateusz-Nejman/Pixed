@@ -11,7 +11,7 @@ using System.Windows.Input;
 
 namespace Pixed.Application.ViewModels;
 
-internal class LayersSectionViewModel : PixedViewModel, IDisposable
+internal class LayersSectionViewModel : ExtendedViewModel, IDisposable
 {
     private readonly ApplicationData _applicationData;
     private readonly IMenuItemRegistry _menuItemRegistry;
