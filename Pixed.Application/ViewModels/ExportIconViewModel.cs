@@ -1,7 +1,7 @@
 ﻿using Pixed.Application.Controls;
 
 namespace Pixed.Application.ViewModels;
-internal class ExportIconWindowViewModel : PixedViewModel
+internal class ExportIconViewModel : PixedViewModel
 {
     private bool _check512;
     private bool _check256;

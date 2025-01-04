@@ -7,11 +7,11 @@ namespace Pixed.Application.Pages;
 
 internal partial class ExportIcon : Modal
 {
-    private readonly ExportIconWindowViewModel _viewModel;
+    private readonly ExportIconViewModel _viewModel;
     public ExportIcon()
     {
         InitializeComponent();
-        _viewModel = DataContext as ExportIconWindowViewModel;
+        _viewModel = DataContext as ExportIconViewModel;
     }
 
     private List<Point> GetIconFormats()

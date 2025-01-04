@@ -7,9 +7,9 @@
         x:Class="Pixed.Application.Pages.ResizeProject"
         Title="Resize Project"
         xmlns:vm="clr-namespace:Pixed.Application.ViewModels"
-		x:DataType="vm:ResizeProjectWindowViewModel">
+		x:DataType="vm:ResizeProjectViewModel">
   <local:Modal.DataContext>
-    <vm:ResizeProjectWindowViewModel/>
+    <vm:ResizeProjectViewModel/>
   </local:Modal.DataContext>
   <local:Modal.Dialog>
     <StackPanel>

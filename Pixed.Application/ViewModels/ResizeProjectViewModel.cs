@@ -3,7 +3,7 @@ using Pixed.Core;
 using System.Collections.Generic;
 
 namespace Pixed.Application.ViewModels;
-internal class ResizeProjectWindowViewModel : PropertyChangedBase
+internal class ResizeProjectViewModel : PropertyChangedBase
 {
     private int _width;
     private int _height;

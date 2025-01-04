@@ -8,7 +8,7 @@
 		xmlns:controls="clr-namespace:Pixed.Application.Controls"
         mc:Ignorable="d"
         Title="Palette list" Height="600" Width="800" 
-		x:DataType="viewmodels:PaletteWindowViewModel">
+		x:DataType="viewmodels:PaletteListViewModel">
   <local:Modal.Dialog>
     <Grid>
       <Grid.RowDefinitions>

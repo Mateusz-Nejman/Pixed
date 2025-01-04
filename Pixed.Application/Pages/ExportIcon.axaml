@@ -7,9 +7,9 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Pixed.Application.Pages.ExportIcon"
         Title="Export Icon"
-		x:DataType="viewModels:ExportIconWindowViewModel">
+		x:DataType="viewModels:ExportIconViewModel">
   <local:Modal.DataContext>
-		<viewModels:ExportIconWindowViewModel/>
+		<viewModels:ExportIconViewModel/>
 	</local:Modal.DataContext>
   <local:Modal.Dialog>
     <StackPanel>

@@ -5,11 +5,11 @@ namespace Pixed.Application.Pages;
 
 internal partial class PaletteList : Modal
 {
-    private readonly PaletteWindowViewModel _viewModel;
+    private readonly PaletteListViewModel _viewModel;
     public PaletteList()
     {
         InitializeComponent();
-        DataContext = _viewModel = new PaletteWindowViewModel(Provider.Get<PaletteService>(), Provider.Get<PaletteSectionViewModel>());
+        DataContext = _viewModel = new PaletteListViewModel(Provider.Get<PaletteService>(), Provider.Get<PaletteSectionViewModel>());
 
         if (_viewModel.Palettes.Count != 0)
         {
