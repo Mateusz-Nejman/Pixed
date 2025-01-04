@@ -306,7 +306,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
 
         _overlayChanged = Subjects.OverlayModified.Subscribe(overlay =>
         {
-            OverlayBitmap = _overlayBitmap;
+            OverlayBitmap = overlay;
             OverlayVisible = true;
         });
 
@@ -372,7 +372,7 @@ internal class PaintCanvasViewModel : PixedViewModel, IDisposable
 
         _renderInterval = Observable.Interval(TimeSpan.FromMilliseconds(100)).Subscribe(l =>
         {
-            if(_renderBitmap == null)
+            if (_renderBitmap == null)
             {
                 return;
             }

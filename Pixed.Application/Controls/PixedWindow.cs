@@ -6,7 +6,7 @@ using Pixed.Common.Menu;
 using System;
 
 namespace Pixed.Application.Controls;
-internal abstract class PixedWindow<T> : Window
+internal abstract class Modal<T> : Window
 {
     protected readonly IMenuItemRegistry _menuItemRegistry;
 
@@ -14,7 +14,7 @@ internal abstract class PixedWindow<T> : Window
 
     public T ViewModel => (T)DataContext;
 
-    public PixedWindow()
+    public Modal()
     {
         _menuItemRegistry = Provider.Get<IMenuItemRegistry>();
         var serviceProvider = this.GetServiceProvider();

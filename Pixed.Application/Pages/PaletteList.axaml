@@ -1,0 +1,56 @@
+﻿<local:Modal x:Class="Pixed.Application.Pages.PaletteList"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Pixed.Application.Pages" 
+		xmlns:viewmodels="clr-namespace:Pixed.Application.ViewModels" 
+		xmlns:controls="clr-namespace:Pixed.Application.Controls"
+        mc:Ignorable="d"
+        Title="Palette list" Height="600" Width="800" 
+		x:DataType="viewmodels:PaletteWindowViewModel">
+  <local:Modal.Dialog>
+    <Grid>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="40"/>
+        <RowDefinition Height="*"/>
+      </Grid.RowDefinitions>
+
+      <ScrollViewer Grid.Row="1">
+        <ListBox Background="{StaticResource BaseBackground}" ItemsSource="{Binding Palettes}" HorizontalAlignment="Stretch">
+          <ListBox.ItemTemplate>
+            <DataTemplate>
+              <Grid>
+                <Grid.RowDefinitions>
+                  <RowDefinition Height="20"/>
+                  <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="*"/>
+                  <ColumnDefinition Width="40"/>
+                  <ColumnDefinition Width="40"/>
+                  <ColumnDefinition Width="40"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding Name}" FontWeight="Bold" Foreground="White" Grid.ColumnSpan="4"/>
+                <Image Source="{Binding BitmapImage}" Grid.Row="1"/>
+                <Button Grid.Column="1" Grid.Row="1" BorderThickness="0" Background="Transparent" Command="{Binding SelectCommand}" CommandParameter="{Binding Model}">
+
+                  <Image Source="avares://Pixed.Application/Resources/Icons/checkmark.png"/>
+                </Button>
+                <Button Grid.Column="2" Grid.Row="1" BorderThickness="0" Background="Transparent" Command="{Binding RenameCommand}" CommandParameter="{Binding Model}">
+
+                  <Image Source="avares://Pixed.Application/Resources/Icons/pencil.png"/>
+                </Button>
+                <Button Grid.Column="3" Grid.Row="1" BorderThickness="0" Background="Transparent" Command="{Binding RemoveCommand}" CommandParameter="{Binding Model}">
+
+                  <Image Source="avares://Pixed.Application/Resources/Icons/bin.png"/>
+                </Button>
+              </Grid>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </ScrollViewer>
+      <TextBlock Text="No palettes found" Grid.Row="1" Name="noPalettesInfo" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+    </Grid>
+  </local:Modal.Dialog>
+</local:Modal>

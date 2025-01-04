@@ -3,17 +3,18 @@ using Avalonia.Input;
 using Pixed.Application.Controls;
 using Pixed.Application.Input;
 using Pixed.Application.IO;
+using Pixed.Application.Pages;
 using Pixed.Application.Platform;
 using Pixed.Application.ViewModels;
+using Pixed.Common;
 using Pixed.Common.Input;
 using Pixed.Common.Services.Keyboard;
-using Pixed.Common;
 using System.IO;
 using System.Threading.Tasks;
 
 namespace Pixed.Application.Windows;
 
-internal partial class MainWindow : PixedWindow<MainViewModel>
+internal partial class MainWindow : Modal<MainViewModel>
 {
     private readonly PixedProjectMethods _pixedProjectMethods;
     private readonly IPlatformSettings _lifecycle;
@@ -40,13 +41,13 @@ internal partial class MainWindow : PixedWindow<MainViewModel>
     {
         e.Cancel = true;
 
-        if(_closeStarted)
+        if (_closeStarted)
         {
             return;
         }
 
         _closeStarted = true;
-        var canQuit = await MainPage.Close();
+        var canQuit = await Main.Close();
 
         if (canQuit)
         {

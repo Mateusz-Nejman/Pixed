@@ -331,7 +331,7 @@
 			<Setter Property="Grid.RowSpan" Value="2" />
 		</Style>
 	</ControlTheme>
-	<ControlTheme x:Key="MainPage" TargetType="Page">
+	<ControlTheme x:Key="Main" TargetType="Page">
 		<Setter Property="Background" Value="{DynamicResource PageBackground}" />
 		<Setter Property="Template">
 			<ControlTemplate>

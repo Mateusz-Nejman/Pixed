@@ -5,10 +5,8 @@ using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
 using Avalonia.Threading;
-using Pixed.Application.Utils;
 using Pixed.Core.Models;
 using Pixed.Core.Utils;
-using SkiaSharp;
 using System;
 using System.Reactive.Linq;
 
@@ -34,7 +32,7 @@ internal class ProjectAnimation : Control
         }
         public void Render(ImmediateDrawingContext context)
         {
-            if(_frameIndex >= _applicationData.CurrentModel.Frames.Count)
+            if (_frameIndex >= _applicationData.CurrentModel.Frames.Count)
             {
                 return;
             }
@@ -54,8 +52,8 @@ internal class ProjectAnimation : Control
                     var canvas = lease.SkCanvas;
                     double ratio = Bounds.Width / _width;
                     double height = _height * ratio;
-                    
-                    if(!SkiaUtils.IsNull(renderSource))
+
+                    if (!SkiaUtils.IsNull(renderSource))
                     {
                         canvas.DrawBitmap(renderSource, new Rect(Bounds.X, Bounds.Y, Bounds.Width, height));
                     }

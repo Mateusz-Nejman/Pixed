@@ -10,7 +10,6 @@ using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
 using Pixed.Core.Utils;
 using SkiaSharp;
-using System;
 
 namespace Pixed.Application.Controls;
 internal class SkiaImage : Control

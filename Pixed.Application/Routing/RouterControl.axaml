@@ -2,7 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:windows="clr-namespace:Pixed.Application.Windows"
+             xmlns:windows="clr-namespace:Pixed.Application.Pages"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Pixed.Application.Routing.RouterControl">
   <ShellView Name="ShellViewMain"
@@ -12,22 +12,22 @@
              DefaultSideMenuSize="0"
              NavigationBar.Visible="False">
 
-    <Route Path="main" Page="windows:MainPage"/>
-    <Route Path="about" Page="windows:AboutWindow" Type="Modal"/>
-    <Route Path="gridSettings" Page="windows:GridSettingsWindow" Type="Modal"/>
-    <Route Path="resizeProject" Page="windows:ResizeProjectWindow" Type="Modal"/>
-    <Route Path="palettes" Page="windows:PaletteWindow" Type="Modal"/>
-    <Route Path="transformAlign" Page="windows:TransformAlignWindow" Type="Modal"/>
-    <Route Path="transformFlip" Page="windows:TransformFlipWindow" Type="Modal"/>
-    <Route Path="transformRotate" Page="windows:TransformRotateWindow" Type="Modal"/>
-    <Route Path="newProject" Page="windows:NewProjectWindow" Type="Modal"/>
-    <Route Path="confirm" Page="windows:ConfirmWindow" Type="Modal"/>
-	<Route Path="prompt" Page="windows:PromptWindow" Type="Modal"/>
-	<Route Path="message" Page="windows:MessageWindow" Type="Modal"/>
-	<Route Path="numericPrompt" Page="windows:NumericPromptWindow" Type="Modal"/>
-    <Route Path="exportIcon" Page="windows:ExportIconWindow" Type="Modal"/>
-    <Route Path="exportPng" Page="windows:ExportPNGWindow" Type="Modal"/>
-    <Route Path="openPng" Page="windows:OpenPNGWindow" Type="Modal"/>
-	<Route Path="openSvg" Page="windows:OpenSVGWindow" Type="Modal"/>
+    <Route Path="main" Page="windows:Main"/>
+    <Route Path="about" Page="windows:About" Type="Modal"/>
+    <Route Path="gridSettings" Page="windows:GridSettings" Type="Modal"/>
+    <Route Path="resizeProject" Page="windows:ResizeProject" Type="Modal"/>
+    <Route Path="palettes" Page="windows:PaletteList" Type="Modal"/>
+    <Route Path="transformAlign" Page="windows:TransformAlign" Type="Modal"/>
+    <Route Path="transformFlip" Page="windows:TransformFlip" Type="Modal"/>
+    <Route Path="transformRotate" Page="windows:TransformRotate" Type="Modal"/>
+    <Route Path="newProject" Page="windows:NewProject" Type="Modal"/>
+    <Route Path="confirm" Page="windows:Confirm" Type="Modal"/>
+	<Route Path="prompt" Page="windows:Prompt" Type="Modal"/>
+	<Route Path="message" Page="windows:Message" Type="Modal"/>
+	<Route Path="numericPrompt" Page="windows:NumericPrompt" Type="Modal"/>
+    <Route Path="exportIcon" Page="windows:ExportIcon" Type="Modal"/>
+    <Route Path="exportPng" Page="windows:ExportPNG" Type="Modal"/>
+    <Route Path="openPng" Page="windows:OpenPNG" Type="Modal"/>
+	<Route Path="openSvg" Page="windows:OpenSVG" Type="Modal"/>
   </ShellView>
 </UserControl>
