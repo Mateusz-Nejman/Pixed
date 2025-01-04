@@ -3,9 +3,9 @@ using Avalonia.Input;
 using Pixed.Application.Controls;
 using Pixed.Application.Input;
 using Pixed.Application.ViewModels;
+using Pixed.Common;
 using Pixed.Common.Input;
 using Pixed.Common.Services.Keyboard;
-using Pixed.Common;
 
 namespace Pixed.Application;
 

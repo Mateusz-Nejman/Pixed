@@ -99,7 +99,7 @@ internal class SelectionOverlay : OverlayControl
             if (hsl.L < 0.5d)
             {
                 color = color.Darken(10);
-                
+
             }
             else
             {

@@ -359,7 +359,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
             SKCanvas canvas = new(image);
             canvas.Clear(SKColors.Transparent);
             canvas.DrawBitmap(_renderBitmap, SKPoint.Empty);
-            if(_overlayBitmap != null)
+            if (_overlayBitmap != null)
             {
                 canvas.DrawBitmap(_overlayBitmap, SKPoint.Empty);
             }
