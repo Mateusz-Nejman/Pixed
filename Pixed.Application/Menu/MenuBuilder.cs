@@ -2,11 +2,11 @@
 using Pixed.Application.Extensions;
 using Pixed.Application.IO;
 using Pixed.Application.Models;
+using Pixed.Application.Pages;
 using Pixed.Application.Platform;
 using Pixed.Application.Routing;
 using Pixed.Application.Services;
 using Pixed.Application.Utils;
-using Pixed.Application.Windows;
 using Pixed.Common;
 using Pixed.Common.Menu;
 using Pixed.Common.Models;
@@ -136,7 +136,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
 
         MenuItem fileQuit = new("Quit")
         {
-            Command = MainPage.QuitCommand,
+            Command = Main.QuitCommand,
             Icon = new("avares://Pixed.Application/Resources/Icons/cross-menu.png")
         };
 

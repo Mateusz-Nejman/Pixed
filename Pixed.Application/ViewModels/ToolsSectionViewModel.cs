@@ -13,9 +13,9 @@ using System.Collections.Generic;
 using IPlatformSettings = Pixed.Application.Platform.IPlatformSettings;
 
 namespace Pixed.Application.ViewModels;
-internal class ToolsSectionViewModel(ToolSelector toolSelector, PaintCanvasViewModel paintCanvas, IPlatformSettings platformSettings) : PixedViewModel
+internal class ToolsSectionViewModel(ToolsManager toolSelector, PaintCanvasViewModel paintCanvas, IPlatformSettings platformSettings) : ExtendedViewModel
 {
-    private readonly ToolSelector _toolSelector = toolSelector;
+    private readonly ToolsManager _toolSelector = toolSelector;
     private readonly PaintCanvasViewModel _paintCanvas = paintCanvas;
     private readonly Dictionary<string, ToolRadioButton> _radios = [];
     private readonly IPlatformSettings _platformSettings = platformSettings;
@@ -84,7 +84,7 @@ internal class ToolsSectionViewModel(ToolSelector toolSelector, PaintCanvasViewM
             }
             string name = radio.Name;
 
-            _toolSelector.ToolSelected = _toolSelector.GetTool(name);
+            _toolSelector.SelectedTool = _toolSelector.GetTool(name);
             _paintCanvas.ClearOverlay();
         }
     }

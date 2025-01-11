@@ -8,6 +8,10 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Pixed.Application.MainView"
 			 x:DataType="viewmodels:MainViewModel"
+			 KeyDown="View_KeyDown"
+			 KeyUp="View_KeyUp"
+			 PointerPressed="View_PointerPressed"
+			 PointerReleased="View_PointerReleased"
 			 Background="{StaticResource BaseBackground}">
 	<UserControl.KeyBindings>
 		<KeyBinding Gesture="CTRL+Q"

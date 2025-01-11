@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Windows.Input;
 
 namespace Pixed.Application.ViewModels;
-internal class AboutViewModel : PixedViewModel
+internal class AboutViewModel : ExtendedViewModel
 {
     public ICommand OpenUrlCommand { get; }
     public string AppVersion { get; }

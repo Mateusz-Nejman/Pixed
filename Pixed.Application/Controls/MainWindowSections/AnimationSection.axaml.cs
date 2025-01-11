@@ -1,6 +1,4 @@
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 using Pixed.Common;
 using Pixed.Core.Models;
 using System;

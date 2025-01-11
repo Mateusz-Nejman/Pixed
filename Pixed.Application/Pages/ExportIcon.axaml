@@ -1,0 +1,27 @@
+<local:Modal xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+				xmlns:viewModels="clr-namespace:Pixed.Application.ViewModels;assembly=Pixed.Application"
+        xmlns:local="clr-namespace:Pixed.Application.Pages;assembly=Pixed.Application"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Pixed.Application.Pages.ExportIcon"
+        Title="Export Icon"
+		x:DataType="viewModels:ExportIconViewModel">
+  <local:Modal.DataContext>
+		<viewModels:ExportIconViewModel/>
+	</local:Modal.DataContext>
+  <local:Modal.Dialog>
+    <StackPanel>
+      <TextBlock Text="Icon formats:" Margin="10"/>
+      <CheckBox Content="512x512" Margin="10" IsChecked="{Binding Check512, Mode=TwoWay}"/>
+      <CheckBox Content="256x256" Margin="10" IsChecked="{Binding Check256, Mode=TwoWay}"/>
+      <CheckBox Content="128x128" Margin="10" IsChecked="{Binding Check128, Mode=TwoWay}"/>
+      <CheckBox Content="64x64" Margin="10" IsChecked="{Binding Check64, Mode=TwoWay}"/>
+      <CheckBox Content="32x32" Margin="10" IsChecked="{Binding Check32, Mode=TwoWay}"/>
+      <CheckBox Content="16x16" Margin="10" IsChecked="{Binding Check16, Mode=TwoWay}"/>
+      <Button Content="OK" Click="Button_Click"
+        Height="24" MinWidth="80" Padding="10,0" Margin="10"/>
+    </StackPanel>
+  </local:Modal.Dialog>
+</local:Modal>

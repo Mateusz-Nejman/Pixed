@@ -1,6 +1,6 @@
 ﻿using Pixed.Application.Controls;
 using Pixed.Application.Menu;
-using Pixed.Application.Windows;
+using Pixed.Application.Pages;
 using Pixed.Common;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Windows.Input;
 
 namespace Pixed.Application.ViewModels;
 
-internal class MainViewModel : PixedViewModel, IDisposable
+internal class MainViewModel : ExtendedViewModel, IDisposable
 {
     private readonly IDisposable _projectChanged;
     private readonly IDisposable _menuBuilt;
@@ -37,7 +37,7 @@ internal class MainViewModel : PixedViewModel, IDisposable
         }
     }
 
-    public ICommand QuitCommand => MainPage.QuitCommand; //For binding
+    public ICommand QuitCommand => Main.QuitCommand; //For binding
     public MainViewModel(MenuBuilder menuBuilder)
     {
         _projectChanged = Subjects.ProjectChanged.Subscribe(model =>

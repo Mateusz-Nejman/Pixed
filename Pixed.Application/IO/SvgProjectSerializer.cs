@@ -21,7 +21,7 @@ internal class SvgProjectSerializer : IPixedProjectSerializer
     {
         SKSvg svg = SKSvg.CreateFromStream(stream);
 
-        if(Width == -1 || Height == -1)
+        if (Width == -1 || Height == -1)
         {
             Width = (int)svg.Picture.CullRect.Width;
             Height = (int)svg.Picture.CullRect.Height;

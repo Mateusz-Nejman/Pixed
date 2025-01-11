@@ -1,15 +1,10 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Media;
-using Pixed.Application.Windows;
-using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 
 namespace Pixed.Application.Controls;
 
-internal partial class TitleBar : EmptyPixedUserControl
+internal partial class TitleBar : EmptyExtendedControl
 {
     public string Title
     {

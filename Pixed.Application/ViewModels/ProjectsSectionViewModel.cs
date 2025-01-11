@@ -5,7 +5,7 @@ using System;
 using System.Collections.ObjectModel;
 
 namespace Pixed.Application.ViewModels;
-internal class ProjectsSectionViewModel : PixedViewModel, IDisposable
+internal class ProjectsSectionViewModel : ExtendedViewModel, IDisposable
 {
     private readonly ApplicationData _applicationData;
     private int _selectedProject = 0;

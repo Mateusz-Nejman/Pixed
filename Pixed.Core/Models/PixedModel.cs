@@ -1,5 +1,6 @@
 ﻿using Pixed.Core.IO;
 using Pixed.Core.Utils;
+using SkiaSharp;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -12,7 +13,7 @@ public class PixedModel : PropertyChangedBase, IPixedSerializer
     private readonly ObservableCollection<Frame> _frames;
     private readonly ObservableCollection<byte[]> _history;
     private int _historyIndex = 0;
-    private PixedImage _renderSource;
+    private SKBitmap? _renderSource = null;
     private int _currentFrameIndex = 0;
     private bool _isEmpty = true;
 
@@ -35,7 +36,7 @@ public class PixedModel : PropertyChangedBase, IPixedSerializer
         }
     }
 
-    public PixedImage RenderSource
+    public SKBitmap? RenderSource
     {
         get => _renderSource;
         set
@@ -102,7 +103,7 @@ public class PixedModel : PropertyChangedBase, IPixedSerializer
 
     public void UpdatePreview()
     {
-        RenderSource = new PixedImage(Frames.First().Render());
+        RenderSource = Frames.First().Render();
     }
 
     public List<uint> GetAllColors()

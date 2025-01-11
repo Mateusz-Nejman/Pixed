@@ -2,7 +2,7 @@
 
 namespace Pixed.Application.Controls;
 
-internal partial class TextTooltip : EmptyPixedUserControl
+internal partial class TextTooltip : EmptyExtendedControl
 {
     public string Text
     {

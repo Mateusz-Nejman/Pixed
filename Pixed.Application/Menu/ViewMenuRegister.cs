@@ -58,7 +58,7 @@ internal class ViewMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
             Subjects.GridChanged.OnNext(true);
         }));
 
-        _menuItemRegistry.Register(BaseMenuItem.View, "Toggle animation preview", async() =>
+        _menuItemRegistry.Register(BaseMenuItem.View, "Toggle animation preview", async () =>
         {
             bool value = !_applicationData.UserSettings.AnimationPreviewVisible;
             Subjects.AnimationPreviewChanged.OnNext(value);

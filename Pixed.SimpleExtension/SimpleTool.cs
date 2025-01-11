@@ -11,9 +11,13 @@ public class SimpleTool(ApplicationData applicationData) : BaseTool(applicationD
     public override string ImagePath => "avares://Pixed.SimpleExtension/Resources/tux.png";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Simple Tool");
 
-    public override void ApplyTool(int x, int y, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override string Name => "Simple Tool";
+
+    public override string Id => "tool_simple";
+
+    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
-        base.ApplyTool(x, y, frame, ref overlay, keyState);
-        PaintUtils.PaintSimiliarConnected(frame.CurrentLayer, x, y, UniColor.CornflowerBlue);
+        base.ApplyTool(point, frame, ref overlay, keyState);
+        PaintUtils.PaintSimiliarConnected(frame.CurrentLayer, point, UniColor.CornflowerBlue);
     }
 }

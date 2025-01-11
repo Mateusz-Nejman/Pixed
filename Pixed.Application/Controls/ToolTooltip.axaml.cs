@@ -3,7 +3,7 @@ using Pixed.Common.Tools;
 
 namespace Pixed.Application.Controls;
 
-internal partial class ToolTooltip : EmptyPixedUserControl
+internal partial class ToolTooltip : EmptyExtendedControl
 {
     public ToolTooltip(ToolTooltipProperties props)
     {

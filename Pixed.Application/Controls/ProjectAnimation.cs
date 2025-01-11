@@ -1,15 +1,13 @@
-﻿using Avalonia.Controls;
+﻿using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Media;
+using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
 using Avalonia.Threading;
-using Avalonia;
-using Avalonia.Platform;
 using Pixed.Core.Models;
-using SkiaSharp;
-using Pixed.Application.Utils;
+using Pixed.Core.Utils;
 using System;
-using Pixed.Common;
 using System.Reactive.Linq;
 
 namespace Pixed.Application.Controls;
@@ -34,11 +32,18 @@ internal class ProjectAnimation : Control
         }
         public void Render(ImmediateDrawingContext context)
         {
-            var frameBitmap = _applicationData.CurrentModel.Frames[_frameIndex] ?? null;
-            if(frameBitmap == null || frameBitmap.RenderSource.Source == null)
+            if (_frameIndex >= _applicationData.CurrentModel.Frames.Count)
             {
                 return;
             }
+
+            var frameBitmap = _applicationData.CurrentModel.Frames[_frameIndex] ?? null;
+            if (frameBitmap == null || frameBitmap.RenderSource == null)
+            {
+                return;
+            }
+
+            var renderSource = frameBitmap.RenderSource;
             if (context.PlatformImpl.GetFeature<ISkiaSharpApiLeaseFeature>() is ISkiaSharpApiLeaseFeature leaseFeature)
             {
                 ISkiaSharpApiLease lease = leaseFeature.Lease();
@@ -47,7 +52,11 @@ internal class ProjectAnimation : Control
                     var canvas = lease.SkCanvas;
                     double ratio = Bounds.Width / _width;
                     double height = _height * ratio;
-                    canvas.DrawBitmap(frameBitmap.RenderSource.Source, SKRect.Create(Bounds.X.ToFloat(), Bounds.Y.ToFloat(), Bounds.Width.ToFloat(), height.ToFloat()));
+
+                    if (!SkiaUtils.IsNull(renderSource))
+                    {
+                        canvas.DrawBitmap(renderSource, new Rect(Bounds.X, Bounds.Y, Bounds.Width, height));
+                    }
                 }
             }
         }
@@ -82,13 +91,13 @@ internal class ProjectAnimation : Control
     {
         _timer?.Dispose();
 
-        if(enabled)
+        if (enabled)
         {
             _timer = Observable.Interval(TimeSpan.FromSeconds(0.1d)).Subscribe(l =>
             {
                 _current++;
 
-                if(_current >= _applicationData.CurrentModel.Frames.Count)
+                if (_current >= _applicationData.CurrentModel.Frames.Count)
                 {
                     _current = 0;
                 }

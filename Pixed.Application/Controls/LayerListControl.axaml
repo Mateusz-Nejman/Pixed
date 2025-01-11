@@ -22,7 +22,7 @@
           </ImageBrush.Transform>
         </ImageBrush>
       </Border.Background>
-      <Image Width="32" Height="32" Source="{Binding RenderSource}" RenderOptions.BitmapInterpolationMode="None"/>
+      <local:SkiaImage Width="32" Height="32" Source="{Binding RenderSource}" RenderOptions.BitmapInterpolationMode="None"/>
     </Border>
     <TextBlock Grid.Column="1" Text="{Binding Name}" Foreground="White" VerticalAlignment="Center" Margin="4"/>
     <Button Grid.Column="2" Command="{Binding ChangeOpacityCommand}">

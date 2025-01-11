@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Pixed.Application.IO;
 using Pixed.Application.Menu;
+using Pixed.Application.Pages;
 using Pixed.Application.Platform;
 using Pixed.Application.Services;
 using Pixed.Application.Utils;
@@ -24,7 +25,7 @@ internal class ApplicationDependencyRegister : IDependencyRegister
         collection.AddSingleton<ToolsSectionViewModel>();
 
         collection.AddSingleton<MainWindow>();
-        collection.AddSingleton<MainPage>();
+        collection.AddSingleton<Main>();
         collection.AddSingleton<RecentFilesService>();
         collection.AddScoped<PixedProjectMethods>();
         collection.AddSingleton<MenuBuilder>();

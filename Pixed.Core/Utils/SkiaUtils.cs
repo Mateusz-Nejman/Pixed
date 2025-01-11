@@ -1,4 +1,5 @@
-﻿using Pixed.Core.Utils;
+﻿using Avalonia;
+using Pixed.Core.Utils;
 using SkiaSharp;
 using System.Runtime.InteropServices;
 using Point = Pixed.Core.Models.Point;
@@ -6,6 +7,20 @@ using Point = Pixed.Core.Models.Point;
 namespace Pixed.Core.Utils;
 public static class SkiaUtils
 {
+    private static readonly object _lock = new();
+
+    public static void DrawBitmap(this SKCanvas canvas, SKBitmap bitmap, Rect rect)
+    {
+        lock (_lock)
+        {
+            if (!IsNull(bitmap))
+            {
+                SKImage image = SKImage.FromBitmap(bitmap);
+                canvas.DrawImage(image, SKRect.Create((float)rect.X, (float)rect.Y, (float)rect.Width, (float)rect.Height));
+            }
+        }
+    }
+
     public static SKBitmap FromArray(IList<uint> array, Point size)
     {
         var bitmap = new SKBitmap(size.X, size.Y, true);
@@ -73,6 +88,17 @@ public static class SkiaUtils
         }
     }
 
+    public static void DrawLine(this SKCanvas canvas, SKPoint p0, SKPoint p1, UniColor color)
+    {
+        var paint = new SKPaint
+        {
+            Color = color,
+            Style = SKPaintStyle.Stroke
+        };
+
+        canvas.DrawLine(p0, p1, paint);
+    }
+
     public static void DrawPatternLine(this SKCanvas canvas, SKPoint p0, SKPoint p1, float[] pattern, UniColor color)
     {
         SKPath path = new();
@@ -89,5 +115,10 @@ public static class SkiaUtils
         };
 
         canvas.DrawPath(path, paint);
+    }
+
+    public static bool IsNull(SKBitmap? bitmap)
+    {
+        return bitmap == null || bitmap.Handle == IntPtr.Zero;
     }
 }
