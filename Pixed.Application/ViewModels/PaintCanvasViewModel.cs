@@ -289,7 +289,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
 
         _currentLayerRenderModified = Subjects.CurrentLayerRenderModified.Subscribe(pixels =>
         {
-            _applicationData.CurrentFrame.RefreshLayerRenderSources(pixels);
+            _applicationData.CurrentFrame.RefreshCurrentLayerRenderSource(pixels);
             RenderBitmap = _applicationData.CurrentFrame.RenderSource?.Copy();
         });
 
