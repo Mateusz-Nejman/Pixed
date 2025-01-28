@@ -1,4 +1,5 @@
 ﻿using Pixed.Core;
+using Pixed.Core.Utils;
 
 namespace Pixed.BigGustave;
 
@@ -51,14 +52,17 @@ public class Png
 
     public UniColor[] GetPixels()
     {
-        var bytes = data.GetBytes(Height);
-        UniColor[] colors = new UniColor[bytes.Length / 4];
-        for(int a = 0; a < colors.Length; a++)
+        return GetPixelsUInt().Select(u => (UniColor)u).ToArray();
+    }
+
+    public uint[] GetPixelsUInt()
+    {
+        byte[] bytes = data.GetBytes(Height);
+        for (int a = 0; a < bytes.Length; a += 4)
         {
-            int startByteIndex = a * 4;
-            colors[a] = new UniColor(bytes[startByteIndex + 3], bytes[startByteIndex], bytes[startByteIndex + 1], bytes[startByteIndex + 2]);
+            (bytes[a + 2], bytes[a]) = (bytes[a], bytes[a + 2]);
         }
-        return colors;
+        return bytes.ToUInt();
     }
 
     /// <summary>

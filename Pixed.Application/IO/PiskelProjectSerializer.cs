@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using Pixed.BigGustave;
 using Pixed.Core;
 using Pixed.Core.Models;
 using SkiaSharp;
@@ -43,8 +44,7 @@ internal partial class PiskelProjectSerializer : IPixedProjectSerializer
             {
                 string str = match.Value[7..];
                 byte[] data = Convert.FromBase64String(str);
-                MemoryStream memoryStream = new(data);
-                SKBitmap bitmap = SKBitmap.Decode(memoryStream);
+                Png png = Png.Open(data);
 
                 for (int f = 0; f < frames.Count; f++)
                 {
@@ -54,17 +54,13 @@ internal partial class PiskelProjectSerializer : IPixedProjectSerializer
                     {
                         for (int y = 0; y < height; y++)
                         {
-                            UniColor pixel = bitmap.GetPixel(x + (f * width), y);
-                            frameLayerData[y * width + x] = pixel;
+                            frameLayerData[y * width + x] = png.GetPixel(x + (f * width), y);
                         }
                     }
 
                     Layer newLayer = Layer.FromColors(frameLayerData, width, height, layerName);
                     frames[f].Layers.Add(newLayer);
                 }
-
-                memoryStream.Dispose();
-                bitmap.Dispose();
             }
         }
 
