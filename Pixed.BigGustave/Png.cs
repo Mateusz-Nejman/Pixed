@@ -49,6 +49,18 @@ public class Png
     /// <returns>The pixel at the coordinate.</returns>
     public UniColor GetPixel(int x, int y) => data.GetPixel(x, y);
 
+    public UniColor[] GetPixels()
+    {
+        var bytes = data.GetBytes(Height);
+        UniColor[] colors = new UniColor[bytes.Length / 4];
+        for(int a = 0; a < colors.Length; a++)
+        {
+            int startByteIndex = a * 4;
+            colors[a] = new UniColor(bytes[startByteIndex + 3], bytes[startByteIndex], bytes[startByteIndex + 1], bytes[startByteIndex + 2]);
+        }
+        return colors;
+    }
+
     /// <summary>
     /// Read the PNG image from the stream.
     /// </summary>

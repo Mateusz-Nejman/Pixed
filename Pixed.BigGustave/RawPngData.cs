@@ -39,6 +39,21 @@ internal class RawPngData
         bitDepth = imageHeader.BitDepth;
     }
 
+    public byte[] GetBytes(int height)
+    {
+        byte[] pixels = new byte[width * height * bytesPerPixel];
+
+        //TODO palette case
+
+        for(int y = 0; y < height; y++)
+        {
+            var rowStartPixel = (rowOffset + (rowOffset * y)) + (bytesPerPixel * width * y);
+            Array.Copy(data, rowStartPixel, pixels, width * y * bytesPerPixel, width * bytesPerPixel);
+        }
+
+        return pixels;
+    }
+
     public UniColor GetPixel(int x, int y)
     {
         if (palette != null)
