@@ -181,7 +181,7 @@ internal class PaletteSectionViewModel : ExtendedViewModel, IDisposable
 
     public async Task PaletteOpenAction()
     {
-        var files = await _dialogUtils.OpenFileDialog("All Supported (.json;.gpl)|*.json;*.gpl|Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl", _paletteService.SelectedPalette.Name);
+        var files = await _dialogUtils.OpenFileDialog("All Supported (.json;.gpl;.png)|*.json;*.gpl;*.png|Pixed Palettes (*.json)|*.json|GIMP Palettes (*.gpl)|*.gpl|PNG Palettes (*.png)|*.png", _paletteService.SelectedPalette.Name);
 
         if (files.Count == 0)
         {
