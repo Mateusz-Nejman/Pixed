@@ -68,14 +68,14 @@ internal class PaletteSectionViewModel : ExtendedViewModel, IDisposable
     {
         get
         {
-            return new ObservableCollection<UniColor>(SelectedPalette.Colors.Select(s => (UniColor)s));
+            return new ObservableCollection<UniColor>(SelectedPalette.Colors.Take(256).Select(s => (UniColor)s));
         }
     }
     public ObservableCollection<UniColor> CurrentPaletteColors
     {
         get
         {
-            return new ObservableCollection<UniColor>(_paletteService.CurrentColorsPalette.Colors.Select(s => (UniColor)s));
+            return new ObservableCollection<UniColor>(_paletteService.CurrentColorsPalette.Colors.Take(256).Select(s => (UniColor)s));
         }
     }
 
