@@ -1,4 +1,5 @@
 ﻿using Pixed.Core;
+using Pixed.Core.Utils;
 
 namespace Pixed.BigGustave;
 
@@ -48,6 +49,21 @@ public class Png
     /// <param name="y">The y coordinate (row).</param>
     /// <returns>The pixel at the coordinate.</returns>
     public UniColor GetPixel(int x, int y) => data.GetPixel(x, y);
+
+    public UniColor[] GetPixels()
+    {
+        return GetPixelsUInt().Select(u => (UniColor)u).ToArray();
+    }
+
+    public uint[] GetPixelsUInt()
+    {
+        byte[] bytes = data.GetBytes(Height);
+        for (int a = 0; a < bytes.Length; a += 4)
+        {
+            (bytes[a + 2], bytes[a]) = (bytes[a], bytes[a + 2]);
+        }
+        return bytes.ToUInt();
+    }
 
     /// <summary>
     /// Read the PNG image from the stream.

@@ -6,6 +6,7 @@ using Pixed.Common.Tools.Selection;
 using Pixed.Core;
 using Pixed.Core.Models;
 using Pixed.Core.Selection;
+using Pixed.Core.Utils;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -169,7 +170,8 @@ public class SelectionManager
 
             if (data is byte[] array)
             {
-                return SKBitmap.Decode(array);
+                Png png = Png.Open(array);
+                return SkiaUtils.FromArray(png.GetPixelsUInt(), new Point(png.Width, png.Height));
             }
         }
 

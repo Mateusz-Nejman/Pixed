@@ -6,6 +6,32 @@ public class PngTests
     private static readonly UniColor Tr = new(0, 0, 0, 0);
 
     [Test]
+    public void GetPixelsTest()
+    {
+        var values = new List<UniColor>
+        {
+            new(255, 0), new(0, 255, 0), new(0, 255, 255), new(255, 0, 0),
+            new(0, 255, 0), new(0, 0, 255), new(255, 255, 0), new(255, 0, 255),
+            new(255, 255), Tr, new(255, 0, 0), new(0, 255, 255),
+            new(0, 0, 255), new(255, 255, 0), new(255, 0), new(255, 255)
+        };
+        var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images", "BigGustaveTest.png");
+        var img = Png.Open(path);
+        var pixels = img.GetPixels();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(values, Has.Count.EqualTo(16));
+            Assert.That(pixels, Has.Length.EqualTo(16));
+        });
+
+        for (int a = 0; a < 16; a++)
+        {
+            Assert.That(pixels[a], Is.EqualTo(values[a]), $"Expected {values[a]} but got {pixels[a]} at {a}");
+        }
+    }
+
+    [Test]
     public void FourByFourGrayscale()
     {
         var values = new List<byte[]>

@@ -1,4 +1,5 @@
 ﻿using Pixed.Application.Utils;
+using Pixed.BigGustave;
 using Pixed.Common.Utils;
 using Pixed.Core.Models;
 using Pixed.Core.Utils;
@@ -17,15 +18,14 @@ internal class PngProjectSerializer : IPixedProjectSerializer
     public int TileHeight { get; set; } = -1;
     public PixedModel Deserialize(Stream stream, ApplicationData applicationData)
     {
-        SKBitmap bitmap = SKBitmap.Decode(stream);
-        var colors = bitmap.ToArray();
+        var png = Png.Open(stream);
+        var colors = png.GetPixelsUInt();
         ObservableCollection<Frame> frames = [];
 
-        Layer layer = Layer.FromColors(colors, bitmap.Width, bitmap.Height, "Layer 0");
+        Layer layer = Layer.FromColors(colors, png.Width, png.Height, "Layer 0");
         if (TileWidth == -1 && TileHeight == -1)
         {
             Frame frame = Frame.FromLayers([layer]);
-            bitmap.Dispose();
             frames.Add(frame);
         }
         else

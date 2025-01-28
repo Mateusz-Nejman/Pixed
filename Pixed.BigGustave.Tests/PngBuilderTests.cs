@@ -1,4 +1,6 @@
-﻿namespace Pixed.BigGustave.Tests;
+﻿using Pixed.Core;
+
+namespace Pixed.BigGustave.Tests;
 
 public class PngBuilderTests
 {

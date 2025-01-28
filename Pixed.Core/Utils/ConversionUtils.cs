@@ -1,6 +1,6 @@
 ﻿namespace Pixed.Core.Utils;
 
-internal static class ConversionUtils
+public static class ConversionUtils
 {
     public static uint[] ToUInt(this byte[] array)
     {
