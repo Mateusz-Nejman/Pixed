@@ -1,4 +1,5 @@
-﻿using Pixed.Application.Models;
+﻿using Avalonia.Platform.Storage;
+using Pixed.Application.Models;
 using Pixed.Application.Platform;
 using Pixed.Application.Routing;
 using Pixed.Application.Services;
@@ -12,11 +13,12 @@ using System.IO;
 using System.Threading.Tasks;
 
 namespace Pixed.Application.IO;
-internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils dialogUtils, IPlatformSettings platformSettings)
+internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils dialogUtils, IPlatformSettings platformSettings, IStorageProviderHandle storageProvider)
 {
     private readonly ApplicationData _applicationData = applicationData;
     private readonly DialogUtils _dialogUtils = dialogUtils;
     private readonly IPlatformSettings _platformSettings = platformSettings;
+    private readonly IStorageProviderHandle _storageProvider = storageProvider;
 
     public async Task Save(PixedModel model, bool saveAs, RecentFilesService recentFilesService)
     {
@@ -27,7 +29,17 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
         }
         else
         {
-            fileStream = File.OpenWrite(model.FilePath);
+            var file = await _storageProvider.StorageProvider.TryGetFileFromPathAsync(new Uri(model.FilePath));
+            
+            if(file != null)
+            {
+                fileStream = await file.OpenWrite();
+            }
+            else
+            {
+                //TODO info
+                return;
+            }
         }
 
         if (saveAs)
@@ -158,14 +170,31 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
 
     public async Task Open(string path)
     {
-        FileInfo info = new(path);
-        IPixedProjectSerializer? serializer = GetSerializer(info.Extension);
+        var file = await _storageProvider.StorageProvider.TryGetFileFromPathAsync(new Uri(path));
+
+        if(file == null)
+        {
+            return;
+        }
+
+        await Open(file);
+    }
+
+    public async Task Open(IStorageFile? file)
+    {
+        if (file == null)
+        {
+            return;
+        }
+
+        IPixedProjectSerializer? serializer = GetSerializer(file.GetExtension());
 
         if (serializer == null || !serializer.CanDeserialize)
         {
             return;
         }
-        Stream stream = File.OpenRead(path);
+
+        Stream stream = await file.OpenReadAsync();
 
         PixedModel model;
         try
@@ -178,12 +207,12 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
             return;
         }
         stream.Dispose();
-        model.FileName = info.Name.Replace(".png", ".pixed");
+        model.FileName = file.Name.Replace(".png", ".pixed");
         model.AddHistory();
 
-        if (info.Name.EndsWith(".pixed"))
+        if (file.Name.EndsWith(".pixed"))
         {
-            model.FilePath = info.FullName;
+            model.FilePath = file.Path.AbsolutePath;
             model.UnsavedChanges = false;
         }
 

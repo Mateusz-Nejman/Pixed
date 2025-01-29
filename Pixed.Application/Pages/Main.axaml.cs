@@ -81,9 +81,9 @@ internal partial class Main : EmptyPixedPage, IDisposable
         _toolsMenuRegister.Register();
 
         await Initialize();
-        _menuBuilder.Build();
-        _toolSelector.SelectTool("tool_pen");
         await _recentFilesService.Load();
+        await _menuBuilder.Build();
+        _toolSelector.SelectTool("tool_pen");
         await _paletteSectionViewModel.LoadAll();
 
         Subjects.ProjectAdded.OnNext(_applicationData.CurrentModel);

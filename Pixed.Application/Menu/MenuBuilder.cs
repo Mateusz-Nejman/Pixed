@@ -45,10 +45,10 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
         _entries.Add(new MenuEntry(baseMenu, menuItem));
     }
 
-    public void Build(bool clear = true)
+    public async Task Build(bool clear = true)
     {
         AddFromExtensions();
-        MenuItem fileMenu = GetFileMenu();
+        MenuItem fileMenu = await GetFileMenu();
         MenuItem editMenu = GetEditMenu();
         MenuItem toolsMenu = new("Tools");
         MenuItem paletteMenu = new("Palette");
@@ -80,7 +80,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
         OnMenuBuilt.OnNext(items);
     }
 
-    private MenuItem GetFileMenu()
+    private async Task<MenuItem> GetFileMenu()
     {
         MenuItem fileMenu = new("File");
         MenuItem fileNew = new("New")
@@ -131,7 +131,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
         };
         MenuItem fileRecent = new("Recent")
         {
-            Items = _recentFilesService.BuildMenu()
+            Items = await _recentFilesService.BuildMenu()
         };
 
         MenuItem fileQuit = new("Quit")
