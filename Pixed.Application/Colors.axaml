@@ -7,10 +7,10 @@
 			<Border Background="{StaticResource ButtonBackground}" BorderBrush="{StaticResource Accent}" BorderThickness="2" Width="128" Height="128"/>
 		</StackPanel>
 	</Design.PreviewWith>
-	<Color x:Key="ButtonBorder">#888888</Color>
-	<Color x:Key="BaseBorder">#444444</Color>
-	<Color x:Key="BaseBackground">#1D1D1D</Color>
-	<Color x:Key="BaseBackgroundHover">#171717</Color>
+	<Color x:Key="ButtonBorder">#2c2c2c</Color>
+  <Color x:Key="BaseBorder">#444444</Color>
+	<Color x:Key="BaseBackground">#212121</Color>
+	<Color x:Key="BaseBackgroundHover">#424242</Color>
 	<Color x:Key="Accent">#01579B</Color>
   <Color x:Key="AccentHover">#013e71</Color>
 	<Color x:Key="ButtonBackground">#3f3f3f</Color>

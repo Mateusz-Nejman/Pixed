@@ -19,7 +19,6 @@ public class DependencyInjectionRegister : IDependencyRegister
         collection.AddScoped<ToolBucket>();
         collection.AddScoped<ToolCircle>();
         collection.AddScoped<ToolColorPicker>();
-        collection.AddScoped<ToolColorSwap>();
         collection.AddScoped<ToolDithering>();
         collection.AddScoped<ToolEraser>();
         collection.AddScoped<ToolLighten>();

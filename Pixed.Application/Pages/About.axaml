@@ -13,7 +13,7 @@
 	</local:Modal.DataContext>
   <local:Modal.Dialog>
     <StackPanel HorizontalAlignment="Center" Spacing="20" Margin="40">
-      <Image Source="/Resources/icon.png" Width="64" Height="64"/>
+      <Image Source="/Resources/icon256.png" Width="64" Height="64"/>
       <TextBlock Text="Pixed" FontWeight="Bold" FontSize="30" HorizontalAlignment="Center"/>
       <TextBlock Text="{Binding AppVersion}" Name="versionText"/>
       <TextBlock Text="Author: Mateusz Nejman"/>
