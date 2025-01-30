@@ -129,10 +129,6 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
         {
             Command = new AsyncCommand(ExportIcoAction)
         };
-        MenuItem fileRecent = new("Recent")
-        {
-            Items = await _recentFilesService.BuildMenu()
-        };
 
         MenuItem fileQuit = new("Quit")
         {
@@ -145,6 +141,11 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
 
         if (_platformSettings.RecentFilesEnabled)
         {
+            MenuItem fileRecent = new("Recent")
+            {
+                Items = await _recentFilesService.BuildMenu()
+            };
+
             fileMenu.Items.Add(fileRecent);
         }
         fileMenu.Items.Add(fileQuit);
