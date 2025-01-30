@@ -11,8 +11,9 @@
 	<Color x:Key="BaseBorder">#444444</Color>
 	<Color x:Key="BaseBackground">#1D1D1D</Color>
 	<Color x:Key="BaseBackgroundHover">#171717</Color>
-	<Color x:Key="Accent">#0c548b</Color>
+	<Color x:Key="Accent">#01579B</Color>
+  <Color x:Key="AccentHover">#013e71</Color>
 	<Color x:Key="ButtonBackground">#3f3f3f</Color>
-	<Color x:Key="SystemAccentColor">#0c548b</Color>
+	<Color x:Key="SystemAccentColor">#01579B</Color>
 	<SolidColorBrush x:Key="CaptionButtonBackground" Color="#ff373737" />
 </ResourceDictionary>

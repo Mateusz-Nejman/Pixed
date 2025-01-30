@@ -20,25 +20,27 @@
 		x:Name="scrollView"
 		AllowAutoHide="False"
 			Theme="{StaticResource NoGesturesScrollViewer}">
-		<Border BorderBrush="{StaticResource ButtonBorder}" BorderThickness="2">
-			<zoom:ZoomBorder Name="zoomBorder" ZoomSpeed="1.2" ClipToBounds="True" GestureZoomEnabled="{Binding GestureZoomEnabled, Mode=TwoWay}">
-				<Canvas
-				  Name="imageGrid"
-				  Width="{Binding GridWidth, Mode=TwoWay}"
-				  Height="{Binding GridHeight, Mode=TwoWay}"
-				  PointerExited="Canvas_PointerExited"
-							  PointerMoved="Canvas_PointerMoved"
-							  PointerPressed="Canvas_PointerPressed"
-							  PointerReleased="Canvas_PointerReleased"
-							  PointerWheelChanged="Canvas_PointerWheelChanged"
-				  RenderOptions.BitmapInterpolationMode="None"
-				  Background="{Binding TransparentBrush}">
-					<controls:SkiaImage Name="image" RenderOptions.BitmapInterpolationMode="None" Source="{Binding ImageBitmap}"/>
-					<controls:ImageGrid Width="{Binding ScaledGridWidth}" Height="{Binding ScaledGridHeight}" Name="gridCanvas" IsHitTestVisible="False"/>
-					<controls:SelectionOverlay Width="{Binding ScaledGridWidth}" Height="{Binding ScaledGridHeight}" Name="selectionOverlay" IsHitTestVisible="False"/>
-				</Canvas>
-			</zoom:ZoomBorder>
-		</Border>
+      <Border BorderBrush="{StaticResource Accent}" BorderThickness="0 2 0 0">
+        <Border BorderBrush="{StaticResource ButtonBorder}" BorderThickness="2 0 2 2">
+          <zoom:ZoomBorder Name="zoomBorder" ZoomSpeed="1.2" ClipToBounds="True" GestureZoomEnabled="{Binding GestureZoomEnabled, Mode=TwoWay}">
+            <Canvas
+              Name="imageGrid"
+              Width="{Binding GridWidth, Mode=TwoWay}"
+              Height="{Binding GridHeight, Mode=TwoWay}"
+              PointerExited="Canvas_PointerExited"
+                    PointerMoved="Canvas_PointerMoved"
+                    PointerPressed="Canvas_PointerPressed"
+                    PointerReleased="Canvas_PointerReleased"
+                    PointerWheelChanged="Canvas_PointerWheelChanged"
+              RenderOptions.BitmapInterpolationMode="None"
+              Background="{Binding TransparentBrush}">
+              <controls:SkiaImage Name="image" RenderOptions.BitmapInterpolationMode="None" Source="{Binding ImageBitmap}"/>
+              <controls:ImageGrid Width="{Binding ScaledGridWidth}" Height="{Binding ScaledGridHeight}" Name="gridCanvas" IsHitTestVisible="False"/>
+              <controls:SelectionOverlay Width="{Binding ScaledGridWidth}" Height="{Binding ScaledGridHeight}" Name="selectionOverlay" IsHitTestVisible="False"/>
+            </Canvas>
+          </zoom:ZoomBorder>
+        </Border>
+      </Border>
     </ScrollViewer>
     <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="5" Margin="4">
       <TextBlock Text="Tool size" VerticalAlignment="Center"/>
