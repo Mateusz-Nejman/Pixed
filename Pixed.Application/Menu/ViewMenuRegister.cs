@@ -33,7 +33,7 @@ internal class ViewMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
                 {
                     mainWindow.WindowState = WindowState.FullScreen;
                 }
-            }, new("avares://Pixed.Application/Resources/Icons/enlarge-menu.png"));
+            }, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_full_screen_maximize_32_regular.svg"));
         }
 
         _menuItemRegistry.Register(BaseMenuItem.View, "Grid settings", new AsyncCommand(async () =>
@@ -49,7 +49,7 @@ internal class ViewMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
                 await SettingsUtils.Save(_storageProvider.StorageFolder, _applicationData);
                 Subjects.GridChanged.OnNext(true);
             }
-        }), null, new("avares://Pixed.Application/Resources/Icons/cogs-menu.png"));
+        }), null, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_settings_48_regular.svg"));
 
         _menuItemRegistry.Register(BaseMenuItem.View, "Toggle grid", new AsyncCommand(async () =>
         {
@@ -64,6 +64,6 @@ internal class ViewMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
             Subjects.AnimationPreviewChanged.OnNext(value);
             _applicationData.UserSettings.AnimationPreviewVisible = value;
             await SettingsUtils.Save(_storageProvider.StorageFolder, _applicationData);
-        }, new("avares://Pixed.Application/Resources/Icons/film-menu.png"));
+        }, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_filmstrip_play_32_regular.svg"));
     }
 }

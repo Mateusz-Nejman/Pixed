@@ -32,7 +32,7 @@
 							  Foreground="{TemplateBinding Foreground}"
 							  RecognizesAccessKey="True" />
           </Border>
-          <Image Source="avares://Pixed.Application/Resources/Icons/cogs.png" Grid.Row="2" Grid.Column="2"/>
+          <Image Source="{SvgImage avares://Pixed.Application/Resources/fluent-icons/ic_fluent_settings_48_regular.svg}" Grid.Row="2" Grid.Column="2"/>
         </Grid>
       </ControlTemplate>
     </Setter>

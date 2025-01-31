@@ -79,9 +79,9 @@ internal class FramesSectionViewModel : ExtendedViewModel, IDisposable
 
     public override void RegisterMenuItems()
     {
-        _menuItemRegistry.Register(BaseMenuItem.Project, "New Frame", NewFrameCommand, null, new("avares://Pixed.Application/Resources/Icons/plus-menu.png"));
-        _menuItemRegistry.Register(BaseMenuItem.Project, "Duplicate Frame", DuplicateFrameCommand, null, new("avares://Pixed.Application/Resources/Icons/files-empty-menu.png"));
-        _menuItemRegistry.Register(BaseMenuItem.Project, "Remove Frame", RemoveFrameCommand, null, new("avares://Pixed.Application/Resources/Icons/bin-menu.png"));
+        _menuItemRegistry.Register(BaseMenuItem.Project, "New Frame", NewFrameCommand, null, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_add_48_regular.svg"));
+        _menuItemRegistry.Register(BaseMenuItem.Project, "Duplicate Frame", DuplicateFrameCommand, null, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_layer_diagonal_24_regular.svg"));
+        _menuItemRegistry.Register(BaseMenuItem.Project, "Remove Frame", RemoveFrameCommand, null, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_delete_48_regular.svg"));
     }
 
     protected virtual void Dispose(bool disposing)

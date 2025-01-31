@@ -31,37 +31,37 @@
 								<RowDefinition Height="32"/>
 							</Grid.RowDefinitions>
 							<controls:TouchButton Theme="{StaticResource BaseButton}" Command="{Binding PaletteAddPrimaryCommand}">
-								<Image Source="avares://Pixed.Application/Resources/Icons/plus.png" Width="16" Height="16"/>
+								<Image Source="{SvgImage avares://Pixed.Application/Resources/fluent-icons/ic_fluent_add_48_regular.svg}" Width="16" Height="16"/>
 								<ToolTip.Tip>
 									<controls:TextTooltip Text="Add Primary color to palette"/>
 								</ToolTip.Tip>
 							</controls:TouchButton>
 							<controls:TouchButton Theme="{StaticResource BaseButton}" Grid.Column="1" Command="{Binding PaletteAddCurrentCommand}">
-								<Image Source="avares://Pixed.Application/Resources/Icons/merge_palettes.png" Width="16" Height="16"/>
+								<Image Source="{SvgImage avares://Pixed.Application/Resources/fluent-icons/ic_fluent_layer_diagonal_24_regular.svg}" Width="16" Height="16"/>
 								<ToolTip.Tip>
 									<controls:TextTooltip Text="Merge palette with current colors"/>
 								</ToolTip.Tip>
 							</controls:TouchButton>
 							<controls:TouchButton Theme="{StaticResource BaseButton}" Grid.Column="2" Command="{Binding PaletteListCommand}">
-								<Image Source="avares://Pixed.Application/Resources/Icons/database.png" Width="16" Height="16"/>
+								<Image Source="{SvgImage avares://Pixed.Application/Resources/fluent-icons/ic_fluent_database_48_regular.svg}" Width="16" Height="16"/>
 								<ToolTip.Tip>
 									<controls:TextTooltip Text="Palettes list"/>
 								</ToolTip.Tip>
 							</controls:TouchButton>
 							<controls:TouchButton Theme="{StaticResource BaseButton}" Grid.Column="3" Command="{Binding PaletteOpenCommand}">
-								<Image Source="avares://Pixed.Application/Resources/Icons/folder-open.png" Width="16" Height="16"/>
+								<Image Source="{SvgImage avares://Pixed.Application/Resources/fluent-icons/ic_fluent_folder_open_28_regular.svg}" Width="16" Height="16"/>
 								<ToolTip.Tip>
 									<controls:TextTooltip Text="Open palette from file"/>
 								</ToolTip.Tip>
 							</controls:TouchButton>
 							<controls:TouchButton Theme="{StaticResource BaseButton}" Grid.Column="4" Command="{Binding PaletteSaveCommand}">
-								<Image Source="avares://Pixed.Application/Resources/Icons/floppy-disk.png" Width="16" Height="16"/>
+								<Image Source="{SvgImage avares://Pixed.Application/Resources/fluent-icons/ic_fluent_save_32_regular.svg}" Width="16" Height="16"/>
 								<ToolTip.Tip>
 									<controls:TextTooltip Text="Save palette to file"/>
 								</ToolTip.Tip>
 							</controls:TouchButton>
 							<controls:TouchButton Theme="{StaticResource BaseButton}" Grid.Column="5" Command="{Binding PaletteClearCommand}">
-								<Image Source="avares://Pixed.Application/Resources/Icons/cross.png" Width="16" Height="16"/>
+								<Image Source="{SvgImage avares://Pixed.Application/Resources/fluent-icons/ic_fluent_square_eraser_20_regular.svg}" Width="16" Height="16"/>
 								<ToolTip.Tip>
 									<controls:TextTooltip Text="Clear palette"/>
 								</ToolTip.Tip>

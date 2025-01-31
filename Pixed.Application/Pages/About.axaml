@@ -19,7 +19,7 @@
       <TextBlock Text="Author: Mateusz Nejman"/>
       <StackPanel Orientation="Horizontal" Spacing="10">
         <Button Name="buttonWWW" Command="{Binding OpenUrlCommand}" CommandParameter="https://mateusz-nejman.com">
-          <Image Source="avares://Pixed.Application/Resources/Icons/sphere.png"/>
+          <Image Source="{SvgImage avares://Pixed.Application/Resources/fluent-icons/ic_fluent_globe_48_regular.svg}"/>
         </Button>
         <Button Name="buttonGithub" Command="{Binding OpenUrlCommand}" CommandParameter="https://github.com/Mateusz-Nejman/Pixed">
           <Image Source="avares://Pixed.Application/Resources/Icons/github.png"/>

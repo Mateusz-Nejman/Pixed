@@ -99,7 +99,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
                 Subjects.ProjectAdded.OnNext(model);
             }
         }),
-            Icon = new("avares://Pixed.Application/Resources/Icons/file-empty-menu.png")
+            Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_document_48_regular.svg")
         };
         MenuItem fileOpen = new("Open")
         {
@@ -107,19 +107,19 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
         {
             await _projectMethods.Open(_recentFilesService);
         }),
-            Icon = new("avares://Pixed.Application/Resources/Icons/folder-open-menu.png")
+            Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_folder_open_28_regular.svg")
         };
         MenuItem fileSave = new("Save")
         {
             Command = new AsyncCommand<bool>(SaveAction),
             CommandParameter = false,
-            Icon = new("avares://Pixed.Application/Resources/Icons/floppy-disk-menu.png")
+            Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_save_32_regular.svg")
         };
         MenuItem fileSaveAs = new("Save as")
         {
             Command = new AsyncCommand<bool>(SaveAction),
             CommandParameter = true,
-            Icon = new("avares://Pixed.Application/Resources/Icons/floppy-disk-menu.png")
+            Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_save_edit_24_regular.svg")
         };
         MenuItem fileExportPng = new("Export to PNG")
         {
@@ -137,7 +137,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
         MenuItem fileQuit = new("Quit")
         {
             Command = Main.QuitCommand,
-            Icon = new("avares://Pixed.Application/Resources/Icons/cross-menu.png")
+            Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_arrow_exit_20_regular.svg")
         };
 
         fileMenu.Items = [fileNew, fileOpen, fileSave, fileSaveAs, fileExportPng, fileExportIco];
@@ -161,7 +161,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
                 _applicationData.CurrentModel.Undo();
                 Subjects.ProjectModified.OnNext(_applicationData.CurrentModel);
             }),
-            Icon = new("avares://Pixed.Application/Resources/Icons/undo2-menu.png")
+            Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_arrow_undo_48_regular.svg")
         };
         MenuItem redoMenu = new("Redo")
         {
@@ -170,7 +170,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
                 _applicationData.CurrentModel.Redo();
                 Subjects.ProjectModified.OnNext(_applicationData.CurrentModel);
             }),
-            Icon = new("avares://Pixed.Application/Resources/Icons/redo2-menu.png")
+            Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_arrow_redo_48_regular.svg")
         };
 
         editMenu.Items = [undoMenu, redoMenu];
