@@ -4,7 +4,7 @@ using System;
 namespace Pixed.Common.Tools;
 public class ToolMoveCanvas(ApplicationData applicationData) : BaseTool(applicationData)
 {
-    public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-move-canvas.png";
+    public override string ImagePath => "avares://Pixed.Application/Resources/fluent-icons/ic_fluent_arrow_move_24_regular.svg";
     public override string Name => "Move canvas";
     public override string Id => "tool_move_canvas";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Move canvas");

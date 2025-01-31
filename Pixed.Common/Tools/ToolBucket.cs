@@ -9,7 +9,7 @@ namespace Pixed.Common.Tools;
 public class ToolBucket(ApplicationData applicationData) : BaseTool(applicationData)
 {
     private const string PROP_REPLACE = "Replace color in current layer";
-    public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-paint-bucket.png";
+    public override string ImagePath => "avares://Pixed.Application/Resources/fluent-icons/ic_fluent_paint_bucket_24_regular.svg";
     public override string Name => "Paint bucket tool";
     public override string Id => "tool_paint_bucket";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Fill color", "Shift", PROP_REPLACE);

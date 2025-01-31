@@ -14,7 +14,7 @@ public class ToolPen(ApplicationData applicationData) : BaseTool(applicationData
     private readonly List<Pixel> _pixels = [];
     private readonly List<Point> _modifiedPoints = [];
 
-    public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-pen.png";
+    public override string ImagePath => "avares://Pixed.Application/Resources/fluent-icons/ic_fluent_pen_48_regular.svg";
     public override string Name => "Pen tool";
     public override string Id => "tool_pen";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Pen tool");

@@ -13,7 +13,7 @@ public class ToolMove(ApplicationData applicationData) : BaseTool(applicationDat
     private Layer _currentLayer;
     private Layer _currentLayerClone;
 
-    public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-move.png";
+    public override string ImagePath => "avares://Pixed.Application/Resources/fluent-icons/ic_fluent_hand_left_28_regular.svg";
     public override string Name => "Move tool";
     public override string Id => "tool_move";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Move content", "Ctrl", "Apply to all layers", "Shift", "Apply to all frames", "Alt", "Wrap canvas borders");

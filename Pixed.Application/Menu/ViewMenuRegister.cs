@@ -56,7 +56,7 @@ internal class ViewMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
             _applicationData.UserSettings.GridEnabled = !_applicationData.UserSettings.GridEnabled;
             await SettingsUtils.Save(_storageProvider.StorageFolder, _applicationData);
             Subjects.GridChanged.OnNext(true);
-        }));
+        }), null, new System.Uri("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_table_simple_48_regular.svg"));
 
         _menuItemRegistry.Register(BaseMenuItem.View, "Toggle animation preview", async () =>
         {

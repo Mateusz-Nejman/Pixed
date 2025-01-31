@@ -22,7 +22,7 @@
           <Image Source="{SvgImage avares://Pixed.Application/Resources/fluent-icons/ic_fluent_globe_48_regular.svg}"/>
         </Button>
         <Button Name="buttonGithub" Command="{Binding OpenUrlCommand}" CommandParameter="https://github.com/Mateusz-Nejman/Pixed">
-          <Image Source="avares://Pixed.Application/Resources/Icons/github.png"/>
+          <Image Source="avares://Pixed.Application/Resources/github.png"/>
         </Button>
       </StackPanel>
     </StackPanel>

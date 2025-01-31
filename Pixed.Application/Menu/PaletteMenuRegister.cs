@@ -14,6 +14,6 @@ internal class PaletteMenuRegister(IMenuItemRegistry menuItemRegistry, PaletteSe
         _menuItemRegistry.Register(BaseMenuItem.Palette, "Clear palette", _paletteSectionViewModel.PaletteClearAction, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_square_eraser_20_regular.svg"));
         _menuItemRegistry.Register(BaseMenuItem.Palette, "Open palette from file", async () => await _paletteSectionViewModel.PaletteOpenAction(), new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_folder_open_28_regular.svg"));
         _menuItemRegistry.Register(BaseMenuItem.Palette, "Save palette to file", async () => await _paletteSectionViewModel.PaletteSaveAction(), new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_save_32_regular.svg"));
-        _menuItemRegistry.Register(BaseMenuItem.Palette, "Palettes list", _paletteSectionViewModel.PaletteListAction, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_database_48_regular.svg"));
+        _menuItemRegistry.Register(BaseMenuItem.Palette, "Palettes list", _paletteSectionViewModel.PaletteListAction, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_color_24_regular.svg"));
     }
 }

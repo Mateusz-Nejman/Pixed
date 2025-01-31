@@ -26,7 +26,9 @@ internal class ToolRadioButton : RadioButton
             {
                 Image image = new()
                 {
-                    Source = img
+                    Source = img,
+                    Width = 20,
+                    Height = 20,
                 };
                 radio.Content = image;
             }

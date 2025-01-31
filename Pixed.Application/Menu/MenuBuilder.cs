@@ -182,25 +182,28 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
     private MenuItem GetProjectMenu()
     {
         MenuItem projectMenu = new("Project");
-        MenuItem projectResize = new("Resize project");
+        MenuItem projectResize = new("Resize project")
+        {
+            Command = new ActionCommand(async () =>
+            {
+                var navigatorResult = await Router.Navigate<ResizeResult>("/resizeProject");
+                if (navigatorResult.HasValue)
+                {
+                    var result = navigatorResult.Value;
+                    var model = ResizeUtils.ResizeModel(_applicationData, _applicationData.CurrentModel, new Point(result.Width, result.Height), result.ResizeCanvasContent, result.Anchor);
+                    _applicationData.UserSettings.UserWidth = result.Width;
+                    _applicationData.UserSettings.UserHeight = result.Height;
+                    _applicationData.UserSettings.MaintainAspectRatio = result.MaintainAspectRatio;
+                    await SettingsUtils.Save(_storageProvider.StorageFolder, _applicationData);
+                    _applicationData.Models[_applicationData.CurrentModelIndex] = model;
+                    Subjects.ProjectModified.OnNext(model);
+                    Subjects.ProjectChanged.OnNext(model);
+                }
+            }),
+            Icon = new System.Uri("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_resize_48_regular.svg")
+        };
 
         projectMenu.Items = [];
-        projectResize.Command = new ActionCommand(async () =>
-        {
-            var navigatorResult = await Router.Navigate<ResizeResult>("/resizeProject");
-            if (navigatorResult.HasValue)
-            {
-                var result = navigatorResult.Value;
-                var model = ResizeUtils.ResizeModel(_applicationData, _applicationData.CurrentModel, new Point(result.Width, result.Height), result.ResizeCanvasContent, result.Anchor);
-                _applicationData.UserSettings.UserWidth = result.Width;
-                _applicationData.UserSettings.UserHeight = result.Height;
-                _applicationData.UserSettings.MaintainAspectRatio = result.MaintainAspectRatio;
-                await SettingsUtils.Save(_storageProvider.StorageFolder, _applicationData);
-                _applicationData.Models[_applicationData.CurrentModelIndex] = model;
-                Subjects.ProjectModified.OnNext(model);
-                Subjects.ProjectChanged.OnNext(model);
-            }
-        });
 
         projectMenu.Items.Add(projectResize);
         AddToMenu(ref projectMenu, GetEntries(BaseMenuItem.Project));

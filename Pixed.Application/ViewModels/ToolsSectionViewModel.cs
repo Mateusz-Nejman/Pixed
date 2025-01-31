@@ -5,6 +5,7 @@ using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Styling;
+using Avalonia.Svg.Skia;
 using Pixed.Application.Controls;
 using Pixed.Application.Extensions;
 using Pixed.Common.Tools;
@@ -56,7 +57,7 @@ internal class ToolsSectionViewModel(ToolsManager toolSelector, PaintCanvasViewM
             if (AssetLoader.Exists(new Uri(tool.Value.ImagePath)))
             {
                 var stream = AssetLoader.Open(new Uri(tool.Value.ImagePath));
-                toolRadio.Source = new Bitmap(stream);
+                toolRadio.Source = new SvgImage() { Source = SvgSource.LoadFromStream(stream) };
                 stream.Dispose();
             }
             else
