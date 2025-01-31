@@ -6,6 +6,7 @@ using Pixed.Common.Menu;
 using Pixed.Core;
 using Pixed.Core.Models;
 using Pixed.Core.Utils;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -48,7 +49,7 @@ namespace Pixed.Application.Services
             }
         }
 
-        public List<IMenuItem> BuildMenu()
+        public async Task<List<IMenuItem>> BuildMenu()
         {
             if (RecentFiles.Count == 0)
             {
@@ -59,7 +60,8 @@ namespace Pixed.Application.Services
 
             foreach (var file in RecentFiles)
             {
-                if (File.Exists(file))
+                var storageFile = await _storageProvider.StorageProvider.TryGetFileFromPathAsync(new Uri(file));
+                if (storageFile != null)
                 {
                     items.Add(new MenuItem(file)
                     {
@@ -84,10 +86,11 @@ namespace Pixed.Application.Services
         {
             RecentFiles.Remove(path);
 
-            if (File.Exists(path))
+            var file = await _storageProvider.StorageProvider.TryGetFileFromPathAsync(new Uri(path));
+            if (file != null)
             {
                 RecentFiles.Insert(0, path);
-                await _projectMethods.Open(path);
+                await _projectMethods.Open(file);
             }
 
             await Save();
