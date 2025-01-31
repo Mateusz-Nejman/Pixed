@@ -29,16 +29,23 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
         }
         else
         {
-            var file = await _storageProvider.StorageProvider.TryGetFileFromPathAsync(new Uri(model.FilePath));
-            
-            if(file != null)
+            try
             {
-                fileStream = await file.OpenWrite();
+                var file = await _storageProvider.StorageProvider.TryGetFileFromPathAsync(new Uri(model.FilePath));
+
+                if (file != null)
+                {
+                    fileStream = await file.OpenWrite();
+                }
+                else
+                {
+                    await Router.Message("Error", "Can't open " + model.FilePath);
+                    return;
+                }
             }
-            else
+            catch(Exception) //On android FilePath can contains one-use FilePath
             {
-                //TODO info
-                return;
+                saveAs = true;
             }
         }
 

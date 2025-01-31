@@ -81,7 +81,10 @@ internal partial class Main : EmptyPixedPage, IDisposable
         _toolsMenuRegister.Register();
 
         await Initialize();
-        await _recentFilesService.Load();
+        if(_lifecycle.RecentFilesEnabled)
+        {
+            await _recentFilesService.Load();
+        }
         await _menuBuilder.Build();
         _toolSelector.SelectTool("tool_pen");
         await _paletteSectionViewModel.LoadAll();
