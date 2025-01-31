@@ -8,11 +8,20 @@
       <ResourceDictionary>
         <ResourceDictionary.MergedDictionaries>
           <ResourceInclude Source="/Colors.axaml"/>
-          <ResourceInclude Source="/ControlThemes.axaml"/>
+          <ResourceInclude Source="/Themes/BaseButton.axaml"/>
+          <ResourceInclude Source="/Themes/CaptionButtons.axaml"/>
+          <ResourceInclude Source="/Themes/ColorPicker.axaml"/>
+          <ResourceInclude Source="/Themes/CrossButton.axaml"/>
+          <ResourceInclude Source="/Themes/FrameListBoxItem.axaml"/>
+          <ResourceInclude Source="/Themes/HandledFixScrollViewer.axaml"/>
+          <ResourceInclude Source="/Themes/LayersListBoxItem.axaml"/>
+          <ResourceInclude Source="/Themes/MainPage.axaml"/>
+          <ResourceInclude Source="/Themes/NoGesturesScrollViewer.axaml"/>
+          <ResourceInclude Source="/Themes/TabStripItem.axaml"/>
+          <ResourceInclude Source="/Themes/ToolButton.axaml"/>
+          <ResourceInclude Source="/Themes/ToolRadio.axaml"/>
+          <ResourceInclude Source="/Themes/ToolRadioCustom.axaml"/>
         </ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary.ThemeDictionaries>
-          <ResourceInclude x:Key="Default" Source="/ColorPickerTheme.axaml"/>
-        </ResourceDictionary.ThemeDictionaries>
       </ResourceDictionary>
     </Application.Resources>
   <Application.Styles>
