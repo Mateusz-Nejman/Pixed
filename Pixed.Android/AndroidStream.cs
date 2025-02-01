@@ -45,7 +45,9 @@ internal class AndroidStreamWrite(Stream stream) : StreamBase(stream)
     protected override void Dispose(bool disposing)
     {
         var buffer = _internalStream.ToArray();
-        _stream.Write(buffer, 0, buffer.Length);
+        Java.IO.BufferedOutputStream bos = new(_stream);
+        bos.Write(buffer, 0, buffer.Length);
+        bos.Close();
         _internalStream.Dispose();
     }
 }
