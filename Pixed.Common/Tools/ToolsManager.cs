@@ -24,18 +24,16 @@ public class ToolsManager
     }
 
     public ToolsManager(
-        ToolPen toolPen, ToolVerticalPen toolVerticalPen, ToolBucket toolBucket, ToolColorSwap toolColorSwap, ToolEraser toolEraser,
+        ToolPen toolPen, ToolBucket toolBucket, ToolEraser toolEraser,
         ToolStroke toolStroke, ToolRectangle toolRectangle, ToolCircle toolCircle, ToolMove toolMove, ToolLighten toolLighten,
-        ToolDithering toolDithering, ToolColorPicker toolColorPicker, ToolNoise toolNoise, ToolNoiseFill toolNoiseFill,
+        ToolDithering toolDithering, ToolColorPicker toolColorPicker,
         ToolOutliner toolOutliner, ToolMoveCanvas toolMoveCanvas, ToolSelectShape shapeSelect, ToolSelectRectangle rectangleSelect, ToolSelectLasso lassoSelect)
     {
         _tools = new Dictionary<string, BaseTool>()
             {
             { "tool_move_canvas", toolMoveCanvas },
             { "tool_pen", toolPen},
-            { "tool_mirror_pen", toolVerticalPen},
             { "tool_paint_bucket", toolBucket},
-            { "tool_colorswap", toolColorSwap},
             { "tool_eraser", toolEraser},
             { "tool_stroke", toolStroke},
             { "tool_rectangle", toolRectangle},
@@ -46,8 +44,6 @@ public class ToolsManager
             { "tool_lighten", toolLighten},
             { "tool_dithering", toolDithering},
             { "tool_colorpicker", toolColorPicker},
-            { "tool_noise", toolNoise},
-            { "tool_noise_fill", toolNoiseFill},
             { "tool_outliner", toolOutliner}
         };
     }

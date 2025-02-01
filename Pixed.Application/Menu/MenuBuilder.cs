@@ -99,7 +99,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
                 Subjects.ProjectAdded.OnNext(model);
             }
         }),
-            Icon = new("avares://Pixed.Application/Resources/Icons/file-empty-menu.png")
+            Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_document_48_regular.svg")
         };
         MenuItem fileOpen = new("Open")
         {
@@ -107,33 +107,35 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
         {
             await _projectMethods.Open(_recentFilesService);
         }),
-            Icon = new("avares://Pixed.Application/Resources/Icons/folder-open-menu.png")
+            Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_folder_open_28_regular.svg")
         };
         MenuItem fileSave = new("Save")
         {
             Command = new AsyncCommand<bool>(SaveAction),
             CommandParameter = false,
-            Icon = new("avares://Pixed.Application/Resources/Icons/floppy-disk-menu.png")
+            Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_save_32_regular.svg")
         };
         MenuItem fileSaveAs = new("Save as")
         {
             Command = new AsyncCommand<bool>(SaveAction),
             CommandParameter = true,
-            Icon = new("avares://Pixed.Application/Resources/Icons/floppy-disk-menu.png")
+            Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_save_edit_24_regular.svg")
         };
         MenuItem fileExportPng = new("Export to PNG")
         {
-            Command = new AsyncCommand(ExportPngAction)
+            Command = new AsyncCommand(ExportPngAction),
+            Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_image_48_regular.svg")
         };
         MenuItem fileExportIco = new("Export to Ico")
         {
-            Command = new AsyncCommand(ExportIcoAction)
+            Command = new AsyncCommand(ExportIcoAction),
+            Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_image_circle_48_regular.svg")
         };
 
         MenuItem fileQuit = new("Quit")
         {
             Command = Main.QuitCommand,
-            Icon = new("avares://Pixed.Application/Resources/Icons/cross-menu.png")
+            Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_arrow_exit_20_regular.svg")
         };
 
         fileMenu.Items = [fileNew, fileOpen, fileSave, fileSaveAs, fileExportPng, fileExportIco];
@@ -162,7 +164,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
                 _applicationData.CurrentModel.Undo();
                 Subjects.ProjectModified.OnNext(_applicationData.CurrentModel);
             }),
-            Icon = new("avares://Pixed.Application/Resources/Icons/undo2-menu.png")
+            Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_arrow_undo_48_regular.svg")
         };
         MenuItem redoMenu = new("Redo")
         {
@@ -171,7 +173,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
                 _applicationData.CurrentModel.Redo();
                 Subjects.ProjectModified.OnNext(_applicationData.CurrentModel);
             }),
-            Icon = new("avares://Pixed.Application/Resources/Icons/redo2-menu.png")
+            Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_arrow_redo_48_regular.svg")
         };
 
         editMenu.Items = [undoMenu, redoMenu];
@@ -183,25 +185,28 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
     private MenuItem GetProjectMenu()
     {
         MenuItem projectMenu = new("Project");
-        MenuItem projectResize = new("Resize project");
+        MenuItem projectResize = new("Resize project")
+        {
+            Command = new ActionCommand(async () =>
+            {
+                var navigatorResult = await Router.Navigate<ResizeResult>("/resizeProject");
+                if (navigatorResult.HasValue)
+                {
+                    var result = navigatorResult.Value;
+                    var model = ResizeUtils.ResizeModel(_applicationData, _applicationData.CurrentModel, new Point(result.Width, result.Height), result.ResizeCanvasContent, result.Anchor);
+                    _applicationData.UserSettings.UserWidth = result.Width;
+                    _applicationData.UserSettings.UserHeight = result.Height;
+                    _applicationData.UserSettings.MaintainAspectRatio = result.MaintainAspectRatio;
+                    await SettingsUtils.Save(_storageProvider.StorageFolder, _applicationData);
+                    _applicationData.Models[_applicationData.CurrentModelIndex] = model;
+                    Subjects.ProjectModified.OnNext(model);
+                    Subjects.ProjectChanged.OnNext(model);
+                }
+            }),
+            Icon = new System.Uri("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_resize_48_regular.svg")
+        };
 
         projectMenu.Items = [];
-        projectResize.Command = new ActionCommand(async () =>
-        {
-            var navigatorResult = await Router.Navigate<ResizeResult>("/resizeProject");
-            if (navigatorResult.HasValue)
-            {
-                var result = navigatorResult.Value;
-                var model = ResizeUtils.ResizeModel(_applicationData, _applicationData.CurrentModel, new Point(result.Width, result.Height), result.ResizeCanvasContent, result.Anchor);
-                _applicationData.UserSettings.UserWidth = result.Width;
-                _applicationData.UserSettings.UserHeight = result.Height;
-                _applicationData.UserSettings.MaintainAspectRatio = result.MaintainAspectRatio;
-                await SettingsUtils.Save(_storageProvider.StorageFolder, _applicationData);
-                _applicationData.Models[_applicationData.CurrentModelIndex] = model;
-                Subjects.ProjectModified.OnNext(model);
-                Subjects.ProjectChanged.OnNext(model);
-            }
-        });
 
         projectMenu.Items.Add(projectResize);
         AddToMenu(ref projectMenu, GetEntries(BaseMenuItem.Project));

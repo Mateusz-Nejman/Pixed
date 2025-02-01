@@ -15,13 +15,13 @@
 		Background="Transparent">
 	<Border CornerRadius="16" Background="{StaticResource BaseBackground}">
 		<Grid>
-			<Image Source="/Resources/icon256.png" Width="100" Height="100"/>
-			<progRing:ProgressRing Width="80"
-							   Height="80"
+			<Image Source="/Resources/icon256.png" Width="200" Height="200"/>
+			<progRing:ProgressRing Width="180"
+							   Height="180"
 							   IsActive="True"
 							   HorizontalAlignment="Center"
 							   VerticalAlignment="Center"
-							   Foreground="{StaticResource Accent}"
+							   Foreground="White"
 							   Margin="10,20,0,0"/>
 		</Grid>
 	</Border>

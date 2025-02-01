@@ -6,7 +6,7 @@ namespace Pixed.Common.Tools.Selection;
 
 public class ToolSelectShape(ApplicationData applicationData) : ToolSelectBase(applicationData)
 {
-    public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-shape-select.png";
+    public override string ImagePath => "avares://Pixed.Application/Resources/fluent-icons/ic_fluent_wand_48_regular.svg";
     public override string Name => "Shape selection";
     public override string Id => "tool_shape_select";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Shape selection", "Ctrl+C", "Copy the selected area", "Ctrl+V", "Paste the copied area");

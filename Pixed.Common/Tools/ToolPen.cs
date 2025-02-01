@@ -1,107 +1,77 @@
-﻿using Pixed.Common.Services.Keyboard;
-using Pixed.Core;
-using Pixed.Core.Algorithms;
+﻿using Pixed.Common.Models;
+using Pixed.Common.Services.Keyboard;
 using Pixed.Core.Models;
-using Pixed.Core.Utils;
 using SkiaSharp;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Pixed.Common.Tools;
-
-public class ToolPen(ApplicationData applicationData) : BaseTool(applicationData)
+public class ToolPen(ApplicationData applicationData) : ToolPenBase(applicationData)
 {
-    protected Point _prev = new(-1);
-    private readonly List<Pixel> _pixels = [];
-    private readonly List<Point> _modifiedPoints = [];
-
-    public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-pen.png";
+    private const string PROP_VERTICAL = "Use vertical mirror";
+    private const string PROP_HORIZONTAL = "Use horizontal mirror";
+    private const string PROP_BOTH = "Use both vertical and horizontal mirror";
+    public override string ImagePath => "avares://Pixed.Application/Resources/fluent-icons/ic_fluent_pen_48_regular.svg";
     public override string Name => "Pen tool";
     public override string Id => "tool_pen";
-    public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Pen tool");
+    public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Pen tool", "Ctrl", PROP_VERTICAL, "Alt", PROP_HORIZONTAL, "Shift", PROP_BOTH);
+
+    public override List<ToolProperty> GetToolProperties()
+    {
+        return [
+            new ToolProperty(PROP_VERTICAL),
+            new ToolProperty(PROP_HORIZONTAL), 
+            new ToolProperty(PROP_BOTH)
+        ];
+    }
+
     public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
-        ApplyToolBase(point, frame, ref overlay, keyState);
-        _prev = point;
+        base.ApplyTool(point, frame, ref overlay, keyState);
+        bool shiftPressed = keyState.IsShift || GetProperty(PROP_BOTH);
+        bool controlPressed = keyState.IsCtrl || GetProperty(PROP_VERTICAL) || shiftPressed;
+        bool altPressed = keyState.IsAlt || GetProperty(PROP_HORIZONTAL) || shiftPressed;
 
-        DrawOnOverlay(ToolColor, point, frame, ref overlay);
-        Subjects.OverlayModified.OnNext(overlay);
+        var color = ToolColor;
 
-        if (_pixels.Count > 0)
+        bool mirror = controlPressed || altPressed || shiftPressed;
+
+        if(mirror)
         {
-            Subjects.CurrentLayerRenderModified.OnNext(_pixels);
-        }
-    }
+            int symX = GetSymmetricX(point.X, frame);
+            int symY = GetSymmetricY(point.Y, frame);
 
-    public override void MoveTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
-    {
-        if (_prev != point)
-        {
-            var interpolatedPixels = BresenhamLine.Get(point, _prev);
-
-            foreach (var pixel in interpolatedPixels)
+            if (controlPressed)
             {
-                ApplyTool(pixel, frame, ref overlay, keyState);
+                DrawOnOverlay(color, new Point(symX, point.Y), frame, ref overlay);
             }
-        }
-        else
-        {
-            ApplyTool(point, frame, ref overlay, keyState);
-        }
 
-        _prev = point;
-    }
-
-    public override void ReleaseTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
-    {
-        SetPixels(frame, _pixels);
-        _pixels.Clear();
-        _modifiedPoints.Clear();
-        _prev = new Point(-1);
-
-        overlay.Clear();
-        Subjects.OverlayModified.OnNext(overlay);
-        ReleaseToolBase(point, frame, ref overlay, keyState);
-    }
-
-    public List<Pixel> GetPixels()
-    {
-        return _pixels;
-    }
-
-    protected bool IsPixelModified(Point point)
-    {
-        return _modifiedPoints.Contains(point);
-    }
-
-    protected void AddPixel(Point point, uint color)
-    {
-        if (IsPixelModified(point))
-        {
-            return;
-        }
-
-        _pixels.Add(new Pixel(point, color));
-        _modifiedPoints.Add(point);
-    }
-
-    protected void DrawOnOverlay(UniColor color, Point point, Frame frame, ref SKBitmap overlay)
-    {
-        var toolSize = _applicationData.ToolSize;
-        overlay.SetPixel(point, color, toolSize);
-
-        if (color == UniColor.Transparent)
-        {
-            frame.SetPixel(point, color, toolSize);
-        }
-
-        var toolPoints = PaintUtils.GetToolPoints(point, toolSize);
-
-        foreach (var toolPoint in toolPoints)
-        {
-            if (frame.ContainsPixel(toolPoint))
+            if(altPressed)
             {
-                AddPixel(toolPoint, color);
+                DrawOnOverlay(color, new Point(point.X, symY), frame, ref overlay);
             }
+
+            if(shiftPressed)
+            {
+                DrawOnOverlay(color, new Point(symX, symY), frame, ref overlay);
+            }
+
+            Subjects.OverlayModified.OnNext(overlay);
+
+            _prev = point;
         }
+    }
+
+    private static int GetSymmetricX(int x, Frame frame)
+    {
+        return frame.Width - 1 - x;
+    }
+
+    private static int GetSymmetricY(int y, Frame frame)
+    {
+        return frame.Height - 1 - y;
     }
 }

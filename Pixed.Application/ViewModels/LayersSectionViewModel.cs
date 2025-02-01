@@ -136,12 +136,12 @@ internal class LayersSectionViewModel : ExtendedViewModel, IDisposable
 
     public override void RegisterMenuItems()
     {
-        _menuItemRegistry.Register(BaseMenuItem.Project, "Add Layer to current frame", AddLayerCommand, null, new("avares://Pixed.Application/Resources/Icons/plus-menu.png"));
-        _menuItemRegistry.Register(BaseMenuItem.Project, "Edit layer name", EditLayerNameCommand, null, new("avares://Pixed.Application/Resources/Icons/pencil-menu.png"));
-        _menuItemRegistry.Register(BaseMenuItem.Project, "Merge with layer below", MergeLayerCommand, null, new("avares://Pixed.Application/Resources/Icons/download2-menu.png"));
-        _menuItemRegistry.Register(BaseMenuItem.Project, "Move layer up", MoveLayerUpCommand, null, new("avares://Pixed.Application/Resources/Icons/arrow-up-menu.png"));
-        _menuItemRegistry.Register(BaseMenuItem.Project, "Move layer down", MoveLayerDownCommand, null, new("avares://Pixed.Application/Resources/Icons/arrow-down-menu.png"));
-        _menuItemRegistry.Register(BaseMenuItem.Project, "Remove current layer", RemoveLayerCommand, null, new("avares://Pixed.Application/Resources/Icons/bin-menu.png"));
+        _menuItemRegistry.Register(BaseMenuItem.Project, "Add Layer to current frame", AddLayerCommand, null, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_add_48_regular.svg"));
+        _menuItemRegistry.Register(BaseMenuItem.Project, "Edit layer name", EditLayerNameCommand, null, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_pen_48_regular.svg"));
+        _menuItemRegistry.Register(BaseMenuItem.Project, "Merge with layer below", MergeLayerCommand, null, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_layer_diagonal_sparkle_24_regular.svg"));
+        _menuItemRegistry.Register(BaseMenuItem.Project, "Move layer up", MoveLayerUpCommand, null, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_arrow_up_48_regular.svg"));
+        _menuItemRegistry.Register(BaseMenuItem.Project, "Move layer down", MoveLayerDownCommand, null, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_arrow_down_48_regular.svg"));
+        _menuItemRegistry.Register(BaseMenuItem.Project, "Remove current layer", RemoveLayerCommand, null, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_delete_48_regular.svg"));
     }
 
     protected virtual void Dispose(bool disposing)

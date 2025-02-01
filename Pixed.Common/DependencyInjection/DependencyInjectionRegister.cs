@@ -19,19 +19,15 @@ public class DependencyInjectionRegister : IDependencyRegister
         collection.AddScoped<ToolBucket>();
         collection.AddScoped<ToolCircle>();
         collection.AddScoped<ToolColorPicker>();
-        collection.AddScoped<ToolColorSwap>();
         collection.AddScoped<ToolDithering>();
         collection.AddScoped<ToolEraser>();
         collection.AddScoped<ToolLighten>();
         collection.AddScoped<ToolMove>();
         collection.AddSingleton<ToolMoveCanvas>();
-        collection.AddScoped<ToolNoise>();
-        collection.AddScoped<ToolNoiseFill>();
         collection.AddScoped<ToolOutliner>();
         collection.AddScoped<ToolPen>();
         collection.AddScoped<ToolRectangle>();
         collection.AddScoped<ToolStroke>();
-        collection.AddScoped<ToolVerticalPen>();
 
         collection.AddScoped<ToolSelectLasso>();
         collection.AddScoped<ToolSelectRectangle>();

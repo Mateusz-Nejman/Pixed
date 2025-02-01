@@ -9,7 +9,7 @@
         x:Class="Pixed.Application.Windows.MainWindow"
         WindowStartupLocation="CenterScreen"
 		Padding="6"
-        ExtendClientAreaTitleBarHeightHint="38"
+        ExtendClientAreaTitleBarHeightHint="46"
         ExtendClientAreaToDecorationsHint="True"
         WindowState="Maximized"
         Icon="avares://Pixed.Application/Resources/icon.ico"

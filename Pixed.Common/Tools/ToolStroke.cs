@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace Pixed.Common.Tools;
 public class ToolStroke : ShapeTool
 {
-    public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-stroke.png";
+    public override string ImagePath => "avares://Pixed.Application/Resources/fluent-icons/ic_fluent_line_48_regular.svg";
     public override string Name => "Line tool";
     public override string Id => "tool_stroke";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Line", "Shift", "Draw straight lines");

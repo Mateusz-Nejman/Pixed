@@ -6,12 +6,12 @@ using SkiaSharp;
 using System.Collections.Generic;
 
 namespace Pixed.Common.Tools;
-public class ToolLighten(ApplicationData applicationData) : ToolPen(applicationData)
+public class ToolLighten(ApplicationData applicationData) : ToolPenBase(applicationData)
 {
     private const string PROP_DARKEN = "Darken";
     private const string PROP_APPLY_ONCE = "Apply once per pixel";
 
-    public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-lighten.png";
+    public override string ImagePath => "avares://Pixed.Application/Resources/fluent-icons/ic_fluent_add_subtract_circle_48_regular.svg";
     public override string Name => "Lighten tool";
     public override string Id => "tool_lighten";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Lighten", "Ctrl", "Darken", "Shift", "Apply once per pixel");

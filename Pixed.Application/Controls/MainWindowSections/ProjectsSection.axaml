@@ -8,19 +8,20 @@
              x:Class="Pixed.Application.Controls.MainWindowSections.ProjectsSection"
 			 x:DataType="vm:ProjectsSectionViewModel">
   <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden">
-    <TabControl ItemsSource="{Binding Projects}" SelectedIndex="{Binding SelectedProject, Mode=TwoWay}">
-      <TabControl.ItemTemplate>
+    <TabStrip ItemsSource="{Binding Projects}" SelectedIndex="{Binding SelectedProject, Mode=TwoWay}">
+      <TabStrip.ItemTemplate>
         <DataTemplate>
-          <Grid Width="100" Height="72">
+          <Grid Height="32">
             <ToolTip.Tip>
               <TextBlock FontWeight="Bold" FontSize="14" Text="{Binding FileName}" Foreground="White"></TextBlock>
             </ToolTip.Tip>
             <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="64"/>
-              <ColumnDefinition Width="32"/>
+              <ColumnDefinition Width="24"/>
+              <ColumnDefinition Width="auto"/>
+              <ColumnDefinition Width="20"/>
             </Grid.ColumnDefinitions>
-            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-              <Grid MaxWidth="64" MaxHeight="64" RenderOptions.BitmapInterpolationMode="None">
+            <Grid HorizontalAlignment="Left" VerticalAlignment="Center">
+              <Grid MaxWidth="20" MaxHeight="20" RenderOptions.BitmapInterpolationMode="None">
                 <Grid.Background>
                   <ImageBrush Source="avares://Pixed.Application/Resources/transparentBackground.png" TileMode="Tile">
                     <ImageBrush.Transform>
@@ -28,18 +29,14 @@
                     </ImageBrush.Transform>
                   </ImageBrush>
                 </Grid.Background>
-                <controls:SkiaImage MaxWidth="64" MaxHeight="64" Source="{Binding RenderSource}" RenderOptions.BitmapInterpolationMode="None"/>
+                <controls:SkiaImage MaxWidth="20" MaxHeight="20" Source="{Binding RenderSource}" RenderOptions.BitmapInterpolationMode="None"/>
               </Grid>
             </Grid>
-            <Button Grid.Column="1" Theme="{StaticResource BaseButton}" Command="{Binding CloseCommand}">
-              <Image Source="/Resources/Icons/cross.png" Width="16" Height="16"/>
-            </Button>
+            <TextBlock Text="{Binding FileName}" Grid.Column="1" FontSize="14" VerticalAlignment="Center"/>
+            <Button Grid.Column="2" Theme="{StaticResource CrossButton}" Command="{Binding CloseCommand}" HorizontalAlignment="Right"/>
           </Grid>
         </DataTemplate>
-      </TabControl.ItemTemplate>
-      <TabControl.ContentTemplate>
-        <DataTemplate></DataTemplate>
-      </TabControl.ContentTemplate>
-    </TabControl>
+      </TabStrip.ItemTemplate>
+    </TabStrip>
   </ScrollViewer>
 </UserControl>

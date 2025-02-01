@@ -1,0 +1,46 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <ControlTheme x:Key="ToolRadioCustom" TargetType="RadioButton">
+    <Setter Property="Width" Value="46"/>
+    <Setter Property="Height" Value="46"/>
+    <Setter Property="BorderThickness" Value="3"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderBrush" Value="Transparent"/>
+    <Setter Property="Template">
+      <ControlTemplate TargetType="RadioButton">
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+          </Grid.ColumnDefinitions>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+          </Grid.RowDefinitions>
+          <Border BorderThickness="{TemplateBinding BorderThickness}"
+							BorderBrush="{TemplateBinding BorderBrush}"
+							Background="{TemplateBinding Background}" Grid.ColumnSpan="3" Grid.RowSpan="3">
+            <ContentPresenter
+							  Name="PART_ContentPresenter"
+							  Margin="{TemplateBinding Padding}"
+							  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+							  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+							  Content="{TemplateBinding Content}"
+							  ContentTemplate="{TemplateBinding ContentTemplate}"
+							  Foreground="{TemplateBinding Foreground}"
+							  RecognizesAccessKey="True" />
+          </Border>
+          <Image Source="{SvgImage avares://Pixed.Application/Resources/fluent-icons/ic_fluent_settings_48_regular.svg}" Grid.Row="2" Grid.Column="2"/>
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+    <Style Selector="^:checked">
+      <Setter Property="BorderBrush" Value="{StaticResource Accent}"/>
+    </Style>
+    <Style Selector="^:pointerover">
+      <Setter Property="Background" Value="{StaticResource BaseBackgroundHover}"/>
+    </Style>
+  </ControlTheme>
+</ResourceDictionary>

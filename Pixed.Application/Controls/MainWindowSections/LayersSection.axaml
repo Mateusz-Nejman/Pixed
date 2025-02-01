@@ -25,43 +25,43 @@
 					<RowDefinition Height="32"/>
 				</Grid.RowDefinitions>
 				<controls:TouchButton Theme="{StaticResource BaseButton}" Command="{Binding AddLayerCommand}">
-					<Image Source="avares://Pixed.Application/Resources/Icons/plus.png" Width="16" Height="16"/>
+					<Image Source="{SvgImage avares://Pixed.Application/Resources/fluent-icons/ic_fluent_add_48_regular.svg}" Width="16" Height="16"/>
 					<ToolTip.Tip>
 						<controls:TextTooltip Text="Add Layer"/>
 					</ToolTip.Tip>
 				</controls:TouchButton>
 				<controls:TouchButton Theme="{StaticResource BaseButton}" Grid.Column="1" Command="{Binding DuplicateLayerCommand}">
-					<Image Source="avares://Pixed.Application/Resources/Icons/files-empty.png" Width="16" Height="16"/>
+					<Image Source="{SvgImage avares://Pixed.Application/Resources/fluent-icons/ic_fluent_document_copy_48_regular.svg}" Width="16" Height="16"/>
 					<ToolTip.Tip>
 						<controls:TextTooltip Text="Duplicate layer"/>
 					</ToolTip.Tip>
 				</controls:TouchButton>
 				<controls:TouchButton Theme="{StaticResource BaseButton}" Grid.Column="2" Command="{Binding MoveLayerUpCommand}" IsEnabled="{Binding CanLayerMoveUp}">
-					<Image Source="avares://Pixed.Application/Resources/Icons/arrow-up.png" Width="16" Height="16"/>
+					<Image Source="{SvgImage avares://Pixed.Application/Resources/fluent-icons/ic_fluent_arrow_up_48_regular.svg}" Width="16" Height="16"/>
 					<ToolTip.Tip>
 						<controls:TextTooltip Text="Move layer up"/>
 					</ToolTip.Tip>
 				</controls:TouchButton>
 				<controls:TouchButton Theme="{StaticResource BaseButton}" Grid.Column="3" Command="{Binding MoveLayerDownCommand}" IsEnabled="{Binding CanLayerMoveDown}">
-					<Image Source="avares://Pixed.Application/Resources/Icons/arrow-down.png" Width="16" Height="16"/>
+					<Image Source="{SvgImage avares://Pixed.Application/Resources/fluent-icons/ic_fluent_arrow_down_48_regular.svg}" Width="16" Height="16"/>
 					<ToolTip.Tip>
 						<controls:TextTooltip Text="Move layer down"/>
 					</ToolTip.Tip>
 				</controls:TouchButton>
 				<controls:TouchButton Theme="{StaticResource BaseButton}" Grid.Column="4" Command="{Binding EditLayerNameCommand}">
-					<Image Source="avares://Pixed.Application/Resources/Icons/pencil.png" Width="16" Height="16"/>
+					<Image Source="{SvgImage avares://Pixed.Application/Resources/fluent-icons/ic_fluent_pen_48_regular.svg}" Width="16" Height="16"/>
 					<ToolTip.Tip>
 						<controls:TextTooltip Text="Edit layer name"/>
 					</ToolTip.Tip>
 				</controls:TouchButton>
 				<controls:TouchButton Theme="{StaticResource BaseButton}" Grid.Column="5" Command="{Binding MergeLayerCommand}" IsEnabled="{Binding CanLayerMerge}">
-					<Image Source="avares://Pixed.Application/Resources/Icons/download2.png" Width="16" Height="16"/>
+					<Image Source="{SvgImage avares://Pixed.Application/Resources/fluent-icons/ic_fluent_layer_diagonal_sparkle_24_regular.svg}" Width="16" Height="16"/>
 					<ToolTip.Tip>
 						<controls:TextTooltip Text="Merge with layer below"/>
 					</ToolTip.Tip>
 				</controls:TouchButton>
 				<controls:TouchButton Theme="{StaticResource BaseButton}" Grid.Column="6" Command="{Binding RemoveLayerCommand}" IsEnabled="{Binding CanLayerRemove}">
-					<Image Source="avares://Pixed.Application/Resources/Icons/bin.png" Width="16" Height="16"/>
+					<Image Source="{SvgImage avares://Pixed.Application/Resources/fluent-icons/ic_fluent_delete_48_regular.svg}" Width="16" Height="16"/>
 					<ToolTip.Tip>
 						<controls:TextTooltip Text="Delete selected layer"/>
 					</ToolTip.Tip>

@@ -21,10 +21,10 @@ internal class TransformMenuRegister(IMenuItemRegistry menuItemRegistry, Selecti
         {
             Items = []
         };
-        AddToMenu(ref transformMenu, "Flip", () => Router.Navigate("/transformFlip"), new("avares://Pixed.Application/Resources/Icons/transform/tool-flip.png"));
-        AddToMenu(ref transformMenu, "Rotation", () => Router.Navigate("/transformRotate"), new("avares://Pixed.Application/Resources/Icons/transform/tool-rotate.png"));
-        AddToMenu(ref transformMenu, "Align image to the center", () => Router.Navigate("/transformAlign"), new("avares://Pixed.Application/Resources/Icons/transform/tool-center.png"));
-        AddToMenu(ref transformMenu, "Crop to fit the content or the selection", new Crop(_applicationData, _selectionManager), new("avares://Pixed.Application/Resources/Icons/transform/tool-crop.png"));
+        AddToMenu(ref transformMenu, "Flip", () => Router.Navigate("/transformFlip"), new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_flip_horizontal_48_regular.svg"));
+        AddToMenu(ref transformMenu, "Rotation", () => Router.Navigate("/transformRotate"), new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_arrow_rotate_clockwise_24_regular.svg"));
+        AddToMenu(ref transformMenu, "Align image to the center", () => Router.Navigate("/transformAlign"), new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_arrow_move_inward_20_regular.svg"));
+        AddToMenu(ref transformMenu, "Crop to fit the content or the selection", new Crop(_applicationData, _selectionManager), new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_crop_48_regular.svg"));
 
         _menuItemRegistry.Register(BaseMenuItem.Tools, transformMenu);
     }

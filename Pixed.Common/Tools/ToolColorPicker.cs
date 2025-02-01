@@ -6,7 +6,7 @@ using SkiaSharp;
 namespace Pixed.Common.Tools;
 public class ToolColorPicker(ApplicationData applicationData) : BaseTool(applicationData)
 {
-    public override string ImagePath => "avares://Pixed.Application/Resources/Icons/tools/tool-colorpicker.png";
+    public override string ImagePath => "avares://Pixed.Application/Resources/fluent-icons/ic_fluent_eyedropper_24_regular.svg";
     public override string Name => "Color picker";
     public override string Id => "tool_colorpicker";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties(Name);
