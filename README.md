@@ -57,7 +57,6 @@ Your imagination and **Pixed**. These two things are needed for pixel-arted imag
 - SkiaSharp [mono/SkiaSharp](https://github.com/mono/SkiaSharp)
 - BigGustave (Modified in Pixed.BigGustave) [EliotJones/BigGustave](https://github.com/EliotJones/BigGustave)
 - WiX Toolset [wixtoolset/wix](https://github.com/wixtoolset/wix)
-- Fluent UI System Icons [microsoft/fluentui-system-icons](https://github.com/microsoft/fluentui-system-icons)
 - Svg.Skia [wieslawsoltes/Svg.Skia](https://github.com/wieslawsoltes/Svg.Skia)
 
 ## Build prerequisites
@@ -70,5 +69,4 @@ wix extension add  WixToolset.UI.wixext
 ```
 
 ## Assets
-- Icons from IcoMoon [https://icomoon.io/](https://icomoon.io/)
-- Icons from Piskel [piskelapp/piskel](https://github.com/piskelapp/piskel)
+- Fluent UI System Icons [microsoft/fluentui-system-icons](https://github.com/microsoft/fluentui-system-icons)
