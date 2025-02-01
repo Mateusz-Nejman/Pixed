@@ -6,7 +6,7 @@ using SkiaSharp;
 using System.Collections.Generic;
 
 namespace Pixed.Common.Tools;
-public class ToolLighten(ApplicationData applicationData) : ToolPen(applicationData)
+public class ToolLighten(ApplicationData applicationData) : ToolPenBase(applicationData)
 {
     private const string PROP_DARKEN = "Darken";
     private const string PROP_APPLY_ONCE = "Apply once per pixel";

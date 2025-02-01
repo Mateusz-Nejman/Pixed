@@ -24,13 +24,10 @@ public class DependencyInjectionRegister : IDependencyRegister
         collection.AddScoped<ToolLighten>();
         collection.AddScoped<ToolMove>();
         collection.AddSingleton<ToolMoveCanvas>();
-        collection.AddScoped<ToolNoise>();
-        collection.AddScoped<ToolNoiseFill>();
         collection.AddScoped<ToolOutliner>();
         collection.AddScoped<ToolPen>();
         collection.AddScoped<ToolRectangle>();
         collection.AddScoped<ToolStroke>();
-        collection.AddScoped<ToolVerticalPen>();
 
         collection.AddScoped<ToolSelectLasso>();
         collection.AddScoped<ToolSelectRectangle>();

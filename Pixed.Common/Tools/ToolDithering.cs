@@ -5,7 +5,7 @@ using Pixed.Core.Utils;
 using SkiaSharp;
 
 namespace Pixed.Common.Tools;
-public class ToolDithering(ApplicationData applicationData) : ToolPen(applicationData)
+public class ToolDithering(ApplicationData applicationData) : ToolPenBase(applicationData)
 {
     public override string ImagePath => "avares://Pixed.Application/Resources/fluent-icons/ic_fluent_transparency_square_24_regular.svg";
     public override string Name => "Dithering tool";

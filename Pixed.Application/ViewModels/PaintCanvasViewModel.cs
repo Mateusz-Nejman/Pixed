@@ -538,7 +538,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
     {
         List<Pixel>? pixels = null;
 
-        if (_toolSelector.SelectedTool is ToolPen pen)
+        if (_toolSelector.SelectedTool is ToolPenBase pen)
         {
             pixels = pen.GetPixels();
         }

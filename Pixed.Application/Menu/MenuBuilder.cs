@@ -123,11 +123,13 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
         };
         MenuItem fileExportPng = new("Export to PNG")
         {
-            Command = new AsyncCommand(ExportPngAction)
+            Command = new AsyncCommand(ExportPngAction),
+            Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_image_48_regular.svg")
         };
         MenuItem fileExportIco = new("Export to Ico")
         {
-            Command = new AsyncCommand(ExportIcoAction)
+            Command = new AsyncCommand(ExportIcoAction),
+            Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_image_circle_48_regular.svg")
         };
         MenuItem fileRecent = new("Recent")
         {
