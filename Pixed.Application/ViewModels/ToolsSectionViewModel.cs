@@ -14,12 +14,11 @@ using System.Collections.Generic;
 using IPlatformSettings = Pixed.Application.Platform.IPlatformSettings;
 
 namespace Pixed.Application.ViewModels;
-internal class ToolsSectionViewModel(ToolsManager toolSelector, PaintCanvasViewModel paintCanvas, IPlatformSettings platformSettings) : ExtendedViewModel
+internal class ToolsSectionViewModel(ToolsManager toolSelector, PaintCanvasViewModel paintCanvas) : ExtendedViewModel
 {
     private readonly ToolsManager _toolSelector = toolSelector;
     private readonly PaintCanvasViewModel _paintCanvas = paintCanvas;
     private readonly Dictionary<string, ToolRadioButton> _radios = [];
-    private readonly IPlatformSettings _platformSettings = platformSettings;
 
     public void InitializeTools(StackPanel stackPanel)
     {
@@ -27,7 +26,7 @@ internal class ToolsSectionViewModel(ToolsManager toolSelector, PaintCanvasViewM
         _radios.Clear();
         var tools = _toolSelector.GetTools();
 
-        if (_platformSettings.ExtensionsEnabled)
+        if (IPlatformSettings.Instance.ExtensionsEnabled)
         {
             var extensionTools = ExtensionsLoader.GetTools(App.ServiceProvider);
 

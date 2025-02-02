@@ -13,11 +13,10 @@ using System.IO;
 using System.Threading.Tasks;
 
 namespace Pixed.Application.IO;
-internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils dialogUtils, IPlatformSettings platformSettings, IStorageProviderHandle storageProvider)
+internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils dialogUtils, IStorageProviderHandle storageProvider)
 {
     private readonly ApplicationData _applicationData = applicationData;
     private readonly DialogUtils _dialogUtils = dialogUtils;
-    private readonly IPlatformSettings _platformSettings = platformSettings;
     private readonly IStorageProviderHandle _storageProvider = storageProvider;
 
     public async Task Save(PixedModel model, bool saveAs, RecentFilesService recentFilesService)
@@ -59,7 +58,7 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
                 name = info.Name.Replace(info.Extension, string.Empty);
             }
 
-            if (_platformSettings.ExtensionsOnSave)
+            if (IPlatformSettings.Instance.ExtensionsOnSave)
             {
                 name += ".pixed";
             }
@@ -245,7 +244,7 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
             name = info.Name.Replace(info.Extension, string.Empty);
         }
 
-        if (_platformSettings.ExtensionsOnSave)
+        if (IPlatformSettings.Instance.ExtensionsOnSave)
         {
             name += ".png";
         }
@@ -283,7 +282,7 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
         {
             name = info.Name.Replace(info.Extension, string.Empty);
         }
-        if (_platformSettings.ExtensionsOnSave)
+        if (IPlatformSettings.Instance.ExtensionsOnSave)
         {
             name += ".ico";
         }

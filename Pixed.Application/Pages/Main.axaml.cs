@@ -32,12 +32,11 @@ internal partial class Main : EmptyPixedPage, IDisposable
     private readonly ViewMenuRegister _viewMenuRegister;
     private readonly ToolsMenuRegister _toolsMenuRegister;
     private readonly RecentFilesService _recentFilesService;
-    private readonly PaletteService _paletteService;
     private readonly ToolsManager _toolSelector;
     private readonly MenuBuilder _menuBuilder;
     private readonly IStorageProviderHandle _storageProviderHandle;
+    private readonly IPlatformFolder _platformFolder;
     private readonly IDisposable _newInstanceHandled;
-    private readonly IPlatformSettings _lifecycle;
     private readonly PaletteSectionViewModel _paletteSectionViewModel;
     private bool _disposedValue;
 
@@ -55,9 +54,8 @@ internal partial class Main : EmptyPixedPage, IDisposable
         _recentFilesService = Get<RecentFilesService>();
         _toolSelector = Get<ToolsManager>();
         _menuBuilder = Get<MenuBuilder>();
-        _paletteService = Get<PaletteService>();
         _storageProviderHandle = Get<IStorageProviderHandle>();
-        _lifecycle = Get<IPlatformSettings>();
+        _platformFolder = Get<IPlatformFolder>();
         _paletteSectionViewModel = Get<PaletteSectionViewModel>();
         _newInstanceHandled = Subjects.NewInstanceHandled.Subscribe(args =>
         {
@@ -81,7 +79,7 @@ internal partial class Main : EmptyPixedPage, IDisposable
         _toolsMenuRegister.Register();
 
         await Initialize();
-        if(_lifecycle.RecentFilesEnabled)
+        if(IPlatformSettings.Instance.RecentFilesEnabled)
         {
             await _recentFilesService.Load();
         }
@@ -161,21 +159,21 @@ internal partial class Main : EmptyPixedPage, IDisposable
 
             if (canQuit)
             {
-                _lifecycle.Close();
+                IPlatformSettings.Instance.Close();
             }
         });
     }
 
     private async Task InitializeDataFolder()
     {
-        _storageProviderHandle.StorageFolder.GetFiles(FolderType.Root);
-        _storageProviderHandle.StorageFolder.GetFiles(FolderType.Palettes);
+        _platformFolder.GetFiles(FolderType.Root);
+        _platformFolder.GetFiles(FolderType.Palettes);
 
-        if (_lifecycle.ExtensionsEnabled)
+        if (IPlatformSettings.Instance.ExtensionsEnabled)
         {
-            _storageProviderHandle.StorageFolder.GetFiles(FolderType.Extensions);
+            _platformFolder.GetFiles(FolderType.Extensions);
         }
-        _applicationData.UserSettings = await SettingsUtils.Load(_storageProviderHandle.StorageFolder);
+        _applicationData.UserSettings = await SettingsUtils.Load(_platformFolder);
         _applicationData.Initialize();
         Subjects.AnimationPreviewChanged.OnNext(_applicationData.UserSettings.AnimationPreviewVisible);
     }

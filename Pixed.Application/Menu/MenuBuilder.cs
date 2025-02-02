@@ -22,7 +22,7 @@ using System.Threading.Tasks;
 
 namespace Pixed.Application.Menu;
 
-internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods pixedProjectMethods, RecentFilesService recentFilesService, IStorageProviderHandle storageProvider, IPlatformSettings platformSettings)
+internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods pixedProjectMethods, RecentFilesService recentFilesService, IStorageProviderHandle storageProvider, IPlatformFolder platformFolder)
 {
 
     private readonly struct MenuEntry(BaseMenuItem baseMenu, IMenuItem menuItem)
@@ -35,7 +35,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
     private readonly PixedProjectMethods _projectMethods = pixedProjectMethods;
     private readonly RecentFilesService _recentFilesService = recentFilesService;
     private readonly IStorageProviderHandle _storageProvider = storageProvider;
-    private readonly IPlatformSettings _platformSettings = platformSettings;
+    private readonly IPlatformFolder _platformFolder = platformFolder;
     private readonly List<MenuEntry> _entries = [];
 
     public Subject<List<IMenuItem>> OnMenuBuilt { get; } = new Subject<List<IMenuItem>>();
@@ -141,7 +141,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
         fileMenu.Items = [fileNew, fileOpen, fileSave, fileSaveAs, fileExportPng, fileExportIco];
         AddToMenu(ref fileMenu, GetEntries(BaseMenuItem.File));
 
-        if (_platformSettings.RecentFilesEnabled)
+        if (IPlatformSettings.Instance.RecentFilesEnabled)
         {
             MenuItem fileRecent = new("Recent")
             {
@@ -197,7 +197,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
                     _applicationData.UserSettings.UserWidth = result.Width;
                     _applicationData.UserSettings.UserHeight = result.Height;
                     _applicationData.UserSettings.MaintainAspectRatio = result.MaintainAspectRatio;
-                    await SettingsUtils.Save(_storageProvider.StorageFolder, _applicationData);
+                    await SettingsUtils.Save(_platformFolder, _applicationData);
                     _applicationData.Models[_applicationData.CurrentModelIndex] = model;
                     Subjects.ProjectModified.OnNext(model);
                     Subjects.ProjectChanged.OnNext(model);

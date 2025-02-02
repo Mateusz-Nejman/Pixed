@@ -11,11 +11,11 @@ using Pixed.Core.Models;
 using System.Runtime.InteropServices;
 
 namespace Pixed.Application.Menu;
-internal class ViewMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationData applicationData, IStorageProviderHandle storageProvider)
+internal class ViewMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationData applicationData, IPlatformFolder platformFolder)
 {
     private readonly IMenuItemRegistry _menuItemRegistry = menuItemRegistry;
     private readonly ApplicationData _applicationData = applicationData;
-    private readonly IStorageProviderHandle _storageProvider = storageProvider;
+    private readonly IPlatformFolder _platformFolder = platformFolder;
 
     public void Register()
     {
@@ -46,7 +46,7 @@ internal class ViewMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
                 _applicationData.UserSettings.GridHeight = navigateResult.Value.Height;
                 _applicationData.UserSettings.GridColor = navigateResult.Value.Color;
                 _applicationData.UserSettings.GridEnabled = true;
-                await SettingsUtils.Save(_storageProvider.StorageFolder, _applicationData);
+                await SettingsUtils.Save(_platformFolder, _applicationData);
                 Subjects.GridChanged.OnNext(true);
             }
         }), null, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_settings_48_regular.svg"));
@@ -54,7 +54,7 @@ internal class ViewMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
         _menuItemRegistry.Register(BaseMenuItem.View, "Toggle grid", new AsyncCommand(async () =>
         {
             _applicationData.UserSettings.GridEnabled = !_applicationData.UserSettings.GridEnabled;
-            await SettingsUtils.Save(_storageProvider.StorageFolder, _applicationData);
+            await SettingsUtils.Save(_platformFolder, _applicationData);
             Subjects.GridChanged.OnNext(true);
         }), null, new System.Uri("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_table_simple_48_regular.svg"));
 
@@ -63,7 +63,7 @@ internal class ViewMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
             bool value = !_applicationData.UserSettings.AnimationPreviewVisible;
             Subjects.AnimationPreviewChanged.OnNext(value);
             _applicationData.UserSettings.AnimationPreviewVisible = value;
-            await SettingsUtils.Save(_storageProvider.StorageFolder, _applicationData);
+            await SettingsUtils.Save(_platformFolder, _applicationData);
         }, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_filmstrip_play_32_regular.svg"));
     }
 }

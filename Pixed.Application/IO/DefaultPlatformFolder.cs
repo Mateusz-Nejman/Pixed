@@ -5,9 +5,10 @@ using System.IO;
 using System.Threading.Tasks;
 
 namespace Pixed.Application.IO;
-public class DefaultPlatformFolder : IPlatformFolder
+internal class DefaultPlatformFolder(IStorageProviderHandle handle) : IPlatformFolder
 {
-    private IStorageProvider _storageProvider;
+    private readonly IStorageProviderHandle _storageProviderHandle = handle;
+
     public IStorageContainerFile Convert(IStorageFile value)
     {
         return new DefaultStorageContainerFile(value);
@@ -30,7 +31,7 @@ public class DefaultPlatformFolder : IPlatformFolder
         var folder = await GetFolder(folderType);
         var filepath = Path.Combine(folder.Path.AbsolutePath, filename);
 
-        IStorageFile? file = await _storageProvider.TryGetFileFromPathAsync(filepath);
+        IStorageFile? file = await _storageProviderHandle.StorageProvider.TryGetFileFromPathAsync(filepath);
 
         if (file == null)
         {
@@ -40,18 +41,13 @@ public class DefaultPlatformFolder : IPlatformFolder
         return new DefaultStorageContainerFile(file);
     }
 
-    public void Initialize(IStorageProvider storageProvider)
-    {
-        _storageProvider = storageProvider;
-    }
-
     private async Task<IStorageFolder> GetFolder(FolderType type)
     {
         return type switch
         {
-            FolderType.Root => await GetPixedFolder(_storageProvider),
-            FolderType.Palettes => await GetPalettesFolder(_storageProvider),
-            FolderType.Extensions => await GetExtensionsFolder(_storageProvider),
+            FolderType.Root => await GetPixedFolder(_storageProviderHandle.StorageProvider),
+            FolderType.Palettes => await GetPalettesFolder(_storageProviderHandle.StorageProvider),
+            FolderType.Extensions => await GetExtensionsFolder(_storageProviderHandle.StorageProvider),
             _ => throw new System.NotImplementedException()
         };
     }
