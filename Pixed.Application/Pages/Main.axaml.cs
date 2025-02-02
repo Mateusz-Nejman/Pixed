@@ -29,6 +29,7 @@ internal partial class Main : EmptyPixedPage, IDisposable
     private readonly TransformMenuRegister _transformToolsMenuRegister;
     private readonly CopyPasteMenuRegister _copyPasteMenuRegister;
     private readonly PaletteMenuRegister _paletteMenuRegister;
+    private readonly ProjectMenuRegister _projectMenuRegister;
     private readonly ViewMenuRegister _viewMenuRegister;
     private readonly ToolsMenuRegister _toolsMenuRegister;
     private readonly RecentFilesService _recentFilesService;
@@ -49,6 +50,7 @@ internal partial class Main : EmptyPixedPage, IDisposable
         _transformToolsMenuRegister = Get<TransformMenuRegister>();
         _copyPasteMenuRegister = Get<CopyPasteMenuRegister>();
         _paletteMenuRegister = Get<PaletteMenuRegister>();
+        _projectMenuRegister = Get<ProjectMenuRegister>();
         _viewMenuRegister = Get<ViewMenuRegister>();
         _toolsMenuRegister = Get<ToolsMenuRegister>();
         _recentFilesService = Get<RecentFilesService>();
@@ -83,6 +85,7 @@ internal partial class Main : EmptyPixedPage, IDisposable
         {
             await _recentFilesService.Load();
         }
+        _projectMenuRegister.Register();
         await _menuBuilder.Build();
         _toolSelector.SelectTool("tool_pen");
         await _paletteSectionViewModel.LoadAll();
