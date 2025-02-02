@@ -17,13 +17,11 @@ namespace Pixed.Application.Windows;
 internal partial class MainWindow : ExtendedWindow<MainViewModel>
 {
     private readonly PixedProjectMethods _pixedProjectMethods;
-    private readonly IPlatformSettings _lifecycle;
     private bool _closeStarted = false;
-    public MainWindow(PixedProjectMethods pixedProjectMethods, IPlatformSettings lifecycle) : base()
+    public MainWindow(PixedProjectMethods pixedProjectMethods) : base()
     {
         InitializeComponent();
         _pixedProjectMethods = pixedProjectMethods;
-        _lifecycle = lifecycle;
     }
 
     public async Task OpenFromArgs(string[] args)
@@ -51,7 +49,7 @@ internal partial class MainWindow : ExtendedWindow<MainViewModel>
 
         if (canQuit)
         {
-            _lifecycle.Close();
+            IPlatformSettings.Instance.Close();
         }
         _closeStarted = false;
     }

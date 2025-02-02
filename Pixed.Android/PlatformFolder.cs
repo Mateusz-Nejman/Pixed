@@ -31,11 +31,6 @@ internal class PlatformFolder : IPlatformFolder
         return Task.FromResult((IStorageContainerFile)new PathStorageContainerFile(Path.Combine(GetFolderPath(folderType), filename)));
     }
 
-    public void Initialize(IStorageProvider storageProvider)
-    {
-        //Unused
-    }
-
     private static string GetFolderPath(FolderType type)
     {
         return type switch

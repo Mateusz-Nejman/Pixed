@@ -6,6 +6,7 @@ using Avalonia.Android;
 using Avalonia.ReactiveUI;
 using AvaloniaInside.Shell;
 using Pixed.Application;
+using Pixed.Application.DependencyInjection;
 using Pixed.Application.IO;
 using Pixed.Application.Platform;
 using Pixed.Application.Utils;
@@ -30,6 +31,7 @@ public class MainActivity : AvaloniaMainActivity<App>
         StreamBase.StreamWriteImpl = typeof(AndroidStreamWrite);
         base.OnCreate(savedInstanceState);
         Platform.Init(this, savedInstanceState);
+        PlatformDependencyRegister.Implementation = new AndroidDependencyRegister();
         var permissions = await CheckPermissions();
 
         if (permissions != PermissionStatus.Granted)
@@ -43,9 +45,7 @@ public class MainActivity : AvaloniaMainActivity<App>
             .WithInterFont()
             .LogToTrace()
             .UseReactiveUI()
-            .UseShell()
-            .SetPlatformFolder(new PlatformFolder())
-            .SetSettings(new PlatformSettings());
+            .UseShell();
     }
 
     private async Task<PermissionStatus> CheckPermissions()

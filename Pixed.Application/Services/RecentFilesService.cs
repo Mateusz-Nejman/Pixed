@@ -13,15 +13,16 @@ using System.Threading.Tasks;
 
 namespace Pixed.Application.Services
 {
-    internal class RecentFilesService(ApplicationData applicationData, PixedProjectMethods pixedProjectMethods, IStorageProviderHandle storageProvider)
+    internal class RecentFilesService(ApplicationData applicationData, PixedProjectMethods pixedProjectMethods, IStorageProviderHandle storageProvider, IPlatformFolder platformFolder)
     {
         private readonly PixedProjectMethods _projectMethods = pixedProjectMethods;
         private readonly IStorageProviderHandle _storageProvider = storageProvider;
+        private readonly IPlatformFolder _platformFolder = platformFolder;
         public List<string> RecentFiles { get; private set; } = [];
 
         public async Task Load()
         {
-            var file = await _storageProvider.StorageFolder.GetFile("recent.json", FolderType.Root);
+            var file = await _platformFolder.GetFile("recent.json", FolderType.Root);
 
             if (!file.Exists)
             {
@@ -76,7 +77,7 @@ namespace Pixed.Application.Services
 
         private async Task Save()
         {
-            var file = await _storageProvider.StorageFolder.GetFile("recent.json", FolderType.Root);
+            var file = await _platformFolder.GetFile("recent.json", FolderType.Root);
             var stream = await file.OpenWrite();
             stream.Write(JsonConvert.SerializeObject(RecentFiles));
             stream.Dispose();

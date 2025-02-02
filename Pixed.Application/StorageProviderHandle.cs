@@ -6,10 +6,8 @@ internal class StorageProviderHandle : IStorageProviderHandle
 {
     private IStorageProvider _storageProvider;
     public IStorageProvider StorageProvider => _storageProvider;
-    public IPlatformFolder StorageFolder => PlatformUtils.platformFolder;
     public void Initialize(IStorageProvider storageProvider)
     {
         _storageProvider = storageProvider;
-        StorageFolder.Initialize(storageProvider);
     }
 }

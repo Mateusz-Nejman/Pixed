@@ -5,5 +5,4 @@ public interface IStorageProviderHandle
 {
     public void Initialize(IStorageProvider storageProvider);
     public IStorageProvider StorageProvider { get; }
-    public IPlatformFolder StorageFolder { get; }
 }

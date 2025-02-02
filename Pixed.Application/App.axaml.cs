@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Pixed.Application.DependencyInjection;
 using Pixed.Application.Extensions;
+using Pixed.Application.Platform;
 using Pixed.Application.Windows;
 using Pixed.Common;
 using Pixed.Common.DependencyInjection;
@@ -30,7 +31,7 @@ public partial class App : Avalonia.Application
 
     public async override void OnFrameworkInitializationCompleted()
     {
-        Platform.PlatformSettings.Lifecycle.ApplicationLifetime = ApplicationLifetime;
+        IPlatformSettings.Instance.ApplicationLifetime = ApplicationLifetime;
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             SplashWindow splash = new();
@@ -58,9 +59,9 @@ public partial class App : Avalonia.Application
             register.Register(ref collection);
         }
 
-        collection.AddSingleton(Platform.PlatformSettings.Lifecycle);
+        PlatformDependencyRegister.Implementation.Register(ref collection);
 
-        if (Platform.PlatformSettings.Lifecycle.ExtensionsEnabled)
+        if (IPlatformSettings.Instance.ExtensionsEnabled)
         {
             ExtensionsLoader.Load(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Pixed", "Extensions"));
             ExtensionsLoader.RegisterTools(ref collection);
@@ -136,7 +137,7 @@ public partial class App : Avalonia.Application
         return false;
     }
 
-    private List<IDependencyRegister> GetDependencyRegisters()
+    private static List<IDependencyRegister> GetDependencyRegisters()
     {
         return [new DependencyInjectionRegister(), new ApplicationDependencyRegister()];
     }

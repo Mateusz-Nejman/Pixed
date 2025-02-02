@@ -26,7 +26,7 @@ internal class PaletteSectionViewModel : ExtendedViewModel, IDisposable
     private readonly IMenuItemRegistry _menuItemRegistry;
     private readonly PaletteService _paletteService;
     private readonly DialogUtils _dialogUtils;
-    private readonly IStorageProviderHandle _storageProviderHandle;
+    private readonly IPlatformFolder _platformFolder;
 
     private UniColor _primaryColor = UniColor.Black;
     private UniColor _secondaryColor = UniColor.White;
@@ -86,13 +86,13 @@ internal class PaletteSectionViewModel : ExtendedViewModel, IDisposable
     public ICommand PaletteSaveCommand { get; }
     public ICommand PaletteClearCommand { get; }
 
-    public PaletteSectionViewModel(ApplicationData applicationData, IMenuItemRegistry menuItemRegistry, PaletteService paletteService, DialogUtils dialogUtils, IStorageProviderHandle storageProviderHandle)
+    public PaletteSectionViewModel(ApplicationData applicationData, IMenuItemRegistry menuItemRegistry, PaletteService paletteService, DialogUtils dialogUtils, IPlatformFolder platformFolder)
     {
         _applicationData = applicationData;
         _menuItemRegistry = menuItemRegistry;
         _paletteService = paletteService;
         _dialogUtils = dialogUtils;
-        _storageProviderHandle = storageProviderHandle;
+        _platformFolder = platformFolder;
         _primaryProjectChanged = Subjects.PrimaryColorChanged.Subscribe(c => _applicationData.PrimaryColor = c);
         _secondaryProjectChanged = Subjects.SecondaryColorChanged.Subscribe(c => _applicationData.SecondaryColor = c);
         _primaryProjectChange = Subjects.PrimaryColorChange.Subscribe(c => PrimaryColor = c);
@@ -217,7 +217,7 @@ internal class PaletteSectionViewModel : ExtendedViewModel, IDisposable
         var palette = _paletteService.Palettes[index];
         palette.Name = newName;
 
-        var file = await _storageProviderHandle.StorageFolder.GetFile(palette.Path, FolderType.Palettes);
+        var file = await _platformFolder.GetFile(palette.Path, FolderType.Palettes);
 
         if (file != null)
         {
@@ -227,7 +227,7 @@ internal class PaletteSectionViewModel : ExtendedViewModel, IDisposable
 
     public async Task LoadAll()
     {
-        var files = _storageProviderHandle.StorageFolder.GetFiles(FolderType.Palettes);
+        var files = _platformFolder.GetFiles(FolderType.Palettes);
         await foreach (var file in files)
         {
             Stream? stream = null;
@@ -248,7 +248,7 @@ internal class PaletteSectionViewModel : ExtendedViewModel, IDisposable
     private async Task Load(IStorageFile file)
     {
         string name = file.Name;
-        var paletteFile = await _storageProviderHandle.StorageFolder.GetFile(name, FolderType.Palettes);
+        var paletteFile = await _platformFolder.GetFile(name, FolderType.Palettes);
 
         if (paletteFile != null)
         {
@@ -290,7 +290,7 @@ internal class PaletteSectionViewModel : ExtendedViewModel, IDisposable
         model.Path = file.Name;
         await Save(model, file);
 
-        var paletteFile = await _storageProviderHandle.StorageFolder.GetFile(file.Name, FolderType.Palettes);
+        var paletteFile = await _platformFolder.GetFile(file.Name, FolderType.Palettes);
 
         if (paletteFile != null)
         {

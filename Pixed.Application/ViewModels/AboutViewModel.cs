@@ -27,8 +27,6 @@ internal class AboutViewModel : ExtendedViewModel
 
     private string GetVersion()
     {
-        var lifecycle = Provider.Get<IPlatformSettings>();
-
-        return lifecycle.GetVersion();
+        return IPlatformSettings.Instance.GetVersion();
     }
 }
