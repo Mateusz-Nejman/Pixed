@@ -1,0 +1,17 @@
+<local:Modal xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        x:Class="Pixed.Application.Pages.LoadLayer"
+		xmlns:local="clr-namespace:Pixed.Application.Pages;assembly=Pixed.Application"
+        Title="Load layer from file">
+	<local:Modal.Dialog>
+		<StackPanel>
+			<RadioButton GroupName="layerType" Content="Single image" Name="single" IsCheckedChanged="RadioButton_IsCheckedChanged" Margin="10"/>
+			<RadioButton GroupName="layerType" Content="Repeat image" Name="repeat" IsCheckedChanged="RadioButton_IsCheckedChanged" Margin="10"/>
+			<Button Content="OK" Click="Button_Click"
+			  Height="24" MinWidth="80" Padding="10,0" Margin="10"/>
+		</StackPanel>
+	</local:Modal.Dialog>
+</local:Modal>

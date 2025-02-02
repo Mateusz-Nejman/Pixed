@@ -35,18 +35,23 @@ public static class LayerUtils
     {
         var pixels = layer.GetPixels();
 
-        if (point.X + size.X > layer.Width || point.Y + size.Y > layer.Height)
+        return pixels.GetRectangleColors(new Point(layer.Width, layer.Height), point, size);
+    }
+
+    public static uint[] GetRectangleColors(this uint[] pixels, Point sourceSize, Point point, Point destinationSize)
+    {
+        if (point.X + destinationSize.X > sourceSize.X || point.Y + destinationSize.Y > sourceSize.Y)
         {
             return [];
         }
 
         IList<uint> colors = [];
 
-        for (int y = point.Y; y < point.Y + size.Y; y++)
+        for (int y = point.Y; y < point.Y + destinationSize.Y; y++)
         {
-            for (int x = point.X; x < point.X + size.X; x++)
+            for (int x = point.X; x < point.X + destinationSize.X; x++)
             {
-                colors.Add(pixels[y * layer.Width + x]);
+                colors.Add(pixels[y * sourceSize.X + x]);
             }
         }
 

@@ -34,6 +34,7 @@ internal class ApplicationDependencyRegister : IDependencyRegister
         collection.AddSingleton<TransformMenuRegister>();
         collection.AddSingleton<CopyPasteMenuRegister>();
         collection.AddSingleton<PaletteMenuRegister>();
+        collection.AddSingleton<ProjectMenuRegister>();
         collection.AddSingleton<ViewMenuRegister>();
         collection.AddSingleton<ToolsMenuRegister>();
         collection.AddSingleton<IClipboardHandle, ClipboardHandle>();
