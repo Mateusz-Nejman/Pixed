@@ -1,8 +1,7 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-  <ControlTheme x:Key="Main" TargetType="Page">
+  <ControlTheme x:Key="{x:Type Page}" TargetType="Page">
     <Setter Property="Background" Value="{DynamicResource PageBackground}" />
-    <Setter Property="CornerRadius" Value="0"/>
     <Setter Property="Template">
       <ControlTemplate>
         <Border Background="{TemplateBinding Background}"
