@@ -1,6 +1,8 @@
 ﻿using Android.App;
+using Android.Content;
 using Android.Content.PM;
 using Android.OS;
+using Android.Runtime;
 using Avalonia;
 using Avalonia.Android;
 using Avalonia.ReactiveUI;
@@ -8,8 +10,8 @@ using AvaloniaInside.Shell;
 using Pixed.Application;
 using Pixed.Application.DependencyInjection;
 using Pixed.Application.IO;
+using Pixed.Application.Platform;
 using System.Threading.Tasks;
-using Xamarin.Essentials;
 
 namespace Pixed.Android;
 
@@ -20,6 +22,7 @@ namespace Pixed.Android;
     ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.ScreenSize | ConfigChanges.UiMode)]
 public class MainActivity : AvaloniaMainActivity<App>
 {
+    private TaskCompletionSource<Permission> _permissionTcs;
     protected override async void OnCreate(Bundle? savedInstanceState)
     {
         AndroidX.Core.SplashScreen.SplashScreen.InstallSplashScreen(this);
@@ -27,14 +30,16 @@ public class MainActivity : AvaloniaMainActivity<App>
         PlatformFolder.Context = this;
         StreamBase.StreamReadImpl = typeof(AndroidStreamRead);
         StreamBase.StreamWriteImpl = typeof(AndroidStreamWrite);
-        base.OnCreate(savedInstanceState);
-        Platform.Init(this, savedInstanceState);
         PlatformDependencyRegister.Implementation = new AndroidDependencyRegister();
+        IPlatformSettings.Instance = new PlatformSettings();
+
+        base.OnCreate(savedInstanceState);
         var permissions = await CheckPermissions();
 
-        if (permissions != PermissionStatus.Granted)
+        if (permissions != Permission.Granted)
         {
-            FinishAffinity();
+            Process.KillProcess(Process.MyPid());
+            return;
         }
     }
     protected override AppBuilder CustomizeAppBuilder(AppBuilder builder)
@@ -46,25 +51,41 @@ public class MainActivity : AvaloniaMainActivity<App>
             .UseShell();
     }
 
-    private async Task<PermissionStatus> CheckPermissions()
+    private Task<Permission> CheckPermissions()
     {
-        var storageRead = await Permissions.CheckStatusAsync<Permissions.StorageRead>();
-        var storageWrite = await Permissions.CheckStatusAsync<Permissions.StorageWrite>();
-
-        if (storageRead == PermissionStatus.Granted && storageWrite == PermissionStatus.Granted)
+        if (Environment.IsExternalStorageManager)
         {
-            return PermissionStatus.Granted;
+            return Task.FromResult(Permission.Granted);
         }
 
-        storageRead = await Permissions.RequestAsync<Permissions.StorageRead>();
-        storageWrite = await Permissions.RequestAsync<Permissions.StorageWrite>();
-
-        if (storageRead != PermissionStatus.Granted || storageWrite != PermissionStatus.Granted)
+        if (_permissionTcs != null && _permissionTcs.Task.IsCompleted)
         {
-            return PermissionStatus.Denied;
+            _permissionTcs.SetCanceled();
+            _permissionTcs = null;
         }
 
-        return PermissionStatus.Granted;
+        Intent intent = new(global::Android.Provider.Settings.ActionManageAppAllFilesAccessPermission);
+        intent.AddCategory("android.intent.category.DEFAULT");
+        intent.SetData(global::Android.Net.Uri.Parse("package:" + PackageName));
+        StartActivityForResult(intent, 1);
+        _permissionTcs = new TaskCompletionSource<Permission>();
+        return _permissionTcs.Task;
+    }
+
+    protected override void OnActivityResult(int requestCode, [GeneratedEnum] Result resultCode, Intent? data)
+    {
+        base.OnActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1)
+        {
+            if (Environment.IsExternalStorageManager)
+            {
+                _permissionTcs.TrySetResult(Permission.Granted);
+                return;
+            }
+
+            _permissionTcs.TrySetResult(Permission.Denied);
+        }
     }
 }
 
