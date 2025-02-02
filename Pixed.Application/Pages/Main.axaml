@@ -11,8 +11,7 @@
         mc:Ignorable="d"
         Background="{StaticResource BaseBackground}"
 		DragDrop.AllowDrop="True"
-        NavigationBar.Visible="False"
-	    Theme="{StaticResource Main}">
+        NavigationBar.Visible="False">
 	<Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*"/>
