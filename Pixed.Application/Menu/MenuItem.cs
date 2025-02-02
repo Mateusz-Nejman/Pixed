@@ -38,6 +38,6 @@ internal class MenuItem(string? header) : IMenuItem
             }
             stream.Dispose();
         }
-        return new Avalonia.Controls.MenuItem() { Header = Header, Command = Command, CommandParameter = CommandParameter, Icon = new Image() { Width = 16, Height = 16, Source = icon}, ItemsSource = Items != null && Items.Count > 0 ? Items.Select(i => i.ToAvaloniaMenuItem()) : null };
+        return new Avalonia.Controls.MenuItem() { Header = Header, Command = Command, CommandParameter = CommandParameter, Icon = new Image() { Width = 16, Height = 16, Source = icon }, ItemsSource = Items != null && Items.Count > 0 ? Items.Select(i => i.ToAvaloniaMenuItem()) : null };
     }
 }

@@ -2,11 +2,7 @@
 using Pixed.Common.Services.Keyboard;
 using Pixed.Core.Models;
 using SkiaSharp;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pixed.Common.Tools;
 public class ToolPen(ApplicationData applicationData) : ToolPenBase(applicationData)
@@ -23,7 +19,7 @@ public class ToolPen(ApplicationData applicationData) : ToolPenBase(applicationD
     {
         return [
             new ToolProperty(PROP_VERTICAL),
-            new ToolProperty(PROP_HORIZONTAL), 
+            new ToolProperty(PROP_HORIZONTAL),
             new ToolProperty(PROP_BOTH)
         ];
     }
@@ -39,7 +35,7 @@ public class ToolPen(ApplicationData applicationData) : ToolPenBase(applicationD
 
         bool mirror = controlPressed || altPressed || shiftPressed;
 
-        if(mirror)
+        if (mirror)
         {
             int symX = GetSymmetricX(point.X, frame);
             int symY = GetSymmetricY(point.Y, frame);
@@ -49,12 +45,12 @@ public class ToolPen(ApplicationData applicationData) : ToolPenBase(applicationD
                 DrawOnOverlay(color, new Point(symX, point.Y), frame, ref overlay);
             }
 
-            if(altPressed)
+            if (altPressed)
             {
                 DrawOnOverlay(color, new Point(point.X, symY), frame, ref overlay);
             }
 
-            if(shiftPressed)
+            if (shiftPressed)
             {
                 DrawOnOverlay(color, new Point(symX, symY), frame, ref overlay);
             }

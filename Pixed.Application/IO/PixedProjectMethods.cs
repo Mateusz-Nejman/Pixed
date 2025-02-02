@@ -42,7 +42,7 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
                     return;
                 }
             }
-            catch(Exception) //On android FilePath can contains one-use FilePath
+            catch (Exception) //On android FilePath can contains one-use FilePath
             {
                 saveAs = true;
             }
@@ -178,7 +178,7 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
     {
         var file = await _storageProvider.StorageProvider.TryGetFileFromPathAsync(new Uri(path));
 
-        if(file == null)
+        if (file == null)
         {
             return;
         }

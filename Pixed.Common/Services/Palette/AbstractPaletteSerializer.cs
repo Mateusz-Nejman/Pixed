@@ -12,7 +12,7 @@ public abstract class AbstractPaletteSerializer
         {
             return new GplPaletteSerializer();
         }
-        else if(extension == ".png")
+        else if (extension == ".png")
         {
             return new PngPaletteSerializer();
         }

@@ -1,8 +1,5 @@
-﻿using Pixed.Application.IO;
-using Pixed.Application.Models;
-using Pixed.Application.Routing;
+﻿using Pixed.Application.Routing;
 using Pixed.Application.Utils;
-using Pixed.Application.ViewModels;
 using Pixed.BigGustave;
 using Pixed.Common;
 using Pixed.Common.Menu;
@@ -12,9 +9,7 @@ using Pixed.Core.Models;
 using Pixed.Core.Utils;
 using SkiaSharp;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Pixed.Application.Menu;
@@ -34,7 +29,7 @@ internal class ProjectMenuRegister(IMenuItemRegistry menuItemRegistry, DialogUti
     {
         var files = await _dialogUtils.OpenFileDialog("PNG images (*.png)|*.png", "Open file");
 
-        if(files.Count != 1)
+        if (files.Count != 1)
         {
             return;
         }
@@ -42,7 +37,7 @@ internal class ProjectMenuRegister(IMenuItemRegistry menuItemRegistry, DialogUti
         var file = files[0];
         var result = await Router.Navigate<bool>("/loadLayer");
 
-        if(result.HasValue)
+        if (result.HasValue)
         {
             bool isSingle = result.Value;
 
@@ -56,7 +51,7 @@ internal class ProjectMenuRegister(IMenuItemRegistry menuItemRegistry, DialogUti
             var currentSize = new Point(_applicationData.CurrentFrame.Width, _applicationData.CurrentFrame.Height);
             SKBitmap? bitmap;
 
-            if(png.Width > currentSize.X || png.Height > currentSize.Y)
+            if (png.Width > currentSize.X || png.Height > currentSize.Y)
             {
                 colors = colors.GetRectangleColors(new Point(png.Width, png.Height), new Point(), new Point(Math.Min(png.Width, currentSize.X), Math.Min(png.Height, currentSize.Y)));
                 bitmap = SkiaUtils.FromArray(colors, new Point(Math.Min(png.Width, currentSize.X), Math.Min(png.Height, currentSize.Y)));

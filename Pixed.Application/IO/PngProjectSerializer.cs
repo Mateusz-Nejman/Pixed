@@ -2,7 +2,6 @@
 using Pixed.BigGustave;
 using Pixed.Common.Utils;
 using Pixed.Core.Models;
-using Pixed.Core.Utils;
 using SkiaSharp;
 using System;
 using System.Collections.ObjectModel;

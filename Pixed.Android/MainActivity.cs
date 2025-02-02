@@ -8,8 +8,6 @@ using AvaloniaInside.Shell;
 using Pixed.Application;
 using Pixed.Application.DependencyInjection;
 using Pixed.Application.IO;
-using Pixed.Application.Platform;
-using Pixed.Application.Utils;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 

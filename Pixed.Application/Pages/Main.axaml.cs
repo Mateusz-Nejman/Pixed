@@ -11,7 +11,6 @@ using Pixed.Application.Utils;
 using Pixed.Application.ViewModels;
 using Pixed.Common;
 using Pixed.Common.Platform;
-using Pixed.Common.Services.Palette;
 using Pixed.Common.Tools;
 using Pixed.Core;
 using Pixed.Core.Models;
@@ -81,7 +80,7 @@ internal partial class Main : EmptyPixedPage, IDisposable
         _toolsMenuRegister.Register();
 
         await Initialize();
-        if(IPlatformSettings.Instance.RecentFilesEnabled)
+        if (IPlatformSettings.Instance.RecentFilesEnabled)
         {
             await _recentFilesService.Load();
         }

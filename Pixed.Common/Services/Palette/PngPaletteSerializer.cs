@@ -16,19 +16,19 @@ internal class PngPaletteSerializer : AbstractPaletteSerializer
             {
                 var color = png.GetPixel(x, y);
 
-                if(!model.Colors.Contains(color))
+                if (!model.Colors.Contains(color))
                 {
                     model.Colors.Add(color);
                 }
 
-                if(model.Colors.Count == 256)
+                if (model.Colors.Count == 256)
                 {
                     colorLimit = true;
                     break;
                 }
             }
 
-            if(colorLimit)
+            if (colorLimit)
             {
                 break;
             }

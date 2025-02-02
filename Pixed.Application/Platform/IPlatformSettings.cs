@@ -1,5 +1,4 @@
-﻿using Avalonia;
-using Avalonia.Controls.ApplicationLifetimes;
+﻿using Avalonia.Controls.ApplicationLifetimes;
 
 namespace Pixed.Application.Platform;
 public interface IPlatformSettings

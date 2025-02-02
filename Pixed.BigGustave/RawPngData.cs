@@ -45,7 +45,7 @@ internal class RawPngData
 
         //TODO palette case
 
-        for(int y = 0; y < height; y++)
+        for (int y = 0; y < height; y++)
         {
             var rowStartPixel = (rowOffset + (rowOffset * y)) + (bytesPerPixel * width * y);
             Array.Copy(data, rowStartPixel, pixels, width * y * bytesPerPixel, width * bytesPerPixel);

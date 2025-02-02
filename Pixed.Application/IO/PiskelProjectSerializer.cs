@@ -1,8 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using Pixed.BigGustave;
-using Pixed.Core;
 using Pixed.Core.Models;
-using SkiaSharp;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
