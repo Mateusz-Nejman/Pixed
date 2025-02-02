@@ -6,14 +6,7 @@
       <ControlTemplate>
         <Border Background="{TemplateBinding Background}"
 				        CornerRadius="0">
-          <Grid RowDefinitions="Auto,*">
-            <ContentPresenter Grid.Row="0"
-						                  Name="PART_NavigationBarPlaceHolder"></ContentPresenter>
-            <ContentPresenter Grid.Row="1"
-						                  Content="{TemplateBinding Content}"
-						                  Margin="{TemplateBinding PageSafePadding}">
-            </ContentPresenter>
-          </Grid>
+			<ContentPresenter Content="{TemplateBinding Content}" Margin="0"/>
         </Border>
       </ControlTemplate>
     </Setter>

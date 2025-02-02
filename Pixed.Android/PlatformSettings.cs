@@ -1,4 +1,6 @@
 ﻿using Android.App;
+using Android.Content.PM;
+using Android.OS;
 using Avalonia.Controls.ApplicationLifetimes;
 using Pixed.Application.Platform;
 namespace Pixed.Android;
@@ -12,11 +14,12 @@ internal class PlatformSettings : IPlatformSettings
 
     public void Close()
     {
-        MainActivity?.FinishAffinity();
+        Process.KillProcess(Process.MyPid());
     }
 
     public string GetVersion()
     {
-        return Xamarin.Essentials.VersionTracking.CurrentVersion;
+        PackageInfo info = MainActivity.PackageManager.GetPackageInfo(MainActivity.PackageName, 0);
+        return info.VersionName;
     }
 }
