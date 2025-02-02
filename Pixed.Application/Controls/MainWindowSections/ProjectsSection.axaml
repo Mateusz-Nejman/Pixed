@@ -23,11 +23,7 @@
             <Grid HorizontalAlignment="Left" VerticalAlignment="Center">
               <Grid MaxWidth="20" MaxHeight="20" RenderOptions.BitmapInterpolationMode="None">
                 <Grid.Background>
-                  <ImageBrush Source="avares://Pixed.Application/Resources/transparentBackground.png" TileMode="Tile">
-                    <ImageBrush.Transform>
-                      <ScaleTransform ScaleX="0.2" ScaleY="0.2"/>
-                    </ImageBrush.Transform>
-                  </ImageBrush>
+                  <ImageBrush Source="avares://Pixed.Application/Resources/transparentBackground.png"/>
                 </Grid.Background>
                 <controls:SkiaImage MaxWidth="20" MaxHeight="20" Source="{Binding RenderSource}" RenderOptions.BitmapInterpolationMode="None"/>
               </Grid>

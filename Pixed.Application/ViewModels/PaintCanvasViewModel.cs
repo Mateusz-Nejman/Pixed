@@ -559,14 +559,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
 
     private ImageBrush GetTransparentBackgroundBrush()
     {
-        double defaultValue = 2d;
-
-        double delta = defaultValue;
-        if (ZoomContainer != null)
-        {
-            Avalonia.Matrix matrix = ZoomContainer.Matrix.Invert();
-            delta = matrix.Prepend(new Avalonia.Matrix(defaultValue, 0, 0, defaultValue, 0, 0)).M11;
-        }
+        double delta = 1.0d / _applicationData.CurrentFrame.Width;
         return new(_transparentBitmap)
         {
             TileMode = TileMode.Tile,

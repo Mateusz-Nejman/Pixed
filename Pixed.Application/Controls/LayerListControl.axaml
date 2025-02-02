@@ -14,16 +14,12 @@
       <ColumnDefinition Width="*"/>
       <ColumnDefinition Width="34"/>
     </Grid.ColumnDefinitions>
-    <Border BorderBrush="Gray" BorderThickness="1" RenderOptions.BitmapInterpolationMode="None">
-      <Border.Background>
-        <ImageBrush Source="avares://Pixed.Application/Resources/transparentBackground.png" TileMode="Tile">
-          <ImageBrush.Transform>
-            <ScaleTransform ScaleX="0.2" ScaleY="0.2"/>
-          </ImageBrush.Transform>
-        </ImageBrush>
-      </Border.Background>
-      <local:SkiaImage Width="32" Height="32" Source="{Binding RenderSource}" RenderOptions.BitmapInterpolationMode="None"/>
-    </Border>
+	  <Grid RenderOptions.BitmapInterpolationMode="None">
+		  <Grid.Background>
+			  <ImageBrush Source="avares://Pixed.Application/Resources/transparentBackground.png"/>
+		  </Grid.Background>
+		  <local:SkiaImage Width="32" Height="32" Source="{Binding RenderSource}" RenderOptions.BitmapInterpolationMode="None"/>
+	  </Grid>
     <TextBlock Grid.Column="1" Text="{Binding Name}" Foreground="White" VerticalAlignment="Center" Margin="4"/>
     <Button Grid.Column="2" Command="{Binding ChangeOpacityCommand}">
       <ToolTip.Tip>
