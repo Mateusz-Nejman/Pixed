@@ -29,7 +29,7 @@
 				 FontSize="14"
 				 FontWeight="Bold"
 				 Foreground="White"
-				 HorizontalAlignment="Stretch"
+				 HorizontalAlignment="Center"
 				 TextAlignment="Center"
 				 VerticalAlignment="Center"
 				 IsHitTestVisible="False"

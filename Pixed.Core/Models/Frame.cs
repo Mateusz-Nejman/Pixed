@@ -119,7 +119,6 @@ public class Frame : PropertyChangedBase, IPixedSerializer
 
     public void RefreshCurrentLayerRenderSource(List<Pixel> pixels)
     {
-        RenderSource?.Dispose();
         RenderSource = Render(pixels);
     }
 

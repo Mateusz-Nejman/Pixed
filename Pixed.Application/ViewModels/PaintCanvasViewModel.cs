@@ -559,7 +559,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
 
     private ImageBrush GetTransparentBackgroundBrush()
     {
-        double delta = 1.0d / _applicationData.CurrentFrame.Width;
+        double delta = Math.Max(0.01d, 1.0d / Math.Min(_applicationData.CurrentFrame.Width, _applicationData.CurrentFrame.Height));
         return new(_transparentBitmap)
         {
             TileMode = TileMode.Tile,
