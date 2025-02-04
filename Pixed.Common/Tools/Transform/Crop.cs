@@ -70,12 +70,6 @@ public class Crop(ApplicationData applicationData, SelectionManager selectionMan
         Subjects.SelectionDismissed.OnNext(null);
         _applicationData.Models[_applicationData.CurrentModelIndex] = newModel;
         Subjects.ProjectModified.OnNext(newModel);
-
-        foreach (var frame in _applicationData.CurrentModel.Frames)
-        {
-            frame.RefreshLayerRenderSources();
-            frame.RefreshCurrentLayerRenderSource([]);
-        }
         return true;
     }
 }

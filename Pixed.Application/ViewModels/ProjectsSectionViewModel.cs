@@ -46,10 +46,6 @@ internal class ProjectsSectionViewModel : ExtendedViewModel, IDisposable
     public ProjectsSectionViewModel(ApplicationData applicationData)
     {
         _applicationData = applicationData;
-        _frameRemoved = Subjects.FrameRemoved.Subscribe(f => _applicationData.CurrentModel.UpdatePreview());
-        _frameModified = Subjects.FrameModified.Subscribe(f => _applicationData.CurrentModel.UpdatePreview());
-        _layerModified = Subjects.LayerModified.Subscribe(f => _applicationData.CurrentModel.UpdatePreview());
-        _layerRemoved = Subjects.LayerRemoved.Subscribe(f => _applicationData.CurrentModel.UpdatePreview());
         _projectAdded = Subjects.ProjectAdded.Subscribe(p =>
         {
             int index = _applicationData.Models.IndexOf(p);

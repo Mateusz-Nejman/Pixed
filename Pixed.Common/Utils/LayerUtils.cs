@@ -9,7 +9,7 @@ public static class LayerUtils
 {
     public static Layer Resize(Layer layer, Point targetSize)
     {
-        layer.Render(out SKBitmap oldBitmap);
+        var oldBitmap = layer.Render();
 
         SKBitmap newBitmap = new(targetSize.X, targetSize.Y, true);
         SKCanvas canvas = new(newBitmap);

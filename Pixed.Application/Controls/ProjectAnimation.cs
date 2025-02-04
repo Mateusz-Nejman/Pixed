@@ -38,12 +38,12 @@ internal class ProjectAnimation : Control
             }
 
             var frameBitmap = _applicationData.CurrentModel.Frames[_frameIndex] ?? null;
-            if (frameBitmap == null || frameBitmap.RenderSource == null)
+            if (frameBitmap == null)
             {
                 return;
             }
 
-            var renderSource = frameBitmap.RenderSource;
+            var renderSource = frameBitmap.Render();
             if (context.PlatformImpl.GetFeature<ISkiaSharpApiLeaseFeature>() is ISkiaSharpApiLeaseFeature leaseFeature)
             {
                 ISkiaSharpApiLease lease = leaseFeature.Lease();

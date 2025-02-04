@@ -3,17 +3,23 @@ using Avalonia.Automation;
 using Avalonia.Automation.Peers;
 using Avalonia.Controls;
 using Avalonia.Controls.Automation.Peers;
+using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Metadata;
 using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
+using Avalonia.Threading;
+using Pixed.Core.Models;
 using Pixed.Core.Utils;
 using SkiaSharp;
+using System;
+using System.Reactive.Linq;
 
 namespace Pixed.Application.Controls;
-internal class SkiaImage : Control
+internal class PixelImageControl : Control
 {
+    private const int TICK_TIME = 50;
     private class InternalImage : IImage, ICustomDrawOperation
     {
         private SKBitmap? _source;
@@ -77,37 +83,38 @@ internal class SkiaImage : Control
     /// <summary>
     /// Defines the <see cref="Source"/> property.
     /// </summary>
-    public static readonly StyledProperty<SKBitmap?> SourceProperty =
-        AvaloniaProperty.Register<SkiaImage, SKBitmap?>(nameof(Source));
+    public static readonly StyledProperty<PixelImage?> SourceProperty =
+        AvaloniaProperty.Register<PixelImageControl, PixelImage?>(nameof(Source));
 
     /// <summary>
     /// Defines the <see cref="Stretch"/> property.
     /// </summary>
     public static readonly StyledProperty<Stretch> StretchProperty =
-        AvaloniaProperty.Register<SkiaImage, Stretch>(nameof(Stretch), Stretch.Uniform);
+        AvaloniaProperty.Register<PixelImageControl, Stretch>(nameof(Stretch), Stretch.Uniform);
 
     /// <summary>
     /// Defines the <see cref="StretchDirection"/> property.
     /// </summary>
     public static readonly StyledProperty<StretchDirection> StretchDirectionProperty =
-        AvaloniaProperty.Register<SkiaImage, StretchDirection>(
+        AvaloniaProperty.Register<PixelImageControl, StretchDirection>(
             nameof(StretchDirection),
             StretchDirection.Both);
 
-    static SkiaImage()
+    static PixelImageControl()
     {
-        AffectsRender<SkiaImage>(SourceProperty, StretchProperty, StretchDirectionProperty);
-        AffectsMeasure<SkiaImage>(SourceProperty, StretchProperty, StretchDirectionProperty);
-        AutomationProperties.ControlTypeOverrideProperty.OverrideDefaultValue<SkiaImage>(AutomationControlType.Image);
+        AffectsRender<PixelImageControl>(SourceProperty, StretchProperty, StretchDirectionProperty);
+        AffectsMeasure<PixelImageControl>(SourceProperty, StretchProperty, StretchDirectionProperty);
+        AutomationProperties.ControlTypeOverrideProperty.OverrideDefaultValue<PixelImageControl>(AutomationControlType.Image);
     }
 
     private readonly InternalImage _image = new(null);
+    private IDisposable _refreshTick;
 
     /// <summary>
     /// Gets or sets the image that will be displayed.
     /// </summary>
     [Content]
-    public SKBitmap? Source
+    public PixelImage? Source
     {
         get => GetValue(SourceProperty);
         set => SetValue(SourceProperty, value);
@@ -140,8 +147,8 @@ internal class SkiaImage : Control
     /// <param name="context">The drawing context.</param>
     public sealed override void Render(DrawingContext context)
     {
-        _image.UpdateBitmap(Source);
-        var source = Source;
+        var source = Source?.Render();
+        _image.UpdateBitmap(source);
 
         if (source != null && Bounds.Width > 0 && Bounds.Height > 0)
         {
@@ -168,7 +175,7 @@ internal class SkiaImage : Control
     /// <returns>The desired size of the control.</returns>
     protected override Size MeasureOverride(Size availableSize)
     {
-        var source = Source;
+        var source = Source?.Render();
         var result = new Size();
 
         if (source != null)
@@ -182,7 +189,7 @@ internal class SkiaImage : Control
     /// <inheritdoc/>
     protected override Size ArrangeOverride(Size finalSize)
     {
-        var source = Source;
+        var source = Source?.Render();
 
         if (source != null)
         {
@@ -199,5 +206,21 @@ internal class SkiaImage : Control
     protected override AutomationPeer OnCreateAutomationPeer()
     {
         return new ImageAutomationPeer(this);
+    }
+
+    protected override void OnLoaded(RoutedEventArgs e)
+    {
+        base.OnLoaded(e);
+
+        _refreshTick ??= Observable.Interval(TimeSpan.FromMilliseconds(TICK_TIME)).Subscribe(t =>
+            {
+                Dispatcher.UIThread.Invoke(() => _image?.UpdateBitmap(Source?.Render()));
+            });
+    }
+
+    protected override void OnUnloaded(RoutedEventArgs e)
+    {
+        base.OnUnloaded(e);
+        _refreshTick?.Dispose();
     }
 }

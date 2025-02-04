@@ -4,13 +4,11 @@ using SkiaSharp;
 using System.Windows.Input;
 namespace Pixed.Core.Models;
 
-public class Layer : PropertyChangedBase, IPixedSerializer
+public class Layer : PixelImage, IPixedSerializer
 {
     private uint[] _pixels;
     private int _width;
     private int _height;
-    private SKBitmap? _renderSource = null;
-    private bool _needRerender = true;
     private double _opacity = 100.0d;
     private string _name = string.Empty;
     private readonly string _id;
@@ -21,7 +19,7 @@ public class Layer : PropertyChangedBase, IPixedSerializer
         set
         {
             _opacity = value;
-            _needRerender = true;
+            NeedRender = true;
         }
     }
 
@@ -35,22 +33,13 @@ public class Layer : PropertyChangedBase, IPixedSerializer
         }
     }
 
-    public SKBitmap? RenderSource
-    {
-        get => _renderSource;
-        set
-        {
-            _renderSource = value;
-            OnPropertyChanged();
-        }
-    }
-
     public string Id => _id;
     public int Width => _width;
     public int Height => _height;
     public ICommand? ChangeOpacityCommand { get; }
 
     public static Func<Layer, Task> ChangeOpacityAction { get; set; }
+
     public Layer(int width, int height)
     {
         ChangeOpacityCommand = new AsyncCommand(async () =>
@@ -84,9 +73,7 @@ public class Layer : PropertyChangedBase, IPixedSerializer
         Layer layer = new(_width, _height, pixels)
         {
             Name = Name,
-            _needRerender = true
         };
-        layer.RenderSource = _renderSource;
         return layer;
     }
 
@@ -115,28 +102,14 @@ public class Layer : PropertyChangedBase, IPixedSerializer
 
     public void MergeLayers(Layer layer2)
     {
-        Render(out SKBitmap bitmap);
-        layer2.Render(out SKBitmap layer2bitmap);
+        var bitmap = Render();
+        var layer2Bitmap = layer2.Render();
         SKCanvas canvas = new(bitmap);
-        canvas.DrawBitmap(layer2bitmap, new SKPoint(0, 0));
+        canvas.DrawBitmap(layer2Bitmap, new SKPoint(0, 0));
         canvas.Dispose();
 
         _pixels = bitmap.ToArray();
-        _needRerender = true;
-    }
-
-    public void Rerender(List<Pixel>? pixels = null)
-    {
-        _needRerender = true;
-        RefreshRenderSource(pixels);
-    }
-
-    public void RefreshRenderSource(List<Pixel>? pixels = null)
-    {
-        if (Render(out SKBitmap bitmap, pixels))
-        {
-            RenderSource = bitmap;
-        }
+        NeedRender = true;
     }
 
     public uint GetPixel(Point point)
@@ -149,19 +122,18 @@ public class Layer : PropertyChangedBase, IPixedSerializer
         return _pixels[point.Y * _width + point.X];
     }
 
-    public bool Render(out SKBitmap render, List<Pixel>? modifiedPixels = null)
+    public override SKBitmap Render()
     {
-        render = _renderSource;
-        if (!_needRerender && (modifiedPixels == null || modifiedPixels.Count == 0))
+        if(!NeedRender)
         {
-            return false;
+            return base.Render();
         }
 
         List<uint> pixels = new(_pixels);
 
-        if (modifiedPixels != null)
+        if (ModifiedPixels.Count > 0)
         {
-            foreach (var pixel in modifiedPixels)
+            foreach (var pixel in ModifiedPixels)
             {
                 pixels[pixel.Position.Y * _width + pixel.Position.X] = pixel.Color;
             }
@@ -178,11 +150,10 @@ public class Layer : PropertyChangedBase, IPixedSerializer
         }
 
         var bitmap = SkiaUtils.FromArray(pixels, new Point(_width, _height));
+        _render = bitmap;
         pixels.Clear();
-        RenderSource = bitmap;
-        _needRerender = false;
-        render = bitmap;
-        return true;
+        NeedRender = false;
+        return bitmap;
     }
 
     public bool ContainsPixel(Point point)
@@ -233,6 +204,6 @@ public class Layer : PropertyChangedBase, IPixedSerializer
         }
 
         _pixels[point.Y * _width + point.X] = color;
-        _needRerender = true;
+        NeedRender = true;
     }
 }

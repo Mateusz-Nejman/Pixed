@@ -17,7 +17,7 @@
           </ImageBrush.Transform>
         </ImageBrush>
       </Grid.Background>
-      <local:SkiaImage MaxWidth="96" MaxHeight="96" Source="{Binding RenderSource}" RenderOptions.BitmapInterpolationMode="None"/>
+      <local:PixelImageControl MaxWidth="96" MaxHeight="96" Source="{Binding}" RenderOptions.BitmapInterpolationMode="None"/>
     </Grid>
   </Grid>
 </UserControl>
