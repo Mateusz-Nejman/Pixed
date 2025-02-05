@@ -2,29 +2,22 @@
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
 using Avalonia.Controls;
-using Avalonia.Controls.Automation.Peers;
 using Avalonia.Media;
 using Avalonia.Metadata;
 using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
+using Avalonia.Threading;
 using Pixed.Core.Models;
 using Pixed.Core.Utils;
-using SkiaSharp;
-using System;
-using System.Reactive.Linq;
 
 namespace Pixed.Application.Controls;
 internal class PixelImageControl : Control
 {
-    private const int TICK_TIME = 50;
     private class InternalImage : IImage, ICustomDrawOperation
     {
         private PixelImage? _source;
         private Size _size;
-        private string _uuid = string.Empty;
-        private SKBitmap? _bitmap;
-        private readonly IDisposable _disposed;
 
         public Size Size => _size;
 
@@ -32,22 +25,12 @@ internal class PixelImageControl : Control
 
         public PixelImage? Source => _source;
 
+        public InternalImage() : this(null)
+        {
+        }
         public InternalImage(PixelImage? source)
         {
             UpdateBitmap(source);
-            _disposed = Observable.Interval(TimeSpan.FromMilliseconds(TICK_TIME)).Subscribe(t =>
-            {
-                if (_source == null)
-                {
-                    return;
-                }
-
-                if (_source.NeedRender(_uuid))
-                {
-                    _bitmap = _source.Render();
-                    _uuid = _source.UUID;
-                }
-            });
         }
 
         public void UpdateBitmap(PixelImage? source)
@@ -77,17 +60,13 @@ internal class PixelImageControl : Control
                 ISkiaSharpApiLease lease = leaseFeature.Lease();
                 using (lease)
                 {
-                    if (_bitmap != null)
-                    {
-                        lease.SkCanvas.DrawBitmap(_bitmap, Bounds);
-                    }
+                    lease.SkCanvas.DrawBitmap(Source.Render(), Bounds);
                 }
             }
         }
 
         public void Dispose()
         {
-            _disposed.Dispose();
         }
     }
     /// <summary>
@@ -117,7 +96,7 @@ internal class PixelImageControl : Control
         AutomationProperties.ControlTypeOverrideProperty.OverrideDefaultValue<PixelImageControl>(AutomationControlType.Image);
     }
 
-    private readonly InternalImage _image = new(null);
+    private readonly InternalImage _image = new();
 
     /// <summary>
     /// Gets or sets the image that will be displayed.
@@ -180,6 +159,8 @@ internal class PixelImageControl : Control
             _image.Bounds = destRect;
             context.DrawImage(_image, sourceRect, destRect);
         }
+
+        Dispatcher.UIThread.Post(InvalidateVisual, DispatcherPriority.Input);
     }
 
     /// <summary>
@@ -215,10 +196,5 @@ internal class PixelImageControl : Control
         {
             return new Size();
         }
-    }
-
-    protected override AutomationPeer OnCreateAutomationPeer()
-    {
-        return new ImageAutomationPeer(this);
     }
 }

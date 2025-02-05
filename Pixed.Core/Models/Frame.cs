@@ -34,7 +34,6 @@ public class Frame : PixelImage, IPixedSerializer
         _id = Guid.NewGuid().ToString();
         _layers = [];
         AddLayer(new Layer(width, height));
-        UUID = GenerateUUID();
     }
 
     public static Frame FromLayers(ObservableCollection<Layer> layers)
@@ -71,7 +70,6 @@ public class Frame : PixelImage, IPixedSerializer
     public void SetPixels(List<Pixel> pixels)
     {
         CurrentLayer.SetPixels(pixels);
-        UUID = GenerateUUID();
     }
 
     public void SetPixel(Point point, uint color, int toolSize)
@@ -120,7 +118,6 @@ public class Frame : PixelImage, IPixedSerializer
                 canvas.DrawBitmap(bitmap, new SKPoint(0, 0));
             }
             canvas.Dispose();
-            UUID = GenerateUUID();
             return render;
         }
     }
@@ -200,42 +197,5 @@ public class Frame : PixelImage, IPixedSerializer
             layer.Deserialize(stream);
             _layers.Add(layer);
         }
-    }
-
-    public override bool NeedRender(string uuid)
-    {
-        if (string.IsNullOrEmpty(uuid) || string.IsNullOrEmpty(UUID))
-        {
-            return true;
-        }
-        string[] layerUUIDS = UUID.Split(';');
-
-        if (layerUUIDS.Length != _layers.Count)
-        {
-            return true;
-        }
-
-        for (int a = 0; a < _layers.Count; a++)
-        {
-            if (_layers[a].NeedRender(layerUUIDS[a]))
-            {
-                return true;
-            }
-        }
-
-        return uuid != UUID;
-    }
-
-    public override string GenerateUUID()
-    {
-        string uuid = string.Empty;
-        var last = _layers.Last();
-
-        foreach (var layer in Layers)
-        {
-            uuid += layer.UUID + (last != layer ? ";" : "");
-        }
-
-        return uuid;
     }
 }

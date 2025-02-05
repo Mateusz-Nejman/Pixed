@@ -144,7 +144,6 @@ public class PixedModel : PixelImage, IPixedSerializer
     public override SKBitmap Render()
     {
         var render = Frames.First().Render();
-        UUID = GenerateUUID();
         return render;
     }
 
@@ -173,11 +172,6 @@ public class PixedModel : PixelImage, IPixedSerializer
         }
     }
 
-    public override bool NeedRender(string uuid)
-    {
-        return _frames.First().NeedRender(uuid);
-    }
-
     public static PixedModel FromFrames(ObservableCollection<Frame> frames, string name, ApplicationData applicationData)
     {
         PixedModel model = new(applicationData);
@@ -191,10 +185,5 @@ public class PixedModel : PixelImage, IPixedSerializer
         }
 
         return model;
-    }
-
-    public override string GenerateUUID()
-    {
-        return Frames.First().GenerateUUID();
     }
 }

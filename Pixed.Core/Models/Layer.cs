@@ -20,7 +20,6 @@ public class Layer : PixelImage, IPixedSerializer
         set
         {
             _opacity = value;
-            UUID = GenerateUUID();
         }
     }
 
@@ -53,7 +52,6 @@ public class Layer : PixelImage, IPixedSerializer
         _pixels = new uint[width * height];
 
         Array.Fill(_pixels, UniColor.Transparent.ToUInt());
-        UUID = GenerateUUID();
     }
 
     private Layer(int width, int height, uint[] pixels)
@@ -66,7 +64,6 @@ public class Layer : PixelImage, IPixedSerializer
         _width = width;
         _height = height;
         _pixels = pixels;
-        UUID = GenerateUUID();
     }
 
     public Layer Clone()
@@ -93,7 +90,6 @@ public class Layer : PixelImage, IPixedSerializer
     public void SetPixel(Point point, uint color)
     {
         SetPixelPrivate(point, color);
-        UUID = GenerateUUID();
     }
 
     public void SetPixels(List<Pixel> pixels)
@@ -102,7 +98,6 @@ public class Layer : PixelImage, IPixedSerializer
         {
             SetPixelPrivate(pixel.Position, pixel.Color);
         }
-        UUID = GenerateUUID();
     }
 
     public void MergeLayers(Layer layer2)
@@ -114,7 +109,6 @@ public class Layer : PixelImage, IPixedSerializer
         canvas.Dispose();
 
         _pixels = bitmap.ToArray();
-        UUID = GenerateUUID();
     }
 
     public uint GetPixel(Point point)
@@ -136,7 +130,8 @@ public class Layer : PixelImage, IPixedSerializer
 
             if (ModifiedPixels.Count > 0)
             {
-                foreach (var pixel in ModifiedPixels)
+                List<Pixel> modified = new List<Pixel>(ModifiedPixels);
+                foreach (var pixel in modified)
                 {
                     pixels[pixel.Position.Y * _width + pixel.Position.X] = pixel.Color;
                 }
@@ -186,21 +181,6 @@ public class Layer : PixelImage, IPixedSerializer
         {
             _pixels[i] = stream.ReadUInt();
         }
-    }
-
-    public override bool NeedRender(string uuid)
-    {
-        if (string.IsNullOrEmpty(uuid) || string.IsNullOrEmpty(UUID))
-        {
-            return true;
-        }
-
-        return !UUID.Equals(uuid);
-    }
-
-    public override string GenerateUUID()
-    {
-        return Guid.NewGuid().ToString();
     }
 
     public static Layer FromColors(uint[] colors, int width, int height, string name)
