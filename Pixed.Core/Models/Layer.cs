@@ -12,6 +12,7 @@ public class Layer : PixelImage, IPixedSerializer
     private double _opacity = 100.0d;
     private string _name = string.Empty;
     private readonly string _id;
+    private static readonly object _lock = new();
 
     public double Opacity
     {
@@ -19,7 +20,7 @@ public class Layer : PixelImage, IPixedSerializer
         set
         {
             _opacity = value;
-            NeedRender = true;
+            UUID = GenerateUUID();
         }
     }
 
@@ -52,6 +53,7 @@ public class Layer : PixelImage, IPixedSerializer
         _pixels = new uint[width * height];
 
         Array.Fill(_pixels, UniColor.Transparent.ToUInt());
+        UUID = GenerateUUID();
     }
 
     private Layer(int width, int height, uint[] pixels)
@@ -64,6 +66,7 @@ public class Layer : PixelImage, IPixedSerializer
         _width = width;
         _height = height;
         _pixels = pixels;
+        UUID = GenerateUUID();
     }
 
     public Layer Clone()
@@ -90,6 +93,7 @@ public class Layer : PixelImage, IPixedSerializer
     public void SetPixel(Point point, uint color)
     {
         SetPixelPrivate(point, color);
+        UUID = GenerateUUID();
     }
 
     public void SetPixels(List<Pixel> pixels)
@@ -98,6 +102,7 @@ public class Layer : PixelImage, IPixedSerializer
         {
             SetPixelPrivate(pixel.Position, pixel.Color);
         }
+        UUID = GenerateUUID();
     }
 
     public void MergeLayers(Layer layer2)
@@ -109,7 +114,7 @@ public class Layer : PixelImage, IPixedSerializer
         canvas.Dispose();
 
         _pixels = bitmap.ToArray();
-        NeedRender = true;
+        UUID = GenerateUUID();
     }
 
     public uint GetPixel(Point point)
@@ -124,35 +129,32 @@ public class Layer : PixelImage, IPixedSerializer
 
     public override SKBitmap Render()
     {
-        if(!NeedRender)
+        SKBitmap bitmap;
+        lock(_lock)
         {
-            return base.Render();
-        }
+            List<uint> pixels = new(_pixels);
 
-        List<uint> pixels = new(_pixels);
-
-        if (ModifiedPixels.Count > 0)
-        {
-            foreach (var pixel in ModifiedPixels)
+            if (ModifiedPixels.Count > 0)
             {
-                pixels[pixel.Position.Y * _width + pixel.Position.X] = pixel.Color;
+                foreach (var pixel in ModifiedPixels)
+                {
+                    pixels[pixel.Position.Y * _width + pixel.Position.X] = pixel.Color;
+                }
             }
-        }
 
-        if (Opacity != 100)
-        {
-            for (int a = 0; a < pixels.Count; a++)
+            if (Opacity != 100)
             {
-                UniColor color = pixels[a];
-                color.A = (byte)(Opacity / 100d * color.A);
-                pixels[a] = color;
+                for (int a = 0; a < pixels.Count; a++)
+                {
+                    UniColor color = pixels[a];
+                    color.A = (byte)(Opacity / 100d * color.A);
+                    pixels[a] = color;
+                }
             }
-        }
 
-        var bitmap = SkiaUtils.FromArray(pixels, new Point(_width, _height));
-        _render = bitmap;
-        pixels.Clear();
-        NeedRender = false;
+            bitmap = SkiaUtils.FromArray(pixels, new Point(_width, _height));
+            pixels.Clear();
+        }
         return bitmap;
     }
 
@@ -186,6 +188,21 @@ public class Layer : PixelImage, IPixedSerializer
         }
     }
 
+    public override bool NeedRender(string uuid)
+    {
+        if(string.IsNullOrEmpty(uuid) || string.IsNullOrEmpty(UUID))
+        {
+            return true;
+        }
+
+        return !UUID.Equals(uuid);
+    }
+
+    public override string GenerateUUID()
+    {
+        return Guid.NewGuid().ToString();
+    }
+
     public static Layer FromColors(uint[] colors, int width, int height, string name)
     {
         Layer layer = new(width, height)
@@ -204,6 +221,5 @@ public class Layer : PixelImage, IPixedSerializer
         }
 
         _pixels[point.Y * _width + point.X] = color;
-        NeedRender = true;
     }
 }

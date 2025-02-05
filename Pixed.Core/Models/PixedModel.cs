@@ -39,8 +39,6 @@ public class PixedModel : PixelImage, IPixedSerializer
     public bool UnsavedChanges { get; set; } = false;
 
     public ICommand CloseCommand { get; }
-
-    public override bool NeedRender { get => _frames.Any(f => f.NeedRender) || base.NeedRender; protected set => base.NeedRender = value; }
     public static Action<PixedModel> CloseCommandAction { get; set; }
 
     public int HistoryIndex
@@ -145,7 +143,9 @@ public class PixedModel : PixelImage, IPixedSerializer
     }
     public override SKBitmap Render()
     {
-        return Frames.First().Render();
+        var render = Frames.First().Render();
+        UUID = GenerateUUID();
+        return render;
     }
 
     public void Serialize(Stream stream)
@@ -173,6 +173,11 @@ public class PixedModel : PixelImage, IPixedSerializer
         }
     }
 
+    public override bool NeedRender(string uuid)
+    {
+        return _frames.First().NeedRender(uuid);
+    }
+
     public static PixedModel FromFrames(ObservableCollection<Frame> frames, string name, ApplicationData applicationData)
     {
         PixedModel model = new(applicationData);
@@ -186,5 +191,10 @@ public class PixedModel : PixelImage, IPixedSerializer
         }
 
         return model;
+    }
+
+    public override string GenerateUUID()
+    {
+        return Frames.First().GenerateUUID();
     }
 }

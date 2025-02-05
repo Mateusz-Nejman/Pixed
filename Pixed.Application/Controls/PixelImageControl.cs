@@ -3,13 +3,11 @@ using Avalonia.Automation;
 using Avalonia.Automation.Peers;
 using Avalonia.Controls;
 using Avalonia.Controls.Automation.Peers;
-using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Metadata;
 using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
-using Avalonia.Threading;
 using Pixed.Core.Models;
 using Pixed.Core.Utils;
 using SkiaSharp;
@@ -22,36 +20,44 @@ internal class PixelImageControl : Control
     private const int TICK_TIME = 50;
     private class InternalImage : IImage, ICustomDrawOperation
     {
-        private SKBitmap? _source;
+        private PixelImage? _source;
         private Size _size;
+        private string _uuid = string.Empty;
+        private SKBitmap? _bitmap;
+        private readonly IDisposable _disposed;
 
         public Size Size => _size;
 
         public Rect Bounds { get; set; }
 
-        public SKBitmap? Source => _source;
+        public PixelImage? Source => _source;
 
-        public InternalImage(SKBitmap? source)
+        public InternalImage(PixelImage? source)
         {
             UpdateBitmap(source);
+            _disposed = Observable.Interval(TimeSpan.FromMilliseconds(TICK_TIME)).Subscribe(t =>
+            {
+                if(_source == null)
+                {
+                    return;
+                }
+
+                if (_source.NeedRender(_uuid))
+                {
+                    _bitmap = _source.Render();
+                    _uuid = _source.UUID;
+                }
+            });
         }
 
-        public void UpdateBitmap(SKBitmap? source)
+        public void UpdateBitmap(PixelImage? source)
         {
             _source = source;
-            if (source?.Info.Size is SKSizeI size)
+            if (source is PixelImage image)
             {
-                _size = new(size.Width, size.Height);
+                var bitmap = image.Render();
+                _size = new(bitmap.Width, bitmap.Height);
             }
-        }
-
-        public InternalImage Clone()
-        {
-            return new InternalImage(_source?.Copy());
-        }
-
-        public InternalImage(uint[] colors, Pixed.Core.Models.Point size) : this(SkiaUtils.FromArray(colors, size))
-        {
         }
 
         public void Draw(DrawingContext context, Rect sourceRect, Rect destRect)
@@ -66,18 +72,22 @@ internal class PixelImageControl : Control
 
         public void Render(ImmediateDrawingContext context)
         {
-            if (Source is SKBitmap bitmap && context.PlatformImpl.GetFeature<ISkiaSharpApiLeaseFeature>() is ISkiaSharpApiLeaseFeature leaseFeature)
+            if (Source != null && context.PlatformImpl.GetFeature<ISkiaSharpApiLeaseFeature>() is ISkiaSharpApiLeaseFeature leaseFeature)
             {
                 ISkiaSharpApiLease lease = leaseFeature.Lease();
                 using (lease)
                 {
-                    lease.SkCanvas.DrawBitmap(bitmap, Bounds);
+                    if(_bitmap != null)
+                    {
+                        lease.SkCanvas.DrawBitmap(_bitmap, Bounds);
+                    }
                 }
             }
         }
 
         public void Dispose()
         {
+            _disposed.Dispose();
         }
     }
     /// <summary>
@@ -108,7 +118,6 @@ internal class PixelImageControl : Control
     }
 
     private readonly InternalImage _image = new(null);
-    private IDisposable _refreshTick;
 
     /// <summary>
     /// Gets or sets the image that will be displayed.
@@ -147,8 +156,13 @@ internal class PixelImageControl : Control
     /// <param name="context">The drawing context.</param>
     public sealed override void Render(DrawingContext context)
     {
-        var source = Source?.Render();
-        _image.UpdateBitmap(source);
+        if(Source == null)
+        {
+            return;
+        }
+
+        var source = Source.Render();
+        _image.UpdateBitmap(Source);
 
         if (source != null && Bounds.Width > 0 && Bounds.Height > 0)
         {
@@ -206,21 +220,5 @@ internal class PixelImageControl : Control
     protected override AutomationPeer OnCreateAutomationPeer()
     {
         return new ImageAutomationPeer(this);
-    }
-
-    protected override void OnLoaded(RoutedEventArgs e)
-    {
-        base.OnLoaded(e);
-
-        _refreshTick ??= Observable.Interval(TimeSpan.FromMilliseconds(TICK_TIME)).Subscribe(t =>
-            {
-                Dispatcher.UIThread.Invoke(() => _image?.UpdateBitmap(Source?.Render()));
-            });
-    }
-
-    protected override void OnUnloaded(RoutedEventArgs e)
-    {
-        base.OnUnloaded(e);
-        _refreshTick?.Dispose();
     }
 }

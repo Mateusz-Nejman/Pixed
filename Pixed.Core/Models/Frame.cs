@@ -10,6 +10,7 @@ public class Frame : PixelImage, IPixedSerializer
     private readonly ObservableCollection<Layer> _layers;
     private int _selectedLayer = 0;
     private readonly string _id;
+    private static readonly object _lock = new();
 
     public int Width => Layers[0].Width;
     public int Height => Layers[0].Height;
@@ -28,13 +29,12 @@ public class Frame : PixelImage, IPixedSerializer
 
     public string Id => _id;
 
-    public override bool NeedRender { get => _layers.Any(l => l.NeedRender) || base.NeedRender; protected set => base.NeedRender = value; }
-
     public Frame(int width, int height)
     {
         _id = Guid.NewGuid().ToString();
         _layers = [];
         AddLayer(new Layer(width, height));
+        UUID = GenerateUUID();
     }
 
     public static Frame FromLayers(ObservableCollection<Layer> layers)
@@ -71,6 +71,7 @@ public class Frame : PixelImage, IPixedSerializer
     public void SetPixels(List<Pixel> pixels)
     {
         CurrentLayer.SetPixels(pixels);
+        UUID = GenerateUUID();
     }
 
     public void SetPixel(Point point, uint color, int toolSize)
@@ -107,24 +108,21 @@ public class Frame : PixelImage, IPixedSerializer
 
     public override SKBitmap Render()
     {
-        if(!NeedRender)
+        lock(_lock)
         {
-            return base.Render();
-        }
+            SKBitmap render = new(Width, Height, true);
+            SKCanvas canvas = new(render);
+            canvas.Clear(SKColors.Transparent);
 
-        SKBitmap render = new(Width, Height, true);
-        SKCanvas canvas = new(render);
-        canvas.Clear(SKColors.Transparent);
-        for (int a = 0; a < _layers.Count; a++)
-        {
-            var bitmap = _layers[a].Render();
-            canvas.DrawBitmap(bitmap, new SKPoint(0, 0));
+            for (int a = 0; a < _layers.Count; a++)
+            {
+                var bitmap = _layers[a].Render();
+                canvas.DrawBitmap(bitmap, new SKPoint(0, 0));
+            }
+            canvas.Dispose();
+            UUID = GenerateUUID();
+            return render;
         }
-        canvas.Dispose();
-
-        _render = render;
-        NeedRender = false;
-        return render;
     }
 
     public bool ContainsPixel(Point point)
@@ -202,5 +200,42 @@ public class Frame : PixelImage, IPixedSerializer
             layer.Deserialize(stream);
             _layers.Add(layer);
         }
+    }
+
+    public override bool NeedRender(string uuid)
+    {
+        if (string.IsNullOrEmpty(uuid) || string.IsNullOrEmpty(UUID))
+        {
+            return true;
+        }
+        string[] layerUUIDS = UUID.Split(';');
+
+        if(layerUUIDS.Length != _layers.Count)
+        {
+            return true;
+        }
+
+        for(int a = 0; a < _layers.Count; a++)
+        {
+            if (_layers[a].NeedRender(layerUUIDS[a]))
+            {
+                return true;
+            }
+        }
+
+        return uuid != UUID;
+    }
+
+    public override string GenerateUUID()
+    {
+        string uuid = string.Empty;
+        var last = _layers.Last();
+
+        foreach(var layer in Layers)
+        {
+            uuid += layer.UUID + (last != layer ? ";" : "");
+        }
+
+        return uuid;
     }
 }
