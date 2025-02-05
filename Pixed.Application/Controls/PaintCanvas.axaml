@@ -34,7 +34,7 @@
                     PointerWheelChanged="Canvas_PointerWheelChanged"
               RenderOptions.BitmapInterpolationMode="None"
               Background="{Binding TransparentBrush}">
-              <controls:SkiaImage Name="image" RenderOptions.BitmapInterpolationMode="None" Source="{Binding ImageBitmap}"/>
+              <controls:PixelImageControl Name="image" RenderOptions.BitmapInterpolationMode="None" Source="{Binding RenderModel}"/>
               <controls:ImageGrid Width="{Binding ScaledGridWidth}" Height="{Binding ScaledGridHeight}" Name="gridCanvas" IsHitTestVisible="False"/>
               <controls:SelectionOverlay Width="{Binding ScaledGridWidth}" Height="{Binding ScaledGridHeight}" Name="selectionOverlay" IsHitTestVisible="False"/>
             </Canvas>

@@ -2,6 +2,7 @@
 using Avalonia.Platform;
 using Pixed.Application.Controls;
 using Pixed.Application.Input;
+using Pixed.Application.Models;
 using Pixed.Application.Zoom;
 using Pixed.Common;
 using Pixed.Common.Services.Keyboard;
@@ -11,7 +12,6 @@ using Pixed.Core.Models;
 using Pixed.Core.Utils;
 using SkiaSharp;
 using System;
-using System.Collections.Generic;
 using System.Reactive.Linq;
 using Frame = Pixed.Core.Models.Frame;
 
@@ -21,9 +21,8 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
 {
     private readonly ApplicationData _applicationData;
     private readonly ToolsManager _toolSelector;
-    private SKBitmap? _overlayBitmap;
-    private SKBitmap? _renderBitmap;
-    private SKBitmap? _imageBitmap;
+    private RenderModel _renderModel;
+    private SKBitmap? _overlay;
     private ImageBrush _transparentBrush;
     private readonly Avalonia.Media.Imaging.Bitmap _transparentBitmap;
     private double _gridWidth;
@@ -42,7 +41,6 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
     private int _prevY = -1;
     private bool _gestureZoomEnabled;
     private double _zoomValue = 1;
-    private bool _overlayVisible = false;
 
     private readonly IDisposable _projectModified;
     private readonly IDisposable _projectChanged;
@@ -83,26 +81,6 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
         {
             _toolSize = value;
             _applicationData.ToolSize = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public SKBitmap? RenderBitmap
-    {
-        get => _renderBitmap;
-        set
-        {
-            _renderBitmap = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public SKBitmap? ImageBitmap
-    {
-        get => _imageBitmap;
-        set
-        {
-            _imageBitmap = value;
             OnPropertyChanged();
         }
     }
@@ -200,11 +178,25 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
         }
     }
 
+    public RenderModel RenderModel
+    {
+        get => _renderModel;
+        set
+        {
+            _renderModel = value;
+            OnPropertyChanged();
+        }
+    }
+
     public PaintCanvasViewModel(ApplicationData applicationData, ToolsManager toolSelector, ToolMoveCanvas toolMoveCanvas, SelectionManager selectionManager)
     {
         _applicationData = applicationData;
         _toolSelector = toolSelector;
         _frame = new Frame(32, 32);
+        _renderModel = new RenderModel
+        {
+            Frame = _frame
+        };
         LeftMouseDown = new ActionCommand<MouseEvent>(LeftMouseDownAction);
         LeftMouseUp = new ActionCommand<MouseEvent>(LeftMouseUpAction);
         RightMouseDown = new ActionCommand<MouseEvent>(RightMouseDownAction);
@@ -220,6 +212,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
         _projectModified = Subjects.ProjectModified.Subscribe(p =>
         {
             _frame = p.CurrentFrame;
+            _renderModel.Frame = _frame;
             RecalculateFactor(_lastWindowSize);
         });
 
@@ -229,37 +222,15 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
             RecalculateFactor(_lastWindowSize);
             RefreshGridCanvas();
             ProjectSizeText = "[" + p.Width + "x" + p.Height + "]";
-            RenderBitmap = _frame.RenderSource?.Copy();
-        });
-
-        _projectAdded = Subjects.ProjectAdded.Subscribe(p =>
-        {
-            foreach (var frame in p.Frames)
-            {
-                frame.RefreshCurrentLayerRenderSource([]);
-            }
         });
 
         _frameChanged = Subjects.FrameChanged.Subscribe(f =>
         {
             _frame = f;
-            _frame.RefreshLayerRenderSources();
-            ReloadFrameRender();
+            _renderModel.Frame = _frame;
             ClearOverlay();
             GridWidth = _frame.Width;
             GridHeight = _frame.Height;
-        });
-
-        _frameModified = Subjects.FrameModified.Subscribe(f =>
-        {
-            f.RefreshLayerRenderSources();
-            ReloadFrameRender();
-        });
-
-        _layerModified = Subjects.LayerModified.Subscribe(l =>
-        {
-            l.Rerender();
-            ReloadFrameRender();
         });
 
         _gridChanged = Subjects.GridChanged.Subscribe(enabled =>
@@ -284,13 +255,13 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
 
         _overlayChanged = Subjects.OverlayModified.Subscribe(overlay =>
         {
-            _overlayBitmap = overlay;
+            _overlay = overlay;
+            _renderModel.Overlay = overlay;
         });
 
         _currentLayerRenderModified = Subjects.CurrentLayerRenderModified.Subscribe(pixels =>
         {
-            _applicationData.CurrentFrame.RefreshCurrentLayerRenderSource(pixels);
-            RenderBitmap = _applicationData.CurrentFrame.RenderSource?.Copy();
+            _frame.SetModifiedPixels(pixels);
         });
 
         _zoomChanged = ZoomBorder.ZoomChanged.Subscribe(entry =>
@@ -347,24 +318,6 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
         {
             GestureZoomEnabled = isEnabled;
         };
-
-        _renderInterval = Observable.Interval(TimeSpan.FromMilliseconds(100)).Subscribe(l =>
-        {
-            if (_renderBitmap == null)
-            {
-                return;
-            }
-            SKBitmap image = new(_renderBitmap.Width, _renderBitmap.Height, true);
-            SKCanvas canvas = new(image);
-            canvas.Clear(SKColors.Transparent);
-            canvas.DrawBitmap(_renderBitmap, SKPoint.Empty);
-            if (_overlayBitmap != null)
-            {
-                canvas.DrawBitmap(_overlayBitmap, SKPoint.Empty);
-            }
-            canvas.Dispose();
-            ImageBitmap = image;
-        });
     }
     public void RecalculateFactor(Point windowSize)
     {
@@ -381,15 +334,17 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
     }
     public void ClearOverlay()
     {
-        if (_overlayBitmap == null || _overlayBitmap.Width != _frame.Width || _overlayBitmap.Height != _frame.Height)
+        if (_overlay == null || _overlay.Width != _frame.Width || _overlay.Height != _frame.Height)
         {
-            _overlayBitmap?.Dispose();
-            _overlayBitmap = new SKBitmap(_frame.Width, _frame.Height, true);
+            _overlay?.Dispose();
+            _overlay = new SKBitmap(_frame.Width, _frame.Height, true);
         }
         else
         {
-            _overlayBitmap.Clear();
+            _overlay.Clear();
         }
+
+        _renderModel.Overlay = _overlay;
     }
 
     public void RefreshGridCanvas()
@@ -447,7 +402,8 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
         }
 
         _leftPressed = true;
-        _toolSelector.SelectedTool?.ApplyTool(mouseEvent.Point, _frame, ref _overlayBitmap, _currentKeyState);
+        _toolSelector.SelectedTool?.ApplyTool(mouseEvent.Point, _frame, ref _overlay, _currentKeyState);
+        _renderModel.Overlay = _overlay;
         Subjects.FrameModified.OnNext(_frame);
     }
 
@@ -459,12 +415,15 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
         }
 
         _leftPressed = false;
-        _toolSelector.SelectedTool?.ReleaseTool(mouseEvent.Point, _frame, ref _overlayBitmap, _currentKeyState);
+        _toolSelector.SelectedTool?.ReleaseTool(mouseEvent.Point, _frame, ref _overlay, _currentKeyState);
+        _renderModel.Overlay = _overlay;
 
         if (_toolSelector.SelectedTool != null && _toolSelector.SelectedTool.AddToHistory)
         {
             _applicationData.CurrentModel.AddHistory();
         }
+
+        _applicationData.CurrentModel.SetModifiedPixels([]);
 
         Subjects.FrameModified.OnNext(_frame);
     }
@@ -477,7 +436,8 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
         }
 
         _rightPressed = true;
-        _toolSelector.SelectedTool?.ApplyTool(mouseEvent.Point, _frame, ref _overlayBitmap, _currentKeyState);
+        _toolSelector.SelectedTool?.ApplyTool(mouseEvent.Point, _frame, ref _overlay, _currentKeyState);
+        _renderModel.Overlay = _overlay;
     }
 
     private void RightMouseUpAction(MouseEvent mouseEvent)
@@ -488,12 +448,15 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
         }
 
         _rightPressed = false;
-        _toolSelector.SelectedTool?.ReleaseTool(mouseEvent.Point, _frame, ref _overlayBitmap, _currentKeyState);
+        _toolSelector.SelectedTool?.ReleaseTool(mouseEvent.Point, _frame, ref _overlay, _currentKeyState);
+        _renderModel.Overlay = _overlay;
 
         if (_toolSelector.SelectedTool != null && _toolSelector.SelectedTool.AddToHistory)
         {
             _applicationData.CurrentModel.AddHistory();
         }
+
+        _applicationData.CurrentModel.SetModifiedPixels([]);
 
         Subjects.FrameModified.OnNext(_frame);
     }
@@ -514,11 +477,13 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
 
         if (_leftPressed || _rightPressed)
         {
-            _toolSelector.SelectedTool.MoveTool(mouseEvent.Point, _frame, ref _overlayBitmap, _currentKeyState);
+            _toolSelector.SelectedTool.MoveTool(mouseEvent.Point, _frame, ref _overlay, _currentKeyState);
+            _renderModel.Overlay = _overlay;
         }
         else
         {
-            _toolSelector.SelectedTool.UpdateHighlightedPixel(mouseEvent.Point, _frame, ref _overlayBitmap);
+            _toolSelector.SelectedTool.UpdateHighlightedPixel(mouseEvent.Point, _frame, ref _overlay);
+            _renderModel.Overlay = _overlay;
         }
 
 
@@ -528,23 +493,11 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
     {
         if (_rightPressed || _leftPressed)
         {
-            _toolSelector.SelectedTool?.ReleaseTool(new Point(), _frame, ref _overlayBitmap, _currentKeyState);
+            _toolSelector.SelectedTool?.ReleaseTool(new Point(), _frame, ref _overlay, _currentKeyState);
+            _renderModel.Overlay = _overlay;
         }
         _rightPressed = false;
         _leftPressed = false;
-    }
-
-    private void ReloadFrameRender()
-    {
-        List<Pixel>? pixels = null;
-
-        if (_toolSelector.SelectedTool is ToolPenBase pen)
-        {
-            pixels = pen.GetPixels();
-        }
-
-        _frame.RefreshCurrentLayerRenderSource(pixels);
-        RenderBitmap = _frame.RenderSource?.Copy();
     }
 
     private bool CanProcess(Point point)

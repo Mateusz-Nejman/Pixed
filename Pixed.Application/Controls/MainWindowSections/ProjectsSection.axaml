@@ -25,7 +25,7 @@
                 <Grid.Background>
                   <ImageBrush Source="avares://Pixed.Application/Resources/transparentBackground.png"/>
                 </Grid.Background>
-                <controls:SkiaImage MaxWidth="20" MaxHeight="20" Source="{Binding RenderSource}" RenderOptions.BitmapInterpolationMode="None"/>
+                <controls:PixelImageControl MaxWidth="20" MaxHeight="20" Source="{Binding}" RenderOptions.BitmapInterpolationMode="None"/>
               </Grid>
             </Grid>
             <TextBlock Text="{Binding FileName}" Grid.Column="1" FontSize="14" VerticalAlignment="Center"/>

@@ -6,14 +6,13 @@ using System.Windows.Input;
 
 namespace Pixed.Core.Models;
 
-public class PixedModel : PropertyChangedBase, IPixedSerializer
+public class PixedModel : PixelImage, IPixedSerializer
 {
     private readonly ApplicationData _applicationData;
     private const int MAX_HISTORY_ENTRIES = 500;
     private readonly ObservableCollection<Frame> _frames;
     private readonly ObservableCollection<byte[]> _history;
     private int _historyIndex = 0;
-    private SKBitmap? _renderSource = null;
     private int _currentFrameIndex = 0;
     private bool _isEmpty = true;
 
@@ -32,16 +31,6 @@ public class PixedModel : PropertyChangedBase, IPixedSerializer
         set
         {
             _currentFrameIndex = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public SKBitmap? RenderSource
-    {
-        get => _renderSource;
-        set
-        {
-            _renderSource = value;
             OnPropertyChanged();
         }
     }
@@ -101,11 +90,6 @@ public class PixedModel : PropertyChangedBase, IPixedSerializer
         return model;
     }
 
-    public void UpdatePreview()
-    {
-        RenderSource = Frames.First().Render();
-    }
-
     public List<uint> GetAllColors()
     {
         uint transparentColor = UniColor.Transparent;
@@ -151,6 +135,16 @@ public class PixedModel : PropertyChangedBase, IPixedSerializer
         }
 
         UnsavedChanges = true;
+    }
+
+    public override void SetModifiedPixels(List<Pixel> modifiedPixels)
+    {
+        CurrentFrame.SetModifiedPixels(modifiedPixels);
+    }
+    public override SKBitmap Render()
+    {
+        var render = Frames.First().Render();
+        return render;
     }
 
     public void Serialize(Stream stream)

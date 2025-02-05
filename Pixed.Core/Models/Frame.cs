@@ -5,12 +5,12 @@ using System.Collections.ObjectModel;
 
 namespace Pixed.Core.Models;
 
-public class Frame : PropertyChangedBase, IPixedSerializer
+public class Frame : PixelImage, IPixedSerializer
 {
     private readonly ObservableCollection<Layer> _layers;
     private int _selectedLayer = 0;
     private readonly string _id;
-    private SKBitmap? _renderSource = null;
+    private static readonly object _lock = new();
 
     public int Width => Layers[0].Width;
     public int Height => Layers[0].Height;
@@ -25,15 +25,6 @@ public class Frame : PropertyChangedBase, IPixedSerializer
         }
     }
 
-    public SKBitmap? RenderSource
-    {
-        get => _renderSource;
-        set
-        {
-            _renderSource = value;
-            OnPropertyChanged();
-        }
-    }
     public ObservableCollection<Layer> Layers => _layers;
 
     public string Id => _id;
@@ -103,38 +94,32 @@ public class Frame : PropertyChangedBase, IPixedSerializer
     {
         string name = "Layer " + _layers.Count;
         layer.Name = name;
-        layer.RefreshRenderSource();
         _layers.Add(layer);
         OnPropertyChanged(nameof(Layers));
         return layer;
     }
 
-    public void RefreshLayerRenderSources(List<Pixel>? pixels = null)
+    public override void SetModifiedPixels(List<Pixel> modifiedPixels)
     {
-        foreach (var layer in _layers)
-        {
-            layer.Rerender(layer == CurrentLayer ? pixels : null);
-        }
+        CurrentLayer.SetModifiedPixels(modifiedPixels);
     }
 
-    public void RefreshCurrentLayerRenderSource(List<Pixel> pixels)
+    public override SKBitmap Render()
     {
-        RenderSource = Render(pixels);
-    }
-
-    public SKBitmap Render(List<Pixel>? pixels = null)
-    {
-        SKBitmap render = new(Width, Height, true);
-        SKCanvas canvas = new(render);
-        canvas.Clear(SKColors.Transparent);
-        for (int a = 0; a < _layers.Count; a++)
+        lock (_lock)
         {
-            _layers[a].Render(out SKBitmap bitmap, a == SelectedLayer ? pixels : null);
-            canvas.DrawBitmap(bitmap, new SKPoint(0, 0));
-        }
-        canvas.Dispose();
+            SKBitmap render = new(Width, Height, true);
+            SKCanvas canvas = new(render);
+            canvas.Clear(SKColors.Transparent);
 
-        return render;
+            for (int a = 0; a < _layers.Count; a++)
+            {
+                var bitmap = _layers[a].Render();
+                canvas.DrawBitmap(bitmap, new SKPoint(0, 0));
+            }
+            canvas.Dispose();
+            return render;
+        }
     }
 
     public bool ContainsPixel(Point point)

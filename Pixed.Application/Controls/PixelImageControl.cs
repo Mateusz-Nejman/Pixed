@@ -2,50 +2,45 @@
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
 using Avalonia.Controls;
-using Avalonia.Controls.Automation.Peers;
 using Avalonia.Media;
 using Avalonia.Metadata;
 using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
+using Avalonia.Threading;
+using Pixed.Core.Models;
 using Pixed.Core.Utils;
-using SkiaSharp;
 
 namespace Pixed.Application.Controls;
-internal class SkiaImage : Control
+internal class PixelImageControl : Control
 {
     private class InternalImage : IImage, ICustomDrawOperation
     {
-        private SKBitmap? _source;
+        private PixelImage? _source;
         private Size _size;
 
         public Size Size => _size;
 
         public Rect Bounds { get; set; }
 
-        public SKBitmap? Source => _source;
+        public PixelImage? Source => _source;
 
-        public InternalImage(SKBitmap? source)
+        public InternalImage() : this(null)
+        {
+        }
+        public InternalImage(PixelImage? source)
         {
             UpdateBitmap(source);
         }
 
-        public void UpdateBitmap(SKBitmap? source)
+        public void UpdateBitmap(PixelImage? source)
         {
             _source = source;
-            if (source?.Info.Size is SKSizeI size)
+            if (source is PixelImage image)
             {
-                _size = new(size.Width, size.Height);
+                var bitmap = image.Render();
+                _size = new(bitmap.Width, bitmap.Height);
             }
-        }
-
-        public InternalImage Clone()
-        {
-            return new InternalImage(_source?.Copy());
-        }
-
-        public InternalImage(uint[] colors, Pixed.Core.Models.Point size) : this(SkiaUtils.FromArray(colors, size))
-        {
         }
 
         public void Draw(DrawingContext context, Rect sourceRect, Rect destRect)
@@ -60,12 +55,12 @@ internal class SkiaImage : Control
 
         public void Render(ImmediateDrawingContext context)
         {
-            if (Source is SKBitmap bitmap && context.PlatformImpl.GetFeature<ISkiaSharpApiLeaseFeature>() is ISkiaSharpApiLeaseFeature leaseFeature)
+            if (Source != null && context.PlatformImpl.GetFeature<ISkiaSharpApiLeaseFeature>() is ISkiaSharpApiLeaseFeature leaseFeature)
             {
                 ISkiaSharpApiLease lease = leaseFeature.Lease();
                 using (lease)
                 {
-                    lease.SkCanvas.DrawBitmap(bitmap, Bounds);
+                    lease.SkCanvas.DrawBitmap(Source.Render(), Bounds);
                 }
             }
         }
@@ -77,37 +72,37 @@ internal class SkiaImage : Control
     /// <summary>
     /// Defines the <see cref="Source"/> property.
     /// </summary>
-    public static readonly StyledProperty<SKBitmap?> SourceProperty =
-        AvaloniaProperty.Register<SkiaImage, SKBitmap?>(nameof(Source));
+    public static readonly StyledProperty<PixelImage?> SourceProperty =
+        AvaloniaProperty.Register<PixelImageControl, PixelImage?>(nameof(Source));
 
     /// <summary>
     /// Defines the <see cref="Stretch"/> property.
     /// </summary>
     public static readonly StyledProperty<Stretch> StretchProperty =
-        AvaloniaProperty.Register<SkiaImage, Stretch>(nameof(Stretch), Stretch.Uniform);
+        AvaloniaProperty.Register<PixelImageControl, Stretch>(nameof(Stretch), Stretch.Uniform);
 
     /// <summary>
     /// Defines the <see cref="StretchDirection"/> property.
     /// </summary>
     public static readonly StyledProperty<StretchDirection> StretchDirectionProperty =
-        AvaloniaProperty.Register<SkiaImage, StretchDirection>(
+        AvaloniaProperty.Register<PixelImageControl, StretchDirection>(
             nameof(StretchDirection),
             StretchDirection.Both);
 
-    static SkiaImage()
+    static PixelImageControl()
     {
-        AffectsRender<SkiaImage>(SourceProperty, StretchProperty, StretchDirectionProperty);
-        AffectsMeasure<SkiaImage>(SourceProperty, StretchProperty, StretchDirectionProperty);
-        AutomationProperties.ControlTypeOverrideProperty.OverrideDefaultValue<SkiaImage>(AutomationControlType.Image);
+        AffectsRender<PixelImageControl>(SourceProperty, StretchProperty, StretchDirectionProperty);
+        AffectsMeasure<PixelImageControl>(SourceProperty, StretchProperty, StretchDirectionProperty);
+        AutomationProperties.ControlTypeOverrideProperty.OverrideDefaultValue<PixelImageControl>(AutomationControlType.Image);
     }
 
-    private readonly InternalImage _image = new(null);
+    private readonly InternalImage _image = new();
 
     /// <summary>
     /// Gets or sets the image that will be displayed.
     /// </summary>
     [Content]
-    public SKBitmap? Source
+    public PixelImage? Source
     {
         get => GetValue(SourceProperty);
         set => SetValue(SourceProperty, value);
@@ -140,8 +135,13 @@ internal class SkiaImage : Control
     /// <param name="context">The drawing context.</param>
     public sealed override void Render(DrawingContext context)
     {
+        if (Source == null)
+        {
+            return;
+        }
+
+        var source = Source.Render();
         _image.UpdateBitmap(Source);
-        var source = Source;
 
         if (source != null && Bounds.Width > 0 && Bounds.Height > 0)
         {
@@ -159,6 +159,8 @@ internal class SkiaImage : Control
             _image.Bounds = destRect;
             context.DrawImage(_image, sourceRect, destRect);
         }
+
+        Dispatcher.UIThread.Post(InvalidateVisual, DispatcherPriority.Input);
     }
 
     /// <summary>
@@ -168,7 +170,7 @@ internal class SkiaImage : Control
     /// <returns>The desired size of the control.</returns>
     protected override Size MeasureOverride(Size availableSize)
     {
-        var source = Source;
+        var source = Source?.Render();
         var result = new Size();
 
         if (source != null)
@@ -182,7 +184,7 @@ internal class SkiaImage : Control
     /// <inheritdoc/>
     protected override Size ArrangeOverride(Size finalSize)
     {
-        var source = Source;
+        var source = Source?.Render();
 
         if (source != null)
         {
@@ -194,10 +196,5 @@ internal class SkiaImage : Control
         {
             return new Size();
         }
-    }
-
-    protected override AutomationPeer OnCreateAutomationPeer()
-    {
-        return new ImageAutomationPeer(this);
     }
 }

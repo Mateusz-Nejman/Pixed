@@ -118,11 +118,6 @@ internal class LayersSectionViewModel : ExtendedViewModel, IDisposable
             SelectedLayer = f.SelectedLayer;
         });
 
-        _layerModified = Subjects.LayerModified.Subscribe(l =>
-        {
-            l.Rerender();
-        });
-
         _layerAdded = Subjects.LayerAdded.Subscribe(l =>
         {
             SelectedLayer = _applicationData.CurrentFrame.Layers.IndexOf(l);
@@ -235,7 +230,6 @@ internal class LayersSectionViewModel : ExtendedViewModel, IDisposable
 
         Subjects.LayerRemoved.OnNext(removedLayer);
         Subjects.LayerModified.OnNext(currentLayer);
-        currentLayer.RefreshRenderSource();
         Subjects.FrameModified.OnNext(Frame);
         OnPropertyChanged(nameof(Layers));
         _applicationData.CurrentModel.AddHistory();

@@ -215,7 +215,6 @@ internal partial class Main : EmptyPixedPage, IDisposable
         if (result.HasValue)
         {
             layer.Opacity = result.Value;
-            layer.RefreshRenderSource();
         }
     }
 
