@@ -37,7 +37,7 @@ internal class PixelImageControl : Control
             UpdateBitmap(source);
             _disposed = Observable.Interval(TimeSpan.FromMilliseconds(TICK_TIME)).Subscribe(t =>
             {
-                if(_source == null)
+                if (_source == null)
                 {
                     return;
                 }
@@ -77,7 +77,7 @@ internal class PixelImageControl : Control
                 ISkiaSharpApiLease lease = leaseFeature.Lease();
                 using (lease)
                 {
-                    if(_bitmap != null)
+                    if (_bitmap != null)
                     {
                         lease.SkCanvas.DrawBitmap(_bitmap, Bounds);
                     }
@@ -156,7 +156,7 @@ internal class PixelImageControl : Control
     /// <param name="context">The drawing context.</param>
     public sealed override void Render(DrawingContext context)
     {
-        if(Source == null)
+        if (Source == null)
         {
             return;
         }

@@ -130,7 +130,7 @@ public class Layer : PixelImage, IPixedSerializer
     public override SKBitmap Render()
     {
         SKBitmap bitmap;
-        lock(_lock)
+        lock (_lock)
         {
             List<uint> pixels = new(_pixels);
 
@@ -190,7 +190,7 @@ public class Layer : PixelImage, IPixedSerializer
 
     public override bool NeedRender(string uuid)
     {
-        if(string.IsNullOrEmpty(uuid) || string.IsNullOrEmpty(UUID))
+        if (string.IsNullOrEmpty(uuid) || string.IsNullOrEmpty(UUID))
         {
             return true;
         }

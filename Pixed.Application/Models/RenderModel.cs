@@ -17,7 +17,7 @@ internal class RenderModel : PixelImage
             bool firstAssign = _frame == null;
             _frame = value;
 
-            if(firstAssign)
+            if (firstAssign)
             {
                 UUID = GenerateUUID();
             }
@@ -52,7 +52,7 @@ internal class RenderModel : PixelImage
             return true;
         }
 
-        if(_overlayUUID != uids[1])
+        if (_overlayUUID != uids[1])
         {
             return true;
         }

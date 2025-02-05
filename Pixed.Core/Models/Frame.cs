@@ -108,7 +108,7 @@ public class Frame : PixelImage, IPixedSerializer
 
     public override SKBitmap Render()
     {
-        lock(_lock)
+        lock (_lock)
         {
             SKBitmap render = new(Width, Height, true);
             SKCanvas canvas = new(render);
@@ -210,12 +210,12 @@ public class Frame : PixelImage, IPixedSerializer
         }
         string[] layerUUIDS = UUID.Split(';');
 
-        if(layerUUIDS.Length != _layers.Count)
+        if (layerUUIDS.Length != _layers.Count)
         {
             return true;
         }
 
-        for(int a = 0; a < _layers.Count; a++)
+        for (int a = 0; a < _layers.Count; a++)
         {
             if (_layers[a].NeedRender(layerUUIDS[a]))
             {
@@ -231,7 +231,7 @@ public class Frame : PixelImage, IPixedSerializer
         string uuid = string.Empty;
         var last = _layers.Last();
 
-        foreach(var layer in Layers)
+        foreach (var layer in Layers)
         {
             uuid += layer.UUID + (last != layer ? ";" : "");
         }

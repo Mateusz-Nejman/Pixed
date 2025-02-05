@@ -12,7 +12,6 @@ using Pixed.Core.Models;
 using Pixed.Core.Utils;
 using SkiaSharp;
 using System;
-using System.Collections.Generic;
 using System.Reactive.Linq;
 using Frame = Pixed.Core.Models.Frame;
 
