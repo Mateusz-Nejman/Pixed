@@ -212,7 +212,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
         _projectModified = Subjects.ProjectModified.Subscribe(p =>
         {
             _frame = p.CurrentFrame;
-            _renderModel.Frame = _frame;
+            UpdateRenderModel();
             RecalculateFactor(_lastWindowSize);
         });
 
@@ -227,7 +227,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
         _frameChanged = Subjects.FrameChanged.Subscribe(f =>
         {
             _frame = f;
-            _renderModel.Frame = _frame;
+            UpdateRenderModel();
             ClearOverlay();
             GridWidth = _frame.Width;
             GridHeight = _frame.Height;
@@ -256,7 +256,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
         _overlayChanged = Subjects.OverlayModified.Subscribe(overlay =>
         {
             _overlay = overlay;
-            _renderModel.Overlay = overlay;
+            UpdateRenderModel();
         });
 
         _currentLayerRenderModified = Subjects.CurrentLayerRenderModified.Subscribe(pixels =>
@@ -344,7 +344,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
             _overlay.Clear();
         }
 
-        _renderModel.Overlay = _overlay;
+        UpdateRenderModel();
     }
 
     public void RefreshGridCanvas()
@@ -403,7 +403,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
 
         _leftPressed = true;
         _toolSelector.SelectedTool?.ApplyTool(mouseEvent.Point, _frame, ref _overlay, _currentKeyState);
-        _renderModel.Overlay = _overlay;
+        UpdateRenderModel();
         Subjects.FrameModified.OnNext(_frame);
     }
 
@@ -416,7 +416,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
 
         _leftPressed = false;
         _toolSelector.SelectedTool?.ReleaseTool(mouseEvent.Point, _frame, ref _overlay, _currentKeyState);
-        _renderModel.Overlay = _overlay;
+        UpdateRenderModel();
 
         if (_toolSelector.SelectedTool != null && _toolSelector.SelectedTool.AddToHistory)
         {
@@ -437,7 +437,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
 
         _rightPressed = true;
         _toolSelector.SelectedTool?.ApplyTool(mouseEvent.Point, _frame, ref _overlay, _currentKeyState);
-        _renderModel.Overlay = _overlay;
+        UpdateRenderModel();
     }
 
     private void RightMouseUpAction(MouseEvent mouseEvent)
@@ -449,7 +449,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
 
         _rightPressed = false;
         _toolSelector.SelectedTool?.ReleaseTool(mouseEvent.Point, _frame, ref _overlay, _currentKeyState);
-        _renderModel.Overlay = _overlay;
+        UpdateRenderModel();
 
         if (_toolSelector.SelectedTool != null && _toolSelector.SelectedTool.AddToHistory)
         {
@@ -478,12 +478,12 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
         if (_leftPressed || _rightPressed)
         {
             _toolSelector.SelectedTool.MoveTool(mouseEvent.Point, _frame, ref _overlay, _currentKeyState);
-            _renderModel.Overlay = _overlay;
+            UpdateRenderModel();
         }
         else
         {
             _toolSelector.SelectedTool.UpdateHighlightedPixel(mouseEvent.Point, _frame, ref _overlay);
-            _renderModel.Overlay = _overlay;
+            UpdateRenderModel();
         }
 
 
@@ -494,7 +494,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
         if (_rightPressed || _leftPressed)
         {
             _toolSelector.SelectedTool?.ReleaseTool(new Point(), _frame, ref _overlay, _currentKeyState);
-            _renderModel.Overlay = _overlay;
+            UpdateRenderModel();
         }
         _rightPressed = false;
         _leftPressed = false;
@@ -518,5 +518,10 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
             TileMode = TileMode.Tile,
             Transform = new ScaleTransform(delta, delta)
         };
+    }
+
+    private void UpdateRenderModel()
+    {
+        RenderModel = new RenderModel() { Frame = _frame, Overlay = _overlay };
     }
 }
