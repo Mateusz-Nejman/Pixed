@@ -38,7 +38,16 @@ internal static class SettingsUtils
 
         try
         {
-            return JsonConvert.DeserializeObject<Settings>(json) ?? new Settings();
+            Settings settings = new();
+
+            if (OperatingSystem.IsAndroid())
+            {
+                settings.PropertiesViewVisible = false;
+                settings.FramesViewVisible = false;
+            }
+
+            JsonConvert.PopulateObject(json, settings);
+            return settings;
         }
         catch (Exception)
         {

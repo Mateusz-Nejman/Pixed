@@ -2,6 +2,7 @@
 
 public enum BaseMenuItem
 {
+    Base,
     File,
     Edit,
     Tools,

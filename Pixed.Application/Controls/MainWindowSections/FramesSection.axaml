@@ -7,53 +7,62 @@
              xmlns:vm="clr-namespace:Pixed.Application.ViewModels"
              xmlns:controls="clr-namespace:Pixed.Application.Controls"
              x:Class="Pixed.Application.Controls.MainWindowSections.FramesSection"
-			 x:DataType="vm:FramesSectionViewModel">
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="32"/>
-      <RowDefinition Height="*"/>
-    </Grid.RowDefinitions>
-    <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="124"/>
-    </Grid.ColumnDefinitions>
+			 x:DataType="vm:FramesSectionViewModel"
+			 IsVisible="{Binding IsVisible}"
+			 Width="124">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="32"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="auto"/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="124"/>
+		</Grid.ColumnDefinitions>
 
-    <Grid Margin="6, 0, 6, 0">
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="*"/>
-        <ColumnDefinition Width="*"/>
-        <ColumnDefinition Width="*"/>
-      </Grid.ColumnDefinitions>
-      <Grid.RowDefinitions>
-        <RowDefinition Height="32"/>
-      </Grid.RowDefinitions>
-      <controls:TouchButton Command="{Binding NewFrameCommand}" Theme="{StaticResource BaseButton}">
-        <Image Source="{SvgImage avares://Pixed.Application/Resources/fluent-icons/ic_fluent_add_48_regular.svg}" Width="16" Height="16"/>
-        <ToolTip.Tip>
-          <controls:TextTooltip Text="New frame"/>
-        </ToolTip.Tip>
-      </controls:TouchButton>
-		<controls:TouchButton Grid.Column="1" Command="{Binding DuplicateFrameCommand}" Theme="{StaticResource BaseButton}">
-        <Image Source="{SvgImage avares://Pixed.Application/Resources/fluent-icons/ic_fluent_document_copy_48_regular.svg}" Width="16" Height="16"/>
-        <ToolTip.Tip>
-          <controls:TextTooltip Text="Duplicate frame"/>
-        </ToolTip.Tip>
-      </controls:TouchButton>
-		<controls:TouchButton Grid.Column="2" Command="{Binding RemoveFrameCommand}" IsEnabled="{Binding RemoveFrameEnabled}" Theme="{StaticResource BaseButton}">
-			<Image Source="{SvgImage avares://Pixed.Application/Resources/fluent-icons/ic_fluent_delete_48_regular.svg}" Width="16" Height="16"/>
+		<Grid Margin="6, 0, 6, 0">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="32"/>
+			</Grid.RowDefinitions>
+			<controls:TouchButton Command="{Binding NewFrameCommand}" Theme="{StaticResource BaseButton}">
+				<Image Source="{SvgImage avares://Pixed.Application/Resources/fluent-icons/ic_fluent_add_48_regular.svg}" Width="16" Height="16"/>
+				<ToolTip.Tip>
+					<controls:TextTooltip Text="New frame"/>
+				</ToolTip.Tip>
+			</controls:TouchButton>
+			<controls:TouchButton Grid.Column="1" Command="{Binding DuplicateFrameCommand}" Theme="{StaticResource BaseButton}">
+				<Image Source="{SvgImage avares://Pixed.Application/Resources/fluent-icons/ic_fluent_document_copy_48_regular.svg}" Width="16" Height="16"/>
+				<ToolTip.Tip>
+					<controls:TextTooltip Text="Duplicate frame"/>
+				</ToolTip.Tip>
+			</controls:TouchButton>
+			<controls:TouchButton Grid.Column="2" Command="{Binding RemoveFrameCommand}" IsEnabled="{Binding RemoveFrameEnabled}" Theme="{StaticResource BaseButton}">
+				<Image Source="{SvgImage avares://Pixed.Application/Resources/fluent-icons/ic_fluent_delete_48_regular.svg}" Width="16" Height="16"/>
+				<ToolTip.Tip>
+					<controls:TextTooltip Text="Remove frame"/>
+				</ToolTip.Tip>
+			</controls:TouchButton>
+		</Grid>
+		<ScrollViewer Grid.Row="1" Width="110" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
+			<ListBox Classes="FramesDragAndDrop" ItemsSource="{Binding Frames}" SelectedIndex="{Binding SelectedFrame, Mode=TwoWay}" Width="102"
+				 Background="{StaticResource BaseBackground}" ItemContainerTheme="{StaticResource FrameListBoxItem}">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<controls:FrameListControl/>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+		</ScrollViewer>
+		<controls:TouchButton Command="{Binding CloseViewCommand}" Theme="{StaticResource BaseButton}" Grid.Row="2" IsVisible="True" Height="32">
+			<Image Source="{SvgImage avares://Pixed.Application/Resources/fluent-icons/ic_fluent_arrow_exit_20_regular.svg}" Width="16" Height="16"/>
 			<ToolTip.Tip>
-				<controls:TextTooltip Text="Remove frame"/>
+				<controls:TextTooltip Text="Close view"/>
 			</ToolTip.Tip>
 		</controls:TouchButton>
-    </Grid>
-    <ScrollViewer Grid.Row="1" Width="110" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
-      <ListBox Classes="FramesDragAndDrop" ItemsSource="{Binding Frames}" SelectedIndex="{Binding SelectedFrame, Mode=TwoWay}" Width="102"
-           Background="{StaticResource BaseBackground}" ItemContainerTheme="{StaticResource FrameListBoxItem}">
-        <ListBox.ItemTemplate>
-          <DataTemplate>
-            <controls:FrameListControl/>
-          </DataTemplate>
-        </ListBox.ItemTemplate>
-      </ListBox>
-    </ScrollViewer>
-  </Grid>
+	</Grid>
 </UserControl>

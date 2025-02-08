@@ -10,4 +10,6 @@ public class Settings
     public bool GridEnabled { get; set; } = true;
     public bool MaintainAspectRatio { get; set; } = false;
     public bool AnimationPreviewVisible { get; set; } = false;
+    public bool FramesViewVisible { get; set; } = true;
+    public bool PropertiesViewVisible { get; set; } = true;
 }

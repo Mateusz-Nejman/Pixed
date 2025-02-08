@@ -175,6 +175,7 @@ internal partial class Main : EmptyPixedPage, IDisposable
         {
             _platformFolder.GetFiles(FolderType.Extensions);
         }
+
         _applicationData.UserSettings = await SettingsUtils.Load(_platformFolder);
         _applicationData.Initialize();
         Subjects.AnimationPreviewChanged.OnNext(_applicationData.UserSettings.AnimationPreviewVisible);
