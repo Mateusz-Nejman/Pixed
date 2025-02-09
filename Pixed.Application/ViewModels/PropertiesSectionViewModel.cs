@@ -4,6 +4,7 @@ using Pixed.Application.Utils;
 using Pixed.Common.Menu;
 using Pixed.Core;
 using Pixed.Core.Models;
+using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -22,12 +23,15 @@ internal class PropertiesSectionViewModel : ExtendedViewModel
             _isVisible = value;
             OnPropertyChanged();
             _applicationData.UserSettings.PropertiesViewVisible = value;
+            IsVisibleChanged.OnNext(value);
             Task.Run(async () =>
             {
                 await SettingsUtils.Save(_platformFolder, _applicationData);
             });
         }
     }
+
+    public Subject<bool> IsVisibleChanged { get; } = new Subject<bool>();
 
     public ICommand CloseViewCommand { get; }
 
@@ -38,17 +42,10 @@ internal class PropertiesSectionViewModel : ExtendedViewModel
         CloseViewCommand = new ActionCommand(CloseView);
         _isVisible = _applicationData.UserSettings.PropertiesViewVisible;
         OnPropertyChanged(nameof(IsVisible));
-
-        menuItemRegistry.Register(BaseMenuItem.Base, "Toggle properties view", ToggleView, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_color_24_regular.svg"));
     }
 
     private void CloseView()
     {
         IsVisible = false;
-    }
-
-    private void ToggleView()
-    {
-        IsVisible = !IsVisible;
     }
 }

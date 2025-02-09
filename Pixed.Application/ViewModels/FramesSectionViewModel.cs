@@ -7,6 +7,7 @@ using Pixed.Core;
 using Pixed.Core.Models;
 using System;
 using System.Collections.ObjectModel;
+using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -61,6 +62,7 @@ internal class FramesSectionViewModel : ExtendedViewModel, IDisposable
             _isVisible = value;
             OnPropertyChanged();
             _applicationData.UserSettings.FramesViewVisible = value;
+            IsVisibleChanged.OnNext(value);
             Task.Run(async () =>
             {
                 await SettingsUtils.Save(_platformFolder, _applicationData);
@@ -72,6 +74,7 @@ internal class FramesSectionViewModel : ExtendedViewModel, IDisposable
     public ICommand RemoveFrameCommand { get; }
     public ICommand DuplicateFrameCommand { get; }
     public ICommand CloseViewCommand { get; }
+    public Subject<bool> IsVisibleChanged { get; } = new Subject<bool>();
 
     public FramesSectionViewModel(ApplicationData applicationData, IMenuItemRegistry menuItemRegistry, IPlatformFolder platformFolder)
     {
@@ -108,7 +111,6 @@ internal class FramesSectionViewModel : ExtendedViewModel, IDisposable
         _menuItemRegistry.Register(BaseMenuItem.Project, "New Frame", NewFrameCommand, null, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_add_48_regular.svg"));
         _menuItemRegistry.Register(BaseMenuItem.Project, "Duplicate Frame", DuplicateFrameCommand, null, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_layer_diagonal_24_regular.svg"));
         _menuItemRegistry.Register(BaseMenuItem.Project, "Remove Frame", RemoveFrameCommand, null, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_delete_48_regular.svg"));
-        _menuItemRegistry.Register(BaseMenuItem.Base, "Toggle frames view", ToggleView, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_image_multiple_48_regular.svg"));
     }
 
     protected virtual void Dispose(bool disposing)
@@ -166,10 +168,5 @@ internal class FramesSectionViewModel : ExtendedViewModel, IDisposable
     private void CloseView()
     {
         IsVisible = false;
-    }
-
-    private void ToggleView()
-    {
-        IsVisible = !IsVisible;
     }
 }

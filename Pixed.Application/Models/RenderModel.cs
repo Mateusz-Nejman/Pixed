@@ -29,7 +29,10 @@ internal class RenderModel : PixelImage
         SKCanvas canvas = new(image);
         canvas.Clear(SKColors.Transparent);
         canvas.DrawBitmap(_frame.Render(), SKPoint.Empty);
-        canvas.DrawBitmap(_overlay, SKPoint.Empty);
+        if(_overlay != null)
+        {
+            canvas.DrawBitmap(_overlay, SKPoint.Empty);
+        }
         canvas.Dispose();
         return image;
     }
