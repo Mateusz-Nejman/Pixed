@@ -1,4 +1,5 @@
-﻿using Pixed.Application.Controls;
+﻿using Avalonia.Media;
+using Pixed.Application.Controls;
 using Pixed.Application.Routing;
 using Pixed.Common.Models;
 using Pixed.Common.Services.Palette;
@@ -6,6 +7,7 @@ using Pixed.Core;
 using SkiaSharp;
 using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Windows.Input;
 
 namespace Pixed.Application.ViewModels;
@@ -14,7 +16,7 @@ internal class PaletteListViewModel : ExtendedViewModel
 {
     public struct PaletteData
     {
-        public SKBitmap? BitmapImage { get; set; }
+        public IImage? BitmapImage { get; set; }
         public int BitmapWidth { get; set; }
         public int BitmapHeight { get; set; }
         public string Name { get; set; }
@@ -62,15 +64,16 @@ internal class PaletteListViewModel : ExtendedViewModel
                 continue;
             }
 
-            var paletteBitmap = GeneratePaleteBitmap(model);
+            var skBitmap = GeneratePaleteBitmap(model);
+            var paletteBitmap = new SkiaBitmap(skBitmap);
             Palettes.Add(new PaletteData
             {
                 Name = model.Name,
                 Path = model.Path,
                 Model = model,
                 BitmapImage = paletteBitmap,
-                BitmapWidth = paletteBitmap.Width,
-                BitmapHeight = paletteBitmap.Height,
+                BitmapWidth = skBitmap.Width,
+                BitmapHeight = skBitmap.Height,
                 SelectCommand = new ActionCommand<PaletteModel>(m => { _paletteService.Select(m); CloseAction?.Invoke(); }),
                 RemoveCommand = new ActionCommand<PaletteModel>(_paletteService.Remove),
                 RenameCommand = new ActionCommand<PaletteModel>(async (m) =>
@@ -85,6 +88,8 @@ internal class PaletteListViewModel : ExtendedViewModel
                 })
             });
         }
+
+        OnPropertyChanged(nameof(Palettes));
     }
 
     private static SKBitmap GeneratePaleteBitmap(PaletteModel model)

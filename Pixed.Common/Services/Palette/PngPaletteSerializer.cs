@@ -7,7 +7,10 @@ internal class PngPaletteSerializer : AbstractPaletteSerializer
     public override PaletteModel Deserialize(Stream stream, string filename)
     {
         Png png = Png.Open(stream);
-        PaletteModel model = new(filename);
+        PaletteModel model = new(filename)
+        {
+            Name = filename
+        };
         bool colorLimit = false;
 
         for (int y = 0; y < png.Height; y++)
