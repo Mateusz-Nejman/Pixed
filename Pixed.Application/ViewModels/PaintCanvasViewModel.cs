@@ -41,6 +41,8 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
     private int _prevY = -1;
     private bool _gestureZoomEnabled;
     private double _zoomValue = 1;
+    private bool _isFramesViewButtonVisible;
+    private bool _isPropertiesViewButtonVisible;
 
     private readonly IDisposable _projectModified;
     private readonly IDisposable _projectChanged;
@@ -63,6 +65,8 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
     private readonly IDisposable _selectionCreated;
     private readonly IDisposable _selectionStarted;
     private readonly IDisposable _renderInterval;
+    private readonly IDisposable _framesViewVisibleChanged;
+    private readonly IDisposable _propertiesViewVisibleChanged;
 
     public ActionCommand<MouseEvent> LeftMouseDown { get; }
     public ActionCommand<MouseEvent> LeftMouseUp { get; }
@@ -73,6 +77,8 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
     public ActionCommand<MouseEvent> MiddleMouseUp { get; }
     public ActionCommand<double> MouseWheel { get; }
     public ActionCommand MouseLeave { get; }
+    public ActionCommand OpenFramesView { get; }
+    public ActionCommand OpenPropertiesView { get; }
 
     public int ToolSize
     {
@@ -188,7 +194,27 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
         }
     }
 
-    public PaintCanvasViewModel(ApplicationData applicationData, ToolsManager toolSelector, ToolMoveCanvas toolMoveCanvas, SelectionManager selectionManager)
+    public bool IsFramesViewButtonVisible
+    {
+        get => _isFramesViewButtonVisible;
+        set
+        {
+            _isFramesViewButtonVisible = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool IsPropertiesViewButtonVisible
+    {
+        get => _isPropertiesViewButtonVisible;
+        set
+        {
+            _isPropertiesViewButtonVisible = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public PaintCanvasViewModel(ApplicationData applicationData, ToolsManager toolSelector, ToolMoveCanvas toolMoveCanvas, SelectionManager selectionManager, FramesSectionViewModel framesSectionViewModel, PropertiesSectionViewModel propertiesSectionViewModel)
     {
         _applicationData = applicationData;
         _toolSelector = toolSelector;
@@ -318,6 +344,15 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
         {
             GestureZoomEnabled = isEnabled;
         };
+
+        IsFramesViewButtonVisible = !_applicationData.UserSettings.FramesViewVisible;
+        IsPropertiesViewButtonVisible = !_applicationData.UserSettings.PropertiesViewVisible;
+
+        _framesViewVisibleChanged = framesSectionViewModel.IsVisibleChanged.Subscribe(v => IsFramesViewButtonVisible = !v);
+        _propertiesViewVisibleChanged = propertiesSectionViewModel.IsVisibleChanged.Subscribe(v => IsPropertiesViewButtonVisible = !v);
+
+        OpenFramesView = new ActionCommand(() => framesSectionViewModel.IsVisible = true);
+        OpenPropertiesView = new ActionCommand(() => propertiesSectionViewModel.IsVisible = true);
     }
     public void RecalculateFactor(Point windowSize)
     {
@@ -382,6 +417,8 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
                 _selectionDismissed?.Dispose();
                 _selectionStarted?.Dispose();
                 _renderInterval?.Dispose();
+                _framesViewVisibleChanged?.Dispose();
+                _propertiesViewVisibleChanged?.Dispose();
             }
 
             _disposedValue = true;

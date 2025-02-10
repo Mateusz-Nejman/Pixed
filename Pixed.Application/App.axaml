@@ -12,6 +12,7 @@
           <ResourceInclude Source="/Themes/CaptionButtons.axaml"/>
           <ResourceInclude Source="/Themes/ColorPicker.axaml"/>
           <ResourceInclude Source="/Themes/CrossButton.axaml"/>
+		  <ResourceInclude Source="/Themes/FlyingButton.axaml"/>
           <ResourceInclude Source="/Themes/FrameListBoxItem.axaml"/>
           <ResourceInclude Source="/Themes/HandledFixScrollViewer.axaml"/>
           <ResourceInclude Source="/Themes/LayersListBoxItem.axaml"/>
@@ -21,6 +22,7 @@
           <ResourceInclude Source="/Themes/ToolButton.axaml"/>
           <ResourceInclude Source="/Themes/ToolRadio.axaml"/>
           <ResourceInclude Source="/Themes/ToolRadioCustom.axaml"/>
+		  <ResourceInclude Source="/Themes/TopLevelMenuItem.axaml"/>
         </ResourceDictionary.MergedDictionaries>
       </ResourceDictionary>
     </Application.Resources>

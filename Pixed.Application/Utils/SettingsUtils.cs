@@ -27,9 +27,17 @@ internal static class SettingsUtils
     {
         var file = await platformFolder.GetFile("settings.json", FolderType.Root);
 
+        Settings settings = new();
+
+        if (OperatingSystem.IsAndroid())
+        {
+            settings.PropertiesViewVisible = false;
+            settings.FramesViewVisible = false;
+        }
+
         if (!file.Exists)
         {
-            return new();
+            return settings;
         }
 
         Stream stream = await file.OpenRead();
@@ -38,11 +46,12 @@ internal static class SettingsUtils
 
         try
         {
-            return JsonConvert.DeserializeObject<Settings>(json) ?? new Settings();
+            JsonConvert.PopulateObject(json, settings);
+            return settings;
         }
         catch (Exception)
         {
-            return new Settings();
+            return settings;
         }
     }
 }

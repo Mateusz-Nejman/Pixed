@@ -1,10 +1,14 @@
 ﻿using Pixed.Application.Controls;
+using Pixed.Application.Platform;
+using Pixed.Application.Utils;
 using Pixed.Common;
 using Pixed.Common.Menu;
 using Pixed.Core;
 using Pixed.Core.Models;
 using System;
 using System.Collections.ObjectModel;
+using System.Reactive.Subjects;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Pixed.Application.ViewModels;
@@ -13,12 +17,14 @@ internal class FramesSectionViewModel : ExtendedViewModel, IDisposable
 {
     private readonly ApplicationData _applicationData;
     private readonly IMenuItemRegistry _menuItemRegistry;
+    private readonly IPlatformFolder _platformFolder;
     private int _selectedFrame = 0;
     private bool _removeFrameEnabled = false;
     private bool _disposedValue;
     private readonly IDisposable _projectChanged;
     private readonly IDisposable _frameAdded;
     private readonly IDisposable _frameRemoved;
+    private bool _isVisible = true;
 
     public ObservableCollection<Frame> Frames => _applicationData.CurrentModel.Frames;
 
@@ -48,17 +54,37 @@ internal class FramesSectionViewModel : ExtendedViewModel, IDisposable
         }
     }
 
+    public bool IsVisible
+    {
+        get => _isVisible;
+        set
+        {
+            _isVisible = value;
+            OnPropertyChanged();
+            _applicationData.UserSettings.FramesViewVisible = value;
+            IsVisibleChanged.OnNext(value);
+            Task.Run(async () =>
+            {
+                await SettingsUtils.Save(_platformFolder, _applicationData);
+            });
+        }
+    }
+
     public ICommand NewFrameCommand { get; }
     public ICommand RemoveFrameCommand { get; }
     public ICommand DuplicateFrameCommand { get; }
+    public ICommand CloseViewCommand { get; }
+    public Subject<bool> IsVisibleChanged { get; } = new Subject<bool>();
 
-    public FramesSectionViewModel(ApplicationData applicationData, IMenuItemRegistry menuItemRegistry)
+    public FramesSectionViewModel(ApplicationData applicationData, IMenuItemRegistry menuItemRegistry, IPlatformFolder platformFolder)
     {
         _applicationData = applicationData;
         _menuItemRegistry = menuItemRegistry;
+        _platformFolder = platformFolder;
         NewFrameCommand = new ActionCommand(NewFrameAction);
         RemoveFrameCommand = new ActionCommand(RemoveFrameAction);
         DuplicateFrameCommand = new ActionCommand(DuplicateFrameAction);
+        CloseViewCommand = new ActionCommand(CloseView);
         _projectChanged = Subjects.ProjectChanged.Subscribe(p =>
         {
             OnPropertyChanged(nameof(Frames));
@@ -75,6 +101,9 @@ internal class FramesSectionViewModel : ExtendedViewModel, IDisposable
         {
             RemoveFrameEnabled = _applicationData.CurrentModel.Frames.Count > 1;
         });
+
+        _isVisible = _applicationData.UserSettings.FramesViewVisible;
+        OnPropertyChanged(nameof(IsVisible));
     }
 
     public override void RegisterMenuItems()
@@ -134,5 +163,10 @@ internal class FramesSectionViewModel : ExtendedViewModel, IDisposable
         Subjects.FrameAdded.OnNext(Frames[^1]);
         SelectedFrame = Frames.Count - 1;
         _applicationData.CurrentModel.AddHistory();
+    }
+
+    private void CloseView()
+    {
+        IsVisible = false;
     }
 }

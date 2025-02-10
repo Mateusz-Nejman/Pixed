@@ -1,5 +1,4 @@
-﻿using Avalonia.Controls;
-using Pixed.Application.Extensions;
+﻿using Pixed.Application.Extensions;
 using Pixed.Application.IO;
 using Pixed.Application.Models;
 using Pixed.Application.Pages;
@@ -22,7 +21,7 @@ using System.Threading.Tasks;
 
 namespace Pixed.Application.Menu;
 
-internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods pixedProjectMethods, RecentFilesService recentFilesService, IStorageProviderHandle storageProvider, IPlatformFolder platformFolder)
+internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods pixedProjectMethods, RecentFilesService recentFilesService, IPlatformFolder platformFolder)
 {
 
     private readonly struct MenuEntry(BaseMenuItem baseMenu, IMenuItem menuItem)
@@ -34,7 +33,6 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
     private readonly ApplicationData _applicationData = applicationData;
     private readonly PixedProjectMethods _projectMethods = pixedProjectMethods;
     private readonly RecentFilesService _recentFilesService = recentFilesService;
-    private readonly IStorageProviderHandle _storageProvider = storageProvider;
     private readonly IPlatformFolder _platformFolder = platformFolder;
     private readonly List<MenuEntry> _entries = [];
 
@@ -48,6 +46,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
     public async Task Build(bool clear = true)
     {
         AddFromExtensions();
+        MenuItem baseMenu = new() { Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_navigation_48_regular.svg") };
         MenuItem fileMenu = await GetFileMenu();
         MenuItem editMenu = GetEditMenu();
         MenuItem toolsMenu = new("Tools");
@@ -69,15 +68,16 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
         AddToMenu(ref viewMenu, GetEntries(BaseMenuItem.View));
         AddToMenu(ref helpMenu, GetEntries(BaseMenuItem.Help));
 
+        baseMenu.Items = [fileMenu, editMenu, toolsMenu, paletteMenu, projectMenu, viewMenu, helpMenu];
+
+        List<IMenuItem> menuItems = [baseMenu];
+        menuItems.AddRange(GetEntries(BaseMenuItem.Base));
+
         if (clear)
         {
             _entries.Clear();
         }
-
-        NativeMenu menu = [];
-
-        List<IMenuItem> items = [fileMenu, editMenu, toolsMenu, paletteMenu, projectMenu, viewMenu, helpMenu];
-        OnMenuBuilt.OnNext(items);
+        OnMenuBuilt.OnNext(menuItems);
     }
 
     private async Task<MenuItem> GetFileMenu()

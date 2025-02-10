@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:mainsections="clr-namespace:Pixed.Application.Controls.MainWindowSections"
+			 xmlns:controls="clr-namespace:Pixed.Application.Controls"
+			 xmlns:vm="clr-namespace:Pixed.Application.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="242" d:DesignHeight="450"
+             x:Class="Pixed.Application.Controls.MainWindowSections.PropertiesSection"
+			 x:DataType="vm:PropertiesSectionViewModel"
+			 Width="242"
+			 IsVisible="{Binding IsVisible}">
+	<Grid Width="242">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+		<ScrollViewer Width="242" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Theme="{StaticResource HandledFixScrollViewer}">
+			<StackPanel Name="rightPanel" Width="242" HorizontalAlignment="Stretch">
+				<mainsections:AnimationSection/>
+				<mainsections:PaletteSection/>
+				<mainsections:LayersSection/>
+			</StackPanel>
+		</ScrollViewer>
+		<controls:TouchButton Command="{Binding CloseViewCommand}" Theme="{StaticResource BaseButton}" Grid.Row="1" IsVisible="True" Height="32">
+			<Image Source="{SvgImage avares://Pixed.Application/Resources/fluent-icons/ic_fluent_arrow_exit_20_regular.svg}" Width="16" Height="16"/>
+			<ToolTip.Tip>
+				<controls:TextTooltip Text="Close view"/>
+			</ToolTip.Tip>
+		</controls:TouchButton>
+	</Grid>
+</UserControl>
