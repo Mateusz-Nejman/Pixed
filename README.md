@@ -14,12 +14,9 @@ Your imagination and **Pixed**. These two things are needed for pixel-arted imag
 
 ## Screenshots
 
-### Base interface
-![Pixed screenshot1](/screenshot1.png "Screenshot 1")
-### Custom actions menu (right click or long touch for open)
-![Pixed screenshot2](/screenshot2.png "Screenshot 2")
-### Palette window
-![Pixed screenshot3](/screenshot3.png "Screenshot 3")
+![Pixed screenshot1](/Pixed_Screenshot1.png "Screenshot 1")
+![Pixed screenshot2](/Pixed_Screenshot2.png "Screenshot 2")
+![Pixed screenshot3](/Pixed_Screenshot3.png "Screenshot 3")
 
 ## Download
 <a href="https://apps.microsoft.com/detail/9nwzsx6x2bgx?mode=direct">
