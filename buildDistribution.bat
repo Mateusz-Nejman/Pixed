@@ -3,7 +3,7 @@
 @title Build distribution script for Pixed
 @cls
 echo Build distribution script for Pixed
-set VERSION=1.7
+set VERSION=1.8
 set SOLUTION_PATH=%~dp0
 
 set ZIP_PATH=%SOLUTION_PATH%build\Dist\Pixed.%VERSION%.win_x64.zip
