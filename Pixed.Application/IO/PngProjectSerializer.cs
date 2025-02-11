@@ -45,8 +45,6 @@ internal class PngProjectSerializer : IPixedProjectSerializer
 
     public void Serialize(Stream stream, PixedModel model, bool close)
     {
-        model.Clone();
-
         int rows = (int)Math.Ceiling((double)model.Frames.Count / (double)ColumnsCount);
         int width = model.Width * ColumnsCount;
         int height = model.Height * rows;
