@@ -28,6 +28,7 @@ public class MainActivity : AvaloniaMainActivity<App>
         StreamBase.StreamWriteImpl = typeof(AndroidStreamWrite);
         PlatformDependencyRegister.Implementation = new AndroidDependencyRegister();
         IPlatformSettings.Instance = new PlatformSettings();
+        OnBackPressedDispatcher.AddCallback(new BackPressedCallback());
 
         base.OnCreate(savedInstanceState);
     }
