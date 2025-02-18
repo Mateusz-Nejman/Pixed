@@ -7,15 +7,18 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Pixed.Application.DependencyInjection;
 using Pixed.Application.Extensions;
+using Pixed.Application.Pages;
 using Pixed.Application.Platform;
 using Pixed.Application.Windows;
 using Pixed.Common;
 using Pixed.Common.DependencyInjection;
+using Pixed.Core;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using ServiceProvider = Pixed.Application.DependencyInjection.ServiceProvider;
 
 namespace Pixed.Application;
@@ -24,6 +27,8 @@ public partial class App : Avalonia.Application
 {
     private Mutex? _mutex;
     internal static IPixedServiceProvider ServiceProvider { get; private set; }
+
+    public static ICommand CloseCommand => Main.QuitCommand;
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
