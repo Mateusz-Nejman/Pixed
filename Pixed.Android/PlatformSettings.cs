@@ -26,12 +26,11 @@ internal class PlatformSettings : IPlatformSettings
 
     public void ProcessMinimumScreenSize(int minScreenSize)
     {
-        if(ApplicationLifetime is ISingleViewApplicationLifetime lifetime && lifetime.MainView is Control control)
+        var metrics = MainActivity.WindowManager.CurrentWindowMetrics;
+        var width = metrics.Bounds.Width() / metrics.Density;
+        if (width <= minScreenSize)
         {
-            if(control.Width <= minScreenSize)
-            {
-                MainActivity.RequestedOrientation = ScreenOrientation.Landscape;
-            }
+            MainActivity.RequestedOrientation = ScreenOrientation.Landscape;
         }
     }
 }
