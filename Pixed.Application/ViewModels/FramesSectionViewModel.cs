@@ -73,7 +73,6 @@ internal class FramesSectionViewModel : ExtendedViewModel, IDisposable
     public ICommand NewFrameCommand { get; }
     public ICommand RemoveFrameCommand { get; }
     public ICommand DuplicateFrameCommand { get; }
-    public ICommand CloseViewCommand { get; }
     public Subject<bool> IsVisibleChanged { get; } = new Subject<bool>();
 
     public FramesSectionViewModel(ApplicationData applicationData, IMenuItemRegistry menuItemRegistry, IPlatformFolder platformFolder)
@@ -84,7 +83,6 @@ internal class FramesSectionViewModel : ExtendedViewModel, IDisposable
         NewFrameCommand = new ActionCommand(NewFrameAction);
         RemoveFrameCommand = new ActionCommand(RemoveFrameAction);
         DuplicateFrameCommand = new ActionCommand(DuplicateFrameAction);
-        CloseViewCommand = new ActionCommand(CloseView);
         _projectChanged = Subjects.ProjectChanged.Subscribe(p =>
         {
             OnPropertyChanged(nameof(Frames));
@@ -163,10 +161,5 @@ internal class FramesSectionViewModel : ExtendedViewModel, IDisposable
         Subjects.FrameAdded.OnNext(Frames[^1]);
         SelectedFrame = Frames.Count - 1;
         _applicationData.CurrentModel.AddHistory();
-    }
-
-    private void CloseView()
-    {
-        IsVisible = false;
     }
 }

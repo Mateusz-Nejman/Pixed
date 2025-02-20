@@ -49,6 +49,8 @@ public partial class App : Avalonia.Application
             InitializeServices();
             singleViewPlatform.MainView = new MainView();
         }
+
+        IPlatformSettings.Instance.ProcessMinimumScreenSize(500);
         base.OnFrameworkInitializationCompleted();
     }
 

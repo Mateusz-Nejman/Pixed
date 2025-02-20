@@ -14,7 +14,6 @@
 		<Grid.RowDefinitions>
 			<RowDefinition Height="32"/>
 			<RowDefinition Height="*"/>
-			<RowDefinition Height="auto"/>
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="124"/>
@@ -58,11 +57,5 @@
 				</ListBox.ItemTemplate>
 			</ListBox>
 		</ScrollViewer>
-		<controls:TouchButton Command="{Binding CloseViewCommand}" Theme="{StaticResource BaseButton}" Grid.Row="2" IsVisible="True" Height="32">
-			<Image Source="{SvgImage avares://Pixed.Application/Resources/fluent-icons/ic_fluent_arrow_exit_20_regular.svg}" Width="16" Height="16"/>
-			<ToolTip.Tip>
-				<controls:TextTooltip Text="Close view"/>
-			</ToolTip.Tip>
-		</controls:TouchButton>
 	</Grid>
 </UserControl>

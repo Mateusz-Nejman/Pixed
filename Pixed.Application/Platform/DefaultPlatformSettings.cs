@@ -24,4 +24,9 @@ internal class DefaultPlatformSettings : IPlatformSettings
         var versionInfo = FileVersionInfo.GetVersionInfo(assemblyName);
         return versionInfo.FileVersion;
     }
+
+    public void ProcessMinimumScreenSize(int minScreenSize)
+    {
+        //Not used
+    }
 }

@@ -42,12 +42,18 @@
         </Border>
       </Border>
     </ScrollViewer>
-	  <Button Width="32" Height="64" HorizontalAlignment="Left" VerticalAlignment="Center" Theme="{StaticResource FlyingButton}" IsVisible="{Binding IsFramesViewButtonVisible}" Command="{Binding OpenFramesView}">
+	  <Button Width="32" Height="64" HorizontalAlignment="Left" VerticalAlignment="Center" Theme="{StaticResource FlyingButton}" IsVisible="{Binding !IsFramesViewButtonVisible}" Command="{Binding OpenFramesView}">
 		  <Image Source="{SvgImage avares://Pixed.Application/Resources/fluent-icons/ic_fluent_panel_left_expand_28_regular.svg}" Width="16" Height="16"/>
 	  </Button>
-	  <Button Width="32" Height="64" HorizontalAlignment="Right" VerticalAlignment="Center" Theme="{StaticResource FlyingButton}" IsVisible="{Binding IsPropertiesViewButtonVisible}" Command="{Binding OpenPropertiesView}">
+    <Button Width="32" Height="64" HorizontalAlignment="Left" VerticalAlignment="Center" Theme="{StaticResource FlyingButton}" IsVisible="{Binding IsFramesViewButtonVisible}" Command="{Binding CloseFramesView}">
+      <Image Source="{SvgImage avares://Pixed.Application/Resources/fluent-icons/ic_fluent_panel_left_contract_28_regular.svg}" Width="16" Height="16"/>
+    </Button>
+	  <Button Width="32" Height="64" HorizontalAlignment="Right" VerticalAlignment="Center" Theme="{StaticResource FlyingButton}" IsVisible="{Binding !IsPropertiesViewButtonVisible}" Command="{Binding OpenPropertiesView}">
 		  <Image Source="{SvgImage avares://Pixed.Application/Resources/fluent-icons/ic_fluent_panel_right_expand_20_regular.svg}" Width="16" Height="16"/>
 	  </Button>
+    <Button Width="32" Height="64" HorizontalAlignment="Right" VerticalAlignment="Center" Theme="{StaticResource FlyingButton}" IsVisible="{Binding IsPropertiesViewButtonVisible}" Command="{Binding ClosePropertiesView}">
+      <Image Source="{SvgImage avares://Pixed.Application/Resources/fluent-icons/ic_fluent_panel_right_contract_24_regular.svg}" Width="16" Height="16"/>
+    </Button>
     <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="5" Margin="4">
       <TextBlock Text="Tool size" VerticalAlignment="Center"/>
       <NumericUpDown Minimum="1" Maximum="20" Value="{Binding ToolSize, Mode=TwoWay}" Width="105" FormatString="0" Increment="1"/>

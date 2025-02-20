@@ -10,4 +10,5 @@ public interface IPlatformSettings
     public bool ExtensionsOnSave { get; }
     public void Close();
     public string GetVersion();
+    public void ProcessMinimumScreenSize(int minScreenSize);
 }
