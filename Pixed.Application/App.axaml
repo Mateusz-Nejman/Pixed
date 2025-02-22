@@ -18,6 +18,7 @@
           <ResourceInclude Source="/Themes/LayersListBoxItem.axaml"/>
           <ResourceInclude Source="/Themes/MainPage.axaml"/>
           <ResourceInclude Source="/Themes/NoGesturesScrollViewer.axaml"/>
+		  <ResourceInclude Source="/Themes/ShellView.axaml"/>
           <ResourceInclude Source="/Themes/TabStripItem.axaml"/>
           <ResourceInclude Source="/Themes/ToolButton.axaml"/>
           <ResourceInclude Source="/Themes/ToolRadio.axaml"/>
