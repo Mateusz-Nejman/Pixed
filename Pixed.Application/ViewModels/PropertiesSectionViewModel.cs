@@ -33,19 +33,11 @@ internal class PropertiesSectionViewModel : ExtendedViewModel
 
     public Subject<bool> IsVisibleChanged { get; } = new Subject<bool>();
 
-    public ICommand CloseViewCommand { get; }
-
-    public PropertiesSectionViewModel(ApplicationData applicationData, IPlatformFolder platformFolder, IMenuItemRegistry menuItemRegistry)
+    public PropertiesSectionViewModel(ApplicationData applicationData, IPlatformFolder platformFolder)
     {
         _applicationData = applicationData;
         _platformFolder = platformFolder;
-        CloseViewCommand = new ActionCommand(CloseView);
         _isVisible = _applicationData.UserSettings.PropertiesViewVisible;
         OnPropertyChanged(nameof(IsVisible));
-    }
-
-    private void CloseView()
-    {
-        IsVisible = false;
     }
 }

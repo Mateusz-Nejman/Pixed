@@ -1,6 +1,7 @@
 ﻿using Android.App;
 using Android.Content.PM;
 using Android.OS;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Pixed.Application.Platform;
 namespace Pixed.Android;
@@ -21,5 +22,15 @@ internal class PlatformSettings : IPlatformSettings
     {
         PackageInfo info = MainActivity.PackageManager.GetPackageInfo(MainActivity.PackageName, 0);
         return info.VersionName;
+    }
+
+    public void ProcessMinimumScreenSize(int minScreenSize)
+    {
+        var metrics = MainActivity.WindowManager.CurrentWindowMetrics;
+        var width = metrics.Bounds.Width() / metrics.Density;
+        if (width <= minScreenSize)
+        {
+            MainActivity.RequestedOrientation = ScreenOrientation.Landscape;
+        }
     }
 }

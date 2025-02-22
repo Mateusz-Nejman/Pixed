@@ -78,7 +78,9 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
     public ActionCommand<double> MouseWheel { get; }
     public ActionCommand MouseLeave { get; }
     public ActionCommand OpenFramesView { get; }
+    public ActionCommand CloseFramesView { get; }
     public ActionCommand OpenPropertiesView { get; }
+    public ActionCommand ClosePropertiesView { get; }
 
     public int ToolSize
     {
@@ -345,14 +347,16 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
             GestureZoomEnabled = isEnabled;
         };
 
-        IsFramesViewButtonVisible = !_applicationData.UserSettings.FramesViewVisible;
-        IsPropertiesViewButtonVisible = !_applicationData.UserSettings.PropertiesViewVisible;
+        IsFramesViewButtonVisible = _applicationData.UserSettings.FramesViewVisible;
+        IsPropertiesViewButtonVisible = _applicationData.UserSettings.PropertiesViewVisible;
 
-        _framesViewVisibleChanged = framesSectionViewModel.IsVisibleChanged.Subscribe(v => IsFramesViewButtonVisible = !v);
-        _propertiesViewVisibleChanged = propertiesSectionViewModel.IsVisibleChanged.Subscribe(v => IsPropertiesViewButtonVisible = !v);
+        _framesViewVisibleChanged = framesSectionViewModel.IsVisibleChanged.Subscribe(v => IsFramesViewButtonVisible = v);
+        _propertiesViewVisibleChanged = propertiesSectionViewModel.IsVisibleChanged.Subscribe(v => IsPropertiesViewButtonVisible = v);
 
         OpenFramesView = new ActionCommand(() => framesSectionViewModel.IsVisible = true);
+        CloseFramesView = new ActionCommand(() => framesSectionViewModel.IsVisible = false);
         OpenPropertiesView = new ActionCommand(() => propertiesSectionViewModel.IsVisible = true);
+        ClosePropertiesView = new ActionCommand(() => propertiesSectionViewModel.IsVisible = false);
     }
     public void RecalculateFactor(Point windowSize)
     {
