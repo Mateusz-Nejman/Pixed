@@ -15,9 +15,18 @@ public class PixedModel : PixelImage, IPixedSerializer
     private int _historyIndex = 0;
     private int _currentFrameIndex = 0;
     private bool _isEmpty = true;
+    private string _fileName = string.Empty;
 
     public string? FilePath { get; set; }
-    public string FileName { get; set; } = string.Empty;
+    public string FileName
+    {
+        get => _fileName;
+        set
+        {
+            _fileName = value;
+            OnPropertyChanged();
+        }
+    }
 
     public ObservableCollection<Frame> Frames => _frames;
     public int Width => Frames[0].Width;
