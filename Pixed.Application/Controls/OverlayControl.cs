@@ -41,6 +41,8 @@ internal abstract class OverlayControl : Control
         }
     }
 
+    public virtual double Zoom { get; set; } = 1;
+
     public override void Render(DrawingContext context)
     {
         context.Custom(new DrawOperation(new Rect(Bounds.X, Bounds.Y, Bounds.Width, Bounds.Height), this));

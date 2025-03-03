@@ -176,6 +176,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
     public ZoomBorder ZoomContainer { get; set; }
     public ImageGrid GridCanvas { get; set; }
     public SelectionOverlay SelectionOverlay { get; set; }
+    public TransparentBackground TransparentBackground { get; set; }
     public ImageBrush TransparentBrush
     {
         get => _transparentBrush;
@@ -306,6 +307,12 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
             {
                 SelectionOverlay.Zoom = entry.Zoom;
             }
+
+            if(TransparentBackground != null)
+            {
+                TransparentBackground.Zoom = entry.Zoom;
+            }
+
             RefreshZoomText();
             TransparentBrush = GetTransparentBackgroundBrush();
         });
