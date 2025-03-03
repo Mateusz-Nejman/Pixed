@@ -1,6 +1,7 @@
 ﻿using Pixed.Application.Utils;
 using Pixed.Core;
 using SkiaSharp;
+using System;
 
 namespace Pixed.Application.Controls;
 internal class TransparentBackground : OverlayControl
@@ -25,7 +26,9 @@ internal class TransparentBackground : OverlayControl
             for(int y = 0; y < yCount; y++)
             {
                 int c = (x + y) % 2;
-                canvas.DrawRect(x.ToFloat() * size, y.ToFloat() * size, size, size, c == 0 ? paint1 : paint2);
+                float cellRight = (x.ToFloat() * size) + size;
+                float cellBottom = (y.ToFloat() * size) + size;
+                canvas.DrawRect(new SKRect(x.ToFloat() * size, y.ToFloat() * size, MathF.Min(cellRight, right / Zoom.ToFloat()), MathF.Min(cellBottom, bottom / Zoom.ToFloat())), c == 0 ? paint1 : paint2);
             }
         }
     }
