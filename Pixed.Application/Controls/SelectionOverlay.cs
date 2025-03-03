@@ -16,7 +16,7 @@ internal class SelectionOverlay : OverlayControl
     private bool _drawLines = false;
     private float[] _pattern = [2f, 2f];
 
-    public double Zoom
+    public override double Zoom
     {
         get => _zoom;
         set

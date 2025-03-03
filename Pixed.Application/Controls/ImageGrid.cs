@@ -10,7 +10,6 @@ internal class ImageGrid : OverlayControl
     {
         ClipToBounds = false;
     }
-    public double Zoom { get; set; } = 1;
     public double GridWidth { get; set; }
     public double GridHeight { get; set; }
     public bool GridEnabled { get; set; } = false;
