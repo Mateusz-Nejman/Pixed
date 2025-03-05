@@ -143,21 +143,12 @@ internal class PixelImageControl : Control
         var source = Source.Render();
         _image.UpdateBitmap(Source);
 
-        if (source != null && Bounds.Width > 0 && Bounds.Height > 0)
+        if (source != null)
         {
-            Rect viewPort = new(Bounds.Size);
             Size sourceSize = new(source.Width, source.Height);
-
-            Vector scale = Stretch.CalculateScaling(Bounds.Size, sourceSize, StretchDirection);
-            Size scaledSize = sourceSize * scale;
-            Rect destRect = viewPort
-                .CenterRect(new Rect(scaledSize))
-                .Intersect(viewPort);
-            Rect sourceRect = new Rect(sourceSize)
-                .CenterRect(new Rect(destRect.Size / scale));
-
-            _image.Bounds = destRect;
-            context.DrawImage(_image, sourceRect, destRect);
+            Rect sourceRect = new(sourceSize);
+            _image.Bounds = sourceRect;
+            context.DrawImage(_image, sourceRect, sourceRect);
         }
 
         Dispatcher.UIThread.Post(InvalidateVisual, DispatcherPriority.Input);
