@@ -8,33 +8,34 @@ using Avalonia.Threading;
 using Pixed.Core.Models;
 
 namespace Pixed.Application.Controls;
-internal class PixelImageControl : Control
+
+internal class PaintCanvasImageControl : Control
 {
     /// <summary>
     /// Defines the <see cref="Source"/> property.
     /// </summary>
     public static readonly StyledProperty<PixelImage?> SourceProperty =
-        AvaloniaProperty.Register<PixelImageControl, PixelImage?>(nameof(Source));
+        AvaloniaProperty.Register<PaintCanvasImageControl, PixelImage?>(nameof(Source));
 
     /// <summary>
     /// Defines the <see cref="Stretch"/> property.
     /// </summary>
     public static readonly StyledProperty<Stretch> StretchProperty =
-        AvaloniaProperty.Register<PixelImageControl, Stretch>(nameof(Stretch), Stretch.Uniform);
+        AvaloniaProperty.Register<PaintCanvasImageControl, Stretch>(nameof(Stretch), Stretch.Uniform);
 
     /// <summary>
     /// Defines the <see cref="StretchDirection"/> property.
     /// </summary>
     public static readonly StyledProperty<StretchDirection> StretchDirectionProperty =
-        AvaloniaProperty.Register<PixelImageControl, StretchDirection>(
+        AvaloniaProperty.Register<PaintCanvasImageControl, StretchDirection>(
             nameof(StretchDirection),
             StretchDirection.Both);
 
-    static PixelImageControl()
+    static PaintCanvasImageControl()
     {
-        AffectsRender<PixelImageControl>(SourceProperty, StretchProperty, StretchDirectionProperty);
-        AffectsMeasure<PixelImageControl>(SourceProperty, StretchProperty, StretchDirectionProperty);
-        AutomationProperties.ControlTypeOverrideProperty.OverrideDefaultValue<PixelImageControl>(AutomationControlType.Image);
+        AffectsRender<PaintCanvasImageControl>(SourceProperty, StretchProperty, StretchDirectionProperty);
+        AffectsMeasure<PaintCanvasImageControl>(SourceProperty, StretchProperty, StretchDirectionProperty);
+        AutomationProperties.ControlTypeOverrideProperty.OverrideDefaultValue<PaintCanvasImageControl>(AutomationControlType.Image);
     }
 
     private readonly PixelDrawOperation _image = new();
@@ -84,21 +85,12 @@ internal class PixelImageControl : Control
         var source = Source.Render();
         _image.UpdateBitmap(Source);
 
-        if (source != null && Bounds.Width > 0 && Bounds.Height > 0)
+        if (source != null)
         {
-            Rect viewPort = new(Bounds.Size);
             Size sourceSize = new(source.Width, source.Height);
-
-            Vector scale = Stretch.CalculateScaling(Bounds.Size, sourceSize, StretchDirection);
-            Size scaledSize = sourceSize * scale;
-            Rect destRect = viewPort
-                .CenterRect(new Rect(scaledSize))
-                .Intersect(viewPort);
-            Rect sourceRect = new Rect(sourceSize)
-                .CenterRect(new Rect(destRect.Size / scale));
-
-            _image.Bounds = destRect;
-            context.DrawImage(_image, sourceRect, destRect);
+            Rect sourceRect = new(sourceSize);
+            _image.Bounds = sourceRect;
+            context.DrawImage(_image, sourceRect, sourceRect);
         }
 
         Dispatcher.UIThread.Post(InvalidateVisual, DispatcherPriority.Input);
