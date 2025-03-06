@@ -23,6 +23,10 @@ Your imagination and **Pixed**. These two things are needed for pixel-arted imag
 	<img src="https://get.microsoft.com/images/en-us%20dark.svg" width="200"/>
 </a>
 
+[<img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png"
+      alt="Get it on Google Play"
+      height="80">](https://play.google.com/store/apps/details?id=com.nejman.pixed)
+
 [Releases](https://github.com/Mateusz-Nejman/Pixed/releases)
 
 ## Supported formats
