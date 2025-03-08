@@ -4,7 +4,7 @@
     <TargetFramework>net8.0-android34.0</TargetFramework>
     <SupportedOSPlatformVersion>30.0</SupportedOSPlatformVersion>
     <Nullable>enable</Nullable>
-    <ApplicationId>com.Nejman.Pixed</ApplicationId>
+    <ApplicationId>com.Nejman.PixedDev</ApplicationId>
     <ApplicationVersion>1</ApplicationVersion>
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
     <AndroidPackageFormat>apk</AndroidPackageFormat>
