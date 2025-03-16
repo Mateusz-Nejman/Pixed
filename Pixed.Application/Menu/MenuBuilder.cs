@@ -8,7 +8,6 @@ using Pixed.Application.Services;
 using Pixed.Application.Utils;
 using Pixed.Common;
 using Pixed.Common.Menu;
-using Pixed.Common.Models;
 using Pixed.Common.Utils;
 using Pixed.Core;
 using Pixed.Core.Models;
@@ -157,26 +156,6 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
     private MenuItem GetEditMenu()
     {
         MenuItem editMenu = new("Edit");
-        MenuItem undoMenu = new("Undo")
-        {
-            Command = new ActionCommand(() =>
-            {
-                _applicationData.CurrentModel.Undo();
-                Subjects.ProjectModified.OnNext(_applicationData.CurrentModel);
-            }),
-            Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_arrow_undo_48_regular.svg")
-        };
-        MenuItem redoMenu = new("Redo")
-        {
-            Command = new ActionCommand(() =>
-            {
-                _applicationData.CurrentModel.Redo();
-                Subjects.ProjectModified.OnNext(_applicationData.CurrentModel);
-            }),
-            Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_arrow_redo_48_regular.svg")
-        };
-
-        editMenu.Items = [undoMenu, redoMenu];
         AddToMenu(ref editMenu, GetEntries(BaseMenuItem.Edit));
 
         return editMenu;

@@ -26,6 +26,7 @@ internal partial class Main : EmptyPixedPage, IDisposable
     private readonly ApplicationData _applicationData;
     private readonly PixedProjectMethods _pixedProjectMethods;
     private readonly TransformMenuRegister _transformToolsMenuRegister;
+    private readonly UndoRedoMenuRegister _undoRedoMenuRegister;
     private readonly CopyPasteMenuRegister _copyPasteMenuRegister;
     private readonly PaletteMenuRegister _paletteMenuRegister;
     private readonly ProjectMenuRegister _projectMenuRegister;
@@ -47,6 +48,7 @@ internal partial class Main : EmptyPixedPage, IDisposable
         _pixedProjectMethods = Get<PixedProjectMethods>();
         _applicationData = Get<ApplicationData>();
         _transformToolsMenuRegister = Get<TransformMenuRegister>();
+        _undoRedoMenuRegister = Get<UndoRedoMenuRegister>();
         _copyPasteMenuRegister = Get<CopyPasteMenuRegister>();
         _paletteMenuRegister = Get<PaletteMenuRegister>();
         _projectMenuRegister = Get<ProjectMenuRegister>();
@@ -75,6 +77,7 @@ internal partial class Main : EmptyPixedPage, IDisposable
         clipboard.Initialize(topLevel.Clipboard);
         _viewMenuRegister.Register();
         _transformToolsMenuRegister.Register();
+        _undoRedoMenuRegister.Register();
         _copyPasteMenuRegister.Register();
         _paletteMenuRegister.Register();
         _toolsMenuRegister.Register();
