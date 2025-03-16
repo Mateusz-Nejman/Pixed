@@ -14,5 +14,10 @@ internal class CopyPasteMenuRegister(IMenuItemRegistry menuItemRegistry, Selecti
         _menuItemRegistry.Register(BaseMenuItem.Edit, "Cut", new AsyncCommand(_selectionManager.Cut), null, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_cut_24_regular.svg"));
         _menuItemRegistry.Register(BaseMenuItem.Edit, "Paste", new AsyncCommand(_selectionManager.Paste), null, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_clipboard_paste_32_regular.svg"));
         _menuItemRegistry.Register(BaseMenuItem.Edit, "Select All", _selectionManager.SelectAll, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_copy_select_24_regular.svg"));
+
+        _menuItemRegistry.Register(BaseMenuItem.Base, "Copy", new AsyncCommand(_selectionManager.Copy), null, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_copy_32_regular.svg"));
+        _menuItemRegistry.Register(BaseMenuItem.Base, "Cut", new AsyncCommand(_selectionManager.Cut), null, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_cut_24_regular.svg"));
+        _menuItemRegistry.Register(BaseMenuItem.Base, "Paste", new AsyncCommand(_selectionManager.Paste), null, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_clipboard_paste_32_regular.svg"));
+        _menuItemRegistry.Register(BaseMenuItem.Base, "Select All", _selectionManager.SelectAll, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_copy_select_24_regular.svg"));
     }
 }
