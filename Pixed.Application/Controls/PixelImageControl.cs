@@ -82,6 +82,11 @@ internal class PixelImageControl : Control
         }
 
         var source = Source.Render();
+
+        if (source == null)
+        {
+            return;
+        }
         _image.UpdateBitmap(Source);
 
         if (source != null && Bounds.Width > 0 && Bounds.Height > 0)

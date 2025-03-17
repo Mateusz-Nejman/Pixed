@@ -33,7 +33,11 @@ public class PixelDrawOperation : IImage, ICustomDrawOperation
         if (source is PixelImage image)
         {
             var bitmap = image.Render();
-            _size = new(bitmap.Width, bitmap.Height);
+
+            if (bitmap != null)
+            {
+                _size = new(bitmap.Width, bitmap.Height);
+            }
         }
     }
 
@@ -54,7 +58,12 @@ public class PixelDrawOperation : IImage, ICustomDrawOperation
             ISkiaSharpApiLease lease = leaseFeature.Lease();
             using (lease)
             {
-                lease.SkCanvas.DrawBitmap(Source.Render(), Bounds);
+                var bitmap = Source.Render();
+
+                if (bitmap != null)
+                {
+                    lease.SkCanvas.DrawBitmap(bitmap, Bounds);
+                }
             }
         }
     }
