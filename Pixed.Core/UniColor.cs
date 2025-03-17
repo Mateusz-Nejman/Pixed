@@ -32,6 +32,9 @@ public struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatable
     public UniColor(byte alpha, byte value) : this(alpha, value, value, value)
     { }
 
+    public UniColor(byte alpha, UniColor color) : this(alpha, color.R, color.G, color.B)
+    { }
+
     public UniColor(byte value) : this(255, value)
     { }
 
