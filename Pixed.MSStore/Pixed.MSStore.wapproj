@@ -59,7 +59,7 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
     <NoWarn>$(NoWarn);NU1702</NoWarn>
-    <EntryPointProjectUniqueName>..\Pixed.Windows\Pixed.Windows.csproj</EntryPointProjectUniqueName>
+    <EntryPointProjectUniqueName>..\Pixed.Desktop\Pixed.Desktop.csproj</EntryPointProjectUniqueName>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <PackageCertificateThumbprint>FEF87BA47F87F0AC5F5077140C546E0FD3C0BDB1</PackageCertificateThumbprint>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
@@ -167,6 +167,6 @@
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.3233" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Pixed.Windows\Pixed.Windows.csproj" />
+    <ProjectReference Include="..\Pixed.Desktop\Pixed.Desktop.csproj" />
   </ItemGroup>
 </Project>

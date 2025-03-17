@@ -7,7 +7,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Pixed.Windows;
+namespace Pixed.Desktop;
 
 class Program
 {

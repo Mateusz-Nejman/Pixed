@@ -27,7 +27,7 @@ Your imagination and **Pixed**. These two things are needed for pixel-arted imag
       alt="Get it on Google Play"
       height="80">](https://play.google.com/store/apps/details?id=com.nejman.pixed)
 
-[Releases](https://github.com/Mateusz-Nejman/Pixed/releases)
+[Releases (Windows, Linux)](https://github.com/Mateusz-Nejman/Pixed/releases)
 
 ## Supported formats
 - Pixed (own project format)
@@ -40,7 +40,7 @@ Your imagination and **Pixed**. These two things are needed for pixel-arted imag
 
 ## Work in progress or planned
 - Animations
-- Linux/MacOS support
+- MacOS support
 - Better touch screen support
 - AI support
 - More formats support
