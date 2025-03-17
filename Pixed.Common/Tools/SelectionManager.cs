@@ -146,7 +146,7 @@ public class SelectionManager
             return;
         }
 
-        var pixels = _currentSelection.Pixels;
+        var pixels = _currentSelection.Pixels.Select(p => new Pixel(p.Position)).ToList();
         var frame = _applicationData.CurrentFrame;
 
         frame.SetPixels(pixels);
