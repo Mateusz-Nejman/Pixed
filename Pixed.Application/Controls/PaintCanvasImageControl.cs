@@ -83,6 +83,11 @@ internal class PaintCanvasImageControl : Control
         }
 
         var source = Source.Render();
+
+        if(source == null)
+        {
+            return;
+        }
         _image.UpdateBitmap(Source);
 
         if (source != null)

@@ -150,10 +150,10 @@ public class PixedModel : PixelImage, IPixedSerializer
     {
         CurrentFrame.SetModifiedPixels(modifiedPixels);
     }
-    public override SKBitmap Render()
+    public override SKBitmap? Render()
     {
-        var render = Frames.First().Render();
-        return render;
+        Frame? frame = Frames.FirstOrDefault((Frame?)null);
+        return frame?.Render();
     }
 
     public void Serialize(Stream stream)

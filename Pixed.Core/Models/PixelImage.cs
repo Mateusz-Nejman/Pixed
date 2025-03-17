@@ -12,5 +12,5 @@ public abstract class PixelImage : PropertyChangedBase
         _modifiedPixels.AddRange(modifiedPixels);
     }
 
-    public abstract SKBitmap Render();
+    public abstract SKBitmap? Render();
 }
