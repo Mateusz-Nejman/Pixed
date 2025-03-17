@@ -13,6 +13,7 @@ public class ToolSelectRectangle(ApplicationData applicationData) : ToolSelectBa
     public override void OnSelectionBegin(Point startPoint, Point currentPoint, Point previousPoint, Frame frame)
     {
         CreateAndSubject(startPoint, currentPoint, frame, Subjects.SelectionStarted);
+        CreateAndSubject(startPoint, currentPoint, frame, Subjects.SelectionCreating);
     }
 
     public override void OnSelection(Point startPoint, Point currentPoint, Point previousPoint, Frame frame)

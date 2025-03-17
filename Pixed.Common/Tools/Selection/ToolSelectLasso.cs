@@ -19,6 +19,7 @@ public class ToolSelectLasso(ApplicationData applicationData) : ToolSelectBase(a
         _points.Clear();
         _points.Add(currentPoint);
         _selection = new ShapeSelection(_points.Select(p => new Pixel(p, frame.GetPixel(p))).ToList());
+        OnSelectionBase(startPoint, currentPoint, previousPoint, frame);
         Subjects.SelectionStarted.OnNext(_selection);
     }
 
