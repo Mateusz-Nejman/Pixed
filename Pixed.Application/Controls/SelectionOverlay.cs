@@ -92,18 +92,16 @@ internal class SelectionOverlay : OverlayControl
         {
             var pixel = pixels[i];
 
-            var color = new UniColor(128, 12, 84, 139);
+            var color = (UniColor)pixel.Color;
             var hsl = color.ToHsl();
-            color = pixel.Color;
-
             if (hsl.L < 0.5d)
             {
-                color = color.Darken(10);
+                color = new UniColor(128, UniColor.White);
 
             }
             else
             {
-                color = color.Lighten(10);
+                color = new UniColor(128, UniColor.Black);
             }
 
             color.A = 128;
