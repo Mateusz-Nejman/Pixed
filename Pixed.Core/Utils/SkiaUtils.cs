@@ -99,7 +99,7 @@ public static class SkiaUtils
         canvas.DrawLine(p0, p1, paint);
     }
 
-    public static void DrawPatternLine(this SKCanvas canvas, SKPoint p0, SKPoint p1, float[] pattern, UniColor color)
+    public static void DrawPatternLine(this SKCanvas canvas, SKPoint p0, SKPoint p1, float[] pattern, UniColor color, float lineWidth = 1f)
     {
         SKPath path = new();
         path.MoveTo(p0.X, p0.Y);
@@ -111,7 +111,8 @@ public static class SkiaUtils
         {
             Color = color,
             PathEffect = effect,
-            Style = SKPaintStyle.Stroke
+            Style = SKPaintStyle.Stroke,
+            StrokeWidth = lineWidth
         };
 
         canvas.DrawPath(path, paint);
