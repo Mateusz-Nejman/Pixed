@@ -5,6 +5,7 @@ using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
 using Avalonia.Threading;
+using Pixed.Application.Zoom;
 using SkiaSharp;
 
 namespace Pixed.Application.Controls;
@@ -42,10 +43,21 @@ internal abstract class OverlayControl : Control
     }
 
     public virtual double Zoom { get; set; } = 1;
+    protected ZoomBorder? ZoomBorder { get; private set; }
+    protected Matrix? VisualToZoomMatrix { get; private set; }
+
+    public void AttachToZoomBorder(ZoomBorder zoomBorder)
+    {
+        ZoomBorder = zoomBorder;
+    }
 
     public override void Render(DrawingContext context)
     {
         context.Custom(new DrawOperation(new Rect(Bounds.X, Bounds.Y, Bounds.Width, Bounds.Height), this));
+        if(ZoomBorder != null)
+        {
+            VisualToZoomMatrix = this.TransformToVisual(ZoomBorder);
+        }
         Dispatcher.UIThread.InvokeAsync(InvalidateVisual, DispatcherPriority.Background);
     }
 

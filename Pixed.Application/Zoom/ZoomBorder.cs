@@ -6,6 +6,8 @@ using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.Transformation;
 using Avalonia.Reactive;
+using Avalonia.VisualTree;
+using Pixed.Application.Controls;
 using System;
 using System.Linq;
 
@@ -205,6 +207,16 @@ internal partial class ZoomBorder : Border, IDisposable
         if (element != null && element != _element)
         {
             AttachElement(element);
+
+            var children = element.GetVisualChildren();
+
+            foreach( var child in children )
+            {
+                if(child is OverlayControl control)
+                {
+                    control.AttachToZoomBorder(this);
+                }
+            }
         }
     }
 

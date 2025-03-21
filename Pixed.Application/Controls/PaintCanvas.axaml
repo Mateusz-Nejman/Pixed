@@ -23,7 +23,7 @@
       <Border BorderBrush="{StaticResource Accent}" BorderThickness="0 2 0 0">
         <Border BorderBrush="{StaticResource ButtonBorder}" BorderThickness="2 0 2 2">
           <zoom:ZoomBorder Name="zoomBorder" ZoomSpeed="1.2" ClipToBounds="True" GestureZoomEnabled="{Binding GestureZoomEnabled, Mode=TwoWay}">
-            <Canvas
+            <zoom:ZoomCanvas
               Name="imageGrid"
               Width="{Binding GridWidth, Mode=TwoWay}"
               Height="{Binding GridHeight, Mode=TwoWay}"
@@ -37,7 +37,7 @@
               <controls:PaintCanvasImageControl Name="image" RenderOptions.BitmapInterpolationMode="None" Source="{Binding RenderModel}"/>
               <controls:ImageGrid Width="{Binding ScaledGridWidth}" Height="{Binding ScaledGridHeight}" Name="gridCanvas" IsHitTestVisible="False"/>
               <controls:SelectionOverlay Width="{Binding ScaledGridWidth}" Height="{Binding ScaledGridHeight}" Name="selectionOverlay" IsHitTestVisible="False"/>
-            </Canvas>
+            </zoom:ZoomCanvas>
           </zoom:ZoomBorder>
         </Border>
       </Border>
