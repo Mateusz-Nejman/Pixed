@@ -5,6 +5,7 @@ using Avalonia.Input;
 using Avalonia.Metadata;
 using Pixed.Application.Zoom.Internals;
 using Pixed.Core;
+using System;
 using System.Reactive.Subjects;
 
 namespace Pixed.Application.Zoom;
@@ -117,6 +118,10 @@ internal class ZoomControl : Decorator
 
     public double Zoom => _baseControl.Zoom;
     public Point Offset => _baseControl.Offset;
+    public Matrix ZoomMatrix => _baseControl.Matrix;
+    public Matrix ContentMatrix => this.TransformToVisual(_childrenControl) ?? throw new Exception("Invalid matrix transformation");
+    public Matrix GestureMatrix => this.TransformToVisual(_externalControl) ?? throw new Exception("Invalid gesture matrix transformation");
+    public Matrix GestureToContentMatrix => GestureMatrix.Invert() * ContentMatrix;
 
     static ZoomControl()
     {
