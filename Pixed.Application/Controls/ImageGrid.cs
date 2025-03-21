@@ -35,7 +35,7 @@ internal class ImageGrid : OverlayControl
             float right = rightBounds;
             float bottom = bottomBounds;
 
-            if (VisualToZoomMatrix.HasValue && ZoomBorder != null)
+            if (VisualToZoomMatrix.HasValue && ZoomControl != null)
             {
                 var inverted = VisualToZoomMatrix.Value.Invert();
                 var gridSize = new Point(GridWidth * Zoom, GridHeight * Zoom);
@@ -45,7 +45,7 @@ internal class ImageGrid : OverlayControl
                     return;
                 }
                 var firstTransform = inverted.Transform(new Point(0, 0));
-                var lastTransform = inverted.Transform(new Point(ZoomBorder.Bounds.Size.Width, ZoomBorder.Bounds.Size.Height));
+                var lastTransform = inverted.Transform(new Point(ZoomControl.Bounds.Size.Width, ZoomControl.Bounds.Size.Height));
 
                 left = Math.Max(left, Math.Round(firstTransform.X).ToFloat() - 1f);
                 top = Math.Max(top, Math.Round(firstTransform.Y).ToFloat() - 1f);

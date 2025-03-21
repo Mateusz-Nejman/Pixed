@@ -1,29 +1,32 @@
-﻿using Avalonia;
-using Avalonia.Animation;
-using Avalonia.Controls;
+﻿using Avalonia.Animation;
 using Avalonia.Controls.Metadata;
+using Avalonia.Controls;
+using Avalonia.Input.GestureRecognizers;
 using Avalonia.Input;
-using Avalonia.Media;
 using Avalonia.Media.Transformation;
-using Avalonia.Reactive;
+using Avalonia;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Reactive;
 using Avalonia.VisualTree;
 using Pixed.Application.Controls;
-using System;
-using System.Linq;
 
-namespace Pixed.Application.Zoom;
+namespace Pixed.Application.Zoom.Internals;
 
 [PseudoClasses(":isPanning")]
-internal partial class ZoomBorder : Border, IDisposable
+internal partial class BaseControl : Decorator, IDisposable
 {
-    public ZoomBorder()
+    public BaseControl(ZoomControl parent)
     {
+        _parent = parent;
         _isPanning = false;
         _matrix = Matrix.Identity;
         _captured = false;
 
         Focusable = true;
-        Background = Brushes.Transparent;
 
         AttachedToVisualTree += PanAndZoom_AttachedToVisualTree;
         DetachedFromVisualTree += PanAndZoom_DetachedFromVisualTree;
@@ -33,17 +36,7 @@ internal partial class ZoomBorder : Border, IDisposable
         _panGestureRecognizer = new PanGestureRecognizer(this);
         this.AddHandler(Gestures.PinchEvent, PinchHandler);
         this.AddHandler(Gestures.PinchEndedEvent, PinchEndedHandler);
-        KeyDown += ZoomBorder_KeyDown;
-    }
-
-    private void ZoomBorder_KeyDown(object? sender, KeyEventArgs e)
-    {
-#if DEBUG
-        if (e.Key == Key.K)
-        {
-            ResetMatrix();
-        }
-#endif
+        ClipToBounds = true;
     }
 
     protected virtual void Dispose(bool disposing)
@@ -210,11 +203,11 @@ internal partial class ZoomBorder : Border, IDisposable
 
             var children = element.GetVisualChildren();
 
-            foreach( var child in children )
+            foreach (var child in children)
             {
-                if(child is OverlayControl control)
+                if (child is OverlayControl control)
                 {
-                    control.AttachToZoomBorder(this);
+                    control.AttachToZoomControl(_parent);
                 }
             }
         }
@@ -245,7 +238,7 @@ internal partial class ZoomBorder : Border, IDisposable
     }
     private void RaiseZoomChanged()
     {
-        ZoomChanged.OnNext(new ZoomEntry(_zoom, _offsetX, _offsetY));
+        ZoomControl.ZoomChanged.OnNext(new ZoomEntry(_zoom, _offsetX, _offsetY));
     }
 
     private void Constrain()
@@ -263,16 +256,14 @@ internal partial class ZoomBorder : Border, IDisposable
         }
 
         Constrain();
-        InvalidateProperties();
+
+        _zoom = _matrix.M11;
+        _offsetX = _matrix.M31;
+        _offsetY = _matrix.M32;
+
         InvalidateScrollable();
         InvalidateElement(skipTransitions);
         RaiseZoomChanged();
-    }
-    private void InvalidateProperties()
-    {
-        SetAndRaise(ZoomProperty, ref _zoom, _matrix.M11);
-        SetAndRaise(OffsetXProperty, ref _offsetX, _matrix.M31);
-        SetAndRaise(OffsetYProperty, ref _offsetY, _matrix.M32);
     }
     private void InvalidateElement(bool skipTransitions)
     {
@@ -304,7 +295,6 @@ internal partial class ZoomBorder : Border, IDisposable
                 anim.Transitions = backupTransitions;
             }
         }
-
         _element.InvalidateVisual();
     }
 
