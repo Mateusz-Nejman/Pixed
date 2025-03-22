@@ -4,21 +4,21 @@ using System;
 namespace Pixed.Application.Zoom;
 public static class MatrixHelper
 {
-    public static Matrix Create(double scale, double centerX, double centerY)
+    public static Matrix Create(double scale, Point center)
     {
-        return new Matrix(scale, 0, 0, scale, centerX - (scale * centerX), centerY - (scale * centerY));
+        return new Matrix(scale, 0, 0, scale, center.X - (scale * center.X), center.Y - (scale * center.Y));
     }
-    public static Matrix TranslatePrepend(Matrix matrix, double offsetX, double offsetY)
+    public static Matrix TranslatePrepend(Matrix matrix, Point offset)
     {
-        return new Matrix(1.0, 0.0, 0.0, 1.0, offsetX, offsetY) * matrix;
+        return new Matrix(1.0, 0.0, 0.0, 1.0, offset.X, offset.Y) * matrix;
     }
-    public static Matrix ScaleAtPrepend(Matrix matrix, double scale, double centerX, double centerY)
+    public static Matrix ScaleAtPrepend(Matrix matrix, double scale, Point center)
     {
-        return matrix.Prepend(Create(scale, centerX, centerY));
+        return matrix.Prepend(Create(scale, center));
     }
-    public static Matrix ScaleAndTranslate(double scale, double offsetX, double offsetY)
+    public static Matrix ScaleAndTranslate(double scale, Point offset)
     {
-        return new Matrix(scale, 0.0, 0.0, scale, offsetX, offsetY);
+        return new Matrix(scale, 0.0, 0.0, scale, offset.X, offset.Y);
     }
 
     public static void ToString(Matrix matrix, string linePrefix = "")

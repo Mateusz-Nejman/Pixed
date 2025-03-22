@@ -149,14 +149,14 @@ internal class ZoomControl : Decorator
         _baseControl.ConfigureOffsetBounds(width, height);
     }
 
-    public void ZoomTo(double ratio, double x, double y, Matrix matrix, bool skipTransitions = false)
+    public void ZoomTo(double ratio, Point zoomPoint, Matrix matrix, bool skipTransitions = false)
     {
-        _baseControl.ZoomTo(ratio, x, y, matrix, skipTransitions);
+        _baseControl.ZoomTo(ratio, zoomPoint, matrix, skipTransitions);
     }
 
-    public void ZoomDeltaTo(double delta, double x, double y, Matrix matrix, bool skipTransitions = false)
+    public void ZoomDeltaTo(double delta, Point zoomPoint, Matrix matrix, bool skipTransitions = false)
     {
-        _baseControl.ZoomDeltaTo(delta, x, y, matrix, skipTransitions);
+        _baseControl.ZoomDeltaTo(delta, zoomPoint, matrix, skipTransitions);
     }
 
     public void SetMatrix(Matrix matrix, bool skipTransitions = false)

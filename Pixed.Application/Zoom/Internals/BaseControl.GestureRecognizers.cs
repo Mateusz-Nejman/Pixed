@@ -27,7 +27,7 @@ internal partial class BaseControl
                 return;
             }
             var point = e.GetPosition(_container._element);
-            _container.ContinuePanTo(point.X, point.Y, true);
+            _container.ContinuePanTo(point, true);
             e.Handled = true;
         }
 
@@ -51,7 +51,7 @@ internal partial class BaseControl
             if (_container._element != null && _container._captured == false && _container._isPanning == false)
             {
                 var point = e.GetPosition(_container._element);
-                _container.BeginPanTo(point.X, point.Y);
+                _container.BeginPanTo(point);
                 _container._captured = true;
                 _container._isPanning = true;
                 _container.SetPseudoClass(":isPanning", _container._isPanning);

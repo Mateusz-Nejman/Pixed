@@ -97,7 +97,7 @@ internal partial class BaseControl : ILogicalScrollable
 			var dy = y - value.Y;
 
 			_offset = value;
-			_matrix = MatrixHelper.ScaleAndTranslate(_zoom, _matrix.M31 + dx, _matrix.M32 + dy);
+			_matrix = MatrixHelper.ScaleAndTranslate(_zoom, new Point(_matrix.M31 + dx, _matrix.M32 + dy));
 			Invalidate(!this.IsPointerOver);
 
 			_updating = false;

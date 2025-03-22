@@ -62,7 +62,7 @@ internal partial class BaseControl : Decorator, IDisposable
         Constrain();
     }
 
-    public void ZoomTo(double ratio, double x, double y, Matrix matrix, bool skipTransitions = false)
+    public void ZoomTo(double ratio, Point zoomPoint, Matrix matrix, bool skipTransitions = false)
     {
         if (_updating)
         {
@@ -76,12 +76,12 @@ internal partial class BaseControl : Decorator, IDisposable
             return;
         }
 
-        _matrix = MatrixHelper.ScaleAtPrepend(matrix, ratio, x, y);
+        _matrix = MatrixHelper.ScaleAtPrepend(matrix, ratio, zoomPoint);
         Invalidate(skipTransitions);
 
         _updating = false;
     }
-    public void ZoomDeltaTo(double delta, double x, double y, Matrix matrix, bool skipTransitions = false)
+    public void ZoomDeltaTo(double delta, Point zoomPoint, Matrix matrix, bool skipTransitions = false)
     {
         int sign = Math.Sign(delta);
 
@@ -90,7 +90,7 @@ internal partial class BaseControl : Decorator, IDisposable
             sign = 1;
         }
         double realDelta = sign * Math.Abs(delta);
-        ZoomTo(Math.Pow(ZoomSpeed, realDelta), x, y, matrix, skipTransitions || Math.Abs(realDelta) <= TransitionThreshold);
+        ZoomTo(Math.Pow(ZoomSpeed, realDelta), zoomPoint, matrix, skipTransitions || Math.Abs(realDelta) <= TransitionThreshold);
     }
 
     public void SetMatrix(Matrix matrix, bool skipTransitions = false)
@@ -133,28 +133,28 @@ internal partial class BaseControl : Decorator, IDisposable
         SetMatrix(Matrix.Identity, skipTransitions);
     }
 
-    private void ZoomDeltaTo(double delta, double x, double y, bool skipTransitions = false)
+    private void ZoomDeltaTo(double delta, Point zoomPoint, bool skipTransitions = false)
     {
-        ZoomDeltaTo(delta, x, y, _matrix, skipTransitions);
+        ZoomDeltaTo(delta, zoomPoint, _matrix, skipTransitions);
     }
-    private void BeginPanTo(double x, double y)
+    private void BeginPanTo(Point point)
     {
         _pan = new Point();
-        _previous = new Point(x, y);
+        _previous = point;
     }
-    private void ContinuePanTo(double x, double y, bool skipTransitions = false)
+    private void ContinuePanTo(Point point, bool skipTransitions = false)
     {
         if (_updating)
         {
             return;
         }
         _updating = true;
-        var dx = x - _previous.X;
-        var dy = y - _previous.Y;
+        var dx = point.X - _previous.X;
+        var dy = point.Y - _previous.Y;
         var delta = new Point(dx, dy);
-        _previous = new Point(x, y);
+        _previous = point;
         _pan = new Point(_pan.X + delta.X, _pan.Y + delta.Y);
-        _matrix = MatrixHelper.TranslatePrepend(_matrix, _pan.X, _pan.Y);
+        _matrix = MatrixHelper.TranslatePrepend(_matrix, _pan);
         Invalidate(skipTransitions);
 
         _updating = false;
@@ -184,7 +184,7 @@ internal partial class BaseControl : Decorator, IDisposable
             return;
         }
         var point = e.GetPosition(_element);
-        ZoomDeltaTo(e.Delta.Y, point.X, point.Y);
+        ZoomDeltaTo(e.Delta.Y, point);
     }
 
     private void ChildChanged(Control? element)
