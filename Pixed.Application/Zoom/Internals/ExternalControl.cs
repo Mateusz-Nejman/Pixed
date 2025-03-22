@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls;
+﻿using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Input;
 using Pixed.Core.Utils;
 using System;
@@ -22,7 +23,7 @@ internal class ExternalControl : Border
 
     public ExternalControl(ZoomControl zoomControl)
     {
-        _pinchGestureRecognizer = new BaseControl.PinchGestureRecognizer();
+        _pinchGestureRecognizer = new BaseControl.PinchGestureRecognizer(zoomControl);
         _zoomControl = zoomControl;
         GestureRecognizers.Add(_pinchGestureRecognizer);
         this.AddHandler(Gestures.PinchEvent, PinchHandler);
@@ -44,8 +45,7 @@ internal class ExternalControl : Border
             {
                 scale = e.Scale;
             }
-            var origin = _zoomControl.GestureToContentMatrix.Transform(e.ScaleOrigin);
-            _zoomControl.ZoomDeltaTo(scale, origin.X, origin.Y, _zoomControl.InternalGestureMatrix.Value);
+            _zoomControl.SetMatrix(new Matrix(scale, 0, 0, scale, e.ScaleOrigin.X, e.ScaleOrigin.Y));
             e.Handled = true;
         }
     }

@@ -70,7 +70,7 @@ internal partial class BaseControl : Decorator, IDisposable
         }
         _updating = true;
 
-        if ((Zoom >= MaxZoom && ratio > 1) || (Zoom <= MinZoom && ratio < 1))
+        if (Zoom >= MaxZoom || Zoom <= MinZoom)
         {
             _updating = false;
             return;
@@ -91,6 +91,19 @@ internal partial class BaseControl : Decorator, IDisposable
         }
         double realDelta = sign * Math.Abs(delta);
         ZoomTo(Math.Pow(ZoomSpeed, realDelta), x, y, matrix, skipTransitions || Math.Abs(realDelta) <= TransitionThreshold);
+    }
+
+    public void SetMatrix(Matrix matrix, bool skipTransitions = false)
+    {
+        if (_updating)
+        {
+            return;
+        }
+        _updating = true;
+        _matrix = matrix;
+        Invalidate(skipTransitions);
+
+        _updating = false;
     }
 
     public void GestureMatrixEndUpdate()
@@ -118,19 +131,6 @@ internal partial class BaseControl : Decorator, IDisposable
     private void ResetMatrix(bool skipTransitions)
     {
         SetMatrix(Matrix.Identity, skipTransitions);
-    }
-
-    private void SetMatrix(Matrix matrix, bool skipTransitions = false)
-    {
-        if (_updating)
-        {
-            return;
-        }
-        _updating = true;
-        _matrix = matrix;
-        Invalidate(skipTransitions);
-
-        _updating = false;
     }
 
     private void ZoomDeltaTo(double delta, double x, double y, bool skipTransitions = false)

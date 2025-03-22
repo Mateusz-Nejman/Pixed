@@ -158,4 +158,9 @@ internal class ZoomControl : Decorator
     {
         _baseControl.ZoomDeltaTo(delta, x, y, matrix, skipTransitions);
     }
+
+    public void SetMatrix(Matrix matrix, bool skipTransitions = false)
+    {
+        _baseControl.SetMatrix(matrix, skipTransitions);
+    }
 }

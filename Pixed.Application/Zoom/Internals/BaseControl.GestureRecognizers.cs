@@ -1,7 +1,6 @@
 ﻿using Avalonia.Input.GestureRecognizers;
 using Avalonia.Input;
 using Pixed.Application.Controls.Gestures;
-using System;
 using Avalonia;
 
 namespace Pixed.Application.Zoom.Internals;
@@ -82,11 +81,13 @@ internal partial class BaseControl
         }
     }
 
-    public class PinchGestureRecognizer() : MultiTouchGestureRecognizer
+    public class PinchGestureRecognizer(ZoomControl zoomControl) : MultiTouchGestureRecognizer
     {
+        private readonly ZoomControl _zoomControl = zoomControl;
         private double _initialDistance;
         private Point _origin;
         private double _previousAngle;
+        private Matrix _initialMatrix;
 
         public bool IsEnabled { get; set; } = true;
         public override bool MultiTouchEnabled => true;
@@ -94,6 +95,7 @@ internal partial class BaseControl
         protected override void PointersPressed(PointersPressedEventArgs e)
         {
             if (!IsEnabled) return;
+            _initialMatrix = _zoomControl.ZoomMatrix;
             _initialDistance = GetDistance(FirstPointer.Position, SecondPointer.Position);
 
             _origin = new Point(FirstPointer.Position.X + ((SecondPointer.Position.X - FirstPointer.Position.X) / 2), 
@@ -112,8 +114,10 @@ internal partial class BaseControl
             var distance = GetDistance(FirstPointer.Position, SecondPointer.Position);
             var scale = distance / _initialDistance;
             var degree = GetAngleDegreeFromPoints(FirstPointer.Position, SecondPointer.Position);
-
-            var pinchEventArgs = new PinchEventArgs(scale, _origin, degree, _previousAngle - degree);
+            var newZoom = _initialMatrix.M11 * scale;
+            var newOffsetX = _initialMatrix.M31 * scale;
+            var newOffsetY = _initialMatrix.M32 * scale;
+            var pinchEventArgs = new PinchEventArgs(newZoom, new Point(newOffsetX, newOffsetY), degree, _previousAngle - degree);
             _previousAngle = degree;
             Target?.RaiseEvent(pinchEventArgs);
             e.Handled = pinchEventArgs.Handled;
