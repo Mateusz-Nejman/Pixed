@@ -71,8 +71,8 @@ internal class ZoomControl : Decorator
 
     public bool GesturesEnabled
     {
-        get => _baseControl.GestureZoomEnabled;
-        set => _baseControl.GestureZoomEnabled = value;
+        get => _externalControl.GestureEnabled;
+        set => _externalControl.GestureEnabled = value;
     }
 
     public BaseControl BaseControl => _baseControl;

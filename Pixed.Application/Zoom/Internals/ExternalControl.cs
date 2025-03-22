@@ -10,14 +10,13 @@ internal class ExternalControl : Border
 {
     private readonly BaseControl.PinchGestureRecognizer _pinchGestureRecognizer;
     private readonly ZoomControl _zoomControl;
-    private bool _enabled = true;
 
-    public bool Enabled
+    public bool GestureEnabled
     {
-        get => _enabled;
+        get => _pinchGestureRecognizer.IsEnabled;
         set
         {
-            _enabled = value;
+            _pinchGestureRecognizer.IsEnabled = value;
         }
     }
 

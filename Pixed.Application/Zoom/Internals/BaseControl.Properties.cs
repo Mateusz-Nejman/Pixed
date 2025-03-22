@@ -30,9 +30,9 @@ internal partial class BaseControl
     public static readonly StyledProperty<bool> GestureZoomEnabledProperty =
         AvaloniaProperty.Register<BaseControl, bool>(nameof(GestureZoomEnabled), false, false, BindingMode.TwoWay, null, (obj, value) =>
         {
-            if (obj is BaseControl border)
+            if (obj is BaseControl control)
             {
-                //border._zoomGestureRecognizer.IsEnabled = value;
+               control.ZoomControl.GesturesEnabled = value;
             }
             return value;
         });
@@ -81,6 +81,7 @@ internal partial class BaseControl
         get => GetValue(TransitionThresholdProperty);
         set => SetValue(TransitionThresholdProperty, value);
     }
+    public ZoomControl ZoomControl => _parent;
     public Matrix Matrix => _matrix;
     public Matrix? GestureMatrix => _gestureMatrix;
     public double Zoom => _zoom;
