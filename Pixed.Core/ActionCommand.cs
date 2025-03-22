@@ -2,6 +2,23 @@
 
 namespace Pixed.Core;
 
+public class ActionCommand<T, T1>(Action<T, T1> action)
+{
+    #region Fields
+    private readonly Action<T, T1> _action = action;
+
+    #endregion
+    #region Constructors
+
+    #endregion
+    #region Public Methods
+    public void Execute(T parameter, T1 parameter1)
+    {
+        _action?.Invoke(parameter, parameter1);
+    }
+    #endregion
+}
+
 public class ActionCommand<T> : ICommand
 {
     #region Fields

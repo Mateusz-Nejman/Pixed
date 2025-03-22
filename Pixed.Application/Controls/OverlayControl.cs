@@ -26,11 +26,6 @@ internal abstract class OverlayControl : Control
         }
         public void Render(ImmediateDrawingContext context)
         {
-            if (Bounds.Width < MinRenderSize || Bounds.Height < MinRenderSize)
-            {
-                return;
-            }
-
             if (context.PlatformImpl.GetFeature<ISkiaSharpApiLeaseFeature>() is ISkiaSharpApiLeaseFeature leaseFeature)
             {
                 ISkiaSharpApiLease lease = leaseFeature.Lease();
@@ -43,20 +38,20 @@ internal abstract class OverlayControl : Control
     }
 
     public virtual double Zoom { get; set; } = 1;
-    protected ZoomBorder? ZoomBorder { get; private set; }
+    protected ZoomControl? ZoomControl { get; private set; }
     protected Matrix? VisualToZoomMatrix { get; private set; }
 
-    public void AttachToZoomBorder(ZoomBorder zoomBorder)
+    public void AttachToZoomControl(ZoomControl zoomBorder)
     {
-        ZoomBorder = zoomBorder;
+        ZoomControl = zoomBorder;
     }
 
     public override void Render(DrawingContext context)
     {
         context.Custom(new DrawOperation(new Rect(Bounds.X, Bounds.Y, Bounds.Width, Bounds.Height), this));
-        if(ZoomBorder != null)
+        if(ZoomControl != null)
         {
-            VisualToZoomMatrix = this.TransformToVisual(ZoomBorder);
+            VisualToZoomMatrix = this.TransformToVisual(ZoomControl);
         }
         Dispatcher.UIThread.InvokeAsync(InvalidateVisual, DispatcherPriority.Background);
     }

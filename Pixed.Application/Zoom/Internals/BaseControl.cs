@@ -1,49 +1,35 @@
-﻿using Avalonia;
-using Avalonia.Animation;
-using Avalonia.Controls;
+﻿using Avalonia.Animation;
 using Avalonia.Controls.Metadata;
+using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Media;
 using Avalonia.Media.Transformation;
-using Avalonia.Reactive;
-using Avalonia.VisualTree;
-using Pixed.Application.Controls;
+using Avalonia;
 using System;
 using System.Linq;
+using System.Reactive;
+using Avalonia.VisualTree;
+using Pixed.Application.Controls;
 
-namespace Pixed.Application.Zoom;
+namespace Pixed.Application.Zoom.Internals;
 
 [PseudoClasses(":isPanning")]
-internal partial class ZoomBorder : Border, IDisposable
+internal partial class BaseControl : Decorator, IDisposable
 {
-    public ZoomBorder()
+    public BaseControl(ZoomControl parent)
     {
+        _parent = parent;
         _isPanning = false;
         _matrix = Matrix.Identity;
         _captured = false;
 
         Focusable = true;
-        Background = Brushes.Transparent;
 
         AttachedToVisualTree += PanAndZoom_AttachedToVisualTree;
         DetachedFromVisualTree += PanAndZoom_DetachedFromVisualTree;
 
         _childChanged = this.GetObservable(ChildProperty).Subscribe(new AnonymousObserver<Control?>(ChildChanged));
-        _zoomGestureRecognizer = new();
         _panGestureRecognizer = new PanGestureRecognizer(this);
-        this.AddHandler(Gestures.PinchEvent, PinchHandler);
-        this.AddHandler(Gestures.PinchEndedEvent, PinchEndedHandler);
-        KeyDown += ZoomBorder_KeyDown;
-    }
-
-    private void ZoomBorder_KeyDown(object? sender, KeyEventArgs e)
-    {
-#if DEBUG
-        if (e.Key == Key.K)
-        {
-            ResetMatrix();
-        }
-#endif
+        ClipToBounds = true;
     }
 
     protected virtual void Dispose(bool disposing)
@@ -76,7 +62,7 @@ internal partial class ZoomBorder : Border, IDisposable
         Constrain();
     }
 
-    public void ZoomTo(double ratio, double x, double y, Matrix matrix, bool skipTransitions = false)
+    public void ZoomTo(double ratio, Point zoomPoint, Matrix matrix, bool skipTransitions = false)
     {
         if (_updating)
         {
@@ -84,28 +70,30 @@ internal partial class ZoomBorder : Border, IDisposable
         }
         _updating = true;
 
-        if ((Zoom >= MaxZoom && ratio > 1) || (Zoom <= MinZoom && ratio < 1))
+        if (Zoom >= MaxZoom || Zoom <= MinZoom)
         {
             _updating = false;
             return;
         }
 
-        _matrix = MatrixHelper.ScaleAtPrepend(matrix, ratio, x, y);
+        _matrix = MatrixHelper.ScaleAtPrepend(matrix, ratio, zoomPoint);
         Invalidate(skipTransitions);
 
         _updating = false;
     }
-
-    private void ResetMatrix()
+    public void ZoomDeltaTo(double delta, Point zoomPoint, Matrix matrix, bool skipTransitions = false)
     {
-        ResetMatrix(false);
-    }
-    private void ResetMatrix(bool skipTransitions)
-    {
-        SetMatrix(Matrix.Identity, skipTransitions);
+        int sign = Math.Sign(delta);
+
+        if(sign == 0)
+        {
+            sign = 1;
+        }
+        double realDelta = sign * Math.Abs(delta);
+        ZoomTo(Math.Pow(ZoomSpeed, realDelta), zoomPoint, matrix, skipTransitions || Math.Abs(realDelta) <= TransitionThreshold);
     }
 
-    private void SetMatrix(Matrix matrix, bool skipTransitions = false)
+    public void SetMatrix(Matrix matrix, bool skipTransitions = false)
     {
         if (_updating)
         {
@@ -117,7 +105,8 @@ internal partial class ZoomBorder : Border, IDisposable
 
         _updating = false;
     }
-    private void PinchHandler(object? sender, PinchEventArgs e)
+
+    public void GestureMatrixEndUpdate()
     {
         if (_gestureMatrix == null)
         {
@@ -126,45 +115,46 @@ internal partial class ZoomBorder : Border, IDisposable
             _gestureMatrix = _matrix;
             _updating = false;
         }
-
-        bool negative = e.Scale < 1;
-        ZoomDeltaTo(negative ? -Math.Abs(1 - e.Scale) : e.Scale, e.ScaleOrigin.X, e.ScaleOrigin.Y, _gestureMatrix.Value);
-        e.Handled = true;
     }
-    private void PinchEndedHandler(object? sender, PinchEndedEventArgs e)
+
+    public void GestureMatrixEndHandling(PinchEndedEventArgs e)
     {
         _gestureMatrix = null;
         _updating = false;
         e.Handled = true;
     }
 
-    private void ZoomDeltaTo(double delta, double x, double y, bool skipTransitions = false)
+    private void ResetMatrix()
     {
-        ZoomDeltaTo(delta, x, y, _matrix, skipTransitions);
+        ResetMatrix(false);
     }
-    private void ZoomDeltaTo(double delta, double x, double y, Matrix matrix, bool skipTransitions = false)
+    private void ResetMatrix(bool skipTransitions)
     {
-        double realDelta = Math.Sign(delta) * Math.Pow(Math.Abs(delta), PowerFactor);
-        ZoomTo(Math.Pow(ZoomSpeed, realDelta), x, y, matrix, skipTransitions || Math.Abs(realDelta) <= TransitionThreshold);
+        SetMatrix(Matrix.Identity, skipTransitions);
     }
-    private void BeginPanTo(double x, double y)
+
+    private void ZoomDeltaTo(double delta, Point zoomPoint, bool skipTransitions = false)
+    {
+        ZoomDeltaTo(delta, zoomPoint, _matrix, skipTransitions);
+    }
+    private void BeginPanTo(Point point)
     {
         _pan = new Point();
-        _previous = new Point(x, y);
+        _previous = point;
     }
-    private void ContinuePanTo(double x, double y, bool skipTransitions = false)
+    private void ContinuePanTo(Point point, bool skipTransitions = false)
     {
         if (_updating)
         {
             return;
         }
         _updating = true;
-        var dx = x - _previous.X;
-        var dy = y - _previous.Y;
+        var dx = point.X - _previous.X;
+        var dy = point.Y - _previous.Y;
         var delta = new Point(dx, dy);
-        _previous = new Point(x, y);
+        _previous = point;
         _pan = new Point(_pan.X + delta.X, _pan.Y + delta.Y);
-        _matrix = MatrixHelper.TranslatePrepend(_matrix, _pan.X, _pan.Y);
+        _matrix = MatrixHelper.TranslatePrepend(_matrix, _pan);
         Invalidate(skipTransitions);
 
         _updating = false;
@@ -194,7 +184,7 @@ internal partial class ZoomBorder : Border, IDisposable
             return;
         }
         var point = e.GetPosition(_element);
-        ZoomDeltaTo(e.Delta.Y, point.X, point.Y);
+        ZoomDeltaTo(e.Delta.Y, point);
     }
 
     private void ChildChanged(Control? element)
@@ -210,11 +200,11 @@ internal partial class ZoomBorder : Border, IDisposable
 
             var children = element.GetVisualChildren();
 
-            foreach( var child in children )
+            foreach (var child in children)
             {
-                if(child is OverlayControl control)
+                if (child is OverlayControl control)
                 {
-                    control.AttachToZoomBorder(this);
+                    control.AttachToZoomControl(_parent);
                 }
             }
         }
@@ -227,7 +217,6 @@ internal partial class ZoomBorder : Border, IDisposable
             return;
         }
         _element = element;
-        _zoomGestureRecognizer.UpdateVisual(_element);
         PointerWheelChanged += Border_PointerWheelChanged;
         AddGestureRecognizers();
     }
@@ -245,7 +234,7 @@ internal partial class ZoomBorder : Border, IDisposable
     }
     private void RaiseZoomChanged()
     {
-        ZoomChanged.OnNext(new ZoomEntry(_zoom, _offsetX, _offsetY));
+        ZoomControl.ZoomChanged.OnNext(new ZoomEntry(_zoom, _offsetX, _offsetY));
     }
 
     private void Constrain()
@@ -263,16 +252,14 @@ internal partial class ZoomBorder : Border, IDisposable
         }
 
         Constrain();
-        InvalidateProperties();
+
+        _zoom = _matrix.M11;
+        _offsetX = _matrix.M31;
+        _offsetY = _matrix.M32;
+
         InvalidateScrollable();
         InvalidateElement(skipTransitions);
         RaiseZoomChanged();
-    }
-    private void InvalidateProperties()
-    {
-        SetAndRaise(ZoomProperty, ref _zoom, _matrix.M11);
-        SetAndRaise(OffsetXProperty, ref _offsetX, _matrix.M31);
-        SetAndRaise(OffsetYProperty, ref _offsetY, _matrix.M32);
     }
     private void InvalidateElement(bool skipTransitions)
     {
@@ -304,17 +291,11 @@ internal partial class ZoomBorder : Border, IDisposable
                 anim.Transitions = backupTransitions;
             }
         }
-
         _element.InvalidateVisual();
     }
 
     private void AddGestureRecognizers()
     {
-        if (!GestureRecognizers.Contains(_zoomGestureRecognizer))
-        {
-            GestureRecognizers.Add(_zoomGestureRecognizer);
-        }
-
         if (!GestureRecognizers.Contains(_panGestureRecognizer))
         {
             GestureRecognizers.Add(_panGestureRecognizer);

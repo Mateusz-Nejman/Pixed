@@ -173,7 +173,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
     public double ZoomOffsetY { get; set; }
 
     public string ZoomText { get; set; }
-    public ZoomBorder ZoomContainer { get; set; }
+    public ZoomControl ZoomContainer { get; set; }
     public ImageGrid GridCanvas { get; set; }
     public SelectionOverlay SelectionOverlay { get; set; }
     public TransparentBackground TransparentBackground { get; set; }
@@ -293,7 +293,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
             _frame.SetModifiedPixels(pixels);
         });
 
-        _zoomChanged = ZoomBorder.ZoomChanged.Subscribe(entry =>
+        _zoomChanged = ZoomControl.ZoomChanged.Subscribe(entry =>
         {
             ZoomValue = entry.Zoom;
             ZoomOffsetX = entry.OffsetX;
