@@ -57,7 +57,7 @@ internal partial class PaintCanvas : ExtendedControl<PaintCanvasViewModel>
         int projectHeight = applicationData.CurrentModel.Height;
         double deltaX = e.NewSize.Width / projectWidth;
         double deltaY = e.NewSize.Height / projectHeight;
-        zoomControl.ZoomTo(Math.Min(deltaX, deltaY), projectWidth / 2, projectHeight / 2, Avalonia.Matrix.Identity);
+        zoomControl.ZoomTo(Math.Min(deltaX, deltaY), new Avalonia.Point(projectWidth / 2, projectHeight / 2), Avalonia.Matrix.Identity);
     }
 
     private void OnPointerPressed(Control sender, PointerPressedEventArgs e)
