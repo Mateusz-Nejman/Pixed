@@ -75,6 +75,8 @@ internal class ZoomControl : Decorator
         set => _baseControl.GestureZoomEnabled = value;
     }
 
+    public BaseControl BaseControl => _baseControl;
+
     public ActionCommand<Control, PointerPressedEventArgs>? PointerPressedCommand
     {
         get => _childrenControl.PointerPressedCommand;
@@ -122,6 +124,7 @@ internal class ZoomControl : Decorator
     public Matrix ContentMatrix => this.TransformToVisual(_childrenControl) ?? throw new Exception("Invalid matrix transformation");
     public Matrix GestureMatrix => this.TransformToVisual(_externalControl) ?? throw new Exception("Invalid gesture matrix transformation");
     public Matrix GestureToContentMatrix => GestureMatrix.Invert() * ContentMatrix;
+    public Matrix? InternalGestureMatrix => _baseControl.GestureMatrix;
 
     static ZoomControl()
     {
@@ -132,8 +135,8 @@ internal class ZoomControl : Decorator
 
     public ZoomControl()
     {
-        _externalControl = new ExternalControl();
         _baseControl = new BaseControl(this);
+        _externalControl = new ExternalControl(this);
         _childrenControl = new ChildrenControl(this);
 
         _baseControl.Child = _childrenControl;
@@ -149,5 +152,10 @@ internal class ZoomControl : Decorator
     public void ZoomTo(double ratio, double x, double y, Matrix matrix, bool skipTransitions = false)
     {
         _baseControl.ZoomTo(ratio, x, y, matrix, skipTransitions);
+    }
+
+    public void ZoomDeltaTo(double delta, double x, double y, Matrix matrix, bool skipTransitions = false)
+    {
+        _baseControl.ZoomDeltaTo(delta, x, y, matrix, skipTransitions);
     }
 }

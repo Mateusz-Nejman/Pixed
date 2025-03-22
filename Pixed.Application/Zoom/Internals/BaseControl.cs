@@ -1,15 +1,11 @@
 ﻿using Avalonia.Animation;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls;
-using Avalonia.Input.GestureRecognizers;
 using Avalonia.Input;
 using Avalonia.Media.Transformation;
 using Avalonia;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Reactive;
 using Avalonia.VisualTree;
 using Pixed.Application.Controls;
@@ -32,10 +28,7 @@ internal partial class BaseControl : Decorator, IDisposable
         DetachedFromVisualTree += PanAndZoom_DetachedFromVisualTree;
 
         _childChanged = this.GetObservable(ChildProperty).Subscribe(new AnonymousObserver<Control?>(ChildChanged));
-        _zoomGestureRecognizer = new();
         _panGestureRecognizer = new PanGestureRecognizer(this);
-        this.AddHandler(Gestures.PinchEvent, PinchHandler);
-        this.AddHandler(Gestures.PinchEndedEvent, PinchEndedHandler);
         ClipToBounds = true;
     }
 
@@ -88,6 +81,35 @@ internal partial class BaseControl : Decorator, IDisposable
 
         _updating = false;
     }
+    public void ZoomDeltaTo(double delta, double x, double y, Matrix matrix, bool skipTransitions = false)
+    {
+        int sign = Math.Sign(delta);
+
+        if(sign == 0)
+        {
+            sign = 1;
+        }
+        double realDelta = sign * Math.Abs(delta);
+        ZoomTo(Math.Pow(ZoomSpeed, realDelta), x, y, matrix, skipTransitions || Math.Abs(realDelta) <= TransitionThreshold);
+    }
+
+    public void GestureMatrixEndUpdate()
+    {
+        if (_gestureMatrix == null)
+        {
+            _captured = false;
+            _isPanning = false;
+            _gestureMatrix = _matrix;
+            _updating = false;
+        }
+    }
+
+    public void GestureMatrixEndHandling(PinchEndedEventArgs e)
+    {
+        _gestureMatrix = null;
+        _updating = false;
+        e.Handled = true;
+    }
 
     private void ResetMatrix()
     {
@@ -110,35 +132,10 @@ internal partial class BaseControl : Decorator, IDisposable
 
         _updating = false;
     }
-    private void PinchHandler(object? sender, PinchEventArgs e)
-    {
-        if (_gestureMatrix == null)
-        {
-            _captured = false;
-            _isPanning = false;
-            _gestureMatrix = _matrix;
-            _updating = false;
-        }
-
-        bool negative = e.Scale < 1;
-        ZoomDeltaTo(negative ? -Math.Abs(1 - e.Scale) : e.Scale, e.ScaleOrigin.X, e.ScaleOrigin.Y, _gestureMatrix.Value);
-        e.Handled = true;
-    }
-    private void PinchEndedHandler(object? sender, PinchEndedEventArgs e)
-    {
-        _gestureMatrix = null;
-        _updating = false;
-        e.Handled = true;
-    }
 
     private void ZoomDeltaTo(double delta, double x, double y, bool skipTransitions = false)
     {
         ZoomDeltaTo(delta, x, y, _matrix, skipTransitions);
-    }
-    private void ZoomDeltaTo(double delta, double x, double y, Matrix matrix, bool skipTransitions = false)
-    {
-        double realDelta = Math.Sign(delta) * Math.Pow(Math.Abs(delta), PowerFactor);
-        ZoomTo(Math.Pow(ZoomSpeed, realDelta), x, y, matrix, skipTransitions || Math.Abs(realDelta) <= TransitionThreshold);
     }
     private void BeginPanTo(double x, double y)
     {
@@ -220,7 +217,6 @@ internal partial class BaseControl : Decorator, IDisposable
             return;
         }
         _element = element;
-        _zoomGestureRecognizer.UpdateVisual(_element);
         PointerWheelChanged += Border_PointerWheelChanged;
         AddGestureRecognizers();
     }
@@ -300,11 +296,6 @@ internal partial class BaseControl : Decorator, IDisposable
 
     private void AddGestureRecognizers()
     {
-        if (!GestureRecognizers.Contains(_zoomGestureRecognizer))
-        {
-            GestureRecognizers.Add(_zoomGestureRecognizer);
-        }
-
         if (!GestureRecognizers.Contains(_panGestureRecognizer))
         {
             GestureRecognizers.Add(_panGestureRecognizer);

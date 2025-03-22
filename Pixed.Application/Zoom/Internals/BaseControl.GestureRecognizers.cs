@@ -82,7 +82,7 @@ internal partial class BaseControl
         }
     }
 
-    private class PinchGestureRecognizer() : MultiTouchGestureRecognizer
+    public class PinchGestureRecognizer() : MultiTouchGestureRecognizer
     {
         private double _initialDistance;
         private Point _origin;
@@ -96,7 +96,8 @@ internal partial class BaseControl
             if (!IsEnabled) return;
             _initialDistance = GetDistance(FirstPointer.Position, SecondPointer.Position);
 
-            _origin = new Point((Math.Max(FirstPointer.Position.X, SecondPointer.Position.X) - Math.Min(FirstPointer.Position.X, SecondPointer.Position.X)) / 2.0, (Math.Max(FirstPointer.Position.Y, SecondPointer.Position.Y) - Math.Min(FirstPointer.Position.Y, SecondPointer.Position.Y)) / 2.0);
+            _origin = new Point(FirstPointer.Position.X + ((SecondPointer.Position.X - FirstPointer.Position.X) / 2), 
+                FirstPointer.Position.Y + ((SecondPointer.Position.X - FirstPointer.Position.Y) / 2));
 
             _previousAngle = GetAngleDegreeFromPoints(FirstPointer.Position, SecondPointer.Position);
 

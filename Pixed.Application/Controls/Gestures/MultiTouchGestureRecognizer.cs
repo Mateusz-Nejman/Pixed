@@ -73,12 +73,6 @@ internal abstract class MultiTouchGestureRecognizer() : GestureRecognizer
             int indexOf = _pointers.IndexOf(pointerData);
             if (indexOf != -1)
             {
-                var oldPointer = _pointers[indexOf];
-
-                if (oldPointer.Position.EqualsPrecision(position, 1))
-                {
-                    return;
-                }
                 _pointers[indexOf] = new PointerData(pointerData.Pointer, point, position);
                 PointersMovedEventArgs eventArgs = new(e.RoutedEvent, _pointers[indexOf], e.PreventGestureRecognition);
                 PointersMoved(eventArgs);

@@ -26,11 +26,6 @@ internal abstract class OverlayControl : Control
         }
         public void Render(ImmediateDrawingContext context)
         {
-            if (Bounds.Width < MinRenderSize || Bounds.Height < MinRenderSize)
-            {
-                return;
-            }
-
             if (context.PlatformImpl.GetFeature<ISkiaSharpApiLeaseFeature>() is ISkiaSharpApiLeaseFeature leaseFeature)
             {
                 ISkiaSharpApiLease lease = leaseFeature.Lease();

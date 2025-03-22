@@ -32,7 +32,7 @@ internal partial class BaseControl
         {
             if (obj is BaseControl border)
             {
-                border._zoomGestureRecognizer.IsEnabled = value;
+                //border._zoomGestureRecognizer.IsEnabled = value;
             }
             return value;
         });
@@ -60,7 +60,6 @@ internal partial class BaseControl
     private double _offsetX = 0.0;
     private double _offsetY = 0.0;
     private bool _captured = false;
-    private readonly PinchGestureRecognizer _zoomGestureRecognizer;
     private readonly PanGestureRecognizer _panGestureRecognizer;
     private bool _disposedValue;
     private readonly IDisposable _childChanged;
@@ -83,6 +82,7 @@ internal partial class BaseControl
         set => SetValue(TransitionThresholdProperty, value);
     }
     public Matrix Matrix => _matrix;
+    public Matrix? GestureMatrix => _gestureMatrix;
     public double Zoom => _zoom;
     public Point Offset => new(_offsetX, _offsetY);
     public bool GestureStarted => _gestureMatrix != null;
@@ -124,7 +124,6 @@ internal partial class BaseControl
         set
         {
             SetValue(GestureZoomEnabledProperty, value);
-            _zoomGestureRecognizer.IsEnabled = value;
         }
     }
 }
