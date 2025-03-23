@@ -43,4 +43,3 @@ foreach (var pair in pairs)
         Console.WriteLine("Version not found in " + pair.File);
     }
 }
-Console.ReadKey();
