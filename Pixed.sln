@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pixed.AndroidDev", "Pixed.A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pixed.Android.Shared", "Pixed.Android.Shared\Pixed.Android.Shared.csproj", "{82F74CF9-EA39-4CF5-AC20-3A749B420194}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pixed.VersionChanger", "Pixed.VersionChanger\Pixed.VersionChanger.csproj", "{6D9B53B2-F739-4784-B5AD-59E5EC298835}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -306,6 +308,26 @@ Global
 		{82F74CF9-EA39-4CF5-AC20-3A749B420194}.Release|x64.Build.0 = Release|Any CPU
 		{82F74CF9-EA39-4CF5-AC20-3A749B420194}.Release|x86.ActiveCfg = Release|Any CPU
 		{82F74CF9-EA39-4CF5-AC20-3A749B420194}.Release|x86.Build.0 = Release|Any CPU
+		{6D9B53B2-F739-4784-B5AD-59E5EC298835}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D9B53B2-F739-4784-B5AD-59E5EC298835}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D9B53B2-F739-4784-B5AD-59E5EC298835}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{6D9B53B2-F739-4784-B5AD-59E5EC298835}.Debug|ARM.Build.0 = Debug|Any CPU
+		{6D9B53B2-F739-4784-B5AD-59E5EC298835}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{6D9B53B2-F739-4784-B5AD-59E5EC298835}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{6D9B53B2-F739-4784-B5AD-59E5EC298835}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6D9B53B2-F739-4784-B5AD-59E5EC298835}.Debug|x64.Build.0 = Debug|Any CPU
+		{6D9B53B2-F739-4784-B5AD-59E5EC298835}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6D9B53B2-F739-4784-B5AD-59E5EC298835}.Debug|x86.Build.0 = Debug|Any CPU
+		{6D9B53B2-F739-4784-B5AD-59E5EC298835}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D9B53B2-F739-4784-B5AD-59E5EC298835}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D9B53B2-F739-4784-B5AD-59E5EC298835}.Release|ARM.ActiveCfg = Release|Any CPU
+		{6D9B53B2-F739-4784-B5AD-59E5EC298835}.Release|ARM.Build.0 = Release|Any CPU
+		{6D9B53B2-F739-4784-B5AD-59E5EC298835}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{6D9B53B2-F739-4784-B5AD-59E5EC298835}.Release|ARM64.Build.0 = Release|Any CPU
+		{6D9B53B2-F739-4784-B5AD-59E5EC298835}.Release|x64.ActiveCfg = Release|Any CPU
+		{6D9B53B2-F739-4784-B5AD-59E5EC298835}.Release|x64.Build.0 = Release|Any CPU
+		{6D9B53B2-F739-4784-B5AD-59E5EC298835}.Release|x86.ActiveCfg = Release|Any CPU
+		{6D9B53B2-F739-4784-B5AD-59E5EC298835}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
