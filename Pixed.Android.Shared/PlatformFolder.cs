@@ -2,9 +2,6 @@
 using Avalonia.Platform.Storage;
 using Pixed.Application.IO;
 using Pixed.Application.Platform;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace Pixed.Android;
 internal class PlatformFolder : IPlatformFolder

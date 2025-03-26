@@ -11,7 +11,7 @@ internal static class PngUtils
         SKBitmap convertedBitmap = new(value.Width, value.Height, true);
         byte[] colors;
 
-        if(value.CopyTo(convertedBitmap, SKColorType.Bgra8888))
+        if (value.CopyTo(convertedBitmap, SKColorType.Bgra8888))
         {
             colors = convertedBitmap.ToByteArray();
         }

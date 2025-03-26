@@ -84,7 +84,7 @@ internal class PaintCanvasImageControl : Control
 
         var source = Source.Render();
 
-        if(source == null)
+        if (source == null)
         {
             return;
         }

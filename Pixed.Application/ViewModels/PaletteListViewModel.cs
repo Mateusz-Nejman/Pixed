@@ -7,7 +7,6 @@ using Pixed.Core;
 using SkiaSharp;
 using System;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Windows.Input;
 
 namespace Pixed.Application.ViewModels;

@@ -32,7 +32,7 @@ internal partial class BaseControl
         {
             if (obj is BaseControl control)
             {
-               control.ZoomControl.GesturesEnabled = value;
+                control.ZoomControl.GesturesEnabled = value;
             }
             return value;
         });

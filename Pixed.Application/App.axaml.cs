@@ -12,7 +12,6 @@ using Pixed.Application.Platform;
 using Pixed.Application.Windows;
 using Pixed.Common;
 using Pixed.Common.DependencyInjection;
-using Pixed.Core;
 using System;
 using System.Collections.Generic;
 using System.IO;

@@ -1,14 +1,14 @@
-﻿using Avalonia.Animation;
-using Avalonia.Controls.Metadata;
+﻿using Avalonia;
+using Avalonia.Animation;
 using Avalonia.Controls;
+using Avalonia.Controls.Metadata;
 using Avalonia.Input;
 using Avalonia.Media.Transformation;
-using Avalonia;
+using Avalonia.VisualTree;
+using Pixed.Application.Controls;
 using System;
 using System.Linq;
 using System.Reactive;
-using Avalonia.VisualTree;
-using Pixed.Application.Controls;
 
 namespace Pixed.Application.Zoom.Internals;
 
@@ -85,7 +85,7 @@ internal partial class BaseControl : Decorator, IDisposable
     {
         int sign = Math.Sign(delta);
 
-        if(sign == 0)
+        if (sign == 0)
         {
             sign = 1;
         }

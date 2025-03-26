@@ -1,12 +1,9 @@
 ﻿using Pixed.Application.Controls;
 using Pixed.Application.Platform;
 using Pixed.Application.Utils;
-using Pixed.Common.Menu;
-using Pixed.Core;
 using Pixed.Core.Models;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace Pixed.Application.ViewModels;
 internal class PropertiesSectionViewModel : ExtendedViewModel

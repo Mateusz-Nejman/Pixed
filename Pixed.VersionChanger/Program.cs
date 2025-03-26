@@ -20,7 +20,7 @@ foreach (var pair in pairs)
     string fileContent = File.ReadAllText(pixedDirectory + pair.File);
     var match = Regex.Match(fileContent, pair.Pattern);
 
-    if(match.Success || match.Groups.Count < 2)
+    if (match.Success || match.Groups.Count < 2)
     {
         var versionMatch = match.Groups[0].Value;
         var oldVersionMatch = match.Groups[1].Value;
@@ -28,7 +28,7 @@ foreach (var pair in pairs)
         Console.WriteLine("New version: ");
         string? newVersion = Console.ReadLine();
 
-        if(newVersion == null)
+        if (newVersion == null)
         {
             continue;
         }

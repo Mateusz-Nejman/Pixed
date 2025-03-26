@@ -40,7 +40,7 @@ internal class ImageGrid : OverlayControl
                 var inverted = VisualToZoomMatrix.Value.Invert();
                 var gridSize = new Point(GridWidth * Zoom, GridHeight * Zoom);
 
-                if(gridSize.X < MinGridSize | gridSize.Y < MinGridSize)
+                if (gridSize.X < MinGridSize | gridSize.Y < MinGridSize)
                 {
                     return;
                 }

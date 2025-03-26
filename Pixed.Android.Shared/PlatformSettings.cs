@@ -1,7 +1,5 @@
-﻿using Android.App;
-using Android.Content.PM;
+﻿using Android.Content.PM;
 using Android.OS;
-using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Pixed.Application.Platform;
 namespace Pixed.Android;

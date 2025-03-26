@@ -1,10 +1,10 @@
-﻿using Avalonia.Media;
-using Avalonia;
+﻿using Avalonia;
+using Avalonia.Media;
+using Avalonia.Platform;
+using Avalonia.Rendering.SceneGraph;
+using Avalonia.Skia;
 using SkiaSharp;
 using System;
-using Avalonia.Rendering.SceneGraph;
-using Avalonia.Platform;
-using Avalonia.Skia;
 
 namespace Pixed.Application.Controls;
 internal class SkiaBitmap : IImage, IDisposable, ICustomDrawOperation

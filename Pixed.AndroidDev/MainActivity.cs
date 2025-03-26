@@ -2,14 +2,14 @@
 using Android.Content.PM;
 using Android.OS;
 using AndroidX.Activity;
-using Avalonia.Android;
 using Avalonia;
+using Avalonia.Android;
+using Avalonia.ReactiveUI;
+using AvaloniaInside.Shell;
+using Pixed.Application;
 using Pixed.Application.DependencyInjection;
 using Pixed.Application.IO;
 using Pixed.Application.Platform;
-using Pixed.Application;
-using Avalonia.ReactiveUI;
-using AvaloniaInside.Shell;
 
 namespace Pixed.Android.Dev;
 

@@ -1,7 +1,7 @@
-﻿using Avalonia.Input.GestureRecognizers;
+﻿using Avalonia;
 using Avalonia.Input;
+using Avalonia.Input.GestureRecognizers;
 using Pixed.Application.Controls.Gestures;
-using Avalonia;
 
 namespace Pixed.Application.Zoom.Internals;
 
@@ -98,7 +98,7 @@ internal partial class BaseControl
             _initialMatrix = _zoomControl.ZoomMatrix;
             _initialDistance = GetDistance(FirstPointer.Position, SecondPointer.Position);
 
-            _origin = new Point(FirstPointer.Position.X + ((SecondPointer.Position.X - FirstPointer.Position.X) / 2), 
+            _origin = new Point(FirstPointer.Position.X + ((SecondPointer.Position.X - FirstPointer.Position.X) / 2),
                 FirstPointer.Position.Y + ((SecondPointer.Position.X - FirstPointer.Position.Y) / 2));
 
             _previousAngle = GetAngleDegreeFromPoints(FirstPointer.Position, SecondPointer.Position);

@@ -2,7 +2,6 @@
 using Avalonia.Input;
 using Avalonia.Input.GestureRecognizers;
 using Avalonia.Interactivity;
-using Pixed.Application.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;

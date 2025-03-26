@@ -49,7 +49,7 @@ internal abstract class OverlayControl : Control
     public override void Render(DrawingContext context)
     {
         context.Custom(new DrawOperation(new Rect(Bounds.X, Bounds.Y, Bounds.Width, Bounds.Height), this));
-        if(ZoomControl != null)
+        if (ZoomControl != null)
         {
             VisualToZoomMatrix = this.TransformToVisual(ZoomControl);
         }

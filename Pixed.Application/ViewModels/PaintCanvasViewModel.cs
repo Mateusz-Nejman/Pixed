@@ -308,7 +308,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
                 SelectionOverlay.Zoom = entry.Zoom;
             }
 
-            if(TransparentBackground != null)
+            if (TransparentBackground != null)
             {
                 TransparentBackground.Zoom = entry.Zoom;
             }

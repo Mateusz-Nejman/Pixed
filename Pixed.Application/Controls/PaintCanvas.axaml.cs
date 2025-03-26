@@ -40,7 +40,7 @@ internal partial class PaintCanvas : ExtendedControl<PaintCanvasViewModel>
         zoomControl.PointerReleasedCommand = new Core.ActionCommand<Control, PointerReleasedEventArgs>(OnPointerReleased);
         zoomControl.PointerWheelCommand = new Core.ActionCommand<Control, PointerWheelEventArgs>(OnPointerWheelChanged);
         zoomControl.PointerExitedCommand = new Core.ActionCommand<Control, PointerEventArgs>(OnPointerExited);
-        zoomControl.PointerMovedCommand = new Core.ActionCommand<Control, PointerEventArgs> (OnPointerMoved);
+        zoomControl.PointerMovedCommand = new Core.ActionCommand<Control, PointerEventArgs>(OnPointerMoved);
     }
 
     private void PaintCanvas_Unloaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
