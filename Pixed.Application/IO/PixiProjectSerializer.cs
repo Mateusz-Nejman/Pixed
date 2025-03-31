@@ -17,6 +17,10 @@ internal class PixiProjectSerializer : IPixedProjectSerializer
 
     public bool CanDeserialize => true;
 
+    public string FormatExtension => ".pixi";
+
+    public string FormatName => "Pixi project";
+
     public PixedModel Deserialize(Stream stream, ApplicationData applicationData)
     {
         //TODO add support for V5, when nuget will be ready
@@ -30,7 +34,7 @@ internal class PixiProjectSerializer : IPixedProjectSerializer
             double opacity = pixiLayer.Opacity * 100d;
             SKBitmap? bitmap = pixiLayer.ToSKBitmap();
 
-            if(bitmap == null)
+            if (bitmap == null)
             {
                 continue;
             }
