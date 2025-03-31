@@ -86,7 +86,7 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
 
     public async Task Open(RecentFilesService recentFilesService)
     {
-        var files = await _dialogUtils.OpenFileDialog("All supported (*.pixed;*.piskel;*.png;*.svg)|*.pixed;*.piskel;*.png|Pixed project (*.pixed)|*.pixed|Piskel project (*.piskel)|*.piskel|PNG images (*.png)|*.png|SVG images (*.svg)|*.svg", "Open file", true);
+        var files = await _dialogUtils.OpenFileDialog("All supported (*.pixed;*.pixi;*.piskel;*.png;*.svg)|*.pixed;*.pixi;*.piskel;*.png|Pixed project (*.pixed)|*.pixed|Piskel project (*.piskel)|*.piskel|PNG images (*.png)|*.png|SVG images (*.svg)|*.svg", "Open file", true);
 
         foreach (var item in files)
         {
@@ -313,6 +313,7 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
         return format switch
         {
             ".pixed" => new PixedProjectSerializer(),
+            ".pixi" => new PixiProjectSerializer(),
             ".png" => new PngProjectSerializer(),
             ".piskel" => new PiskelProjectSerializer(),
             ".ico" => new IconProjectSerializer(),
