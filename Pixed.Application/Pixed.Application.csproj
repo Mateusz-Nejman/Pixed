@@ -36,6 +36,8 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="PixiEditor.ColorPicker.AvaloniaUI" Version="1.0.6" />
+    <PackageReference Include="PixiEditor.Parser" Version="3.3.0" />
+    <PackageReference Include="PixiEditor.Parser.Skia" Version="3.0.0" />
     <PackageReference Include="SkiaSharp" Version="3.116.1" />
     <PackageReference Include="Svg.Skia" Version="2.0.0.4" />
     <PackageReference Include="System.Reactive" Version="6.0.1" />
