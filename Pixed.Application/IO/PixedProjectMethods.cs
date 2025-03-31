@@ -10,6 +10,7 @@ using Svg.Skia;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Pixed.Application.IO;
@@ -18,10 +19,13 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
     private readonly ApplicationData _applicationData = applicationData;
     private readonly DialogUtils _dialogUtils = dialogUtils;
     private readonly IStorageProviderHandle _storageProvider = storageProvider;
+    private readonly IPixedProjectSerializer[] _serializers = [new PixedProjectSerializer(), new PixiProjectSerializer(), new PiskelProjectSerializer(), new PngProjectSerializer(), new IconProjectSerializer(), new SvgProjectSerializer()];
 
     public async Task Save(PixedModel model, bool saveAs, RecentFilesService recentFilesService)
     {
         Stream fileStream = null;
+        PixedProjectSerializer serializer = GetSerializer<PixedProjectSerializer>();
+
         if (model.FilePath == null)
         {
             saveAs = true;
@@ -62,7 +66,8 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
             {
                 name += ".pixed";
             }
-            var file = await _dialogUtils.SaveFileDialog("Pixed project (*.pixed)|*.pixed", name);
+
+            var file = await _dialogUtils.SaveFileDialog(GetFilter(serializer), name);
 
             if (file == null)
             {
@@ -76,7 +81,6 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
 
         if (fileStream != null && fileStream.CanWrite)
         {
-            PixedProjectSerializer serializer = new();
             serializer.Serialize(fileStream, model, true);
             await recentFilesService.AddRecent(model.FilePath);
             model.UnsavedChanges = false;
@@ -86,7 +90,7 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
 
     public async Task Open(RecentFilesService recentFilesService)
     {
-        var files = await _dialogUtils.OpenFileDialog("All supported (*.pixed;*.pixi;*.piskel;*.png;*.svg)|*.pixed;*.pixi;*.piskel;*.png|Pixed project (*.pixed)|*.pixed|Piskel project (*.piskel)|*.piskel|PNG images (*.png)|*.png|SVG images (*.svg)|*.svg", "Open file", true);
+        var files = await _dialogUtils.OpenFileDialog(GetFilter(_serializers), "Open file", true);
 
         foreach (var item in files)
         {
@@ -237,6 +241,8 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
     public async Task ExportToPng(PixedModel model)
     {
         FileInfo info = new(model.FileName);
+        PngProjectSerializer serializer = GetSerializer<PngProjectSerializer>();
+
         string name = info.Name;
 
         if (!string.IsNullOrEmpty(info.Extension))
@@ -254,8 +260,6 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
         {
             return;
         }
-
-        PngProjectSerializer serializer = new();
 
         int columnsCount = 1;
         if (model.Frames.Count > 1)
@@ -276,6 +280,8 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
     public async Task ExportToIco(PixedModel model)
     {
         FileInfo info = new(model.FileName);
+        IconProjectSerializer serializer = GetSerializer<IconProjectSerializer>();
+
         string name = info.Name;
 
         if (!string.IsNullOrEmpty(info.Extension))
@@ -286,14 +292,12 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
         {
             name += ".ico";
         }
-        var file = await _dialogUtils.SaveFileDialog("Icon (*.ico)|*.ico", name);
+        var file = await _dialogUtils.SaveFileDialog(GetFilter(serializer), name);
 
         if (file == null)
         {
             return;
         }
-
-        IconProjectSerializer serializer = new();
 
         if (model.Frames.Count == 1)
         {
@@ -308,17 +312,48 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
         serializer.Serialize(stream, model, true);
     }
 
-    private static IPixedProjectSerializer? GetSerializer(string format)
+    private IPixedProjectSerializer? GetSerializer(string format)
     {
-        return format switch
+        foreach (var serializer in _serializers)
         {
-            ".pixed" => new PixedProjectSerializer(),
-            ".pixi" => new PixiProjectSerializer(),
-            ".png" => new PngProjectSerializer(),
-            ".piskel" => new PiskelProjectSerializer(),
-            ".ico" => new IconProjectSerializer(),
-            ".svg" => new SvgProjectSerializer(),
-            _ => null,
-        };
+            if (serializer.FormatExtension == format)
+            {
+                return serializer;
+            }
+        }
+
+        return null;
+    }
+
+    private T GetSerializer<T>()
+    {
+        foreach (var serializer in _serializers)
+        {
+            if (serializer is T s)
+            {
+                return s;
+            }
+        }
+
+        throw new NotSupportedException();
+    }
+
+    private static string GetFilter(IPixedProjectSerializer serializer)
+    {
+        return serializer.FormatName + " (*" + serializer.FormatExtension + ")|*" + serializer.FormatExtension;
+    }
+
+    private static string GetFilter(IPixedProjectSerializer[] serializers)
+    {
+        string allFormats = string.Join(';', serializers.Select(s => s.FormatExtension));
+        string allFormatsStar = "*" + string.Join(";*", serializers.Select(s => s.FormatExtension));
+        List<string> filters = ["All supported (" + allFormats + ")|" + allFormatsStar];
+
+        foreach (var serializer in serializers)
+        {
+            filters.Add(GetFilter(serializer));
+        }
+
+        return string.Join('|', [.. filters]);
     }
 }

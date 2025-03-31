@@ -12,6 +12,11 @@ internal partial class PiskelProjectSerializer : IPixedProjectSerializer
 {
     public bool CanSerialize => false;
     public bool CanDeserialize => true;
+
+    public string FormatExtension => ".piskel";
+
+    public string FormatName => "Piskel project";
+
     private const string BASE64_REGEX = @"base64?\s*,[^\\""]+(?=,|$)?";
     public PixedModel Deserialize(Stream stream, ApplicationData applicationData)
     {

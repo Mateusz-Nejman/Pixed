@@ -17,6 +17,10 @@ internal class SvgProjectSerializer : IPixedProjectSerializer
     public int Width { get; set; } = -1;
     public int Height { get; set; } = -1;
 
+    public string FormatExtension => ".svg";
+
+    public string FormatName => "SVG image";
+
     public PixedModel Deserialize(Stream stream, ApplicationData applicationData)
     {
         SKSvg svg = SKSvg.CreateFromStream(stream);

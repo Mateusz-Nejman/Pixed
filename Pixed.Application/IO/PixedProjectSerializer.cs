@@ -56,6 +56,11 @@ internal sealed class PixedProjectSerializer : IPixedProjectSerializer
 
     public bool CanSerialize => true;
     public bool CanDeserialize => true;
+
+    public string FormatExtension => ".pixed";
+
+    public string FormatName => "Pixed project";
+
     public void Serialize(Stream stream, PixedModel model, bool close = false)
     {
         MemoryStream memoryStream = new();

@@ -11,6 +11,11 @@ internal class IconProjectSerializer : IPixedProjectSerializer
     public bool CanSerialize => true;
     public bool CanDeserialize => true;
     public List<Point> IconFormats { get; set; } = [];
+
+    public string FormatExtension => ".ico";
+
+    public string FormatName => "Icon file";
+
     public PixedModel Deserialize(Stream stream, ApplicationData applicationData)
     {
         throw new NotImplementedException();

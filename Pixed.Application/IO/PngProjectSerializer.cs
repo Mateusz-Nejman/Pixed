@@ -15,6 +15,11 @@ internal class PngProjectSerializer : IPixedProjectSerializer
     public int ColumnsCount { get; set; } = 1;
     public int TileWidth { get; set; } = -1;
     public int TileHeight { get; set; } = -1;
+
+    public string FormatExtension => ".png";
+
+    public string FormatName => "PNG image";
+
     public PixedModel Deserialize(Stream stream, ApplicationData applicationData)
     {
         var png = Png.Open(stream);
