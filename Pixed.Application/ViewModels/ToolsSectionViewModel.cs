@@ -2,6 +2,8 @@
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Styling;
 using Avalonia.Svg.Skia;
@@ -55,7 +57,17 @@ internal class ToolsSectionViewModel(ToolsManager toolSelector, PaintCanvasViewM
             if (AssetLoader.Exists(new Uri(tool.Value.ImagePath)))
             {
                 var stream = AssetLoader.Open(new Uri(tool.Value.ImagePath));
-                toolRadio.Source = new SvgImage() { Source = SvgSource.LoadFromStream(stream) };
+                IImage? image = null;
+
+                if (tool.Value.ImagePath.EndsWith(".svg"))
+                {
+                    image = new SvgImage() { Source = SvgSource.LoadFromStream(stream) };
+                }
+                else
+                {
+                    image = new Bitmap(stream);
+                }
+                toolRadio.Source = image;
                 stream.Dispose();
             }
             else
