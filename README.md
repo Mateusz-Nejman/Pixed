@@ -12,6 +12,8 @@ Your imagination and **Pixed**. These two things are needed for pixel-arted imag
 ![GitHub issue custom search in repo](https://img.shields.io/github/issues-search/Mateusz-Nejman/Pixed?query=is%3Aissue%20is%3Aopen&label=issues)
 ![GitHub repo size](https://img.shields.io/github/repo-size/Mateusz-Nejman/Pixed)
 
+[Wiki](https://github.com/Mateusz-Nejman/Pixed/wiki)
+
 ## Screenshots
 
 ![Pixed screenshot1](/Pixed_Screenshot1.png "Screenshot 1")

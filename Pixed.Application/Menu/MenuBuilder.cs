@@ -60,7 +60,14 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
             Icon = new("avares://Pixed.Application/Resources/icon.png")
         };
 
-        helpMenu.Items = [aboutMenu];
+        MenuItem onlineHelpMenu = new("Online help")
+        {
+            Command = new ActionCommand<string>(PlatformUtils.OpenUrl),
+            CommandParameter = "https://github.com/Mateusz-Nejman/Pixed/wiki",
+            Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_globe_48_regular.svg")
+        };
+
+        helpMenu.Items = [aboutMenu, onlineHelpMenu];
 
         AddToMenu(ref toolsMenu, GetEntries(BaseMenuItem.Tools));
         AddToMenu(ref paletteMenu, GetEntries(BaseMenuItem.Palette));
