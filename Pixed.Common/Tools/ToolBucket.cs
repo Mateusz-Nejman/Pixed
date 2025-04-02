@@ -13,7 +13,6 @@ public class ToolBucket(ApplicationData applicationData) : BaseTool(applicationD
     public override string Name => "Paint bucket tool";
     public override string Id => "tool_paint_bucket";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Fill color", "Shift", PROP_REPLACE);
-    public override bool ShiftHandle { get; protected set; } = true;
     public override bool SingleHighlightedPixel { get; protected set; } = true;
     public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {

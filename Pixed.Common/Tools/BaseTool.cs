@@ -22,11 +22,7 @@ public abstract class BaseTool(ApplicationData applicationData)
     public abstract string Id { get; }
     public virtual ToolTooltipProperties? ToolTipProperties { get; }
     public virtual bool AddToHistory { get; protected set; } = true;
-    public virtual bool ShiftHandle { get; protected set; } = false;
-    public virtual bool ControlHandle { get; protected set; } = false;
-    public virtual bool AltHandle { get; protected set; } = false;
     public virtual bool SingleHighlightedPixel { get; protected set; } = false;
-    public virtual bool GridMovement { get; protected set; } = true;
 
     protected UniColor ToolColor => _toolColor ?? _applicationData.PrimaryColor;
 
