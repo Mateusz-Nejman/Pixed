@@ -34,9 +34,9 @@ Your imagination and **Pixed**. These two things are needed for pixel-arted imag
 - Pixed (own project format)
 - Pixi from [PixiEditor/PixiEditor](https://github.com/PixiEditor/PixiEditor) (only open)
 - Piskel from [piskelapp/piskel](https://github.com/piskelapp/piskel) (only open)
-- PNG (open/save/palette)
-- ICO (only open)
-- SVG (only open)
+- PNG
+- ICO
+- SVG
 - JSON custom palette format
 - GPL palette format
 
