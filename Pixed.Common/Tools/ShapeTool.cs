@@ -13,8 +13,6 @@ public abstract class ShapeTool(ApplicationData applicationData) : BaseTool(appl
     protected string PROP_SHIFT = "Keep 1 to 1 ratio";
     protected Point _start = new(-1);
 
-    public override bool ShiftHandle { get; protected set; } = true;
-
     public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
         ApplyToolBase(point, frame, ref overlay, keyState);

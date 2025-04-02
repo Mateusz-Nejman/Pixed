@@ -17,9 +17,6 @@ public class ToolMove(ApplicationData applicationData) : BaseTool(applicationDat
     public override string Name => "Move tool";
     public override string Id => "tool_move";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Move content", "Ctrl", "Apply to all layers", "Shift", "Apply to all frames", "Alt", "Wrap canvas borders");
-    public override bool ShiftHandle { get; protected set; } = true;
-    public override bool ControlHandle { get; protected set; } = true;
-    public override bool AltHandle { get; protected set; } = true;
     public override bool SingleHighlightedPixel { get; protected set; } = true;
 
     public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)

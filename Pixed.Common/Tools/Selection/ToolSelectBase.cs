@@ -22,8 +22,6 @@ public abstract class ToolSelectBase(ApplicationData applicationData) : BaseTool
     protected BaseSelection? _selection = null;
     protected SelectionStage _stage = SelectionStage.None;
     protected bool _hasSelection = false;
-
-    public override bool ShiftHandle { get; protected set; } = true;
     public override bool AddToHistory { get; protected set; } = false;
     public override bool SingleHighlightedPixel { get; protected set; }
 

@@ -15,8 +15,6 @@ public class ToolLighten(ApplicationData applicationData) : ToolPenBase(applicat
     public override string Name => "Lighten tool";
     public override string Id => "tool_lighten";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Lighten", "Ctrl", "Darken", "Shift", "Apply once per pixel");
-    public override bool ShiftHandle { get; protected set; } = true;
-    public override bool ControlHandle { get; protected set; } = true;
     public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
     {
         ApplyToolBase(point, frame, ref overlay, keyState);
