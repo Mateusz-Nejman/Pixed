@@ -20,6 +20,11 @@ internal partial class MainView : ExtendedControl<MainViewModel>
     {
         Keyboard.Modifiers = e.KeyModifiers;
         Keyboard.ProcessReleased(e.Key);
+        Subjects.KeyState.OnNext(new KeyState(
+                e.Key,
+                Keyboard.Modifiers.HasFlag(KeyModifiers.Shift),
+                Keyboard.Modifiers.HasFlag(KeyModifiers.Control),
+                Keyboard.Modifiers.HasFlag(KeyModifiers.Alt)));
     }
 
     private void View_KeyDown(object? sender, KeyEventArgs e)
