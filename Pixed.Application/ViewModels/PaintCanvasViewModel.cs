@@ -32,7 +32,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
     private Frame _frame;
     private Point _lastWindowSize;
     private bool _disposedValue;
-    private KeyState _currentKeyState = new(Avalonia.Input.Key.None, false, false, false);
+    private KeyState _currentKeyState = new();
     private string _projectSizeText;
     private string _mouseCoordinatesText;
     private int _toolSize = 1;

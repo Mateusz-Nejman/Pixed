@@ -60,6 +60,7 @@ internal partial class MainWindow : ExtendedWindow<MainViewModel>
         Keyboard.ProcessReleased(e.Key);
         Subjects.KeyState.OnNext(new KeyState(
                 e.Key,
+                false,
                 Keyboard.Modifiers.HasFlag(KeyModifiers.Shift),
                 Keyboard.Modifiers.HasFlag(KeyModifiers.Control),
                 Keyboard.Modifiers.HasFlag(KeyModifiers.Alt)));
@@ -71,6 +72,7 @@ internal partial class MainWindow : ExtendedWindow<MainViewModel>
         Keyboard.ProcessPressed(e.Key);
         Subjects.KeyState.OnNext(new KeyState(
                 e.Key,
+                true,
                 Keyboard.Modifiers.HasFlag(KeyModifiers.Shift),
                 Keyboard.Modifiers.HasFlag(KeyModifiers.Control),
                 Keyboard.Modifiers.HasFlag(KeyModifiers.Alt)));
