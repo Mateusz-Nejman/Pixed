@@ -34,11 +34,11 @@ public class SelectionManager
         _clipboardHandle = clipboardHandle;
         Subjects.SelectionCreating.Subscribe(OnSelectionCreated);
         Subjects.SelectionDismissed.Subscribe(OnSelectionDismissed);
-        shortcutService.Add(new KeyState(Key.C, false, true, false), async () => await Copy());
-        shortcutService.Add(new KeyState(Key.X, false, true, false), async () => await Cut());
-        shortcutService.Add(new KeyState(Key.V, false, true, false), async () => await Paste());
-        shortcutService.Add(new KeyState(Key.A, false, true, false), SelectAll);
-        shortcutService.Add(new KeyState(Key.Delete, false, false, false), Erase);
+        shortcutService.Add(KeyState.Control(Key.C), async () => await Copy());
+        shortcutService.Add(KeyState.Control(Key.X), async () => await Cut());
+        shortcutService.Add(KeyState.Control(Key.V), async () => await Paste());
+        shortcutService.Add(KeyState.Control(Key.A), SelectAll);
+        shortcutService.Add(new KeyState(Key.Delete, true, false, false, false), Erase);
     }
 
     public void Clear()

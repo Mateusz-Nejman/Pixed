@@ -33,12 +33,12 @@ public class ShortcutService
             }
         });
 
-        Add(new KeyState(Key.Z, false, true, false), () =>
+        Add(KeyState.Control(Key.Z), () =>
         {
             _applicationData.CurrentModel.Undo();
             Subjects.ProjectModified.OnNext(_applicationData.CurrentModel);
         });
-        Add(new KeyState(Key.Y, false, true, false), () =>
+        Add(KeyState.Control(Key.Y), () =>
         {
             _applicationData.CurrentModel.Redo();
             Subjects.ProjectModified.OnNext(_applicationData.CurrentModel);
