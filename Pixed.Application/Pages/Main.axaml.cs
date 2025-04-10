@@ -25,6 +25,7 @@ internal partial class Main : EmptyPixedPage, IDisposable
 {
     private readonly ApplicationData _applicationData;
     private readonly PixedProjectMethods _pixedProjectMethods;
+    private readonly FileMenuRegister _fileMenuRegister;
     private readonly TransformMenuRegister _transformToolsMenuRegister;
     private readonly UndoRedoMenuRegister _undoRedoMenuRegister;
     private readonly CopyPasteMenuRegister _copyPasteMenuRegister;
@@ -47,6 +48,7 @@ internal partial class Main : EmptyPixedPage, IDisposable
         InjectMethods();
         _pixedProjectMethods = Get<PixedProjectMethods>();
         _applicationData = Get<ApplicationData>();
+        _fileMenuRegister = Get<FileMenuRegister>();
         _transformToolsMenuRegister = Get<TransformMenuRegister>();
         _undoRedoMenuRegister = Get<UndoRedoMenuRegister>();
         _copyPasteMenuRegister = Get<CopyPasteMenuRegister>();
@@ -88,6 +90,7 @@ internal partial class Main : EmptyPixedPage, IDisposable
             await _recentFilesService.Load();
         }
         _projectMenuRegister.Register();
+        await _fileMenuRegister.Register();
         await _menuBuilder.Build();
         _toolSelector.SelectTool("tool_pen");
         await _paletteSectionViewModel.LoadAll();

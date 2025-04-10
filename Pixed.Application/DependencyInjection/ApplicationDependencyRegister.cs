@@ -32,6 +32,7 @@ internal class ApplicationDependencyRegister : IDependencyRegister
         collection.AddSingleton<MenuBuilder>();
         collection.AddSingleton<IMenuItemRegistry, MenuItemRegistry>();
 
+        collection.AddSingleton<FileMenuRegister>();
         collection.AddSingleton<TransformMenuRegister>();
         collection.AddSingleton<UndoRedoMenuRegister>();
         collection.AddSingleton<CopyPasteMenuRegister>();
