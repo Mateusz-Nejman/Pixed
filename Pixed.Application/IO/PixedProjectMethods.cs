@@ -30,7 +30,7 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
         {
             saveAs = true;
         }
-        else
+        else if(!saveAs)
         {
             try
             {
