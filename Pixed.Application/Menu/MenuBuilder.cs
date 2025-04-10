@@ -1,10 +1,7 @@
 ﻿using Pixed.Application.Extensions;
-using Pixed.Application.IO;
 using Pixed.Application.Models;
-using Pixed.Application.Pages;
 using Pixed.Application.Platform;
 using Pixed.Application.Routing;
-using Pixed.Application.Services;
 using Pixed.Application.Utils;
 using Pixed.Common;
 using Pixed.Common.Menu;
@@ -20,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Pixed.Application.Menu;
 
-internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods pixedProjectMethods, RecentFilesService recentFilesService, IPlatformFolder platformFolder)
+internal class MenuBuilder(ApplicationData applicationData, IPlatformFolder platformFolder)
 {
 
     private readonly struct MenuEntry(BaseMenuItem baseMenu, IMenuItem menuItem)
@@ -30,8 +27,6 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
     }
 
     private readonly ApplicationData _applicationData = applicationData;
-    private readonly PixedProjectMethods _projectMethods = pixedProjectMethods;
-    private readonly RecentFilesService _recentFilesService = recentFilesService;
     private readonly IPlatformFolder _platformFolder = platformFolder;
     private readonly List<MenuEntry> _entries = [];
 
@@ -46,7 +41,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
     {
         AddFromExtensions();
         MenuItem baseMenu = new() { Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_navigation_48_regular.svg") };
-        MenuItem fileMenu = await GetFileMenu();
+        MenuItem fileMenu = new("File");
         MenuItem editMenu = GetEditMenu();
         MenuItem toolsMenu = new("Tools");
         MenuItem paletteMenu = new("Palette");
@@ -69,6 +64,7 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
 
         helpMenu.Items = [aboutMenu, onlineHelpMenu];
 
+        AddToMenu(ref fileMenu, GetEntries(BaseMenuItem.File));
         AddToMenu(ref toolsMenu, GetEntries(BaseMenuItem.Tools));
         AddToMenu(ref paletteMenu, GetEntries(BaseMenuItem.Palette));
         AddToMenu(ref viewMenu, GetEntries(BaseMenuItem.View));
@@ -84,80 +80,6 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
             _entries.Clear();
         }
         OnMenuBuilt.OnNext(menuItems);
-    }
-
-    private async Task<MenuItem> GetFileMenu()
-    {
-        MenuItem fileMenu = new("File");
-        MenuItem fileNew = new("New")
-        {
-            Command = new ActionCommand(async () =>
-        {
-            var result = await Router.Navigate<NewProjectResult>("/newProject");
-
-            if (result.HasValue)
-            {
-                PixedModel model = new(_applicationData, result.Value.Width, result.Value.Height)
-                {
-                    FileName = _applicationData.GenerateName()
-                };
-                _applicationData.Models.Add(model);
-                Subjects.ProjectAdded.OnNext(model);
-            }
-        }),
-            Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_document_48_regular.svg")
-        };
-        MenuItem fileOpen = new("Open")
-        {
-            Command = new ActionCommand(async () =>
-        {
-            await _projectMethods.Open(_recentFilesService);
-        }),
-            Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_folder_open_28_regular.svg")
-        };
-        MenuItem fileSave = new("Save")
-        {
-            Command = new AsyncCommand<bool>(SaveAction),
-            CommandParameter = false,
-            Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_save_32_regular.svg")
-        };
-        MenuItem fileSaveAs = new("Save as")
-        {
-            Command = new AsyncCommand<bool>(SaveAction),
-            CommandParameter = true,
-            Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_save_edit_24_regular.svg")
-        };
-        MenuItem fileExportPng = new("Export to PNG")
-        {
-            Command = new AsyncCommand(ExportPngAction),
-            Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_image_48_regular.svg")
-        };
-        MenuItem fileExportIco = new("Export to Ico")
-        {
-            Command = new AsyncCommand(ExportIcoAction),
-            Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_image_circle_48_regular.svg")
-        };
-
-        MenuItem fileQuit = new("Quit")
-        {
-            Command = Main.QuitCommand,
-            Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_arrow_exit_20_regular.svg")
-        };
-
-        fileMenu.Items = [fileNew, fileOpen, fileSave, fileSaveAs, fileExportPng, fileExportIco];
-        AddToMenu(ref fileMenu, GetEntries(BaseMenuItem.File));
-
-        if (IPlatformSettings.Instance.RecentFilesEnabled)
-        {
-            MenuItem fileRecent = new("Recent")
-            {
-                Items = await _recentFilesService.BuildMenu()
-            };
-
-            fileMenu.Items.Add(fileRecent);
-        }
-        fileMenu.Items.Add(fileQuit);
-        return fileMenu;
     }
 
     private MenuItem GetEditMenu()
@@ -212,21 +134,6 @@ internal class MenuBuilder(ApplicationData applicationData, PixedProjectMethods 
         {
             menuItem.Items.Add(item);
         }
-    }
-
-    private async Task SaveAction(bool saveAs = false)
-    {
-        await _projectMethods.Save(_applicationData.CurrentModel, saveAs, _recentFilesService);
-    }
-
-    private async Task ExportPngAction()
-    {
-        await _projectMethods.ExportToPng(_applicationData.CurrentModel);
-    }
-
-    private async Task ExportIcoAction()
-    {
-        await _projectMethods.ExportToIco(_applicationData.CurrentModel);
     }
 
     private void AddFromExtensions()
