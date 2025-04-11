@@ -15,6 +15,7 @@ public class ToolSelectShape(ApplicationData applicationData) : ToolSelectBase(a
     {
         var pixels = PaintUtils.GetSimiliarConnectedPixels(frame, currentPoint);
         _selection = new ShapeSelection(pixels);
+        Subjects.SelectionCreating.OnNext(_selection);
         Subjects.SelectionCreated.OnNext(_selection);
     }
 }
