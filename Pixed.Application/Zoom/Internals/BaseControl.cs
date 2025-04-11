@@ -70,7 +70,7 @@ internal partial class BaseControl : Decorator, IDisposable
         }
         _updating = true;
 
-        if (Zoom >= MaxZoom || Zoom <= MinZoom)
+        if ((Zoom >= MaxZoom && ratio > 1) || (Zoom <= MinZoom && ratio < 1))
         {
             _updating = false;
             return;
@@ -184,6 +184,11 @@ internal partial class BaseControl : Decorator, IDisposable
             return;
         }
         var point = e.GetPosition(_element);
+
+        if(e.Delta.Y < 0 && Zoom >= MaxZoom)
+        {
+            e.Delta.Y.ToString();
+        }
         ZoomDeltaTo(e.Delta.Y, point);
     }
 
