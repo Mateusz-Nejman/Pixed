@@ -59,7 +59,7 @@ internal class SelectionOverlay : OverlayControl
             foreach (var line in _lines.ToArray())
             {
                 canvas.DrawLine(line.Item1, line.Item2, UniColor.Black);
-                canvas.DrawPatternLine(line.Item1, line.Item2, _pattern, UniColor.White);
+                canvas.DrawPatternLine(line.Item1, line.Item2, _pattern, UniColor.White, 1f / _zoom.ToFloat());
             }
         }
         else
