@@ -60,7 +60,7 @@ public class PixelDrawOperation : IImage, ICustomDrawOperation
             {
                 var bitmap = Source.Render();
 
-                if (bitmap != null)
+                if (!SkiaUtils.IsNull(bitmap))
                 {
                     lease.SkCanvas.DrawBitmap(bitmap, Bounds);
                 }
