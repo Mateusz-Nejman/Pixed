@@ -1,4 +1,5 @@
 ﻿using Pixed.Core.Models;
+using Pixed.Core.Utils;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -47,7 +48,7 @@ internal class IconProjectSerializer : IPixedProjectSerializer
                         var scaledBitmap = new SKBitmap(format.X, format.Y, true);
                         var canvas = new SKCanvas(scaledBitmap);
                         canvas.Clear(SKColors.Transparent);
-                        canvas.DrawBitmap(bitmap, SKRect.Create(scaledBitmap.Width, scaledBitmap.Height));
+                        canvas.DrawBitmapLock(bitmap, SKRect.Create(scaledBitmap.Width, scaledBitmap.Height));
                         canvas.Dispose();
                         images.Add(new SkiaIconImage(scaledBitmap));
                     }

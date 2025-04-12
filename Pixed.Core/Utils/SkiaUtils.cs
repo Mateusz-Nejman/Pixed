@@ -9,14 +9,19 @@ public static class SkiaUtils
 {
     private static readonly object _lock = new();
 
-    public static void DrawBitmap(this SKCanvas canvas, SKBitmap bitmap, Rect rect)
+    public static void DrawBitmapLock(this SKCanvas canvas, SKBitmap bitmap, Rect rect)
+    {
+        DrawBitmapLock(canvas, bitmap, SKRect.Create((float)rect.X, (float)rect.Y, (float)rect.Width, (float)rect.Height));
+    }
+
+    public static void DrawBitmapLock(this SKCanvas canvas, SKBitmap bitmap, SKRect rect)
     {
         lock (_lock)
         {
             if (!IsNull(bitmap))
             {
                 SKImage image = SKImage.FromBitmap(bitmap);
-                canvas.DrawImage(image, SKRect.Create((float)rect.X, (float)rect.Y, (float)rect.Width, (float)rect.Height));
+                canvas.DrawImage(image, rect);
             }
         }
     }

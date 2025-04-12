@@ -62,7 +62,7 @@ public class PixelDrawOperation : IImage, ICustomDrawOperation
 
                 if (!SkiaUtils.IsNull(bitmap))
                 {
-                    lease.SkCanvas.DrawBitmap(bitmap, Bounds);
+                    lease.SkCanvas.DrawBitmapLock(bitmap, Bounds);
                 }
             }
         }
