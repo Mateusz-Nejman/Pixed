@@ -1,4 +1,5 @@
 ﻿using Pixed.Core.Models;
+using Pixed.Core.Utils;
 using SkiaSharp;
 
 namespace Pixed.Application.Models;
@@ -29,7 +30,7 @@ internal class RenderModel : PixelImage
         SKCanvas canvas = new(image);
         canvas.Clear(SKColors.Transparent);
         canvas.DrawBitmap(_frame.Render(), SKPoint.Empty);
-        if (_overlay != null && _overlay.Handle != 0)
+        if (!SkiaUtils.IsNull(_overlay))
         {
             canvas.DrawBitmap(_overlay, SKPoint.Empty);
         }

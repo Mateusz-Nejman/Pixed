@@ -3,6 +3,7 @@ using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
+using Pixed.Core.Utils;
 using SkiaSharp;
 using System;
 
@@ -38,12 +39,12 @@ internal class SkiaBitmap : IImage, IDisposable, ICustomDrawOperation
 
     public void Render(ImmediateDrawingContext context)
     {
-        if (_source is SKBitmap bitmap && context.PlatformImpl.GetFeature<ISkiaSharpApiLeaseFeature>() is ISkiaSharpApiLeaseFeature leaseFeature)
+        if (!SkiaUtils.IsNull(_source) && context.PlatformImpl.GetFeature<ISkiaSharpApiLeaseFeature>() is ISkiaSharpApiLeaseFeature leaseFeature)
         {
             ISkiaSharpApiLease lease = leaseFeature.Lease();
             using (lease)
             {
-                lease.SkCanvas.DrawBitmap(bitmap, SKRect.Create((float)Bounds.X, (float)Bounds.Y, (float)Bounds.Width, (float)Bounds.Height));
+                lease.SkCanvas.DrawBitmap(_source, SKRect.Create((float)Bounds.X, (float)Bounds.Y, (float)Bounds.Width, (float)Bounds.Height));
             }
         }
     }
