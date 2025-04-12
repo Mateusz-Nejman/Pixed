@@ -44,7 +44,7 @@ internal class SkiaBitmap : IImage, IDisposable, ICustomDrawOperation
             ISkiaSharpApiLease lease = leaseFeature.Lease();
             using (lease)
             {
-                lease.SkCanvas.DrawBitmap(_source, SKRect.Create((float)Bounds.X, (float)Bounds.Y, (float)Bounds.Width, (float)Bounds.Height));
+                lease.SkCanvas.DrawBitmapLock(_source, Bounds);
             }
         }
     }

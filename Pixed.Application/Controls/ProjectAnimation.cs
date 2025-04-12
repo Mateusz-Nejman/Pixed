@@ -55,7 +55,7 @@ internal class ProjectAnimation : Control
 
                     if (!SkiaUtils.IsNull(renderSource))
                     {
-                        canvas.DrawBitmap(renderSource, new Rect(Bounds.X, Bounds.Y, Bounds.Width, height));
+                        canvas.DrawBitmapLock(renderSource, new Rect(Bounds.X, Bounds.Y, Bounds.Width, height));
                     }
                 }
             }
