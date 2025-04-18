@@ -18,7 +18,14 @@ internal abstract class PixedPage<T> : Page
     {
         _menuItemRegistry = Provider.Get<IMenuItemRegistry>();
         var serviceProvider = this.GetServiceProvider();
-        this.DataContext = serviceProvider.Get<T>();
+        var viewModel = serviceProvider.Get<T>();
+
+        if (viewModel is ExtendedViewModel extended)
+        {
+            extended.Initialize(this);
+        }
+
+        this.DataContext = viewModel;
         Unloaded += PixedPage_Unloaded;
         Loaded += PixedPage_Loaded;
     }

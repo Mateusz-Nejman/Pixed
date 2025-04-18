@@ -2,11 +2,13 @@
 using Avalonia.Platform;
 using Pixed.Application.Controls;
 using Pixed.Application.Input;
+using Pixed.Application.Menu;
 using Pixed.Application.Models;
 using Pixed.Application.Zoom;
 using Pixed.Common;
 using Pixed.Common.Services.Keyboard;
 using Pixed.Common.Tools;
+using Pixed.Common.Tools.Selection;
 using Pixed.Core;
 using Pixed.Core.Models;
 using Pixed.Core.Utils;
@@ -21,6 +23,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
 {
     private readonly ApplicationData _applicationData;
     private readonly ToolsManager _toolSelector;
+    private readonly SelectionMenu _selectionMenu;
     private RenderModel _renderModel;
     private SKBitmap? _overlay;
     private ImageBrush _transparentBrush;
@@ -217,10 +220,12 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
         }
     }
 
-    public PaintCanvasViewModel(ApplicationData applicationData, ToolsManager toolSelector, ToolMoveCanvas toolMoveCanvas, SelectionManager selectionManager, FramesSectionViewModel framesSectionViewModel, PropertiesSectionViewModel propertiesSectionViewModel)
+    public PaintCanvasViewModel(ApplicationData applicationData, ToolsManager toolSelector, ToolMoveCanvas toolMoveCanvas, SelectionManager selectionManager, 
+        FramesSectionViewModel framesSectionViewModel, PropertiesSectionViewModel propertiesSectionViewModel, SelectionMenu selectionMenu)
     {
         _applicationData = applicationData;
         _toolSelector = toolSelector;
+        _selectionMenu = selectionMenu;
         _frame = new Frame(32, 32);
         _renderModel = new RenderModel
         {
@@ -484,7 +489,16 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
         }
 
         _rightPressed = true;
-        _toolSelector.SelectedTool?.ApplyTool(mouseEvent.Point, _frame, ref _overlay, _currentKeyState);
+
+        if (_toolSelector.SelectedTool is ToolSelectBase selection)
+        {
+            var flyout = _selectionMenu.GetMenu();
+            flyout.ShowAt(View, true);
+        }
+        else if (_toolSelector.SelectedTool is BaseTool tool)
+        {
+            tool.ApplyTool(mouseEvent.Point, _frame, ref _overlay, _currentKeyState);
+        }
         UpdateRenderModel();
     }
 

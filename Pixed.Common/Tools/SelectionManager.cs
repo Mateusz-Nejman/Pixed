@@ -47,6 +47,7 @@ public class SelectionManager
         {
             _currentSelection.Reset();
             _currentSelection = null;
+            Subjects.SelectionDismissed.OnNext(null);
         }
     }
 
