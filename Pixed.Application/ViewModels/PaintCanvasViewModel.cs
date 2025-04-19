@@ -295,8 +295,6 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
                 tool.Previous.ResetProperties();
                 ClearOverlay();
             }
-
-            IsSelectionButtonVisible = tool.Current is ToolSelectBase;
         });
 
         _keyState = Subjects.KeyState.Subscribe(state =>
@@ -351,6 +349,8 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
                 SelectionOverlay.UpdateSelection(null);
                 SelectionOverlay.DrawLines = false;
             }
+
+            IsSelectionButtonVisible = false;
         });
 
         _selectionCreated = Subjects.SelectionCreated.Subscribe(selection =>
@@ -360,6 +360,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
                 SelectionOverlay.DrawLines = true;
                 SelectionOverlay.UpdateSelection(selection);
                 Subjects.OverlayModified.OnNext(null);
+                IsSelectionButtonVisible = true;
             }
         });
 
