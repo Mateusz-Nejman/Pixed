@@ -1,4 +1,5 @@
-﻿using Avalonia.Media;
+﻿using Avalonia.Controls;
+using Avalonia.Media;
 using Avalonia.Platform;
 using Pixed.Application.Controls;
 using Pixed.Application.Input;
@@ -46,6 +47,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
     private double _zoomValue = 1;
     private bool _isFramesViewButtonVisible;
     private bool _isPropertiesViewButtonVisible;
+    private bool _isSelectionButtonVisible = false;
 
     private readonly IDisposable _projectModified;
     private readonly IDisposable _projectChanged;
@@ -84,6 +86,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
     public ActionCommand CloseFramesView { get; }
     public ActionCommand OpenPropertiesView { get; }
     public ActionCommand ClosePropertiesView { get; }
+    public ActionCommand<Control> OpenSelectionMenu { get; }
 
     public int ToolSize
     {
@@ -170,6 +173,16 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
             OnPropertyChanged();
             OnPropertyChanged(nameof(ScaledGridWidth));
             OnPropertyChanged(nameof(ScaledGridHeight));
+        }
+    }
+
+    public bool IsSelectionButtonVisible
+    {
+        get => _isSelectionButtonVisible;
+        set
+        {
+            _isSelectionButtonVisible = value;
+            OnPropertyChanged();
         }
     }
     public double ZoomOffsetX { get; set; }
@@ -280,6 +293,8 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
                 tool.Previous.ResetProperties();
                 ClearOverlay();
             }
+
+            IsSelectionButtonVisible = tool.Current is ToolSelectBase;
         });
 
         _keyState = Subjects.KeyState.Subscribe(state =>
@@ -369,6 +384,13 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
         CloseFramesView = new ActionCommand(() => framesSectionViewModel.IsVisible = false);
         OpenPropertiesView = new ActionCommand(() => propertiesSectionViewModel.IsVisible = true);
         ClosePropertiesView = new ActionCommand(() => propertiesSectionViewModel.IsVisible = false);
+        OpenSelectionMenu = new ActionCommand<Control>(obj =>
+        {
+            var menu = _selectionMenu.GetMenu();
+            menu.Placement = PlacementMode.BottomEdgeAlignedLeft;
+            menu.PlacementAnchor = Avalonia.Controls.Primitives.PopupPositioning.PopupAnchor.TopLeft;
+            menu.ShowAt(obj);
+        });
     }
     public void RecalculateFactor(Point windowSize)
     {
