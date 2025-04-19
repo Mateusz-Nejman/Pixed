@@ -1,9 +1,11 @@
 ﻿using Pixed.Common.Models;
 using Pixed.Common.Services.Keyboard;
 using Pixed.Core.Models;
+using Pixed.Core.Selection;
 using Pixed.Core.Utils;
 using SkiaSharp;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Pixed.Common.Tools;
 public class ToolBucket(ApplicationData applicationData) : BaseTool(applicationData)
@@ -14,9 +16,9 @@ public class ToolBucket(ApplicationData applicationData) : BaseTool(applicationD
     public override string Id => "tool_paint_bucket";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Fill color", "Shift", PROP_REPLACE);
     public override bool SingleHighlightedPixel { get; protected set; } = true;
-    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
     {
-        ApplyToolBase(point, frame, ref overlay, keyState);
+        ApplyToolBase(point, frame, ref overlay, keyState, selection);
         uint color = ToolColor;
         uint targetColor = frame.GetPixel(point);
 
@@ -29,12 +31,25 @@ public class ToolBucket(ApplicationData applicationData) : BaseTool(applicationD
 
         if (replace)
         {
-            List<Pixel> pixels = [];
-            for (int x = 0; x < frame.Width; x++)
+            int minX = 0;
+            int minY = 0;
+            int maxX = frame.Width;
+            int maxY = frame.Height;
+
+            if(selection != null)
             {
-                for (int y = 0; y < frame.Height; y++)
+                minX = selection.Pixels.MinBy(p => p.Position.X).Position.X;
+                minY = selection.Pixels.MinBy(p => p.Position.Y).Position.Y;
+                maxX = selection.Pixels.MaxBy(p => p.Position.X).Position.X + 1;
+                maxY = selection.Pixels.MaxBy(p => p.Position.Y).Position.Y + 1;
+            }
+            List<Pixel> pixels = [];
+            for (int x = minX; x < maxX; x++)
+            {
+                for (int y = minY; y < maxY; y++)
                 {
                     var replacePoint = new Point(x, y);
+
                     if (frame.GetPixel(replacePoint) == targetColor)
                     {
                         pixels.Add(new Pixel(replacePoint, color));
@@ -46,7 +61,7 @@ public class ToolBucket(ApplicationData applicationData) : BaseTool(applicationD
         }
         else
         {
-            PaintUtils.PaintSimiliarConnected(frame.CurrentLayer, point, color);
+            PaintUtils.PaintSimiliarConnected(frame.CurrentLayer, point, color, selection);
         }
         Subjects.FrameModified.OnNext(frame);
     }

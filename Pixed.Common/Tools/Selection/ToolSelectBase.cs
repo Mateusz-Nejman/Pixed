@@ -25,9 +25,9 @@ public abstract class ToolSelectBase(ApplicationData applicationData) : BaseTool
     public override bool AddToHistory { get; protected set; } = false;
     public override bool SingleHighlightedPixel { get; protected set; }
 
-    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
     {
-        ApplyToolBase(point, frame, ref overlay, keyState);
+        ApplyToolBase(point, frame, ref overlay, keyState, selection);
         _start = point;
         _prev = point;
 
@@ -35,7 +35,7 @@ public abstract class ToolSelectBase(ApplicationData applicationData) : BaseTool
         _stage = SelectionStage.Selecting;
     }
 
-    public override void MoveTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void MoveTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
     {
         if (_stage == SelectionStage.Selecting)
         {
@@ -44,26 +44,19 @@ public abstract class ToolSelectBase(ApplicationData applicationData) : BaseTool
         }
     }
 
-    public override void ReleaseTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void ReleaseTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
     {
         if (_stage == SelectionStage.Selecting)
         {
             OnSelectionEnd(_start, point, _prev, frame);
         }
 
-        ReleaseToolBase(point, frame, ref overlay, keyState);
+        ReleaseToolBase(point, frame, ref overlay, keyState, selection);
     }
 
     public virtual void OnSelectionBegin(Point startPoint, Point currentPoint, Point previousPoint, Frame frame) { }
     public virtual void OnSelection(Point startPoint, Point currentPoint, Point previousPoint, Frame frame) { }
     public virtual void OnSelectionEnd(Point startPoint, Point currentPoint, Point previousPoint, Frame frame) { }
-
-    public override void Reset()
-    {
-        _selection?.Pixels.Clear();
-        _selection = null;
-        Subjects.SelectionDismissed.OnNext(null);
-    }
 
     protected bool IsInSelection(Point point)
     {

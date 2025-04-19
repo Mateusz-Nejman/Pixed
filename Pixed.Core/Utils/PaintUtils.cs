@@ -1,4 +1,5 @@
 ﻿using Pixed.Core.Models;
+using Pixed.Core.Selection;
 
 namespace Pixed.Core.Utils;
 
@@ -31,7 +32,7 @@ public static class PaintUtils
         return pixels;
     }
 
-    public static void PaintSimiliarConnected(Layer layer, Point point, uint replacementColor)
+    public static void PaintSimiliarConnected(Layer layer, Point point, uint replacementColor, BaseSelection? selection)
     {
         uint targetColor = layer.GetPixel(point);
 
@@ -40,7 +41,7 @@ public static class PaintUtils
             return;
         }
 
-        var points = MathUtils.FloodFill(point, new Point(layer.Width, layer.Height), pos => layer.GetPixel(pos) == targetColor);
+        var points = MathUtils.FloodFill(point, new Point(layer.Width, layer.Height), pos => layer.GetPixel(pos) == targetColor && (selection == null || selection.InSelection(pos)));
         var pixels = points.Select(p => new Pixel(p, replacementColor)).ToList();
         layer.SetPixels(pixels);
     }

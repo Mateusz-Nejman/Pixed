@@ -3,6 +3,7 @@ using Pixed.Common.Models;
 using Pixed.Common.Services.Keyboard;
 using Pixed.Core;
 using Pixed.Core.Models;
+using Pixed.Core.Selection;
 using Pixed.Core.Utils;
 using SkiaSharp;
 using System.Collections.Generic;
@@ -36,29 +37,29 @@ public abstract class BaseTool(ApplicationData applicationData)
         return _applicationData.PrimaryColor;
     }
 
-    protected void ApplyToolBase(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    protected void ApplyToolBase(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
     {
         _toolColor ??= GetToolColor();
     }
 
-    public virtual void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public virtual void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
     {
-        ApplyToolBase(point, frame, ref overlay, keyState);
+        ApplyToolBase(point, frame, ref overlay, keyState, selection);
     }
 
-    public virtual void MoveTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public virtual void MoveTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
     {
 
     }
 
-    protected void ReleaseToolBase(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    protected void ReleaseToolBase(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
     {
         _toolColor = null;
     }
 
-    public virtual void ReleaseTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public virtual void ReleaseTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
     {
-        ReleaseToolBase(point, frame, ref overlay, keyState);
+        ReleaseToolBase(point, frame, ref overlay, keyState, selection);
     }
 
     public virtual void Reset()
@@ -71,7 +72,7 @@ public abstract class BaseTool(ApplicationData applicationData)
 
     }
 
-    public virtual void UpdateHighlightedPixel(Point point, Frame frame, ref SKBitmap overlay)
+    public virtual void UpdateHighlightedPixel(Point point, Frame frame, ref SKBitmap overlay, BaseSelection? selection)
     {
         overlay ??= new SKBitmap(frame.Width, frame.Height, true);
 

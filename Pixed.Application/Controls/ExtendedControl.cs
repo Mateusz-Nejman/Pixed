@@ -18,7 +18,15 @@ internal abstract class ExtendedControl<T> : UserControl
     {
         _menuItemRegistry = Provider.Get<IMenuItemRegistry>();
         var serviceProvider = this.GetServiceProvider();
-        this.DataContext = serviceProvider.Get<T>();
+
+        var viewModel = serviceProvider.Get<T>();
+
+        if(viewModel is ExtendedViewModel extended)
+        {
+            extended.Initialize(this);
+        }
+
+        this.DataContext = viewModel;
     }
 
     public TResult Get<TResult>()

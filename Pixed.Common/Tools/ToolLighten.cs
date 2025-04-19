@@ -2,6 +2,7 @@
 using Pixed.Common.Services.Keyboard;
 using Pixed.Core;
 using Pixed.Core.Models;
+using Pixed.Core.Selection;
 using SkiaSharp;
 using System.Collections.Generic;
 
@@ -15,9 +16,9 @@ public class ToolLighten(ApplicationData applicationData) : ToolPenBase(applicat
     public override string Name => "Lighten tool";
     public override string Id => "tool_lighten";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Lighten", "Ctrl", "Darken", "Shift", "Apply once per pixel");
-    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
     {
-        ApplyToolBase(point, frame, ref overlay, keyState);
+        ApplyToolBase(point, frame, ref overlay, keyState, selection);
         var controlPressed = keyState.IsCtrl || GetProperty(PROP_DARKEN);
         var shiftPressed = keyState.IsShift || GetProperty(PROP_APPLY_ONCE);
 
@@ -29,7 +30,7 @@ public class ToolLighten(ApplicationData applicationData) : ToolPenBase(applicat
         _prev = point;
 
         var modifiedColor = GetModifierColor(point, frame, ref overlay, shiftPressed, controlPressed);
-        DrawOnOverlay(modifiedColor, point, frame, ref overlay);
+        DrawOnOverlay(modifiedColor, point, frame, ref overlay, selection);
         Subjects.OverlayModified.OnNext(overlay);
     }
 

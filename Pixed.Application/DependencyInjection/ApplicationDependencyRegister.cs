@@ -43,5 +43,6 @@ internal class ApplicationDependencyRegister : IDependencyRegister
         collection.AddSingleton<IClipboardHandle, ClipboardHandle>();
         collection.AddSingleton<IStorageProviderHandle, StorageProviderHandle>();
         collection.AddSingleton<DialogUtils>();
+        collection.AddSingleton<SelectionMenu>();
     }
 }

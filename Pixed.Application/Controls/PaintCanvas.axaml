@@ -33,6 +33,9 @@
         </Border>
       </Border>
     </ScrollViewer>
+	  <Button Width="32" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0 2 0 0" Theme="{StaticResource FlyingButton}" IsVisible="{Binding IsSelectionButtonVisible}" Command="{Binding OpenSelectionMenu}" CommandParameter="{Binding $self}">
+		  <Image Source="{SvgImage avares://Pixed.Application/Resources/fluent-icons/ic_fluent_square_hint_48_regular.svg}" Width="16" Height="16"/>
+	  </Button>
 	  <Button Width="32" Height="64" HorizontalAlignment="Left" VerticalAlignment="Center" Theme="{StaticResource FlyingButton}" IsVisible="{Binding !IsFramesViewButtonVisible}" Command="{Binding OpenFramesView}">
 		  <Image Source="{SvgImage avares://Pixed.Application/Resources/fluent-icons/ic_fluent_panel_left_expand_28_regular.svg}" Width="16" Height="16"/>
 	  </Button>
