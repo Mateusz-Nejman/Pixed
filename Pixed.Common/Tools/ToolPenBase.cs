@@ -2,6 +2,7 @@
 using Pixed.Core;
 using Pixed.Core.Algorithms;
 using Pixed.Core.Models;
+using Pixed.Core.Selection;
 using Pixed.Core.Utils;
 using SkiaSharp;
 using System.Collections.Generic;
@@ -18,9 +19,9 @@ public abstract class ToolPenBase(ApplicationData applicationData) : BaseTool(ap
     public override string Name => "Pen tool";
     public override string Id => "tool_pen";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Pen tool");
-    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
     {
-        ApplyToolBase(point, frame, ref overlay, keyState);
+        ApplyToolBase(point, frame, ref overlay, keyState, selection);
         _prev = point;
 
         DrawOnOverlay(ToolColor, point, frame, ref overlay);
@@ -32,7 +33,7 @@ public abstract class ToolPenBase(ApplicationData applicationData) : BaseTool(ap
         }
     }
 
-    public override void MoveTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void MoveTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
     {
         if (_prev != point)
         {
@@ -40,18 +41,18 @@ public abstract class ToolPenBase(ApplicationData applicationData) : BaseTool(ap
 
             foreach (var pixel in interpolatedPixels)
             {
-                ApplyTool(pixel, frame, ref overlay, keyState);
+                ApplyTool(pixel, frame, ref overlay, keyState, selection);
             }
         }
         else
         {
-            ApplyTool(point, frame, ref overlay, keyState);
+            ApplyTool(point, frame, ref overlay, keyState, selection);
         }
 
         _prev = point;
     }
 
-    public override void ReleaseTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void ReleaseTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
     {
         SetPixels(frame, _pixels);
         _pixels.Clear();
@@ -60,7 +61,7 @@ public abstract class ToolPenBase(ApplicationData applicationData) : BaseTool(ap
 
         overlay.Clear();
         Subjects.OverlayModified.OnNext(overlay);
-        ReleaseToolBase(point, frame, ref overlay, keyState);
+        ReleaseToolBase(point, frame, ref overlay, keyState, selection);
     }
 
     public List<Pixel> GetPixels()

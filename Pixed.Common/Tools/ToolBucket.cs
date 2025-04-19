@@ -1,6 +1,7 @@
 ﻿using Pixed.Common.Models;
 using Pixed.Common.Services.Keyboard;
 using Pixed.Core.Models;
+using Pixed.Core.Selection;
 using Pixed.Core.Utils;
 using SkiaSharp;
 using System.Collections.Generic;
@@ -14,9 +15,9 @@ public class ToolBucket(ApplicationData applicationData) : BaseTool(applicationD
     public override string Id => "tool_paint_bucket";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Fill color", "Shift", PROP_REPLACE);
     public override bool SingleHighlightedPixel { get; protected set; } = true;
-    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
     {
-        ApplyToolBase(point, frame, ref overlay, keyState);
+        ApplyToolBase(point, frame, ref overlay, keyState, selection);
         uint color = ToolColor;
         uint targetColor = frame.GetPixel(point);
 

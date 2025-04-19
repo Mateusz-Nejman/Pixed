@@ -1,6 +1,7 @@
 ﻿using Pixed.Common.Models;
 using Pixed.Common.Services.Keyboard;
 using Pixed.Core.Models;
+using Pixed.Core.Selection;
 using Pixed.Core.Utils;
 using SkiaSharp;
 using System.Collections.Generic;
@@ -15,9 +16,9 @@ public class ToolOutliner(ApplicationData applicationData) : BaseTool(applicatio
     public override string Id => "tool_outliner_tool";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Outliner", "Ctrl", "Fill corners");
     public override bool SingleHighlightedPixel { get; protected set; } = true;
-    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
     {
-        ApplyToolBase(point, frame, ref overlay, keyState);
+        ApplyToolBase(point, frame, ref overlay, keyState, selection);
         var controlPressed = keyState.IsCtrl || GetProperty(PROP_FILL_CORNERS);
         var color = ToolColor;
         PaintUtils.OutlineSimiliarConnectedPixels(frame.CurrentLayer, point, color, controlPressed);

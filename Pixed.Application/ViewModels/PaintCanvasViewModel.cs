@@ -25,6 +25,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
     private readonly ApplicationData _applicationData;
     private readonly ToolsManager _toolSelector;
     private readonly SelectionMenu _selectionMenu;
+    private readonly SelectionManager _selectionManager;
     private RenderModel _renderModel;
     private SKBitmap? _overlay;
     private ImageBrush _transparentBrush;
@@ -239,6 +240,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
         _applicationData = applicationData;
         _toolSelector = toolSelector;
         _selectionMenu = selectionMenu;
+        _selectionManager = selectionManager;
         _frame = new Frame(32, 32);
         _renderModel = new RenderModel
         {
@@ -477,7 +479,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
         }
 
         _leftPressed = true;
-        _toolSelector.SelectedTool?.ApplyTool(mouseEvent.Point, _frame, ref _overlay, _currentKeyState);
+        _toolSelector.SelectedTool?.ApplyTool(mouseEvent.Point, _frame, ref _overlay, _currentKeyState, _selectionManager.Selection);
         UpdateRenderModel();
         Subjects.FrameModified.OnNext(_frame);
     }
@@ -490,7 +492,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
         }
 
         _leftPressed = false;
-        _toolSelector.SelectedTool?.ReleaseTool(mouseEvent.Point, _frame, ref _overlay, _currentKeyState);
+        _toolSelector.SelectedTool?.ReleaseTool(mouseEvent.Point, _frame, ref _overlay, _currentKeyState, _selectionManager.Selection);
         UpdateRenderModel();
 
         if (_toolSelector.SelectedTool != null && _toolSelector.SelectedTool.AddToHistory)
@@ -519,7 +521,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
         }
         else if (_toolSelector.SelectedTool is BaseTool tool)
         {
-            tool.ApplyTool(mouseEvent.Point, _frame, ref _overlay, _currentKeyState);
+            tool.ApplyTool(mouseEvent.Point, _frame, ref _overlay, _currentKeyState, _selectionManager.Selection);
         }
         UpdateRenderModel();
     }
@@ -532,7 +534,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
         }
 
         _rightPressed = false;
-        _toolSelector.SelectedTool?.ReleaseTool(mouseEvent.Point, _frame, ref _overlay, _currentKeyState);
+        _toolSelector.SelectedTool?.ReleaseTool(mouseEvent.Point, _frame, ref _overlay, _currentKeyState, _selectionManager.Selection);
         UpdateRenderModel();
 
         if (_toolSelector.SelectedTool != null && _toolSelector.SelectedTool.AddToHistory)
@@ -561,12 +563,12 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
 
         if (_leftPressed || _rightPressed)
         {
-            _toolSelector.SelectedTool.MoveTool(mouseEvent.Point, _frame, ref _overlay, _currentKeyState);
+            _toolSelector.SelectedTool.MoveTool(mouseEvent.Point, _frame, ref _overlay, _currentKeyState, _selectionManager.Selection);
             UpdateRenderModel();
         }
         else
         {
-            _toolSelector.SelectedTool.UpdateHighlightedPixel(mouseEvent.Point, _frame, ref _overlay);
+            _toolSelector.SelectedTool.UpdateHighlightedPixel(mouseEvent.Point, _frame, ref _overlay, _selectionManager.Selection);
             UpdateRenderModel();
         }
 
@@ -577,7 +579,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
     {
         if (_rightPressed || _leftPressed)
         {
-            _toolSelector.SelectedTool?.ReleaseTool(new Point(), _frame, ref _overlay, _currentKeyState);
+            _toolSelector.SelectedTool?.ReleaseTool(new Point(), _frame, ref _overlay, _currentKeyState, _selectionManager.Selection);
             UpdateRenderModel();
         }
         _rightPressed = false;

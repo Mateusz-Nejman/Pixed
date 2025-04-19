@@ -2,6 +2,7 @@
 using Pixed.Common.Services.Keyboard;
 using Pixed.Core;
 using Pixed.Core.Models;
+using Pixed.Core.Selection;
 using Pixed.Core.Utils;
 using SkiaSharp;
 using System;
@@ -13,16 +14,16 @@ public abstract class ShapeTool(ApplicationData applicationData) : BaseTool(appl
     protected string PROP_SHIFT = "Keep 1 to 1 ratio";
     protected Point _start = new(-1);
 
-    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
     {
-        ApplyToolBase(point, frame, ref overlay, keyState);
+        ApplyToolBase(point, frame, ref overlay, keyState, selection);
         _start = point;
 
         overlay.SetPixel(point, ToolColor, _applicationData.ToolSize);
         Subjects.OverlayModified.OnNext(overlay);
     }
 
-    public override void MoveTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void MoveTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
     {
         overlay.Clear();
         var color = ToolColor;
@@ -35,14 +36,14 @@ public abstract class ShapeTool(ApplicationData applicationData) : BaseTool(appl
         Draw(point, color, keyState.IsShift || GetProperty(PROP_SHIFT), _applicationData.ToolSize, ref overlay);
     }
 
-    public override void ReleaseTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void ReleaseTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
     {
         var color = ToolColor;
 
         Draw(point, color, keyState.IsShift || GetProperty(PROP_SHIFT), _applicationData.ToolSize, frame);
 
         overlay.Clear();
-        ReleaseToolBase(point, frame, ref overlay, keyState);
+        ReleaseToolBase(point, frame, ref overlay, keyState, selection);
     }
 
     public override List<ToolProperty> GetToolProperties()

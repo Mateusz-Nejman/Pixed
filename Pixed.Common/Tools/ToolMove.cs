@@ -2,6 +2,7 @@
 using Pixed.Common.Services.Keyboard;
 using Pixed.Core;
 using Pixed.Core.Models;
+using Pixed.Core.Selection;
 using SkiaSharp;
 using System.Collections.Generic;
 
@@ -19,15 +20,15 @@ public class ToolMove(ApplicationData applicationData) : BaseTool(applicationDat
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Move content", "Ctrl", "Apply to all layers", "Shift", "Apply to all frames", "Alt", "Wrap canvas borders");
     public override bool SingleHighlightedPixel { get; protected set; } = true;
 
-    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
     {
-        ApplyToolBase(point, frame, ref overlay, keyState);
+        ApplyToolBase(point, frame, ref overlay, keyState, selection);
         _start = point;
         _currentLayer = frame.CurrentLayer;
         _currentLayerClone = _currentLayer.Clone();
     }
 
-    public override void MoveTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void MoveTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
     {
         var diff = point - _start;
 
@@ -35,7 +36,7 @@ public class ToolMove(ApplicationData applicationData) : BaseTool(applicationDat
         Subjects.LayerModified.OnNext(frame.CurrentLayer);
     }
 
-    public override void ReleaseTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void ReleaseTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
     {
         var shiftPressed = keyState.IsShift || GetProperty(ToolProperties.PROP_APPLY_ALL_FRAMES);
         var controlPressed = keyState.IsCtrl || GetProperty(ToolProperties.PROP_APPLY_ALL_LAYERS);
@@ -48,7 +49,7 @@ public class ToolMove(ApplicationData applicationData) : BaseTool(applicationDat
             ShiftLayer(layer, reference, diff, altPressed);
         }, _applicationData, true);
 
-        ReleaseToolBase(point, frame, ref overlay, keyState);
+        ReleaseToolBase(point, frame, ref overlay, keyState, selection);
     }
 
     public override List<ToolProperty> GetToolProperties()

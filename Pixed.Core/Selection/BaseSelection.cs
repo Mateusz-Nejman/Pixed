@@ -40,4 +40,9 @@ public class BaseSelection
             pixel.Color = frame.GetPixel(Pixels[i].Position);
         }
     }
+
+    public bool InSelection(Point point)
+    {
+        return Pixels.FindIndex(0, p => p.Position == point) != -1;
+    }
 }
