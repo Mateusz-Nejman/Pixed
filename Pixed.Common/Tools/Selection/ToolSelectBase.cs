@@ -58,13 +58,6 @@ public abstract class ToolSelectBase(ApplicationData applicationData) : BaseTool
     public virtual void OnSelection(Point startPoint, Point currentPoint, Point previousPoint, Frame frame) { }
     public virtual void OnSelectionEnd(Point startPoint, Point currentPoint, Point previousPoint, Frame frame) { }
 
-    public override void Reset()
-    {
-        _selection?.Pixels.Clear();
-        _selection = null;
-        Subjects.SelectionDismissed.OnNext(null);
-    }
-
     protected bool IsInSelection(Point point)
     {
         return _selection != null && _selection.Pixels.Any(p => p.Position == point);

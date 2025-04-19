@@ -30,7 +30,7 @@ public class ToolLighten(ApplicationData applicationData) : ToolPenBase(applicat
         _prev = point;
 
         var modifiedColor = GetModifierColor(point, frame, ref overlay, shiftPressed, controlPressed);
-        DrawOnOverlay(modifiedColor, point, frame, ref overlay);
+        DrawOnOverlay(modifiedColor, point, frame, ref overlay, selection);
         Subjects.OverlayModified.OnNext(overlay);
     }
 

@@ -43,17 +43,17 @@ public class ToolPen(ApplicationData applicationData) : ToolPenBase(applicationD
 
             if (controlPressed)
             {
-                DrawOnOverlay(color, new Point(symX, point.Y), frame, ref overlay);
+                DrawOnOverlay(color, new Point(symX, point.Y), frame, ref overlay, selection);
             }
 
             if (altPressed)
             {
-                DrawOnOverlay(color, new Point(point.X, symY), frame, ref overlay);
+                DrawOnOverlay(color, new Point(point.X, symY), frame, ref overlay, selection);
             }
 
             if (shiftPressed)
             {
-                DrawOnOverlay(color, new Point(symX, symY), frame, ref overlay);
+                DrawOnOverlay(color, new Point(symX, symY), frame, ref overlay, selection);
             }
 
             Subjects.OverlayModified.OnNext(overlay);

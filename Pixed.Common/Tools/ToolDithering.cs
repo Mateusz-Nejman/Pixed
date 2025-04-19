@@ -33,7 +33,7 @@ public class ToolDithering(ApplicationData applicationData) : ToolPenBase(applic
             }
 
             var color = usePrimary ? _applicationData.PrimaryColor : _applicationData.SecondaryColor;
-            AddPixel(toolPoint, color);
+            AddPixel(toolPoint, color, selection);
         }
     }
 }

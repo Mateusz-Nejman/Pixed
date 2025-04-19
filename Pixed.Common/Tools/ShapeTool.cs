@@ -33,14 +33,14 @@ public abstract class ShapeTool(ApplicationData applicationData) : BaseTool(appl
             color = UniColor.WithAlpha(128, UniColor.GetFromResources("Accent"));
         }
 
-        Draw(point, color, keyState.IsShift || GetProperty(PROP_SHIFT), _applicationData.ToolSize, ref overlay);
+        Draw(point, color, keyState.IsShift || GetProperty(PROP_SHIFT), _applicationData.ToolSize, ref overlay, selection);
     }
 
     public override void ReleaseTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
     {
         var color = ToolColor;
 
-        Draw(point, color, keyState.IsShift || GetProperty(PROP_SHIFT), _applicationData.ToolSize, frame);
+        Draw(point, color, keyState.IsShift || GetProperty(PROP_SHIFT), _applicationData.ToolSize, frame, selection);
 
         overlay.Clear();
         ReleaseToolBase(point, frame, ref overlay, keyState, selection);
@@ -53,11 +53,16 @@ public abstract class ShapeTool(ApplicationData applicationData) : BaseTool(appl
             ];
     }
 
-    protected void Draw(Point point, uint color, bool shiftPressed, int toolSize, ref SKBitmap overlay)
+    protected void Draw(Point point, uint color, bool shiftPressed, int toolSize, ref SKBitmap overlay, BaseSelection? selection)
     {
         SKBitmap bitmap = overlay;
         Draw(point, color, shiftPressed, (p, color) =>
         {
+            if(selection != null && !selection.InSelection(p))
+            {
+                return;
+            }
+
             bitmap.SetPixel(p, color, toolSize);
         });
 
@@ -65,11 +70,16 @@ public abstract class ShapeTool(ApplicationData applicationData) : BaseTool(appl
         Subjects.OverlayModified.OnNext(overlay);
     }
 
-    protected void Draw(Point point, uint color, bool shiftPressed, int toolSize, Frame frame)
+    protected void Draw(Point point, uint color, bool shiftPressed, int toolSize, Frame frame, BaseSelection? selection)
     {
-        Draw(point, color, shiftPressed, (p1, _) =>
+        Draw(point, color, shiftPressed, (p, _) =>
         {
-            frame.SetPixel(p1, color, toolSize);
+            if (selection != null && !selection.InSelection(p))
+            {
+                return;
+            }
+
+            frame.SetPixel(p, color, toolSize);
         });
         Subjects.FrameModified.OnNext(frame);
     }

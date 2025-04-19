@@ -24,7 +24,7 @@ public abstract class ToolPenBase(ApplicationData applicationData) : BaseTool(ap
         ApplyToolBase(point, frame, ref overlay, keyState, selection);
         _prev = point;
 
-        DrawOnOverlay(ToolColor, point, frame, ref overlay);
+        DrawOnOverlay(ToolColor, point, frame, ref overlay, selection);
         Subjects.OverlayModified.OnNext(overlay);
 
         if (_pixels.Count > 0)
@@ -74,9 +74,9 @@ public abstract class ToolPenBase(ApplicationData applicationData) : BaseTool(ap
         return _modifiedPoints.Contains(point);
     }
 
-    protected void AddPixel(Point point, uint color)
+    protected void AddPixel(Point point, uint color, BaseSelection? selection)
     {
-        if (IsPixelModified(point))
+        if (IsPixelModified(point) || (selection != null && !selection.InSelection(point)))
         {
             return;
         }
@@ -85,8 +85,12 @@ public abstract class ToolPenBase(ApplicationData applicationData) : BaseTool(ap
         _modifiedPoints.Add(point);
     }
 
-    protected void DrawOnOverlay(UniColor color, Point point, Frame frame, ref SKBitmap overlay)
+    protected void DrawOnOverlay(UniColor color, Point point, Frame frame, ref SKBitmap overlay, BaseSelection? selection)
     {
+        if (selection != null && !selection.InSelection(point))
+        {
+            return;
+        }
         var toolSize = _applicationData.ToolSize;
         overlay.SetPixel(point, color, toolSize);
 
@@ -101,7 +105,7 @@ public abstract class ToolPenBase(ApplicationData applicationData) : BaseTool(ap
         {
             if (frame.ContainsPixel(toolPoint))
             {
-                AddPixel(toolPoint, color);
+                AddPixel(toolPoint, color, selection);
             }
         }
     }
