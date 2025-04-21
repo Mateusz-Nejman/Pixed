@@ -2,6 +2,7 @@
 using Pixed.Common.Tools;
 using Pixed.Core;
 using Pixed.Core.Models;
+using Pixed.Core.Selection;
 using Pixed.Core.Utils;
 using SkiaSharp;
 
@@ -15,9 +16,9 @@ public class SimpleTool(ApplicationData applicationData) : BaseTool(applicationD
 
     public override string Id => "tool_simple";
 
-    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState)
+    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
     {
-        base.ApplyTool(point, frame, ref overlay, keyState);
-        PaintUtils.PaintSimiliarConnected(frame.CurrentLayer, point, UniColor.CornflowerBlue);
+        base.ApplyTool(point, frame, ref overlay, keyState, selection);
+        PaintUtils.PaintSimiliarConnected(frame.CurrentLayer, point, UniColor.CornflowerBlue, selection);
     }
 }
