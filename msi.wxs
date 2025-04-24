@@ -18,7 +18,7 @@
 			<ui:WixUI Id="WixUI_FeatureTree" />
 			<UIRef Id="WixUI_ErrorProgressText" />
 		</UI>
-		<StandardDirectory Id="ProgramFiles6432Folder">
+		<StandardDirectory Id="ProgramFiles64Folder">
 			<Directory Id="CompanyFolder" Name="Mateusz Nejman">
 				<Directory Id="INSTALLLOCATION" Name="Pixed"/>
 			</Directory>

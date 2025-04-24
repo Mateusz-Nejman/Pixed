@@ -58,7 +58,7 @@ cd "%SOLUTION_PATH%\build\Deploy-linux"
 cd "%SOLUTION_PATH%"
 
 echo Creating MSI Installer...
-wix build -ext WixToolset.UI.wixext -bindvariable WixUILicenseRtf=EULA.rtf msi.wxs -out build\Pixed.Installer.msi
+wix build -ext WixToolset.UI.wixext -bindvariable WixUILicenseRtf=EULA.rtf msi.wxs -arch x64 -out build\Pixed.Installer.msi
 
 echo Copying final files...
 if exist "%MSI_INPUT_PATH%" (
