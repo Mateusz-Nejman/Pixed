@@ -23,6 +23,11 @@ internal class PngProjectSerializer : IPixedProjectSerializer
     public PixedModel Deserialize(Stream stream, ApplicationData applicationData)
     {
         var png = Png.Open(stream);
+        return Deserialize(png, applicationData);
+    }
+
+    public PixedModel Deserialize(Png png, ApplicationData applicationData)
+    {
         var colors = png.GetPixelsUInt();
         ObservableCollection<Frame> frames = [];
 

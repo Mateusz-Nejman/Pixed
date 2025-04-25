@@ -1,16 +1,13 @@
 ﻿using Avalonia.Input;
-using Pixed.BigGustave;
-using Pixed.Common.Platform;
+using Pixed.Common.Services;
 using Pixed.Common.Services.Keyboard;
 using Pixed.Common.Tools.Selection;
 using Pixed.Core;
 using Pixed.Core.Models;
 using Pixed.Core.Selection;
-using Pixed.Core.Utils;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,18 +17,18 @@ public class SelectionManager
 {
     private readonly ApplicationData _applicationData;
     private readonly ToolsManager _toolSelector;
-    private readonly IClipboardHandle _clipboardHandle;
+    private readonly ClipboardService _clipboardService;
     private BaseSelection? _currentSelection;
 
     public bool HasSelection => _currentSelection != null;
     public BaseSelection? Selection => _currentSelection;
 
-    public SelectionManager(ApplicationData applicationData, ShortcutService shortcutService, ToolsManager toolSelector, IClipboardHandle clipboardHandle)
+    public SelectionManager(ApplicationData applicationData, ShortcutService shortcutService, ToolsManager toolSelector, ClipboardService clipboardService)
     {
         _applicationData = applicationData;
         _toolSelector = toolSelector;
         _currentSelection = null;
-        _clipboardHandle = clipboardHandle;
+        _clipboardService = clipboardService;
         Subjects.SelectionCreating.Subscribe(OnSelectionCreated);
         Subjects.SelectionDismissed.Subscribe(OnSelectionDismissed);
         shortcutService.Add(KeyState.Control(Key.C), async () => await Copy());
@@ -69,7 +66,7 @@ public class SelectionManager
         if (_currentSelection != null && _applicationData.CurrentFrame != null)
         {
             _currentSelection.FillSelectionFromFrame(_applicationData.CurrentFrame);
-            await CopySelectionAsync(_currentSelection);
+            await _clipboardService.Copy(_currentSelection);
         }
     }
 
@@ -91,7 +88,7 @@ public class SelectionManager
         {
             _toolSelector.SelectedTool = newTool;
         }
-        SKBitmap? source = await CreateBitmapFromClipboard();
+        SKBitmap? source = await _clipboardService.GetBitmap();
 
         if (source == null)
         {
@@ -159,47 +156,5 @@ public class SelectionManager
     private bool IsSelectToolActive()
     {
         return _toolSelector.SelectedTool is ToolSelectBase;
-    }
-
-    private async Task<SKBitmap?> CreateBitmapFromClipboard()
-    {
-        var formats = await _clipboardHandle.GetFormatsAsync();
-
-        if (formats.Contains("PNG"))
-        {
-            var data = await _clipboardHandle.GetDataAsync("PNG");
-
-            if (data is byte[] array)
-            {
-                Png png = Png.Open(array);
-                return SkiaUtils.FromArray(png.GetPixelsUInt(), new Point(png.Width, png.Height));
-            }
-        }
-
-        return null;
-    }
-
-    private async Task CopySelectionAsync(BaseSelection selection)
-    {
-        var minX = selection.Pixels.Min(p => p.Position.X);
-        var minY = selection.Pixels.Min(p => p.Position.Y);
-        var maxX = selection.Pixels.Max(p => p.Position.X);
-        var maxY = selection.Pixels.Max(p => p.Position.Y);
-        int width = maxX - minX + 1;
-        int height = maxY - minY + 1;
-        var builder = PngBuilder.Create(width, height, true);
-
-        foreach (var pixel in selection.Pixels)
-        {
-            builder.SetPixel(new UniColor(pixel.Color), pixel.Position.X - minX, pixel.Position.Y - minY);
-        }
-
-        MemoryStream memoryStream = new();
-        builder.Save(memoryStream);
-        DataObject clipboardObject = new();
-        clipboardObject.Set("PNG", memoryStream.ToArray());
-        await _clipboardHandle.ClearAsync();
-        await _clipboardHandle.SetDataObjectAsync(clipboardObject);
-        memoryStream.Dispose();
     }
 }
