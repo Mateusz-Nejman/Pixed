@@ -1,11 +1,14 @@
 ﻿using Avalonia.Platform.Storage;
+using AvaloniaInside.Shell.Data;
 using Pixed.Application.Models;
 using Pixed.Application.Platform;
 using Pixed.Application.Routing;
 using Pixed.Application.Services;
 using Pixed.Application.Utils;
+using Pixed.BigGustave;
 using Pixed.Common;
 using Pixed.Core.Models;
+using SkiaSharp;
 using Svg.Skia;
 using System;
 using System.Collections.Generic;
@@ -232,6 +235,52 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
         }
         else
         {
+            _applicationData.Models.Add(model);
+        }
+
+        Subjects.ProjectAdded.OnNext(model);
+    }
+
+    public async Task Create(Png png)
+    {
+        PngProjectSerializer serializer = GetSerializer<PngProjectSerializer>();
+
+        var result = await Router.Navigate<OpenPngResult>("/openPng");
+
+        if (result.HasValue)
+        {
+            if (result.Value.IsTileset)
+            {
+                serializer.TileWidth = result.Value.TileWidth;
+                serializer.TileHeight = result.Value.TileHeight;
+            }
+        }
+        else
+        {
+            return;
+        }
+
+        PixedModel model;
+        try
+        {
+            model = serializer.Deserialize(png, _applicationData);
+        }
+        catch (Exception _)
+        {
+            await Router.Message("Opening error", "Invalid format");
+            return;
+        }
+
+        if (_applicationData.CurrentModel.IsEmpty)
+        {
+            model.FileName = _applicationData.Models[_applicationData.CurrentModelIndex].FileName;
+            model.AddHistory();
+            _applicationData.Models[_applicationData.CurrentModelIndex] = model;
+        }
+        else
+        {
+            model.FileName = _applicationData.GenerateName();
+            model.AddHistory();
             _applicationData.Models.Add(model);
         }
 
