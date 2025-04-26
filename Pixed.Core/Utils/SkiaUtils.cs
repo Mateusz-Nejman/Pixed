@@ -125,6 +125,6 @@ public static class SkiaUtils
 
     public static bool IsNull(SKBitmap? bitmap)
     {
-        return bitmap == null || bitmap.Handle == IntPtr.Zero;
+        return bitmap == null || bitmap.Handle == IntPtr.Zero || bitmap.IsNull;
     }
 }
