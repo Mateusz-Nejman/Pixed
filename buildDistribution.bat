@@ -8,6 +8,7 @@ set SOLUTION_PATH=%~dp0
 
 set ZIP_PATH=%SOLUTION_PATH%build\Dist\Pixed.%VERSION%.win_x64.zip
 set ZIP_LINUX_PATH=%SOLUTION_PATH%build\Dist\Pixed.%VERSION%.linux.zip
+set ZIP_EXPORTER_PATH=%SOLUTION_PATH%build\Dist\Pixed.Exporter.%VERSION%.win_x64.zip
 set MSI_PATH=%SOLUTION_PATH%build\Dist\Pixed.%VERSION%.win_x64.msi
 set MSIX_PATH=%SOLUTION_PATH%build\Dist\Pixed.%VERSION%.win_x64.msixbundle
 set MSIX_STORE_PATH=%SOLUTION_PATH%build\Dist\Pixed.%VERSION%.win_x64.msixupload
@@ -41,11 +42,18 @@ if exist "%ZIP_LINUX_PATH%" (
 	del "%ZIP_LINUX_PATH%"
 )
 
+if exist "%ZIP_EXPORTER_PATH%" (
+    del "%ZIP_EXPORTER_PATH%"
+)
+
 echo Deploying for Windows...
 dotnet publish Pixed.Desktop/Pixed.Desktop.csproj --framework net8.0 --runtime win-x64 --output build/Deploy-win
 
 echo Deploying for Linux...
 dotnet publish Pixed.Desktop/Pixed.Desktop.csproj --framework net8.0 --runtime linux-x64 --output build/Deploy-linux
+
+echo Deploying exporter for Windows...
+dotnet publish Pixed.Exporter/Pixed.Exporter.csproj --framework net8.0 --runtime win-x64 --output build/Deploy-exporter-win
 
 echo Compressing files for Windows...
 cd "%SOLUTION_PATH%\build\Deploy-win"
@@ -54,6 +62,10 @@ cd "%SOLUTION_PATH%\build\Deploy-win"
 echo Compressing files for Linux...
 cd "%SOLUTION_PATH%\build\Deploy-linux"
 "%SOLUTION_PATH%\7za.exe" a -x"!linux-x64/" "%ZIP_LINUX_PATH%" -mx9 -tzip
+
+echo Compressing exporter files for Windows...
+cd "%SOLUTION_PATH%\build\Deploy-exporter-win"
+"%SOLUTION_PATH%\7za.exe" a -x"!win-x64/" "%ZIP_EXPORTER_PATH%" -mx9 -tzip
 
 cd "%SOLUTION_PATH%"
 

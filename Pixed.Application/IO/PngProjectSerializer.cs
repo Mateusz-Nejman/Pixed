@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 
 namespace Pixed.Application.IO;
-internal class PngProjectSerializer : IPixedProjectSerializer
+public class PngProjectSerializer : IPixedProjectSerializer
 {
     public bool CanSerialize => true;
     public bool CanDeserialize => true;
