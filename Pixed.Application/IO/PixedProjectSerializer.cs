@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 
 namespace Pixed.Application.IO;
-internal sealed class PixedProjectSerializer : IPixedProjectSerializer
+public sealed class PixedProjectSerializer : IPixedProjectSerializer
 {
     #region LZMASettings
 
