@@ -16,6 +16,9 @@ class Program
     // yet and stuff might break.
     [STAThread]
 #if DEBUG
+    public static void Main(string[] args) => BuildAvaloniaApp()
+        .StartWithClassicDesktopLifetime(args);
+#else
     public static void Main(string[] args)
     {
         TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
@@ -38,9 +41,6 @@ class Program
     {
         File.AppendAllText("exceptions.txt", JsonConvert.SerializeObject(e) + Environment.NewLine);
     }
-#else
-    public static void Main(string[] args) => BuildAvaloniaApp()
-        .StartWithClassicDesktopLifetime(args);
 #endif
 
     // Avalonia configuration, don't remove; also used by visual designer.
