@@ -72,7 +72,7 @@ public static class SkiaUtils
 
     public static void SetPixel(this SKBitmap bitmap, Point point, uint color, int toolSize)
     {
-        if (toolSize <= 1)
+        if (toolSize <= 1 && bitmap.ContainsPixel(point))
         {
             bitmap.SetPixel(point.X, point.Y, (UniColor)color);
             return;
