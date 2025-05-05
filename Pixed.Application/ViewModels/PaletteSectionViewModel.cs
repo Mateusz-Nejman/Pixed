@@ -9,6 +9,7 @@ using Pixed.Common;
 using Pixed.Common.Menu;
 using Pixed.Common.Models;
 using Pixed.Common.Services.Palette;
+using Pixed.Common.Tools;
 using Pixed.Core;
 using Pixed.Core.Models;
 using System;
@@ -23,10 +24,10 @@ namespace Pixed.Application.ViewModels;
 internal class PaletteSectionViewModel : ExtendedViewModel, IDisposable
 {
     private readonly ApplicationData _applicationData;
-    private readonly IMenuItemRegistry _menuItemRegistry;
     private readonly PaletteService _paletteService;
     private readonly DialogUtils _dialogUtils;
     private readonly IPlatformFolder _platformFolder;
+    private readonly ToolsManager _toolsManager;
 
     private UniColor _primaryColor = UniColor.Black;
     private UniColor _secondaryColor = UniColor.White;
@@ -68,14 +69,14 @@ internal class PaletteSectionViewModel : ExtendedViewModel, IDisposable
     {
         get
         {
-            return new ObservableCollection<UniColor>(SelectedPalette.Colors.Take(256).Select(s => (UniColor)s));
+            return [.. SelectedPalette.Colors.Take(256).Select(s => (UniColor)s)];
         }
     }
     public ObservableCollection<UniColor> CurrentPaletteColors
     {
         get
         {
-            return new ObservableCollection<UniColor>(_paletteService.CurrentColorsPalette.Colors.Take(256).Select(s => (UniColor)s));
+            return [.. _paletteService.CurrentColorsPalette.Colors.Take(256).Select(s => (UniColor)s)];
         }
     }
 
@@ -86,15 +87,31 @@ internal class PaletteSectionViewModel : ExtendedViewModel, IDisposable
     public ICommand PaletteSaveCommand { get; }
     public ICommand PaletteClearCommand { get; }
 
-    public PaletteSectionViewModel(ApplicationData applicationData, IMenuItemRegistry menuItemRegistry, PaletteService paletteService, DialogUtils dialogUtils, IPlatformFolder platformFolder)
+    public PaletteSectionViewModel(ApplicationData applicationData, ToolsManager toolsManager, PaletteService paletteService, DialogUtils dialogUtils, IPlatformFolder platformFolder)
     {
         _applicationData = applicationData;
-        _menuItemRegistry = menuItemRegistry;
+        _toolsManager = toolsManager;
         _paletteService = paletteService;
         _dialogUtils = dialogUtils;
         _platformFolder = platformFolder;
-        _primaryProjectChanged = Subjects.PrimaryColorChanged.Subscribe(c => _applicationData.PrimaryColor = c);
-        _secondaryProjectChanged = Subjects.SecondaryColorChanged.Subscribe(c => _applicationData.SecondaryColor = c);
+        _primaryProjectChanged = Subjects.PrimaryColorChanged.Subscribe(c =>
+        {
+            _applicationData.PrimaryColor = c;
+
+            if(_toolsManager.SelectedTool is ToolEraser)
+            {
+                _toolsManager.SelectTool("tool_pen");
+            }
+        });
+        _secondaryProjectChanged = Subjects.SecondaryColorChanged.Subscribe(c =>
+        {
+            _applicationData.SecondaryColor = c;
+
+            if (_toolsManager.SelectedTool is ToolEraser)
+            {
+                _toolsManager.SelectTool("tool_pen");
+            }
+        });
         _primaryProjectChange = Subjects.PrimaryColorChange.Subscribe(c => PrimaryColor = c);
         _secondaryProjectChange = Subjects.SecondaryColorChange.Subscribe(c => SecondaryColor = c);
 
