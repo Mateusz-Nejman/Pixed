@@ -13,7 +13,6 @@ public abstract class ToolPenBase(ApplicationData applicationData) : BaseTool(ap
 {
     protected Point _prev = new(-1);
     private readonly List<Pixel> _pixels = [];
-    private readonly List<Point> _modifiedPoints = [];
 
     public override string ImagePath => "avares://Pixed.Application/Resources/fluent-icons/ic_fluent_pen_48_regular.svg";
     public override string Name => "Pen tool";
@@ -55,8 +54,8 @@ public abstract class ToolPenBase(ApplicationData applicationData) : BaseTool(ap
     public override void ReleaseTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
     {
         SetPixels(frame, _pixels);
+        Subjects.FrameModified.OnNext(frame);
         _pixels.Clear();
-        _modifiedPoints.Clear();
         _prev = new Point(-1);
 
         overlay.Clear();
@@ -69,20 +68,14 @@ public abstract class ToolPenBase(ApplicationData applicationData) : BaseTool(ap
         return _pixels;
     }
 
-    protected bool IsPixelModified(Point point)
-    {
-        return _modifiedPoints.Contains(point);
-    }
-
     protected void AddPixel(Point point, uint color, BaseSelection? selection)
     {
-        if (IsPixelModified(point) || (selection != null && !selection.InSelection(point)))
+        if (selection != null && !selection.InSelection(point))
         {
             return;
         }
 
         _pixels.Add(new Pixel(point, color));
-        _modifiedPoints.Add(point);
     }
 
     protected void DrawOnOverlay(UniColor color, Point point, Frame frame, ref SKBitmap overlay, BaseSelection? selection)

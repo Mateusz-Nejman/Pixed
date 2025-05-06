@@ -3,6 +3,7 @@ using Pixed.Common.Services.Keyboard;
 using Pixed.Core;
 using Pixed.Core.Models;
 using Pixed.Core.Selection;
+using Pixed.Core.Utils;
 using SkiaSharp;
 using System.Collections.Generic;
 
@@ -11,6 +12,8 @@ public class ToolLighten(ApplicationData applicationData) : ToolPenBase(applicat
 {
     private const string PROP_DARKEN = "Darken";
     private const string PROP_APPLY_ONCE = "Apply once per pixel";
+
+    private readonly List<Point> _modified = [];
 
     public override string ImagePath => "avares://Pixed.Application/Resources/fluent-icons/ic_fluent_add_subtract_circle_48_regular.svg";
     public override string Name => "Lighten tool";
@@ -30,8 +33,16 @@ public class ToolLighten(ApplicationData applicationData) : ToolPenBase(applicat
         _prev = point;
 
         var modifiedColor = GetModifierColor(point, frame, ref overlay, shiftPressed, controlPressed);
+
+        _modified.AddRange(PaintUtils.GetToolPoints(point, _applicationData.ToolSize));
         DrawOnOverlay(modifiedColor, point, frame, ref overlay, selection);
         Subjects.OverlayModified.OnNext(overlay);
+    }
+
+    public override void ReleaseTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
+    {
+        base.ReleaseTool(point, frame, ref overlay, keyState, selection);
+        _modified.Clear();
     }
 
     public override List<ToolProperty> GetToolProperties()
@@ -47,7 +58,7 @@ public class ToolLighten(ApplicationData applicationData) : ToolPenBase(applicat
         UniColor overlayColor = overlay.GetPixel(point.X, point.Y);
         UniColor frameColor = frame.GetPixel(point);
 
-        bool isPixelModified = IsPixelModified(point);
+        bool isPixelModified = _modified.Contains(point);
         var pixelColor = isPixelModified ? overlayColor : frameColor;
 
         bool isTransparent = pixelColor == UniColor.Transparent;

@@ -134,7 +134,6 @@ public abstract class BaseTool(ApplicationData applicationData)
     protected static void SetPixels(Frame frame, List<Pixel> pixels)
     {
         frame.SetPixels(pixels);
-        Subjects.FrameModified.OnNext(frame);
     }
 
     protected static void SetPixels(Layer layer, List<Pixel> pixels)
