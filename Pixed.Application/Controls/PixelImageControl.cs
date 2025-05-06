@@ -106,7 +106,7 @@ internal class PixelImageControl : Control
             context.DrawImage(_image, sourceRect, destRect);
         }
 
-        Dispatcher.UIThread.Post(InvalidateVisual, DispatcherPriority.Input);
+        Dispatcher.UIThread.Post(InvalidateVisual, DispatcherPriority.Background);
     }
 
     /// <summary>
