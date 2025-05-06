@@ -13,13 +13,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-	<PackageReference Include="Avalonia" Version="11.2.3" />
-	<PackageReference Include="Avalonia.ReactiveUI" Version="11.2.3" />
-	<PackageReference Include="Avalonia.Skia" Version="11.2.3" />
+	<PackageReference Include="Avalonia" Version="11.3.0" />
+	<PackageReference Include="Avalonia.ReactiveUI" Version="11.3.0" />
+	<PackageReference Include="Avalonia.Skia" Version="11.3.0" />
     <PackageReference Include="MateuszNejman.LZMA_SDK" Version="24.8.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="SkiaSharp" Version="3.116.1" />
+    <PackageReference Include="SkiaSharp" Version="3.119.0" />
     <PackageReference Include="System.Reactive" Version="6.0.1" />
   </ItemGroup>
 
