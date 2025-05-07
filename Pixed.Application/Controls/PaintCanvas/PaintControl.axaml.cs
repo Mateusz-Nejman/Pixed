@@ -9,13 +9,13 @@ using Pixed.Common.Input;
 using Pixed.Core.Models;
 using System;
 
-namespace Pixed.Application.Controls;
+namespace Pixed.Application.Controls.PaintCanvas;
 
-internal partial class PaintCanvas : ExtendedControl<PaintCanvasViewModel>
+internal partial class PaintControl : ExtendedControl<PaintControlViewModel>
 {
     private readonly int _scrollBarSize = 18;
     private readonly IDisposable _zoomChanged;
-    public PaintCanvas() : base()
+    public PaintControl() : base()
     {
         InitializeComponent();
         SizeChanged += PaintCanvas_SizeChanged;

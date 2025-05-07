@@ -7,22 +7,22 @@ using Avalonia.Metadata;
 using Pixed.Core.Models;
 using SkiaSharp;
 
-namespace Pixed.Application.Controls;
+namespace Pixed.Application.Controls.PaintCanvas;
 
-internal class PaintCanvasImageControl : Control
+internal class PaintContainer : Control
 {
     /// <summary>
     /// Defines the <see cref="Source"/> property.
     /// </summary>
     public static readonly StyledProperty<PixelImage?> SourceProperty =
-        AvaloniaProperty.Register<PaintCanvasImageControl, PixelImage?>(nameof(Source));
+        AvaloniaProperty.Register<PaintContainer, PixelImage?>(nameof(Source));
 
 
-    static PaintCanvasImageControl()
+    static PaintContainer()
     {
-        AffectsRender<PaintCanvasImageControl>(SourceProperty);
-        AffectsMeasure<PaintCanvasImageControl>(SourceProperty);
-        AutomationProperties.ControlTypeOverrideProperty.OverrideDefaultValue<PaintCanvasImageControl>(AutomationControlType.Image);
+        AffectsRender<PaintContainer>(SourceProperty);
+        AffectsMeasure<PaintContainer>(SourceProperty);
+        AutomationProperties.ControlTypeOverrideProperty.OverrideDefaultValue<PaintContainer>(AutomationControlType.Image);
     }
 
     private readonly PixelDrawOperation _image = new();

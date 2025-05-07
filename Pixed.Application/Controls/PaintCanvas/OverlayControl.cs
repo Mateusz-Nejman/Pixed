@@ -8,7 +8,7 @@ using Avalonia.Threading;
 using Pixed.Application.Zoom;
 using SkiaSharp;
 
-namespace Pixed.Application.Controls;
+namespace Pixed.Application.Controls.PaintCanvas;
 internal abstract class OverlayControl : Control
 {
     class DrawOperation(Rect bounds, OverlayControl instance) : ICustomDrawOperation

@@ -7,7 +7,7 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 
-namespace Pixed.Application.Controls;
+namespace Pixed.Application.Controls.PaintCanvas;
 internal class SelectionOverlay : OverlayControl
 {
     private List<Tuple<SKPoint, SKPoint>> _lines = [];

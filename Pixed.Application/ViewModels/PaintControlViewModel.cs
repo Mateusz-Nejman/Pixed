@@ -2,6 +2,7 @@
 using Avalonia.Media;
 using Avalonia.Platform;
 using Pixed.Application.Controls;
+using Pixed.Application.Controls.PaintCanvas;
 using Pixed.Application.Input;
 using Pixed.Application.Menu;
 using Pixed.Application.Models;
@@ -20,7 +21,7 @@ using Frame = Pixed.Core.Models.Frame;
 
 namespace Pixed.Application.ViewModels;
 
-internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
+internal class PaintControlViewModel : ExtendedViewModel, IDisposable
 {
     private readonly ApplicationData _applicationData;
     private readonly ToolsManager _toolSelector;
@@ -191,7 +192,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
 
     public string ZoomText { get; set; }
     public ZoomControl ZoomContainer { get; set; }
-    public ImageGrid GridCanvas { get; set; }
+    public GridOverlay GridCanvas { get; set; }
     public SelectionOverlay SelectionOverlay { get; set; }
     public TransparentBackground TransparentBackground { get; set; }
     public ImageBrush TransparentBrush
@@ -234,7 +235,7 @@ internal class PaintCanvasViewModel : ExtendedViewModel, IDisposable
         }
     }
 
-    public PaintCanvasViewModel(ApplicationData applicationData, ToolsManager toolSelector, ToolMoveCanvas toolMoveCanvas, SelectionManager selectionManager, 
+    public PaintControlViewModel(ApplicationData applicationData, ToolsManager toolSelector, ToolMoveCanvas toolMoveCanvas, SelectionManager selectionManager, 
         FramesSectionViewModel framesSectionViewModel, PropertiesSectionViewModel propertiesSectionViewModel, SelectionMenu selectionMenu)
     {
         _applicationData = applicationData;

@@ -3,7 +3,7 @@ using Pixed.Application.Utils;
 using Pixed.Core;
 using SkiaSharp;
 
-namespace Pixed.Application.Controls;
+namespace Pixed.Application.Controls.PaintCanvas;
 internal class TransparentBackground : OverlayControl
 {
     private readonly SKBitmap _transparentBackground;

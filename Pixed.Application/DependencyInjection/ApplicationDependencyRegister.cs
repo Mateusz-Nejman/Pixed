@@ -19,7 +19,7 @@ internal class ApplicationDependencyRegister : IDependencyRegister
         collection.AddSingleton<FramesSectionViewModel>();
         collection.AddSingleton<LayersSectionViewModel>();
         collection.AddSingleton<MainViewModel>();
-        collection.AddSingleton<PaintCanvasViewModel>();
+        collection.AddSingleton<PaintControlViewModel>();
         collection.AddSingleton<PaletteSectionViewModel>();
         collection.AddSingleton<ProjectsSectionViewModel>();
         collection.AddSingleton<PropertiesSectionViewModel>();
