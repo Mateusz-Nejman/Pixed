@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Metadata;
 using Pixed.Core.Models;
+using SkiaSharp;
 
 namespace Pixed.Application.Controls;
 
@@ -16,24 +17,11 @@ internal class PaintCanvasImageControl : Control
     public static readonly StyledProperty<PixelImage?> SourceProperty =
         AvaloniaProperty.Register<PaintCanvasImageControl, PixelImage?>(nameof(Source));
 
-    /// <summary>
-    /// Defines the <see cref="Stretch"/> property.
-    /// </summary>
-    public static readonly StyledProperty<Stretch> StretchProperty =
-        AvaloniaProperty.Register<PaintCanvasImageControl, Stretch>(nameof(Stretch), Stretch.Uniform);
-
-    /// <summary>
-    /// Defines the <see cref="StretchDirection"/> property.
-    /// </summary>
-    public static readonly StyledProperty<StretchDirection> StretchDirectionProperty =
-        AvaloniaProperty.Register<PaintCanvasImageControl, StretchDirection>(
-            nameof(StretchDirection),
-            StretchDirection.Both);
 
     static PaintCanvasImageControl()
     {
-        AffectsRender<PaintCanvasImageControl>(SourceProperty, StretchProperty, StretchDirectionProperty);
-        AffectsMeasure<PaintCanvasImageControl>(SourceProperty, StretchProperty, StretchDirectionProperty);
+        AffectsRender<PaintCanvasImageControl>(SourceProperty);
+        AffectsMeasure<PaintCanvasImageControl>(SourceProperty);
         AutomationProperties.ControlTypeOverrideProperty.OverrideDefaultValue<PaintCanvasImageControl>(AutomationControlType.Image);
     }
 
@@ -47,24 +35,6 @@ internal class PaintCanvasImageControl : Control
     {
         get => GetValue(SourceProperty);
         set => SetValue(SourceProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets a value controlling how the image will be stretched.
-    /// </summary>
-    public Stretch Stretch
-    {
-        get => GetValue(StretchProperty);
-        set => SetValue(StretchProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets a value controlling in what direction the image will be stretched.
-    /// </summary>
-    public StretchDirection StretchDirection
-    {
-        get => GetValue(StretchDirectionProperty);
-        set => SetValue(StretchDirectionProperty, value);
     }
 
     /// <inheritdoc />
@@ -110,7 +80,7 @@ internal class PaintCanvasImageControl : Control
 
         if (source != null)
         {
-            result = Stretch.CalculateSize(availableSize, new Size(source.Width, source.Height), StretchDirection);
+            result = Stretch.Uniform.CalculateSize(availableSize, new Size(source.Width, source.Height), StretchDirection.Both);
         }
 
         return result;
@@ -119,17 +89,13 @@ internal class PaintCanvasImageControl : Control
     /// <inheritdoc/>
     protected override Size ArrangeOverride(Size finalSize)
     {
-        var source = Source?.Render();
-
-        if (source != null)
+        if (Source?.Render() is SKBitmap source)
         {
             var sourceSize = new Size(source.Width, source.Height);
-            var result = Stretch.CalculateSize(finalSize, sourceSize);
+            var result = Stretch.Uniform.CalculateSize(finalSize, sourceSize);
             return result;
         }
-        else
-        {
-            return new Size();
-        }
+
+        return new Size();
     }
 }
