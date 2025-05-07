@@ -11,7 +11,7 @@ internal class TransparentBackground : OverlayControl
     private readonly SKPaint _paint;
     public TransparentBackground()
     {
-        ClipToBounds = true;
+        ClipToBounds = false;
         _transparentBackground = CreateTransparentBackground();
         _shader = SKShader.CreateBitmap(_transparentBackground, SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
         _paint = new SKPaint()

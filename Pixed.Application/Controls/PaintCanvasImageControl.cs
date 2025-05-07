@@ -4,7 +4,6 @@ using Avalonia.Automation.Peers;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Metadata;
-using Avalonia.Threading;
 using Pixed.Core.Models;
 
 namespace Pixed.Application.Controls;
@@ -97,8 +96,6 @@ internal class PaintCanvasImageControl : Control
             _image.Bounds = sourceRect;
             context.DrawImage(_image, sourceRect, sourceRect);
         }
-
-        Dispatcher.UIThread.Post(InvalidateVisual, DispatcherPriority.Background);
     }
 
     /// <summary>
