@@ -1,4 +1,5 @@
 ﻿using Avalonia;
+using Pixed.Core.Models;
 using Pixed.Core.Utils;
 using SkiaSharp;
 using System.Runtime.InteropServices;
@@ -9,6 +10,17 @@ public static class SkiaUtils
 {
     private static readonly object _lock = new();
 
+    public static void DrawPixels(this SKCanvas canvas, List<Pixel> pixels)
+    {
+        var colors = pixels.Select(p => p.Color).Distinct();
+
+        foreach(var color in colors)
+        {
+            SKPaint paint = new() { Color = color, Style = SKPaintStyle.Fill };
+            var points = pixels.Where(p => p.Color == color).Select(p => new SKPoint(p.Position.X + 0.5f, p.Position.Y + 0.5f)).ToArray();
+            canvas.DrawPoints(SKPointMode.Points, points, paint);
+        }
+    }
     public static void DrawBitmapLock(this SKCanvas canvas, SKBitmap bitmap, Rect rect)
     {
         DrawBitmapLock(canvas, bitmap, SKRect.Create((float)rect.X, (float)rect.Y, (float)rect.Width, (float)rect.Height));

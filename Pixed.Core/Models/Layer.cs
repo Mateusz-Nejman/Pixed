@@ -84,6 +84,11 @@ public class Layer : PixelImage, IPixedSerializer, IDisposable
         return GetPixels().Distinct().ToArray();
     }
 
+    public SKCanvas GetCanvas()
+    {
+        return new SKCanvas(_bitmap);
+    }
+
     [Obsolete]
     public void SetPixel(Point point, uint color)
     {
@@ -124,7 +129,7 @@ public class Layer : PixelImage, IPixedSerializer, IDisposable
     {
         if(Opacity == 100)
         {
-            return _bitmap;
+            return _bitmap.Copy();
         }
 
         byte newAlpha = (byte)((Opacity / 100d) * 255d);
@@ -133,6 +138,7 @@ public class Layer : PixelImage, IPixedSerializer, IDisposable
         SKCanvas canvas = new(opacityBitmap);
         canvas.DrawBitmap(_bitmap, SKPoint.Empty, paint);
         canvas.Dispose();
+        paint.Dispose();
 
         return opacityBitmap;
     }

@@ -1,4 +1,6 @@
-﻿namespace Pixed.Core.Models;
+﻿using SkiaSharp;
+
+namespace Pixed.Core.Models;
 public struct Point(int x, int y) : IEquatable<Point>
 {
     public int X { readonly get; set; } = x;
@@ -10,6 +12,11 @@ public struct Point(int x, int y) : IEquatable<Point>
 
     public Point(int value) : this(value, value)
     {
+    }
+
+    public readonly SKPoint ToSKPoint()
+    {
+        return new SKPoint(X + 0.5f, Y + 0.5f);
     }
 
     public static Point operator -(Point a)

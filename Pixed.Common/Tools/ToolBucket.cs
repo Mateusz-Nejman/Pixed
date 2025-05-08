@@ -10,6 +10,8 @@ using System.Linq;
 namespace Pixed.Common.Tools;
 public class ToolBucket(ApplicationData applicationData) : BaseTool(applicationData)
 {
+    private SKCanvas? _canvas = null;
+
     private const string PROP_REPLACE = "Replace color in current layer";
     public override string ImagePath => "avares://Pixed.Application/Resources/fluent-icons/ic_fluent_paint_bucket_24_regular.svg";
     public override string Name => "Paint bucket tool";
@@ -19,6 +21,7 @@ public class ToolBucket(ApplicationData applicationData) : BaseTool(applicationD
     public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
     {
         ApplyToolBase(point, frame, ref overlay, keyState, selection);
+        _canvas = frame.GetCanvas();
         uint color = ToolColor;
         uint targetColor = frame.GetPixel(point);
 
@@ -57,13 +60,20 @@ public class ToolBucket(ApplicationData applicationData) : BaseTool(applicationD
                 }
             }
 
-            SetPixels(frame, pixels);
+            _canvas.DrawPixels(pixels);
         }
         else
         {
             PaintUtils.PaintSimiliarConnected(frame.CurrentLayer, point, color, selection);
         }
         Subjects.FrameModified.OnNext(frame);
+    }
+
+    public override void ReleaseTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
+    {
+        base.ReleaseTool(point, frame, ref overlay, keyState, selection);
+        _canvas?.Dispose();
+        _canvas = null;
     }
 
     public override List<ToolProperty> GetToolProperties()

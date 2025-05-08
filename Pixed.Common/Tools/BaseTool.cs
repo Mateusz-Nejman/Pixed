@@ -6,6 +6,7 @@ using Pixed.Core.Models;
 using Pixed.Core.Selection;
 using Pixed.Core.Utils;
 using SkiaSharp;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -131,6 +132,7 @@ public abstract class BaseTool(ApplicationData applicationData)
         _properties[index].Checked = value;
     }
 
+    [Obsolete]
     protected static void SetPixels(Frame frame, List<Pixel> pixels)
     {
         frame.SetPixels(pixels);

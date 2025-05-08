@@ -62,6 +62,11 @@ public class Frame : PixelImage, IPixedSerializer
         return frame;
     }
 
+    public SKCanvas GetCanvas()
+    {
+        return CurrentLayer.GetCanvas();
+    }
+
     public void SetPixel(Point point, uint color)
     {
         CurrentLayer.SetPixel(point, color);
@@ -120,6 +125,8 @@ public class Frame : PixelImage, IPixedSerializer
                 {
                     canvas.DrawBitmap(bitmap, new SKPoint(0, 0));
                 }
+
+                bitmap.Dispose();
             }
             canvas.Dispose();
             return render;

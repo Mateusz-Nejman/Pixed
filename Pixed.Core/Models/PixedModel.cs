@@ -107,6 +107,7 @@ public class PixedModel : PixelImage, IPixedSerializer
 
     public void AddHistory(bool setIsEmpty = true)
     {
+        return;
         _historyIndex = Math.Clamp(_historyIndex, 0, _history.Count);
         MemoryStream stream = new();
         Serialize(stream);

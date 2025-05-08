@@ -3,14 +3,15 @@ using Pixed.Common.Services.Keyboard;
 using Pixed.Core;
 using Pixed.Core.Models;
 using Pixed.Core.Selection;
-using Pixed.Core.Utils;
 using SkiaSharp;
+using System;
 using System.Collections.Generic;
 
 namespace Pixed.Common.Tools;
 public class ToolLighten(ApplicationData applicationData) : ToolPenBase(applicationData)
 {
     private const string PROP_DARKEN = "Darken";
+    [Obsolete("Will be removed layet and used by default")]
     private const string PROP_APPLY_ONCE = "Apply once per pixel";
 
     private readonly List<Point> _modified = [];
@@ -31,12 +32,14 @@ public class ToolLighten(ApplicationData applicationData) : ToolPenBase(applicat
         }
 
         _prev = point;
+        bool canModify = !shiftPressed || !_modified.Contains(point);
 
-        var modifiedColor = GetModifierColor(point, frame, ref overlay, shiftPressed, controlPressed);
-
-        _modified.AddRange(PaintUtils.GetToolPoints(point, _applicationData.ToolSize));
-        DrawOnOverlay(modifiedColor, point, frame, ref overlay, selection);
-        Subjects.OverlayModified.OnNext(overlay);
+        if(canModify)
+        {
+            _canvas ??= frame.GetCanvas();
+            var modifiedColor = GetModifierColor(point, frame, ref overlay, shiftPressed, controlPressed);
+            _modified.AddRange(DrawOnCanvas(modifiedColor, point, _canvas, selection));
+        }
     }
 
     public override void ReleaseTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
@@ -53,7 +56,7 @@ public class ToolLighten(ApplicationData applicationData) : ToolPenBase(applicat
         ];
     }
 
-    private int GetModifierColor(Point point, Frame frame, ref SKBitmap overlay, bool oncePerPixel, bool isDarken)
+    private UniColor GetModifierColor(Point point, Frame frame, ref SKBitmap overlay, bool oncePerPixel, bool isDarken)
     {
         UniColor overlayColor = overlay.GetPixel(point.X, point.Y);
         UniColor frameColor = frame.GetPixel(point);
