@@ -4,6 +4,7 @@ using Avalonia.Automation.Peers;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Metadata;
+using Avalonia.Threading;
 using Pixed.Core.Models;
 using SkiaSharp;
 
@@ -25,7 +26,7 @@ internal class PaintContainer : Control
         AutomationProperties.ControlTypeOverrideProperty.OverrideDefaultValue<PaintContainer>(AutomationControlType.Image);
     }
 
-    private readonly PixelDrawOperation _image = new();
+    private readonly PaintContainerOperation _image = new();
 
     /// <summary>
     /// Gets or sets the image that will be displayed.
@@ -51,21 +52,13 @@ internal class PaintContainer : Control
             return;
         }
 
-        var source = Source.Render();
-
-        if (source == null)
-        {
-            return;
-        }
         _image.UpdateBitmap(Source);
 
-        if (source != null)
-        {
-            Size sourceSize = new(source.Width, source.Height);
-            Rect sourceRect = new(sourceSize);
-            _image.Bounds = sourceRect;
-            context.DrawImage(_image, sourceRect, sourceRect);
-        }
+        Size sourceSize = new(Source.Width, Source.Height);
+        Rect sourceRect = new(sourceSize);
+        _image.Bounds = sourceRect;
+        context.DrawImage(_image, sourceRect, sourceRect);
+        Dispatcher.UIThread.Post(InvalidateVisual, DispatcherPriority.Background);
     }
 
     /// <summary>
@@ -75,12 +68,11 @@ internal class PaintContainer : Control
     /// <returns>The desired size of the control.</returns>
     protected override Size MeasureOverride(Size availableSize)
     {
-        var source = Source?.Render();
         var result = new Size();
 
-        if (source != null)
+        if (Source != null)
         {
-            result = Stretch.Uniform.CalculateSize(availableSize, new Size(source.Width, source.Height), StretchDirection.Both);
+            result = Stretch.Uniform.CalculateSize(availableSize, new Size(Source.Width, Source.Height), StretchDirection.Both);
         }
 
         return result;
@@ -89,9 +81,9 @@ internal class PaintContainer : Control
     /// <inheritdoc/>
     protected override Size ArrangeOverride(Size finalSize)
     {
-        if (Source?.Render() is SKBitmap source)
+        if (Source != null)
         {
-            var sourceSize = new Size(source.Width, source.Height);
+            var sourceSize = new Size(Source.Width, Source.Height);
             var result = Stretch.Uniform.CalculateSize(finalSize, sourceSize);
             return result;
         }

@@ -3,18 +3,26 @@ using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
+using Pixed.Application.Zoom;
+using Pixed.Common;
+using Pixed.Common.Tools;
 using Pixed.Core.Models;
 using Pixed.Core.Utils;
 using SkiaSharp;
+using System;
 
-namespace Pixed.Application.Controls;
+namespace Pixed.Application.Controls.PaintCanvas;
 
-public class PixelDrawOperation : IImage, ICustomDrawOperation
+public class PaintContainerOperation : IImage, ICustomDrawOperation
 {
     private PixelImage? _source;
     private Size _size;
     private string _currentId = string.Empty;
     private SKBitmap? _currentBitmap = null;
+    private readonly IDisposable _toolChanged;
+    private readonly IDisposable _zoomChanged;
+    private BaseTool? _tool;
+    private double _zoom;
 
     public Size Size => _size;
 
@@ -22,11 +30,13 @@ public class PixelDrawOperation : IImage, ICustomDrawOperation
 
     public PixelImage? Source => _source;
 
-    public PixelDrawOperation() : this(null)
+    public PaintContainerOperation() : this(null)
     {
     }
-    public PixelDrawOperation(PixelImage? source)
+    public PaintContainerOperation(PixelImage? source)
     {
+        _toolChanged = Subjects.ToolChanged.Subscribe(p => _tool = p.Current);
+        _zoomChanged = ZoomControl.ZoomChanged.Subscribe(e => _zoom = e.Zoom);
         UpdateBitmap(source);
     }
 
@@ -58,7 +68,7 @@ public class PixelDrawOperation : IImage, ICustomDrawOperation
             {
                 if (Source.RenderId != _currentId || SkiaUtils.IsNull(_currentBitmap))
                 {
-                    if(!SkiaUtils.IsNull(_currentBitmap))
+                    if (!SkiaUtils.IsNull(_currentBitmap))
                     {
                         _currentBitmap.Dispose();
                         _currentBitmap = null;
@@ -72,11 +82,15 @@ public class PixelDrawOperation : IImage, ICustomDrawOperation
                 {
                     lease.SkCanvas.DrawBitmapLock(_currentBitmap, Bounds);
                 }
+
+                _tool?.OnOverlay(lease.SkCanvas, _zoom);
             }
         }
     }
 
     public void Dispose()
     {
+        _toolChanged?.Dispose();
+        _zoomChanged?.Dispose();
     }
 }

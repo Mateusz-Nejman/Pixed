@@ -12,8 +12,8 @@ public class Frame : PixelImage, IPixedSerializer
     private readonly string _id;
     private static readonly object _lock = new();
 
-    public int Width => Layers[0].Width;
-    public int Height => Layers[0].Height;
+    public override int Width => Layers[0].Width;
+    public override int Height => Layers[0].Height;
     public Layer CurrentLayer => Layers[SelectedLayer];
     public int SelectedLayer
     {

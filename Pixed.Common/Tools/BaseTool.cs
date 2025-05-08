@@ -63,6 +63,11 @@ public abstract class BaseTool(ApplicationData applicationData)
         ReleaseToolBase(point, frame, ref overlay, keyState, selection);
     }
 
+    public virtual void OnOverlay(SKCanvas canvas, double zoom)
+    {
+
+    }
+
     public virtual void Reset()
     {
 

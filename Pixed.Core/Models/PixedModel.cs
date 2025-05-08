@@ -29,8 +29,8 @@ public class PixedModel : PixelImage, IPixedSerializer
     }
 
     public ObservableCollection<Frame> Frames => _frames;
-    public int Width => Frames[0].Width;
-    public int Height => Frames[0].Height;
+    public override int Width => Frames[0].Width;
+    public override int Height => Frames[0].Height;
 
     public Frame CurrentFrame => Frames[_currentFrameIndex];
 

@@ -6,6 +6,8 @@ using Avalonia.Media;
 using Avalonia.Metadata;
 using Avalonia.Threading;
 using Pixed.Core.Models;
+using Pixed.Core.Utils;
+using SkiaSharp;
 
 namespace Pixed.Application.Controls;
 internal class PixelImageControl : Control
@@ -38,6 +40,8 @@ internal class PixelImageControl : Control
     }
 
     private readonly PixelDrawOperation _image = new();
+    private string _currentId = string.Empty;
+    private SKBitmap? _currentBitmap = null;
 
     /// <summary>
     /// Gets or sets the image that will be displayed.
@@ -81,18 +85,12 @@ internal class PixelImageControl : Control
             return;
         }
 
-        var source = Source.Render();
-
-        if (source == null)
-        {
-            return;
-        }
         _image.UpdateBitmap(Source);
 
-        if (source != null && Bounds.Width > 0 && Bounds.Height > 0)
+        if (_currentBitmap != null && Bounds.Width > 0 && Bounds.Height > 0)
         {
             Rect viewPort = new(Bounds.Size);
-            Size sourceSize = new(source.Width, source.Height);
+            Size sourceSize = new(_currentBitmap.Width, _currentBitmap.Height);
 
             Vector scale = Stretch.CalculateScaling(Bounds.Size, sourceSize, StretchDirection);
             Size scaledSize = sourceSize * scale;
@@ -116,12 +114,11 @@ internal class PixelImageControl : Control
     /// <returns>The desired size of the control.</returns>
     protected override Size MeasureOverride(Size availableSize)
     {
-        var source = Source?.Render();
         var result = new Size();
 
-        if (source != null)
+        if (Source != null)
         {
-            result = Stretch.CalculateSize(availableSize, new Size(source.Width, source.Height), StretchDirection);
+            result = Stretch.CalculateSize(availableSize, new Size(Source.Width, Source.Height), StretchDirection);
         }
 
         return result;
@@ -130,11 +127,9 @@ internal class PixelImageControl : Control
     /// <inheritdoc/>
     protected override Size ArrangeOverride(Size finalSize)
     {
-        var source = Source?.Render();
-
-        if (source != null)
+        if (Source != null)
         {
-            var sourceSize = new Size(source.Width, source.Height);
+            var sourceSize = new Size(Source.Width, Source.Height);
             var result = Stretch.CalculateSize(finalSize, sourceSize);
             return result;
         }

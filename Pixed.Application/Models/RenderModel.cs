@@ -8,6 +8,18 @@ internal class RenderModel : PixelImage
     private Frame? _frame;
     private SKBitmap? _overlay;
 
+    public override int Width => _frame?.Width ?? 0;
+    public override int Height => _frame?.Height ?? 0;
+
+    public override string RenderId 
+    { 
+        get => _frame.RenderId;
+        set
+        {
+            _frame.RenderId = value;
+        }
+    }
+
     public Frame? Frame
     {
         get => _frame;

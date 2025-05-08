@@ -54,6 +54,8 @@ public abstract class ToolPenBase(ApplicationData applicationData) : BaseTool(ap
     {
         _canvas?.Dispose();
         _canvas = null;
+        frame.ResetID();
+        _points.Clear();
 
         Subjects.FrameModified.OnNext(frame);
         _prev = new Point(-1);
@@ -61,6 +63,11 @@ public abstract class ToolPenBase(ApplicationData applicationData) : BaseTool(ap
         overlay.Clear();
         Subjects.OverlayModified.OnNext(overlay);
         ReleaseToolBase(point, frame, ref overlay, keyState, selection);
+    }
+
+    public override void OnOverlay(SKCanvas canvas, double zoom)
+    {
+        canvas.DrawPoints(SKPointMode.Points, [.. _points], new SKPaint() { Color = ToolColor, StrokeWidth = (float)(1d / zoom) });
     }
 
     protected List<Point> DrawOnCanvas(UniColor color, Point point, SKCanvas canvas, BaseSelection? selection)

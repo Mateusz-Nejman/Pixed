@@ -34,8 +34,8 @@ public class Layer : PixelImage, IPixedSerializer, IDisposable
     }
 
     public string Id => _id;
-    public int Width => _width;
-    public int Height => _height;
+    public override int Width => _width;
+    public override int Height => _height;
     public ICommand? ChangeOpacityCommand { get; }
 
     public static Func<Layer, Task> ChangeOpacityAction { get; set; }
