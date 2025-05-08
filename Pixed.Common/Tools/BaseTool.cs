@@ -73,8 +73,10 @@ public abstract class BaseTool(ApplicationData applicationData)
 
     }
 
+    [Obsolete]
     public virtual void UpdateHighlightedPixel(Point point, Frame frame, ref SKBitmap overlay, BaseSelection? selection)
     {
+        return; //TODO Replace
         overlay ??= new SKBitmap(frame.Width, frame.Height, true);
 
         if (_highlightedPoint != point)
