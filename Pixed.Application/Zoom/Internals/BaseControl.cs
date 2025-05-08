@@ -6,6 +6,7 @@ using Avalonia.Input;
 using Avalonia.Media.Transformation;
 using Avalonia.VisualTree;
 using Pixed.Application.Controls;
+using Pixed.Application.Controls.PaintCanvas;
 using System;
 using System.Linq;
 using System.Reactive;

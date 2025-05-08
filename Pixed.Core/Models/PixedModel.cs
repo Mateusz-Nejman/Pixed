@@ -11,7 +11,7 @@ public class PixedModel : PixelImage, IPixedSerializer
     private readonly ApplicationData _applicationData;
     private const int MAX_HISTORY_ENTRIES = 500;
     private readonly ObservableCollection<Frame> _frames;
-    private readonly ObservableCollection<byte[]> _history;
+    private readonly ObservableCollection<byte[]> _history; //TODO write to file instead of storing in memory
     private int _historyIndex = 0;
     private int _currentFrameIndex = 0;
     private bool _isEmpty = true;

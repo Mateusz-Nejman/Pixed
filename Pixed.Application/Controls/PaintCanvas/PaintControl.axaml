@@ -1,16 +1,16 @@
-﻿<UserControl x:Class="Pixed.Application.Controls.PaintCanvas"
+﻿<UserControl x:Class="Pixed.Application.Controls.PaintCanvas.PaintControl"
              xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Pixed.Application.Controls"
-			 xmlns:controls="clr-namespace:Pixed.Application.Controls"
+			 xmlns:paintCanvas="clr-namespace:Pixed.Application.Controls.PaintCanvas"
 			 xmlns:gestures="clr-namespace:Pixed.Application.Controls.Gestures"
              xmlns:viewmodels="clr-namespace:Pixed.Application.ViewModels"
 			 xmlns:zoom="clr-namespace:Pixed.Application.Zoom"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
-			 x:DataType="viewmodels:PaintCanvasViewModel">
+			 x:DataType="viewmodels:PaintControlViewModel">
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="*"/>
@@ -24,10 +24,10 @@
         <Border BorderBrush="{StaticResource ButtonBorder}" BorderThickness="2 0 2 2">
           <zoom:ZoomControl Name="zoomControl" GesturesEnabled="{Binding GestureZoomEnabled, Mode=TwoWay}" ZoomWidth="{Binding GridWidth, Mode=TwoWay}" ZoomHeight="{Binding GridHeight, Mode=TwoWay}">
             <zoom:ZoomControl.ZoomContent>
-              <controls:TransparentBackground IsHitTestVisible="False" Width="{Binding ScaledGridWidth}" Height="{Binding ScaledGridHeight}" Name="transparentBackground"/>
-              <controls:PaintCanvasImageControl Name="image" RenderOptions.BitmapInterpolationMode="None" Source="{Binding RenderModel}"/>
-              <controls:ImageGrid Width="{Binding ScaledGridWidth}" Height="{Binding ScaledGridHeight}" Name="gridCanvas" IsHitTestVisible="False"/>
-              <controls:SelectionOverlay Width="{Binding ScaledGridWidth}" Height="{Binding ScaledGridHeight}" Name="selectionOverlay" IsHitTestVisible="False"/>
+              <paintCanvas:TransparentBackground IsHitTestVisible="False" Width="{Binding ScaledGridWidth}" Height="{Binding ScaledGridHeight}" Name="transparentBackground"/>
+              <paintCanvas:PaintContainer Name="image" RenderOptions.BitmapInterpolationMode="None" Source="{Binding RenderModel}"/>
+              <paintCanvas:GridOverlay Width="{Binding ScaledGridWidth}" Height="{Binding ScaledGridHeight}" Name="gridCanvas" IsHitTestVisible="False"/>
+              <paintCanvas:SelectionOverlay Width="{Binding ScaledGridWidth}" Height="{Binding ScaledGridHeight}" Name="selectionOverlay" IsHitTestVisible="False"/>
             </zoom:ZoomControl.ZoomContent>
           </zoom:ZoomControl>
         </Border>

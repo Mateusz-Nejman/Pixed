@@ -77,20 +77,31 @@ public static class SkiaUtils
             bitmap.SetPixel(point.X, point.Y, (UniColor)color);
             return;
         }
-        for (int y = 0; y < toolSize; y++)
+
+        SKCanvas canvas = new(bitmap);
+
+        if(toolSize == 1)
         {
-            for (int x = 0; x < toolSize; x++)
-            {
-                Point toolPoint = new(point.X - (int)Math.Floor(toolSize / 2.0d) + x, point.Y - (int)Math.Floor(toolSize / 2.0d) + y);
-
-                if (!bitmap.ContainsPixel(toolPoint))
-                {
-                    continue;
-                }
-
-                bitmap.SetPixel(toolPoint.X, toolPoint.Y, (UniColor)color);
-            }
+            canvas.DrawPoint(point.X, point.Y, (UniColor)color);
         }
+        else
+        {
+            var points = PaintUtils.GetToolPoints(point, toolSize);
+            var minX = points.Min(p => p.X);
+            var minY = points.Min(p => p.Y);
+            var maxX = points.Max(p => p.X);
+            var maxY = points.Max(p => p.Y);
+
+            SKRect rect = new(minX, minY, maxX + 1, maxY + 1);
+            SKPaint paint = new()
+            {
+                Color = color,
+                Style = SKPaintStyle.Fill
+            };
+            canvas.DrawRect(rect, paint);
+        }
+
+        canvas.Dispose();
     }
 
     public static void DrawLine(this SKCanvas canvas, SKPoint p0, SKPoint p1, UniColor color)

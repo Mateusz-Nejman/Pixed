@@ -5,11 +5,11 @@ using SkiaSharp;
 using System;
 
 
-namespace Pixed.Application.Controls;
-internal class ImageGrid : OverlayControl
+namespace Pixed.Application.Controls.PaintCanvas;
+internal class GridOverlay : OverlayControl
 {
     public const int MinGridSize = 15;
-    public ImageGrid()
+    public GridOverlay()
     {
         ClipToBounds = false;
     }

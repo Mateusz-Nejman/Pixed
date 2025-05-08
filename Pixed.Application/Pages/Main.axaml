@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pixed"
-        xmlns:controls="clr-namespace:Pixed.Application.Controls"
+        xmlns:paintCanvas="clr-namespace:Pixed.Application.Controls.PaintCanvas"
         xmlns:mainsections="clr-namespace:Pixed.Application.Controls.MainWindowSections"
         xmlns:dd="urn:gong-wpf-dragdrop"
         xmlns:viewmodels="clr-namespace:Pixed.Application.ViewModels"
@@ -35,7 +35,7 @@
 					<RowDefinition Height="*"/>
 				</Grid.RowDefinitions>
 				<mainsections:ProjectsSection/>
-				<controls:PaintCanvas Grid.Row="1" x:Name="paintCanvas"/>
+        <paintCanvas:PaintControl Grid.Row="1" x:Name="paintCanvas"/>
 			</Grid>
 			<mainsections:PropertiesSection Grid.Column="2" Width="242"/>
 		</Grid>

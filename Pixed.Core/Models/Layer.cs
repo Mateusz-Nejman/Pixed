@@ -130,7 +130,7 @@ public class Layer : PixelImage, IPixedSerializer
 
             if (ModifiedPixels.Count > 0)
             {
-                List<Pixel> modified = new List<Pixel>(ModifiedPixels);
+                List<Pixel> modified = new(ModifiedPixels.ToArray()); //TODO concurrency fix
                 foreach (var pixel in modified)
                 {
                     pixels[pixel.Position.Y * _width + pixel.Position.X] = pixel.Color;
@@ -139,12 +139,7 @@ public class Layer : PixelImage, IPixedSerializer
 
             if (Opacity != 100)
             {
-                for (int a = 0; a < pixels.Count; a++)
-                {
-                    UniColor color = pixels[a];
-                    color.A = (byte)(Opacity / 100d * color.A);
-                    pixels[a] = color;
-                }
+                pixels = pixels.Select(c => ColorUtils.MultiplyAlpha(c, Opacity / 100d)).ToList();
             }
 
             bitmap = SkiaUtils.FromArray(pixels, new Point(_width, _height));
