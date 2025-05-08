@@ -115,7 +115,11 @@ public class Frame : PixelImage, IPixedSerializer
             for (int a = 0; a < _layers.Count; a++)
             {
                 var bitmap = _layers[a].Render();
-                canvas.DrawBitmap(bitmap, new SKPoint(0, 0));
+
+                if(!SkiaUtils.IsNull(bitmap))
+                {
+                    canvas.DrawBitmap(bitmap, new SKPoint(0, 0));
+                }
             }
             canvas.Dispose();
             return render;
