@@ -20,9 +20,9 @@ public abstract class ToolPenBase(ApplicationData applicationData) : BaseTool(ap
     public override string Name => "Pen tool";
     public override string Id => "tool_pen";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Pen tool");
-    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
+    public override void ApplyTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
     {
-        ApplyToolBase(point, frame, ref overlay, keyState, selection);
+        ApplyToolBase(point, frame, keyState, selection);
 
         _canvas ??= frame.GetCanvas();
         _prev = point;
@@ -31,26 +31,27 @@ public abstract class ToolPenBase(ApplicationData applicationData) : BaseTool(ap
         DrawOnCanvas(ToolColor, point, _canvas, selection);
     }
 
-    public override void MoveTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
+    public override void MoveTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
     {
+        MoveToolBase(point, frame, keyState, selection);
         if (_prev != point)
         {
             var interpolatedPixels = BresenhamLine.Get(point, _prev);
 
             foreach (var pixel in interpolatedPixels)
             {
-                ApplyTool(pixel, frame, ref overlay, keyState, selection);
+                ApplyTool(pixel, frame, keyState, selection);
             }
         }
         else
         {
-            ApplyTool(point, frame, ref overlay, keyState, selection);
+            ApplyTool(point, frame, keyState, selection);
         }
 
         _prev = point;
     }
 
-    public override void ReleaseTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
+    public override void ReleaseTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
     {
         _canvas?.Dispose();
         _canvas = null;
@@ -60,7 +61,7 @@ public abstract class ToolPenBase(ApplicationData applicationData) : BaseTool(ap
         Subjects.FrameModified.OnNext(frame);
         _prev = new Point(-1);
 
-        ReleaseToolBase(point, frame, ref overlay, keyState, selection);
+        ReleaseToolBase(point, frame, keyState, selection);
     }
 
     public override void OnOverlay(SKCanvas canvas)

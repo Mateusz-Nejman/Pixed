@@ -20,9 +20,9 @@ public class ToolLighten(ApplicationData applicationData) : ToolPenBase(applicat
     public override string Name => "Lighten tool";
     public override string Id => "tool_lighten";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Lighten", "Ctrl", "Darken", "Shift", "Apply once per pixel");
-    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
+    public override void ApplyTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
     {
-        ApplyToolBase(point, frame, ref overlay, keyState, selection);
+        ApplyToolBase(point, frame, keyState, selection);
         var controlPressed = keyState.IsCtrl || GetProperty(PROP_DARKEN);
         var shiftPressed = keyState.IsShift || GetProperty(PROP_APPLY_ONCE);
 
@@ -37,14 +37,14 @@ public class ToolLighten(ApplicationData applicationData) : ToolPenBase(applicat
         if(canModify)
         {
             _canvas ??= frame.GetCanvas();
-            var modifiedColor = GetModifierColor(point, frame, ref overlay, shiftPressed, controlPressed);
+            var modifiedColor = GetModifierColor(point, frame, shiftPressed, controlPressed);
             _modified.AddRange(DrawOnCanvas(modifiedColor, point, _canvas, selection));
         }
     }
 
-    public override void ReleaseTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
+    public override void ReleaseTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
     {
-        base.ReleaseTool(point, frame, ref overlay, keyState, selection);
+        base.ReleaseTool(point, frame, keyState, selection);
         _modified.Clear();
     }
 
@@ -56,9 +56,10 @@ public class ToolLighten(ApplicationData applicationData) : ToolPenBase(applicat
         ];
     }
 
-    private UniColor GetModifierColor(Point point, Frame frame, ref SKBitmap overlay, bool oncePerPixel, bool isDarken)
+    private UniColor GetModifierColor(Point point, Frame frame, bool oncePerPixel, bool isDarken)
     {
-        UniColor overlayColor = overlay.GetPixel(point.X, point.Y);
+        return UniColor.White; //TODO
+        /*UniColor overlayColor = overlay.GetPixel(point.X, point.Y);
         UniColor frameColor = frame.GetPixel(point);
 
         bool isPixelModified = _modified.Contains(point);
@@ -88,6 +89,6 @@ public class ToolLighten(ApplicationData applicationData) : ToolPenBase(applicat
             color = pixelColor.Lighten(step);
         }
 
-        return color;
+        return color;*/
     }
 }

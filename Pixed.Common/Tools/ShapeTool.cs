@@ -14,18 +14,19 @@ public abstract class ShapeTool(ApplicationData applicationData) : BaseTool(appl
     protected string PROP_SHIFT = "Keep 1 to 1 ratio";
     protected Point _start = new(-1);
 
-    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
+    public override void ApplyTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
     {
-        ApplyToolBase(point, frame, ref overlay, keyState, selection);
+        ApplyToolBase(point, frame, keyState, selection);
         _start = point;
 
-        overlay.SetPixel(point, ToolColor, _applicationData.ToolSize);
+        //TODO overlay.SetPixel(point, ToolColor, _applicationData.ToolSize);
         //TODO Subjects.OverlayModified.OnNext(overlay);
     }
 
-    public override void MoveTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
+    public override void MoveTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
     {
-        overlay.Clear();
+        MoveToolBase(point, frame, keyState, selection);
+        //TODO overlay.Clear();
         var color = ToolColor;
 
         if (color == UniColor.Transparent)
@@ -33,17 +34,17 @@ public abstract class ShapeTool(ApplicationData applicationData) : BaseTool(appl
             color = UniColor.WithAlpha(128, UniColor.GetFromResources("Accent"));
         }
 
-        Draw(point, color, keyState.IsShift || GetProperty(PROP_SHIFT), _applicationData.ToolSize, ref overlay, selection);
+        Draw(point, color, keyState.IsShift || GetProperty(PROP_SHIFT), _applicationData.ToolSize, selection);
     }
 
-    public override void ReleaseTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
+    public override void ReleaseTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
     {
         var color = ToolColor;
 
         Draw(point, color, keyState.IsShift || GetProperty(PROP_SHIFT), _applicationData.ToolSize, frame, selection);
 
-        overlay.Clear();
-        ReleaseToolBase(point, frame, ref overlay, keyState, selection);
+        //TODO overlay.Clear();
+        ReleaseToolBase(point, frame, keyState, selection);
     }
 
     public override List<ToolProperty> GetToolProperties()
@@ -53,9 +54,9 @@ public abstract class ShapeTool(ApplicationData applicationData) : BaseTool(appl
             ];
     }
 
-    protected void Draw(Point point, uint color, bool shiftPressed, int toolSize, ref SKBitmap overlay, BaseSelection? selection)
+    protected void Draw(Point point, uint color, bool shiftPressed, int toolSize, BaseSelection? selection)
     {
-        SKBitmap bitmap = overlay;
+        /*TODO SKBitmap bitmap = overlay;
         Draw(point, color, shiftPressed, (p, color) =>
         {
             if(selection != null && !selection.InSelection(p))
@@ -66,7 +67,7 @@ public abstract class ShapeTool(ApplicationData applicationData) : BaseTool(appl
             bitmap.SetPixel(p, color, toolSize);
         });
 
-        overlay = bitmap;
+        overlay = bitmap;*/
         //TODO Subjects.OverlayModified.OnNext(overlay);
     }
 

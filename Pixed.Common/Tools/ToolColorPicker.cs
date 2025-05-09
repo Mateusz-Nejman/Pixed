@@ -13,9 +13,9 @@ public class ToolColorPicker(ApplicationData applicationData) : BaseTool(applica
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties(Name);
     public override bool SingleHighlightedPixel { get; protected set; } = true;
     public override bool AddToHistory { get; protected set; } = false;
-    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
+    public override void ApplyTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
     {
-        ApplyToolBase(point, frame, ref overlay, keyState, selection);
+        ApplyToolBase(point, frame, keyState, selection);
         if (frame.ContainsPixel(point))
         {
             var color = frame.GetPixel(point);

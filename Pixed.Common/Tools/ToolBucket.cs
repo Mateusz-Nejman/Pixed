@@ -18,9 +18,9 @@ public class ToolBucket(ApplicationData applicationData) : BaseTool(applicationD
     public override string Id => "tool_paint_bucket";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Fill color", "Shift", PROP_REPLACE);
     public override bool SingleHighlightedPixel { get; protected set; } = true;
-    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
+    public override void ApplyTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
     {
-        ApplyToolBase(point, frame, ref overlay, keyState, selection);
+        ApplyToolBase(point, frame, keyState, selection);
         _canvas = frame.GetCanvas();
         uint color = ToolColor;
         uint targetColor = frame.GetPixel(point);
@@ -69,9 +69,9 @@ public class ToolBucket(ApplicationData applicationData) : BaseTool(applicationD
         Subjects.FrameModified.OnNext(frame);
     }
 
-    public override void ReleaseTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
+    public override void ReleaseTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
     {
-        base.ReleaseTool(point, frame, ref overlay, keyState, selection);
+        base.ReleaseTool(point, frame, keyState, selection);
         _canvas?.Dispose();
         _canvas = null;
     }

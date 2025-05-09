@@ -25,9 +25,9 @@ public class ToolPen(ApplicationData applicationData) : ToolPenBase(applicationD
         ];
     }
 
-    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
+    public override void ApplyTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
     {
-        base.ApplyTool(point, frame, ref overlay, keyState, selection);
+        base.ApplyTool(point, frame, keyState, selection);
         bool shiftPressed = keyState.IsShift || GetProperty(PROP_BOTH);
         bool controlPressed = keyState.IsCtrl || GetProperty(PROP_VERTICAL) || shiftPressed;
         bool altPressed = keyState.IsAlt || GetProperty(PROP_HORIZONTAL) || shiftPressed;

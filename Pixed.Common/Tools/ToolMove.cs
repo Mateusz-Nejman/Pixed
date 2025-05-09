@@ -20,23 +20,24 @@ public class ToolMove(ApplicationData applicationData) : BaseTool(applicationDat
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Move content", "Ctrl", "Apply to all layers", "Shift", "Apply to all frames", "Alt", "Wrap canvas borders");
     public override bool SingleHighlightedPixel { get; protected set; } = true;
 
-    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
+    public override void ApplyTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
     {
-        ApplyToolBase(point, frame, ref overlay, keyState, selection);
+        ApplyToolBase(point, frame, keyState, selection);
         _start = point;
         _currentLayer = frame.CurrentLayer;
         _currentLayerClone = _currentLayer.Clone();
     }
 
-    public override void MoveTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
+    public override void MoveTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
     {
+        MoveToolBase(point, frame, keyState, selection);
         var diff = point - _start;
 
         ShiftLayer(frame.CurrentLayer, _currentLayerClone, diff, keyState.IsAlt);
         Subjects.LayerModified.OnNext(frame.CurrentLayer);
     }
 
-    public override void ReleaseTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
+    public override void ReleaseTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
     {
         var shiftPressed = keyState.IsShift || GetProperty(ToolProperties.PROP_APPLY_ALL_FRAMES);
         var controlPressed = keyState.IsCtrl || GetProperty(ToolProperties.PROP_APPLY_ALL_LAYERS);
@@ -49,7 +50,7 @@ public class ToolMove(ApplicationData applicationData) : BaseTool(applicationDat
             ShiftLayer(layer, reference, diff, altPressed);
         }, _applicationData, true);
 
-        ReleaseToolBase(point, frame, ref overlay, keyState, selection);
+        ReleaseToolBase(point, frame, keyState, selection);
     }
 
     public override List<ToolProperty> GetToolProperties()
