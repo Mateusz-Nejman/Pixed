@@ -9,7 +9,12 @@ using Pixed.Application.ViewModels;
 using Pixed.Common;
 using Pixed.Common.Input;
 using Pixed.Common.Services.Keyboard;
+using SkiaSharp;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Pixed.Application.Windows;
@@ -56,6 +61,23 @@ internal partial class MainWindow : ExtendedWindow<MainViewModel>
 
     private void Window_KeyUp(object? sender, KeyEventArgs e)
     {
+#if DEBUG
+        if (e.Key == Key.D)
+        {
+            var skia = AppDomain.CurrentDomain.GetAssemblies().First(a => a.ToString() == "SkiaSharp, Version=3.119.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756");
+            if (skia != null)
+            {
+                Type handleDictionary = skia.GetType("SkiaSharp.HandleDictionary");
+                var fields = handleDictionary.GetFields(BindingFlags.NonPublic | BindingFlags.Static);
+                var instanceField = fields.First(f => f.Name == "instances");
+                Dictionary<IntPtr, WeakReference> instances = (Dictionary<nint, WeakReference>)instanceField.GetValue(null);
+                var values = instances.Values.ToArray();
+                var targetBitmaps = values.Select(v => v.Target).Where(t => t is SKBitmap).ToList();
+                var targetImages = values.Select(v => v.Target).Where(t => t is SKImage).ToList();
+                skia.ToString();
+            }
+        }
+#endif
         Keyboard.Modifiers = e.KeyModifiers;
         Keyboard.ProcessReleased(e.Key);
         Subjects.KeyState.OnNext(new KeyState(

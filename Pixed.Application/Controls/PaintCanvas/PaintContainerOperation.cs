@@ -20,9 +20,7 @@ public class PaintContainerOperation : IImage, ICustomDrawOperation
     private string _currentId = string.Empty;
     private SKBitmap? _currentBitmap = null;
     private readonly IDisposable _toolChanged;
-    private readonly IDisposable _zoomChanged;
     private BaseTool? _tool;
-    private double _zoom;
 
     public Size Size => _size;
 
@@ -36,7 +34,6 @@ public class PaintContainerOperation : IImage, ICustomDrawOperation
     public PaintContainerOperation(PixelImage? source)
     {
         _toolChanged = Subjects.ToolChanged.Subscribe(p => _tool = p.Current);
-        _zoomChanged = ZoomControl.ZoomChanged.Subscribe(e => _zoom = e.Zoom);
         UpdateBitmap(source);
     }
 
@@ -83,7 +80,7 @@ public class PaintContainerOperation : IImage, ICustomDrawOperation
                     lease.SkCanvas.DrawBitmapLock(_currentBitmap, Bounds);
                 }
 
-                _tool?.OnOverlay(lease.SkCanvas, _zoom);
+                _tool?.OnOverlay(lease.SkCanvas);
             }
         }
     }
@@ -91,6 +88,5 @@ public class PaintContainerOperation : IImage, ICustomDrawOperation
     public void Dispose()
     {
         _toolChanged?.Dispose();
-        _zoomChanged?.Dispose();
     }
 }

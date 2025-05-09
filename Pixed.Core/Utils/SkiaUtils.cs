@@ -32,8 +32,7 @@ public static class SkiaUtils
         {
             if (!IsNull(bitmap))
             {
-                SKImage image = SKImage.FromBitmap(bitmap);
-                canvas.DrawImage(image, rect);
+                canvas.DrawBitmap(bitmap, rect);
             }
         }
     }

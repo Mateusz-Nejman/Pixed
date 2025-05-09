@@ -40,8 +40,6 @@ internal class PixelImageControl : Control
     }
 
     private readonly PixelDrawOperation _image = new();
-    private string _currentId = string.Empty;
-    private SKBitmap? _currentBitmap = null;
 
     /// <summary>
     /// Gets or sets the image that will be displayed.
@@ -87,10 +85,10 @@ internal class PixelImageControl : Control
 
         _image.UpdateBitmap(Source);
 
-        if (_currentBitmap != null && Bounds.Width > 0 && Bounds.Height > 0)
+        if (Bounds.Width > 0 && Bounds.Height > 0)
         {
             Rect viewPort = new(Bounds.Size);
-            Size sourceSize = new(_currentBitmap.Width, _currentBitmap.Height);
+            Size sourceSize = new(Source.Width, Source.Height);
 
             Vector scale = Stretch.CalculateScaling(Bounds.Size, sourceSize, StretchDirection);
             Size scaledSize = sourceSize * scale;

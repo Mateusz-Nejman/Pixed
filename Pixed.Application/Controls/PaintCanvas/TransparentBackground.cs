@@ -6,25 +6,23 @@ using SkiaSharp;
 namespace Pixed.Application.Controls.PaintCanvas;
 internal class TransparentBackground : OverlayControl
 {
-    private readonly SKBitmap _transparentBackground;
-    private readonly SKShader _shader;
     private readonly SKPaint _paint;
     public TransparentBackground()
     {
         ClipToBounds = false;
-        _transparentBackground = CreateTransparentBackground();
-        _shader = SKShader.CreateBitmap(_transparentBackground, SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
+        var background = CreateTransparentBackground();
+        var shader = SKShader.CreateBitmap(background, SKShaderTileMode.Repeat, SKShaderTileMode.Repeat);
         _paint = new SKPaint()
         {
-            Shader = _shader,
+            Shader = shader,
         };
+        background.Dispose();
+        shader.Dispose();
     }
 
     protected override void OnUnloaded(RoutedEventArgs e)
     {
         base.OnUnloaded(e);
-        _transparentBackground.Dispose();
-        _shader.Dispose();
         _paint.Dispose();
     }
 

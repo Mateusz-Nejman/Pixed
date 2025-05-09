@@ -20,7 +20,7 @@ public abstract class ShapeTool(ApplicationData applicationData) : BaseTool(appl
         _start = point;
 
         overlay.SetPixel(point, ToolColor, _applicationData.ToolSize);
-        Subjects.OverlayModified.OnNext(overlay);
+        //TODO Subjects.OverlayModified.OnNext(overlay);
     }
 
     public override void MoveTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
@@ -67,7 +67,7 @@ public abstract class ShapeTool(ApplicationData applicationData) : BaseTool(appl
         });
 
         overlay = bitmap;
-        Subjects.OverlayModified.OnNext(overlay);
+        //TODO Subjects.OverlayModified.OnNext(overlay);
     }
 
     protected void Draw(Point point, uint color, bool shiftPressed, int toolSize, Frame frame, BaseSelection? selection)

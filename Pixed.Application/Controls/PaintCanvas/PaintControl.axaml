@@ -25,7 +25,7 @@
           <zoom:ZoomControl Name="zoomControl" GesturesEnabled="{Binding GestureZoomEnabled, Mode=TwoWay}" ZoomWidth="{Binding GridWidth, Mode=TwoWay}" ZoomHeight="{Binding GridHeight, Mode=TwoWay}">
             <zoom:ZoomControl.ZoomContent>
               <paintCanvas:TransparentBackground IsHitTestVisible="False" Width="{Binding ScaledGridWidth}" Height="{Binding ScaledGridHeight}" Name="transparentBackground"/>
-              <paintCanvas:PaintContainer Name="image" RenderOptions.BitmapInterpolationMode="None" Source="{Binding RenderModel}"/>
+              <paintCanvas:PaintContainer Name="image" RenderOptions.BitmapInterpolationMode="None" Source="{Binding CurrentFrame}"/>
               <paintCanvas:GridOverlay Width="{Binding ScaledGridWidth}" Height="{Binding ScaledGridHeight}" Name="gridCanvas" IsHitTestVisible="False"/>
               <paintCanvas:SelectionOverlay Width="{Binding ScaledGridWidth}" Height="{Binding ScaledGridHeight}" Name="selectionOverlay" IsHitTestVisible="False"/>
             </zoom:ZoomControl.ZoomContent>

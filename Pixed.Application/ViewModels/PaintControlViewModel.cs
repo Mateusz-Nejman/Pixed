@@ -27,8 +27,8 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
     private readonly ToolsManager _toolSelector;
     private readonly SelectionMenu _selectionMenu;
     private readonly SelectionManager _selectionManager;
-    private RenderModel _renderModel;
-    private SKBitmap? _overlay;
+    [Obsolete]
+    private SKBitmap _overlay;
     private ImageBrush _transparentBrush;
     private readonly Avalonia.Media.Imaging.Bitmap _transparentBitmap;
     private double _gridWidth;
@@ -64,7 +64,6 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
     private readonly IDisposable _gridChanged;
     private readonly IDisposable _toolChanged;
     private readonly IDisposable _keyState;
-    private readonly IDisposable _overlayChanged;
     private readonly IDisposable _currentLayerRenderModified;
     private readonly IDisposable _zoomChanged;
     private readonly IDisposable _selectionCreating;
@@ -205,14 +204,9 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
         }
     }
 
-    public RenderModel RenderModel
+    public Frame CurrentFrame
     {
-        get => _renderModel;
-        set
-        {
-            _renderModel = value;
-            OnPropertyChanged();
-        }
+        get => _frame;
     }
 
     public bool IsFramesViewButtonVisible
@@ -243,10 +237,7 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
         _selectionMenu = selectionMenu;
         _selectionManager = selectionManager;
         _frame = new Frame(32, 32);
-        _renderModel = new RenderModel
-        {
-            Frame = _frame
-        };
+        _overlay = new SKBitmap(32, 32);
         LeftMouseDown = new ActionCommand<MouseEvent>(LeftMouseDownAction);
         LeftMouseUp = new ActionCommand<MouseEvent>(LeftMouseUpAction);
         RightMouseDown = new ActionCommand<MouseEvent>(RightMouseDownAction);
@@ -278,7 +269,6 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
         {
             _frame = f;
             UpdateRenderModel();
-            ClearOverlay();
             GridWidth = _frame.Width;
             GridHeight = _frame.Height;
         });
@@ -294,19 +284,12 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
             {
                 tool.Previous.Reset();
                 tool.Previous.ResetProperties();
-                ClearOverlay();
             }
         });
 
         _keyState = Subjects.KeyState.Subscribe(state =>
         {
             _currentKeyState = state;
-        });
-
-        _overlayChanged = Subjects.OverlayModified.Subscribe(overlay =>
-        {
-            _overlay = overlay;
-            UpdateRenderModel();
         });
 
         _currentLayerRenderModified = Subjects.CurrentLayerRenderModified.Subscribe(pixels =>
@@ -360,7 +343,6 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
             {
                 SelectionOverlay.DrawLines = true;
                 SelectionOverlay.UpdateSelection(selection);
-                Subjects.OverlayModified.OnNext(null);
                 IsSelectionButtonVisible = true;
             }
         });
@@ -400,7 +382,6 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
     {
         RefreshGridCanvas();
         _lastWindowSize = windowSize;
-        ClearOverlay();
     }
     public void RefreshZoomText()
     {
@@ -408,20 +389,6 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
         bool needRound = zoom % 1 != 0;
         ZoomText = "Zoom: " + zoom.ToString(needRound ? "#.0" : "#");
         OnPropertyChanged(nameof(ZoomText));
-    }
-    public void ClearOverlay()
-    {
-        if (_overlay == null || _overlay.Width != _frame.Width || _overlay.Height != _frame.Height)
-        {
-            _overlay?.Dispose();
-            _overlay = new SKBitmap(_frame.Width, _frame.Height, true);
-        }
-        else
-        {
-            _overlay.Clear();
-        }
-
-        UpdateRenderModel();
     }
 
     public void RefreshGridCanvas()
@@ -451,7 +418,6 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
                 _gridChanged?.Dispose();
                 _toolChanged?.Dispose();
                 _keyState?.Dispose();
-                _overlayChanged?.Dispose();
                 _zoomChanged?.Dispose();
                 _currentLayerRenderModified?.Dispose();
                 _selectionCreated?.Dispose();
@@ -570,7 +536,6 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
         }
         else
         {
-            _toolSelector.SelectedTool.UpdateHighlightedPixel(mouseEvent.Point, _frame, ref _overlay, _selectionManager.Selection);
             UpdateRenderModel();
         }
 
@@ -610,6 +575,6 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
 
     private void UpdateRenderModel()
     {
-        RenderModel = new RenderModel() { Frame = _frame, Overlay = _overlay };
+        OnPropertyChanged(nameof(CurrentFrame));
     }
 }

@@ -63,7 +63,7 @@ public abstract class BaseTool(ApplicationData applicationData)
         ReleaseToolBase(point, frame, ref overlay, keyState, selection);
     }
 
-    public virtual void OnOverlay(SKCanvas canvas, double zoom)
+    public virtual void OnOverlay(SKCanvas canvas)
     {
 
     }
@@ -76,29 +76,6 @@ public abstract class BaseTool(ApplicationData applicationData)
     public virtual void Initialize()
     {
 
-    }
-
-    [Obsolete]
-    public virtual void UpdateHighlightedPixel(Point point, Frame frame, ref SKBitmap overlay, BaseSelection? selection)
-    {
-        return; //TODO Replace
-        overlay ??= new SKBitmap(frame.Width, frame.Height, true);
-
-        if (_highlightedPoint != point)
-        {
-            overlay?.Clear();
-        }
-
-        _highlightedPoint = point;
-
-        uint pixel = frame.GetPixel(point);
-
-        if (overlay.ContainsPixel(point))
-        {
-            overlay.SetPixel(point, GetHighlightColor(pixel), SingleHighlightedPixel ? 1 : _applicationData.ToolSize);
-        }
-
-        Subjects.OverlayModified.OnNext(overlay);
     }
 
     public virtual List<ToolProperty> GetToolProperties()
@@ -139,27 +116,9 @@ public abstract class BaseTool(ApplicationData applicationData)
         _properties[index].Checked = value;
     }
 
-    [Obsolete]
-    protected static void SetPixels(Frame frame, List<Pixel> pixels)
-    {
-        frame.SetPixels(pixels);
-    }
-
     protected static void SetPixels(Layer layer, List<Pixel> pixels)
     {
         layer.SetPixels(pixels);
         Subjects.LayerModified.OnNext(layer);
-    }
-
-    private static UniColor GetHighlightColor(uint pixel)
-    {
-        UniColor.Hsl hsl = ((UniColor)pixel).ToHsl();
-
-        if (hsl.L > 0.5)
-        {
-            return UniColor.WithAlpha(50, UniColor.Black);
-        }
-
-        return UniColor.WithAlpha(50, UniColor.White);
     }
 }
