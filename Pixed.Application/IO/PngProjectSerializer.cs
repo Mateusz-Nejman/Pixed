@@ -58,7 +58,7 @@ public class PngProjectSerializer : IPixedProjectSerializer
         int rows = (int)Math.Ceiling((double)model.Frames.Count / (double)ColumnsCount);
         int width = model.Width * ColumnsCount;
         int height = model.Height * rows;
-        SKBitmap outputBitmap = new(width, height, true);
+        SKBitmap outputBitmap = new(width, height);
         SKCanvas canvas = new(outputBitmap);
 
         int frameColumn = 0;

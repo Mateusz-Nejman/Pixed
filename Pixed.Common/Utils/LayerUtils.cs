@@ -11,7 +11,7 @@ public static class LayerUtils
     {
         var oldBitmap = layer.Render();
 
-        SKBitmap newBitmap = new(targetSize.X, targetSize.Y, true);
+        SKBitmap newBitmap = new(targetSize.X, targetSize.Y);
         SKCanvas canvas = new(newBitmap);
         canvas.DrawBitmap(oldBitmap, SKRect.Create(oldBitmap.Width, oldBitmap.Height), SKRect.Create(targetSize.X, targetSize.Y));
         canvas.Dispose();

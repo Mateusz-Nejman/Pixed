@@ -113,7 +113,7 @@ public class Frame : PixelImage, IPixedSerializer
     {
         lock (_lock)
         {
-            SKBitmap render = new(Width, Height, true);
+            SKBitmap render = new(Width, Height);
             SKCanvas canvas = new(render);
             canvas.Clear(SKColors.Transparent);
 

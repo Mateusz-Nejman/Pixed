@@ -39,7 +39,7 @@ public static class SkiaUtils
 
     public static SKBitmap FromArray(IList<uint> array, Point size)
     {
-        var bitmap = new SKBitmap(size.X, size.Y, true);
+        var bitmap = new SKBitmap(size.X, size.Y);
         var gcHandle = GCHandle.Alloc(array.ToArray(), GCHandleType.Pinned);
         var info = new SKImageInfo(size.X, size.Y, SKColorType.Bgra8888, SKAlphaType.Unpremul);
         bitmap.InstallPixels(info, gcHandle.AddrOfPinnedObject(), info.RowBytes, delegate { gcHandle.Free(); }, null);

@@ -575,6 +575,7 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
 
     private void UpdateRenderModel()
     {
+        _frame.ResetID();
         OnPropertyChanged(nameof(CurrentFrame));
     }
 }

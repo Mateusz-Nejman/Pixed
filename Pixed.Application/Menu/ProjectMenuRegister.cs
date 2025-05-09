@@ -62,7 +62,7 @@ internal class ProjectMenuRegister(IMenuItemRegistry menuItemRegistry, DialogUti
             }
 
             var bitmapSize = new Point(bitmap.Width, bitmap.Height);
-            SKBitmap? layerBitmap = new(currentSize.X, currentSize.Y, true);
+            SKBitmap? layerBitmap = new(currentSize.X, currentSize.Y);
             SKCanvas canvas = new(layerBitmap);
 
             if (isSingle)
