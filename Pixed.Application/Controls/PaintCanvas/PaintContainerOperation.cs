@@ -13,16 +13,14 @@ using System;
 
 namespace Pixed.Application.Controls.PaintCanvas;
 
-public class PaintContainerOperation : IImage, ICustomDrawOperation
+public class PaintContainerOperation : ICustomPixedImageOperation
 {
+    private bool _disposedValue;
     private PixelImage? _source;
-    private Size _size;
     private string _currentId = string.Empty;
     private SKBitmap? _currentBitmap = null;
     private readonly IDisposable _toolChanged;
     private BaseTool? _tool;
-
-    public Size Size => _size;
 
     public Rect Bounds { get; set; }
 
@@ -43,21 +41,17 @@ public class PaintContainerOperation : IImage, ICustomDrawOperation
     public void UpdateBitmap(PixelImage? source)
     {
         _source = source;
-        if (source != null)
-        {
-            _size = new(source.Width, source.Height);
-        }
     }
 
-    public void Draw(DrawingContext context, Rect sourceRect, Rect destRect)
+    public bool Equals(ICustomDrawOperation? other)
     {
-        Bounds = destRect;
-        context.Custom(this);
+        return other?.Equals(this) == true;
     }
 
-    public bool Equals(ICustomDrawOperation? other) => false;
-
-    public bool HitTest(Avalonia.Point p) => Bounds.Contains(p);
+    public bool HitTest(Avalonia.Point p)
+    {
+        return Bounds.Contains(p);
+    }
 
     public void Render(ImmediateDrawingContext context)
     {
@@ -88,8 +82,19 @@ public class PaintContainerOperation : IImage, ICustomDrawOperation
         }
     }
 
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposedValue)
+        {
+            if (disposing)
+            {
+            }
+            _disposedValue = true;
+        }
+    }
     public void Dispose()
     {
-        //TODO _toolChanged?.Dispose();
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
     }
 }

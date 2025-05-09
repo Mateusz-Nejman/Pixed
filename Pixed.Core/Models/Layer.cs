@@ -73,26 +73,14 @@ public class Layer : PixelImage, IPixedSerializer, IDisposable
         return layer;
     }
 
-    [Obsolete]
-    public uint[] GetPixels()
-    {
-        return _bitmap.ToArray(); //TODO
-    }
-
     public uint[] GetDistinctPixels()
     {
-        return GetPixels().Distinct().ToArray();
+        return [.. _bitmap.ToArray().Distinct()];
     }
 
     public SKCanvas GetCanvas()
     {
         return new SKCanvas(_bitmap);
-    }
-
-    [Obsolete]
-    public void SetPixel(Point point, uint color)
-    {
-        SetPixelPrivate(point, color);
     }
 
     [Obsolete]
@@ -179,6 +167,16 @@ public class Layer : PixelImage, IPixedSerializer, IDisposable
 
         _bitmap?.Dispose();
         _bitmap = SkiaUtils.FromArray(colors, new Point(_width, _height));
+    }
+
+    public static Layer FromBitmap(SKBitmap bitmap, string name)
+    {
+        Layer layer = new(bitmap.Width, bitmap.Height)
+        {
+            _bitmap = bitmap,
+            _name = name
+        };
+        return layer;
     }
 
     public static Layer FromColors(uint[] colors, int width, int height, string name)

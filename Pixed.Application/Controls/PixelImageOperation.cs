@@ -10,7 +10,7 @@ using System;
 
 namespace Pixed.Application.Controls;
 
-internal class PixelImageOperation : ICustomDrawOperation
+internal class PixelImageOperation : ICustomPixedImageOperation
 {
     private bool _disposedValue;
     private string _currentId = string.Empty;

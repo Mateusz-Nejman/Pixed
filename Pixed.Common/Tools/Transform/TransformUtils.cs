@@ -1,6 +1,8 @@
 ﻿using Pixed.Core;
 using Pixed.Core.Models;
 using Pixed.Core.Selection;
+using Pixed.Core.Utils;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 
@@ -45,7 +47,7 @@ public static class TransformUtils
             }
         }
 
-        layer.SetPixels(pixels);
+        SetPixelsOpaque(layer, pixels);
     }
 
     public static void Rotate(ref Layer layer, Direction direction)
@@ -96,7 +98,7 @@ public static class TransformUtils
             }
         }
 
-        layer.SetPixels(pixels);
+        SetPixelsOpaque(layer, pixels);
     }
 
     public static void Center(Layer layer)
@@ -136,7 +138,7 @@ public static class TransformUtils
             }
         }
 
-        layer.SetPixels(pixels);
+        SetPixelsOpaque(layer, pixels);
     }
 
     public static Tuple<Point, Point> GetBoundaries(Layer[] layers)
@@ -192,5 +194,17 @@ public static class TransformUtils
         }
 
         return new Tuple<Point, Point>(new Point(minx, miny), new Point(maxx, maxy));
+    }
+
+    private static void SetPixelsOpaque(Layer layer, List<Pixel> pixels)
+    {
+        SKBitmap opaqued = new(layer.Width, layer.Height, true);
+        SKCanvas opaquedCanvas = new(opaqued);
+        opaquedCanvas.DrawPixels(pixels);
+        opaquedCanvas.Dispose();
+
+        var layerCanvas = layer.GetCanvas();
+        layerCanvas.DrawBitmap(opaqued, SKPoint.Empty);
+        layerCanvas.Dispose();
     }
 }

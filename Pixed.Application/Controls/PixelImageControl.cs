@@ -6,8 +6,6 @@ using Avalonia.Media;
 using Avalonia.Metadata;
 using Avalonia.Threading;
 using Pixed.Core.Models;
-using Pixed.Core.Utils;
-using SkiaSharp;
 
 namespace Pixed.Application.Controls;
 internal class PixelImageControl : Control
@@ -39,7 +37,7 @@ internal class PixelImageControl : Control
         AutomationProperties.ControlTypeOverrideProperty.OverrideDefaultValue<PixelImageControl>(AutomationControlType.Image);
     }
 
-    private readonly PixelImageOperation _operation = new();
+    private readonly ICustomPixedImageOperation _operation;
 
     /// <summary>
     /// Gets or sets the image that will be displayed.
@@ -72,6 +70,11 @@ internal class PixelImageControl : Control
     /// <inheritdoc />
     protected override bool BypassFlowDirectionPolicies => true;
 
+    public PixelImageControl() : base()
+    {
+        _operation = GetOperation();
+    }
+
     /// <summary>
     /// Renders the control.
     /// </summary>
@@ -84,7 +87,6 @@ internal class PixelImageControl : Control
         }
 
         _operation.UpdateBitmap(Source);
-        _operation.Bounds = new Rect(0, 0, this.Bounds.Width, this.Bounds.Height);
 
         if (Bounds.Width > 0 && Bounds.Height > 0)
         {
@@ -96,9 +98,7 @@ internal class PixelImageControl : Control
             Rect destRect = viewPort
                 .CenterRect(new Rect(scaledSize))
                 .Intersect(viewPort);
-            Rect sourceRect = new Rect(sourceSize)
-                .CenterRect(new Rect(destRect.Size / scale));
-
+  
             _operation.Bounds = destRect;
             context.Custom(_operation);
         }
@@ -136,5 +136,10 @@ internal class PixelImageControl : Control
         {
             return new Size();
         }
+    }
+
+    protected virtual ICustomPixedImageOperation GetOperation()
+    {
+        return new PixelImageOperation();
     }
 }

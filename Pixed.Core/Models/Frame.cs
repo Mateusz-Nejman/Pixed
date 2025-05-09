@@ -67,27 +67,9 @@ public class Frame : PixelImage, IPixedSerializer
         return CurrentLayer.GetCanvas();
     }
 
-    public void SetPixel(Point point, uint color)
-    {
-        CurrentLayer.SetPixel(point, color);
-    }
-
     public void SetPixels(List<Pixel> pixels)
     {
         CurrentLayer.SetPixels(pixels);
-    }
-
-    public void SetPixel(Point point, uint color, int toolSize)
-    {
-        if (toolSize <= 1)
-        {
-            SetPixel(point, color);
-            return;
-        }
-
-        var toolPoints = PaintUtils.GetToolPoints(point, toolSize);
-        var pixels = toolPoints.Select(p => new Pixel(p, color)).ToList();
-        SetPixels(pixels);
     }
 
     public uint GetPixel(Point point)

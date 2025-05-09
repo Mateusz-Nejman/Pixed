@@ -31,13 +31,6 @@ public static class LayerUtils
         return newLayer;
     }
 
-    public static uint[] GetRectangleColors(this Layer layer, Point point, Point size)
-    {
-        var pixels = layer.GetPixels();
-
-        return pixels.GetRectangleColors(new Point(layer.Width, layer.Height), point, size);
-    }
-
     public static uint[] GetRectangleColors(this uint[] pixels, Point sourceSize, Point point, Point destinationSize)
     {
         if (point.X + destinationSize.X > sourceSize.X || point.Y + destinationSize.Y > sourceSize.Y)
