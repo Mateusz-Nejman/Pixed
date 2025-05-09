@@ -6,6 +6,7 @@ using Avalonia.Skia;
 using Pixed.Core.Models;
 using Pixed.Core.Utils;
 using SkiaSharp;
+using System;
 
 namespace Pixed.Application.Controls;
 
@@ -78,5 +79,6 @@ public class PixelDrawOperation : IImage, ICustomDrawOperation
 
     public void Dispose()
     {
+        //TODO find why its disposing everytime
     }
 }
