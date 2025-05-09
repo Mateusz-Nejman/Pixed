@@ -39,7 +39,7 @@ internal class PixelImageControl : Control
         AutomationProperties.ControlTypeOverrideProperty.OverrideDefaultValue<PixelImageControl>(AutomationControlType.Image);
     }
 
-    private readonly PixelDrawOperation _image = new();
+    private readonly PixelImageOperation _operation = new();
 
     /// <summary>
     /// Gets or sets the image that will be displayed.
@@ -83,7 +83,8 @@ internal class PixelImageControl : Control
             return;
         }
 
-        _image.UpdateBitmap(Source);
+        _operation.UpdateBitmap(Source);
+        _operation.Bounds = new Rect(0, 0, this.Bounds.Width, this.Bounds.Height);
 
         if (Bounds.Width > 0 && Bounds.Height > 0)
         {
@@ -98,8 +99,8 @@ internal class PixelImageControl : Control
             Rect sourceRect = new Rect(sourceSize)
                 .CenterRect(new Rect(destRect.Size / scale));
 
-            _image.Bounds = destRect;
-            context.DrawImage(_image, sourceRect, destRect);
+            _operation.Bounds = destRect;
+            context.Custom(_operation);
         }
 
         Dispatcher.UIThread.Post(InvalidateVisual, DispatcherPriority.Background);

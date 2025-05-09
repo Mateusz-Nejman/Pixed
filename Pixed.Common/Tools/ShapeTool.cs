@@ -16,29 +16,29 @@ public abstract class ShapeTool(ApplicationData applicationData) : BaseTool(appl
     protected Point _start = new(-1);
     protected List<Point> _shapePoints = [];
 
-    public override void ApplyTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
+    public override void ToolBegin(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        ApplyToolBase(point, frame, keyState, selection);
+        ToolBeginBase(point, model, keyState, selection);
         _start = point;
     }
 
-    public override void MoveTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
+    public override void ToolMove(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        MoveToolBase(point, frame, keyState, selection);
+        ToolMoveBase(point, model, keyState, selection);
 
         _shapePoints = GetShapePoints(point, keyState.IsShift || GetProperty(PROP_SHIFT));
     }
 
-    public override void ReleaseTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
+    public override void ToolEnd(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
         var color = ToolColor;
 
-        var canvas = frame.GetCanvas();
+        var canvas = model.CurrentFrame.GetCanvas();
         canvas.DrawPoints(SKPointMode.Points, [.. _shapePoints.Select(p => p.ToSKPoint())], new SKPaint() { Color = color });
         canvas.Dispose();
-        Subjects.FrameModified.OnNext(frame);
+        Subjects.FrameModified.OnNext(model.CurrentFrame);
 
-        ReleaseToolBase(point, frame, keyState, selection);
+        ToolEndBase(point, model, keyState, selection);
     }
 
     public override void OnOverlay(SKCanvas canvas)

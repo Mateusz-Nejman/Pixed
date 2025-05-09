@@ -38,34 +38,34 @@ public abstract class BaseTool(ApplicationData applicationData)
         return _applicationData.PrimaryColor;
     }
 
-    protected void ApplyToolBase(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
+    protected void ToolBeginBase(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
         _toolColor ??= GetToolColor();
     }
 
-    public virtual void ApplyTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
+    public virtual void ToolBegin(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        ApplyToolBase(point, frame, keyState, selection);
+        ToolBeginBase(point, model, keyState, selection);
     }
 
-    protected void MoveToolBase(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
+    protected void ToolMoveBase(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
         //TODO highlight cursor
     }
 
-    public virtual void MoveTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
+    public virtual void ToolMove(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        MoveToolBase(point, frame, keyState, selection);
+        ToolMoveBase(point, model, keyState, selection);
     }
 
-    protected void ReleaseToolBase(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
+    protected void ToolEndBase(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
         _toolColor = null;
     }
 
-    public virtual void ReleaseTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
+    public virtual void ToolEnd(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        ReleaseToolBase(point, frame, keyState, selection);
+        ToolEndBase(point, model, keyState, selection);
     }
 
     public virtual void OnOverlay(SKCanvas canvas)

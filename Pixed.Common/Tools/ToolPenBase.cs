@@ -20,48 +20,51 @@ public abstract class ToolPenBase(ApplicationData applicationData) : BaseTool(ap
     public override string Name => "Pen tool";
     public override string Id => "tool_pen";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Pen tool");
-    public override void ApplyTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
+    public override void ToolBegin(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        ApplyToolBase(point, frame, keyState, selection);
+        ToolBeginBase(point, model, keyState, selection);
 
-        _canvas ??= frame.GetCanvas();
+        _canvas ??= model.CurrentFrame.GetCanvas();
         _prev = point;
         _points.Add(point.ToSKPoint());
 
         DrawOnCanvas(ToolColor, point, _canvas, selection);
     }
 
-    public override void MoveTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
+    public override void ToolMove(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        MoveToolBase(point, frame, keyState, selection);
+        ToolMoveBase(point, model, keyState, selection);
         if (_prev != point)
         {
             var interpolatedPixels = BresenhamLine.Get(point, _prev);
 
             foreach (var pixel in interpolatedPixels)
             {
-                ApplyTool(pixel, frame, keyState, selection);
+                ToolBegin(pixel, model, keyState, selection);
             }
         }
         else
         {
-            ApplyTool(point, frame, keyState, selection);
+            ToolBegin(point, model, keyState, selection);
         }
 
         _prev = point;
     }
 
-    public override void ReleaseTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
+    public override void ToolEnd(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
         _canvas?.Dispose();
         _canvas = null;
+        var frame = model.CurrentFrame;
+        model.ResetID();
         frame.ResetID();
+        frame.CurrentLayer.ResetID();
         _points.Clear();
 
         Subjects.FrameModified.OnNext(frame);
         _prev = new Point(-1);
 
-        ReleaseToolBase(point, frame, keyState, selection);
+        ToolEndBase(point, model, keyState, selection);
     }
 
     public override void OnOverlay(SKCanvas canvas)

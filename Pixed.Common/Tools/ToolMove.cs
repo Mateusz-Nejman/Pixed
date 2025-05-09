@@ -20,24 +20,25 @@ public class ToolMove(ApplicationData applicationData) : BaseTool(applicationDat
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Move content", "Ctrl", "Apply to all layers", "Shift", "Apply to all frames", "Alt", "Wrap canvas borders");
     public override bool SingleHighlightedPixel { get; protected set; } = true;
 
-    public override void ApplyTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
+    public override void ToolBegin(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        ApplyToolBase(point, frame, keyState, selection);
+        ToolBeginBase(point, model, keyState, selection);
         _start = point;
-        _currentLayer = frame.CurrentLayer;
+        _currentLayer = model.CurrentFrame.CurrentLayer;
         _currentLayerClone = _currentLayer.Clone();
     }
 
-    public override void MoveTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
+    public override void ToolMove(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        MoveToolBase(point, frame, keyState, selection);
+        ToolMoveBase(point, model, keyState, selection);
+        var layer = model.CurrentFrame.CurrentLayer;
         var diff = point - _start;
 
-        ShiftLayer(frame.CurrentLayer, _currentLayerClone, diff, keyState.IsAlt);
-        Subjects.LayerModified.OnNext(frame.CurrentLayer);
+        ShiftLayer(layer, _currentLayerClone, diff, keyState.IsAlt);
+        Subjects.LayerModified.OnNext(layer);
     }
 
-    public override void ReleaseTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
+    public override void ToolEnd(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
         var shiftPressed = keyState.IsShift || GetProperty(ToolProperties.PROP_APPLY_ALL_FRAMES);
         var controlPressed = keyState.IsCtrl || GetProperty(ToolProperties.PROP_APPLY_ALL_LAYERS);
@@ -50,7 +51,7 @@ public class ToolMove(ApplicationData applicationData) : BaseTool(applicationDat
             ShiftLayer(layer, reference, diff, altPressed);
         }, _applicationData, true);
 
-        ReleaseToolBase(point, frame, keyState, selection);
+        ToolEndBase(point, model, keyState, selection);
     }
 
     public override List<ToolProperty> GetToolProperties()

@@ -12,9 +12,10 @@ public class ToolDithering(ApplicationData applicationData) : ToolPenBase(applic
     public override string Name => "Dithering tool";
     public override string Id => "tool_dithering";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Dithering");
-    public override void ApplyTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
+    public override void ToolBegin(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        ApplyToolBase(point, frame, keyState, selection);
+        ToolBeginBase(point, model, keyState, selection);
+        var frame = model.CurrentFrame;
         _prev = point;
         var toolPoints = PaintUtils.GetToolPoints(point, _applicationData.ToolSize);
 

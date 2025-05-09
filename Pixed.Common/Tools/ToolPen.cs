@@ -25,9 +25,10 @@ public class ToolPen(ApplicationData applicationData) : ToolPenBase(applicationD
         ];
     }
 
-    public override void ApplyTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
+    public override void ToolBegin(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        base.ApplyTool(point, frame, keyState, selection);
+        base.ToolBegin(point, model, keyState, selection);
+        var frame = model.CurrentFrame;
         bool shiftPressed = keyState.IsShift || GetProperty(PROP_BOTH);
         bool controlPressed = keyState.IsCtrl || GetProperty(PROP_VERTICAL) || shiftPressed;
         bool altPressed = keyState.IsAlt || GetProperty(PROP_HORIZONTAL) || shiftPressed;

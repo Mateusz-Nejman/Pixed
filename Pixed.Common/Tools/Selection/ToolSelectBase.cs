@@ -25,33 +25,33 @@ public abstract class ToolSelectBase(ApplicationData applicationData) : BaseTool
     public override bool AddToHistory { get; protected set; } = false;
     public override bool SingleHighlightedPixel { get; protected set; }
 
-    public override void ApplyTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
+    public override void ToolBegin(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        ApplyToolBase(point, frame, keyState, selection);
+        ToolBeginBase(point, model, keyState, selection);
         _start = point;
         _prev = point;
 
-        OnSelectionBegin(_start, point, _prev, frame);
+        OnSelectionBegin(_start, point, _prev, model.CurrentFrame);
         _stage = SelectionStage.Selecting;
     }
 
-    public override void MoveTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
+    public override void ToolMove(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
         if (_stage == SelectionStage.Selecting)
         {
-            OnSelection(_start, point, _prev, frame);
+            OnSelection(_start, point, _prev, model.CurrentFrame);
             _prev = point;
         }
     }
 
-    public override void ReleaseTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
+    public override void ToolEnd(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
         if (_stage == SelectionStage.Selecting)
         {
-            OnSelectionEnd(_start, point, _prev, frame);
+            OnSelectionEnd(_start, point, _prev, model.CurrentFrame);
         }
 
-        ReleaseToolBase(point, frame, keyState, selection);
+        ToolEndBase(point, model, keyState, selection);
     }
 
     public virtual void OnSelectionBegin(Point startPoint, Point currentPoint, Point previousPoint, Frame frame) { }

@@ -20,9 +20,10 @@ public class ToolLighten(ApplicationData applicationData) : ToolPenBase(applicat
     public override string Name => "Lighten tool";
     public override string Id => "tool_lighten";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Lighten", "Ctrl", "Darken", "Shift", "Apply once per pixel");
-    public override void ApplyTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
+    public override void ToolBegin(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        ApplyToolBase(point, frame, keyState, selection);
+        ToolBeginBase(point, model, keyState, selection);
+        var frame = model.CurrentFrame;
         var controlPressed = keyState.IsCtrl || GetProperty(PROP_DARKEN);
         var shiftPressed = keyState.IsShift || GetProperty(PROP_APPLY_ONCE);
 
@@ -42,9 +43,9 @@ public class ToolLighten(ApplicationData applicationData) : ToolPenBase(applicat
         }
     }
 
-    public override void ReleaseTool(Point point, Frame frame, KeyState keyState, BaseSelection? selection)
+    public override void ToolEnd(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        base.ReleaseTool(point, frame, keyState, selection);
+        base.ToolEnd(point, model, keyState, selection);
         _modified.Clear();
     }
 
