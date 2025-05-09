@@ -126,4 +126,11 @@ public abstract class BaseTool(ApplicationData applicationData)
         layer.SetPixels(pixels);
         Subjects.LayerModified.OnNext(layer);
     }
+
+    protected static void ResetCurrentID(PixedModel model)
+    {
+        model.ResetID();
+        model.CurrentFrame.ResetID();
+        model.CurrentFrame.CurrentLayer.ResetID();
+    }
 }

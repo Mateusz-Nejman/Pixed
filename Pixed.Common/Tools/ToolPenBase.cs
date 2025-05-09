@@ -56,9 +56,7 @@ public abstract class ToolPenBase(ApplicationData applicationData) : BaseTool(ap
         _canvas?.Dispose();
         _canvas = null;
         var frame = model.CurrentFrame;
-        model.ResetID();
-        frame.ResetID();
-        frame.CurrentLayer.ResetID();
+        ResetCurrentID(model);
         _points.Clear();
 
         Subjects.FrameModified.OnNext(frame);

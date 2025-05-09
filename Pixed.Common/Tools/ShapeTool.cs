@@ -36,6 +36,7 @@ public abstract class ShapeTool(ApplicationData applicationData) : BaseTool(appl
         var canvas = model.CurrentFrame.GetCanvas();
         canvas.DrawPoints(SKPointMode.Points, [.. _shapePoints.Select(p => p.ToSKPoint())], new SKPaint() { Color = color });
         canvas.Dispose();
+        ResetCurrentID(model);
         Subjects.FrameModified.OnNext(model.CurrentFrame);
 
         ToolEndBase(point, model, keyState, selection);
