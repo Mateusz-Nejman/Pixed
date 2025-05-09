@@ -33,7 +33,10 @@ public class PaintContainerOperation : IImage, ICustomDrawOperation
     }
     public PaintContainerOperation(PixelImage? source)
     {
-        _toolChanged = Subjects.ToolChanged.Subscribe(p => _tool = p.Current);
+        _toolChanged = Subjects.ToolChanged.Subscribe(p =>
+        {
+            _tool = p.Current;
+        });
         UpdateBitmap(source);
     }
 
@@ -87,6 +90,6 @@ public class PaintContainerOperation : IImage, ICustomDrawOperation
 
     public void Dispose()
     {
-        _toolChanged?.Dispose();
+        //TODO _toolChanged?.Dispose();
     }
 }

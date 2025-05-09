@@ -62,7 +62,6 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
     private readonly IDisposable _gridChanged;
     private readonly IDisposable _toolChanged;
     private readonly IDisposable _keyState;
-    private readonly IDisposable _currentLayerRenderModified;
     private readonly IDisposable _zoomChanged;
     private readonly IDisposable _selectionCreating;
     private readonly IDisposable _selectionDismissed;
@@ -289,11 +288,6 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
             _currentKeyState = state;
         });
 
-        _currentLayerRenderModified = Subjects.CurrentLayerRenderModified.Subscribe(pixels =>
-        {
-            _frame.SetModifiedPixels(pixels);
-        });
-
         _zoomChanged = ZoomControl.ZoomChanged.Subscribe(entry =>
         {
             ZoomValue = entry.Zoom;
@@ -416,7 +410,6 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
                 _toolChanged?.Dispose();
                 _keyState?.Dispose();
                 _zoomChanged?.Dispose();
-                _currentLayerRenderModified?.Dispose();
                 _selectionCreated?.Dispose();
                 _selectionCreating?.Dispose();
                 _selectionDismissed?.Dispose();

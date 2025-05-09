@@ -20,7 +20,6 @@ public static class Subjects
     public static Subject<bool> AnimationPreviewChanged { get; } = new Subject<bool>();
     public static Subject<BaseToolPair> ToolChanged { get; } = new Subject<BaseToolPair>();
     public static Subject<string[]> NewInstanceHandled { get; } = new Subject<string[]>();
-    public static Subject<List<Pixel>> CurrentLayerRenderModified { get; } = new Subject<List<Pixel>>();
 
     public static Subject<UniColor> PrimaryColorChanged { get; } = new Subject<UniColor>();
     public static Subject<UniColor> PrimaryColorChange { get; } = new Subject<UniColor>();
