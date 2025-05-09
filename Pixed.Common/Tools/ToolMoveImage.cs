@@ -7,7 +7,7 @@ using SkiaSharp;
 using System.Collections.Generic;
 
 namespace Pixed.Common.Tools;
-public class ToolMove(ApplicationData applicationData) : BaseTool(applicationData)
+public class ToolMoveImage(ApplicationData applicationData) : BaseTool(applicationData)
 {
     private const string PROP_WRAP = "Wrap canvas borders";
     private Point _start = new(-1);

@@ -25,7 +25,7 @@ public class ToolsManager
 
     public ToolsManager(
         ToolPen toolPen, ToolBucket toolBucket, ToolEraser toolEraser,
-        ToolStroke toolStroke, ToolRectangle toolRectangle, ToolCircle toolCircle, ToolMove toolMove, ToolLighten toolLighten,
+        ToolStroke toolStroke, ToolRectangle toolRectangle, ToolCircle toolCircle, ToolMoveImage toolMove, ToolLighten toolLighten,
         ToolDithering toolDithering, ToolColorPicker toolColorPicker,
         ToolOutliner toolOutliner, ToolMoveCanvas toolMoveCanvas, ToolSelectShape shapeSelect, ToolSelectRectangle rectangleSelect, ToolSelectLasso lassoSelect)
     {

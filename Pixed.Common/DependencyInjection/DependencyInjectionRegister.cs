@@ -24,7 +24,7 @@ public class DependencyInjectionRegister : IDependencyRegister
         collection.AddScoped<ToolDithering>();
         collection.AddScoped<ToolEraser>();
         collection.AddScoped<ToolLighten>();
-        collection.AddScoped<ToolMove>();
+        collection.AddScoped<ToolMoveImage>();
         collection.AddSingleton<ToolMoveCanvas>();
         collection.AddScoped<ToolOutliner>();
         collection.AddScoped<ToolPen>();
