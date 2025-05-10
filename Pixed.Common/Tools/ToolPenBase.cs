@@ -5,6 +5,7 @@ using Pixed.Core.Models;
 using Pixed.Core.Selection;
 using Pixed.Core.Utils;
 using SkiaSharp;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,7 +15,7 @@ public abstract class ToolPenBase(ApplicationData applicationData) : BaseTool(ap
 {
     protected Point _prev = new(-1);
     protected SKCanvas? _canvas = null;
-    private List<SKPoint> _points = [];
+    private readonly ConcurrentBag<SKPoint> _points = [];
 
     public override string ImagePath => "avares://Pixed.Application/Resources/fluent-icons/ic_fluent_pen_48_regular.svg";
     public override string Name => "Pen tool";

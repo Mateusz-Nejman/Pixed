@@ -16,7 +16,7 @@ public static class SkiaUtils
 
         foreach(var color in colors)
         {
-            SKPaint paint = new() { Color = color, Style = SKPaintStyle.Fill };
+            SKPaint paint = new() { Color = color, Style = SKPaintStyle.Fill, StrokeWidth = 1 };
             var points = pixels.Where(p => p.Color == color).Select(p => new SKPoint(p.Position.X + 0.5f, p.Position.Y + 0.5f)).ToArray();
             canvas.DrawPoints(SKPointMode.Points, points, paint);
         }
