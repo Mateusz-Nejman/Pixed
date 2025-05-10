@@ -52,7 +52,7 @@ public abstract class ToolPenBase(ApplicationData applicationData) : BaseTool(ap
         _prev = point;
     }
 
-    public override void ToolEnd(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
+    public override async void ToolEnd(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
         _canvas?.Dispose();
         _canvas = null;

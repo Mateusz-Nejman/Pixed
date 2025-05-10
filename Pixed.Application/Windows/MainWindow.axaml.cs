@@ -8,6 +8,7 @@ using Pixed.Application.Platform;
 using Pixed.Application.ViewModels;
 using Pixed.Common;
 using Pixed.Common.Input;
+using Pixed.Common.Services;
 using Pixed.Common.Services.Keyboard;
 using SkiaSharp;
 using System;
@@ -22,11 +23,13 @@ namespace Pixed.Application.Windows;
 internal partial class MainWindow : ExtendedWindow<MainViewModel>
 {
     private readonly PixedProjectMethods _pixedProjectMethods;
+    private readonly IHistoryService _historyService;
     private bool _closeStarted = false;
-    public MainWindow(PixedProjectMethods pixedProjectMethods) : base()
+    public MainWindow(PixedProjectMethods pixedProjectMethods, IHistoryService historyService) : base()
     {
         InitializeComponent();
         _pixedProjectMethods = pixedProjectMethods;
+        _historyService = historyService;
     }
 
     public async Task OpenFromArgs(string[] args)
@@ -54,6 +57,7 @@ internal partial class MainWindow : ExtendedWindow<MainViewModel>
 
         if (canQuit)
         {
+            await _historyService.ClearTempFiles();
             IPlatformSettings.Instance.Close();
         }
         _closeStarted = false;

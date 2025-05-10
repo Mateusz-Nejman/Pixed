@@ -1,25 +1,28 @@
 ﻿using Pixed.Common.Models;
+using Pixed.Common.Services;
 using Pixed.Core.Models;
+using System.Threading.Tasks;
 
 namespace Pixed.Common.Tools.Transform;
 
-public abstract class AbstractTransformTool(ApplicationData applicationData)
+public abstract class AbstractTransformTool(ApplicationData applicationData, IHistoryService historyService)
 {
     protected ApplicationData _applicationData = applicationData;
+    protected IHistoryService _historyService = historyService;
 
-    public virtual void ApplyTransformation(bool shiftPressed, bool controlPressed, bool altPressed)
+    public virtual async Task ApplyTransformation(bool shiftPressed, bool controlPressed, bool altPressed)
     {
-        ApplyTool(altPressed, shiftPressed, controlPressed);
-        _applicationData.CurrentModel.AddHistory();
+        await ApplyTool(altPressed, shiftPressed, controlPressed);
+        await _historyService.AddToHistory(_applicationData.CurrentModel);
     }
-    public virtual void ApplyTool(bool altKey, bool allFrames, bool allLayers)
+    public virtual async Task ApplyTool(bool altKey, bool allFrames, bool allLayers)
     {
         _applicationData.CurrentModel.Process(allFrames, allLayers, (frame, layer) =>
         {
             ApplyToolOnLayer(layer, altKey);
         }, _applicationData);
 
-        _applicationData.CurrentModel.AddHistory();
+        await _historyService.AddToHistory(_applicationData.CurrentModel);
     }
 
     public abstract void ApplyToolOnLayer(Layer layer, bool altKey);

@@ -5,6 +5,7 @@ using Pixed.Application.Routing;
 using Pixed.Application.Utils;
 using Pixed.Common;
 using Pixed.Common.Menu;
+using Pixed.Common.Services;
 using Pixed.Common.Utils;
 using Pixed.Core;
 using Pixed.Core.Models;
@@ -17,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace Pixed.Application.Menu;
 
-internal class MenuBuilder(ApplicationData applicationData, IPlatformFolder platformFolder)
+internal class MenuBuilder(ApplicationData applicationData, IPlatformFolder platformFolder, IHistoryService historyService)
 {
 
     private readonly struct MenuEntry(BaseMenuItem baseMenu, IMenuItem menuItem)
@@ -28,6 +29,7 @@ internal class MenuBuilder(ApplicationData applicationData, IPlatformFolder plat
 
     private readonly ApplicationData _applicationData = applicationData;
     private readonly IPlatformFolder _platformFolder = platformFolder;
+    private readonly IHistoryService _historyService = historyService;
     private readonly List<MenuEntry> _entries = [];
 
     public Subject<List<IMenuItem>> OnMenuBuilt { get; } = new Subject<List<IMenuItem>>();
@@ -102,6 +104,9 @@ internal class MenuBuilder(ApplicationData applicationData, IPlatformFolder plat
                 {
                     var result = navigatorResult.Value;
                     var model = ResizeUtils.ResizeModel(_applicationData, _applicationData.CurrentModel, new Point(result.Width, result.Height), result.ResizeCanvasContent, result.Anchor);
+                    historyService.Register(model);
+                    historyService.CopyHistoryFrom(_applicationData.CurrentModel, model);
+                    await historyService.AddToHistory(model);
                     _applicationData.UserSettings.UserWidth = result.Width;
                     _applicationData.UserSettings.UserHeight = result.Height;
                     _applicationData.UserSettings.MaintainAspectRatio = result.MaintainAspectRatio;

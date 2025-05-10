@@ -7,6 +7,7 @@ using Pixed.Application.Services;
 using Pixed.Application.Utils;
 using Pixed.BigGustave;
 using Pixed.Common;
+using Pixed.Common.Services;
 using Pixed.Core.Models;
 using SkiaSharp;
 using Svg.Skia;
@@ -17,11 +18,12 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace Pixed.Application.IO;
-internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils dialogUtils, IStorageProviderHandle storageProvider)
+internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils dialogUtils, IStorageProviderHandle storageProvider, IHistoryService historyService)
 {
     private readonly ApplicationData _applicationData = applicationData;
     private readonly DialogUtils _dialogUtils = dialogUtils;
     private readonly IStorageProviderHandle _storageProvider = storageProvider;
+    private readonly IHistoryService _historyService = historyService;
     private readonly IPixedProjectSerializer[] _serializers = [new PixedProjectSerializer(), new PixiProjectSerializer(), new PiskelProjectSerializer(), new PngProjectSerializer(), new IconProjectSerializer(), new SvgProjectSerializer()];
 
     public async Task Save(PixedModel model, bool saveAs, RecentFilesService recentFilesService)
@@ -160,7 +162,8 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
             }
             stream?.Dispose();
             model.FileName = item.Name.Replace(item.GetExtension(), ".pixed");
-            model.AddHistory();
+            _historyService.Register(model);
+            await _historyService.AddToHistory(model);
 
             if (serializer is PixedProjectSerializer)
             {
@@ -221,7 +224,8 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
         }
         stream.Dispose();
         model.FileName = file.Name.Replace(".png", ".pixed");
-        model.AddHistory();
+        _historyService.Register(model);
+        await _historyService.AddToHistory(model);
 
         if (file.Name.EndsWith(".pixed"))
         {
@@ -271,16 +275,17 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
             return;
         }
 
+        _historyService.Register(model);
         if (_applicationData.CurrentModel.IsEmpty)
         {
             model.FileName = _applicationData.Models[_applicationData.CurrentModelIndex].FileName;
-            model.AddHistory();
+            await _historyService.AddToHistory(model);
             _applicationData.Models[_applicationData.CurrentModelIndex] = model;
         }
         else
         {
             model.FileName = _applicationData.GenerateName();
-            model.AddHistory();
+            await _historyService.AddToHistory(model);
             _applicationData.Models.Add(model);
         }
 

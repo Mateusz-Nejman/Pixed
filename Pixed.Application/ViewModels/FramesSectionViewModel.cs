@@ -3,6 +3,7 @@ using Pixed.Application.Platform;
 using Pixed.Application.Utils;
 using Pixed.Common;
 using Pixed.Common.Menu;
+using Pixed.Common.Services;
 using Pixed.Core;
 using Pixed.Core.Models;
 using System;
@@ -18,6 +19,7 @@ internal class FramesSectionViewModel : ExtendedViewModel, IDisposable
     private readonly ApplicationData _applicationData;
     private readonly IMenuItemRegistry _menuItemRegistry;
     private readonly IPlatformFolder _platformFolder;
+    private readonly IHistoryService _historyService;
     private int _selectedFrame = 0;
     private bool _removeFrameEnabled = false;
     private bool _disposedValue;
@@ -75,14 +77,15 @@ internal class FramesSectionViewModel : ExtendedViewModel, IDisposable
     public ICommand DuplicateFrameCommand { get; }
     public Subject<bool> IsVisibleChanged { get; } = new Subject<bool>();
 
-    public FramesSectionViewModel(ApplicationData applicationData, IMenuItemRegistry menuItemRegistry, IPlatformFolder platformFolder)
+    public FramesSectionViewModel(ApplicationData applicationData, IMenuItemRegistry menuItemRegistry, IPlatformFolder platformFolder, IHistoryService historyService)
     {
         _applicationData = applicationData;
         _menuItemRegistry = menuItemRegistry;
         _platformFolder = platformFolder;
-        NewFrameCommand = new ActionCommand(NewFrameAction);
-        RemoveFrameCommand = new ActionCommand(RemoveFrameAction);
-        DuplicateFrameCommand = new ActionCommand(DuplicateFrameAction);
+        _historyService = historyService;
+        NewFrameCommand = new AsyncCommand(NewFrameAction);
+        RemoveFrameCommand = new AsyncCommand(RemoveFrameAction);
+        DuplicateFrameCommand = new AsyncCommand(DuplicateFrameAction);
         _projectChanged = Subjects.ProjectChanged.Subscribe(p =>
         {
             OnPropertyChanged(nameof(Frames));
@@ -132,15 +135,15 @@ internal class FramesSectionViewModel : ExtendedViewModel, IDisposable
         GC.SuppressFinalize(this);
     }
 
-    private void NewFrameAction()
+    private async Task NewFrameAction()
     {
         Frames.Add(new Frame(Frames[0].Width, Frames[0].Height));
         SelectedFrame = Frames.Count - 1;
-        _applicationData.CurrentModel.AddHistory();
+        await _historyService.AddToHistory(_applicationData.CurrentModel);
         Subjects.FrameAdded.OnNext(Frames[^1]);
     }
 
-    private void RemoveFrameAction()
+    private async Task RemoveFrameAction()
     {
         if (Frames.Count == 1)
         {
@@ -152,14 +155,14 @@ internal class FramesSectionViewModel : ExtendedViewModel, IDisposable
         Frames.RemoveAt(index);
         Subjects.FrameRemoved.OnNext(frame);
         SelectedFrame = Math.Clamp(index, 0, Frames.Count - 1);
-        _applicationData.CurrentModel.AddHistory();
+        await _historyService.AddToHistory(_applicationData.CurrentModel);
     }
 
-    private void DuplicateFrameAction()
+    private async Task DuplicateFrameAction()
     {
         Frames.Add(Frames[SelectedFrame].Clone());
         Subjects.FrameAdded.OnNext(Frames[^1]);
         SelectedFrame = Frames.Count - 1;
-        _applicationData.CurrentModel.AddHistory();
+        await _historyService.AddToHistory(_applicationData.CurrentModel);
     }
 }

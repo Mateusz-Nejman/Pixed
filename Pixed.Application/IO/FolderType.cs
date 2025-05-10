@@ -3,5 +3,6 @@ public enum FolderType
 {
     Root,
     Palettes,
-    Extensions
+    Extensions,
+    History
 }

@@ -10,6 +10,7 @@ using Pixed.Application.Windows;
 using Pixed.Common.DependencyInjection;
 using Pixed.Common.Menu;
 using Pixed.Common.Platform;
+using Pixed.Common.Services;
 
 namespace Pixed.Application.DependencyInjection;
 internal class ApplicationDependencyRegister : IDependencyRegister
@@ -27,6 +28,7 @@ internal class ApplicationDependencyRegister : IDependencyRegister
 
         collection.AddSingleton<MainWindow>();
         collection.AddSingleton<Main>();
+        collection.AddSingleton<IHistoryService, HistoryService>();
         collection.AddSingleton<RecentFilesService>();
         collection.AddScoped<PixedProjectMethods>();
         collection.AddSingleton<MenuBuilder>();

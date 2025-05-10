@@ -1,7 +1,9 @@
-﻿using Pixed.Core.Models;
+﻿using Pixed.Common.Services;
+using Pixed.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace Pixed.Common.Utils;
 
@@ -30,8 +32,6 @@ public static class ResizeUtils
         }
 
         var resizedModel = PixedModel.FromFrames(frames, model.FileName, applicationData);
-        resizedModel.CopyHistoryFrom(model);
-        resizedModel.AddHistory();
         resizedModel.CurrentFrameIndex = model.CurrentFrameIndex;
         return resizedModel;
     }

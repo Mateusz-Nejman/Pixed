@@ -8,6 +8,7 @@ using Pixed.Application.Menu;
 using Pixed.Application.Models;
 using Pixed.Application.Zoom;
 using Pixed.Common;
+using Pixed.Common.Services;
 using Pixed.Common.Services.Keyboard;
 using Pixed.Common.Tools;
 using Pixed.Common.Tools.Selection;
@@ -17,6 +18,7 @@ using Pixed.Core.Utils;
 using SkiaSharp;
 using System;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Frame = Pixed.Core.Models.Frame;
 
 namespace Pixed.Application.ViewModels;
@@ -27,6 +29,7 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
     private readonly ToolsManager _toolSelector;
     private readonly SelectionMenu _selectionMenu;
     private readonly SelectionManager _selectionManager;
+    private readonly IHistoryService _historyService;
     private ImageBrush _transparentBrush;
     private readonly Avalonia.Media.Imaging.Bitmap _transparentBitmap;
     private double _gridWidth;
@@ -226,12 +229,13 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
     }
 
     public PaintControlViewModel(ApplicationData applicationData, ToolsManager toolSelector, ToolMoveCanvas toolMoveCanvas, SelectionManager selectionManager, 
-        FramesSectionViewModel framesSectionViewModel, PropertiesSectionViewModel propertiesSectionViewModel, SelectionMenu selectionMenu)
+        FramesSectionViewModel framesSectionViewModel, PropertiesSectionViewModel propertiesSectionViewModel, SelectionMenu selectionMenu, IHistoryService historyService)
     {
         _applicationData = applicationData;
         _toolSelector = toolSelector;
         _selectionMenu = selectionMenu;
         _selectionManager = selectionManager;
+        _historyService = historyService;
         LeftMouseDown = new ActionCommand<MouseEvent>(LeftMouseDownAction);
         LeftMouseUp = new ActionCommand<MouseEvent>(LeftMouseUpAction);
         RightMouseDown = new ActionCommand<MouseEvent>(RightMouseDownAction);
@@ -437,7 +441,7 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
         Subjects.FrameModified.OnNext(_applicationData.CurrentFrame);
     }
 
-    private void LeftMouseUpAction(MouseEvent mouseEvent)
+    private async void LeftMouseUpAction(MouseEvent mouseEvent)
     {
         if (!_applicationData.CurrentFrame.ContainsPixel(mouseEvent.Point) || _toolSelector.SelectedTool == null)
         {
@@ -450,7 +454,7 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
 
         if (_toolSelector.SelectedTool != null && _toolSelector.SelectedTool.AddToHistory)
         {
-            _applicationData.CurrentModel.AddHistory();
+            await _historyService.AddToHistory(_applicationData.CurrentModel);
         }
 
         _applicationData.CurrentModel.SetModifiedPixels([]);
@@ -479,7 +483,7 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
         UpdateRenderModel();
     }
 
-    private void RightMouseUpAction(MouseEvent mouseEvent)
+    private async void RightMouseUpAction(MouseEvent mouseEvent)
     {
         if (!_applicationData.CurrentFrame.ContainsPixel(mouseEvent.Point) || _toolSelector.SelectedTool == null)
         {
@@ -492,7 +496,7 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
 
         if (_toolSelector.SelectedTool != null && _toolSelector.SelectedTool.AddToHistory)
         {
-            _applicationData.CurrentModel.AddHistory();
+            await _historyService.AddToHistory(_applicationData.CurrentModel);
         }
 
         _applicationData.CurrentModel.SetModifiedPixels([]);

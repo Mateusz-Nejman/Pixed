@@ -24,8 +24,6 @@ public class ApplicationData
     {
         Models.Add(new PixedModel(this, UserSettings.UserWidth, UserSettings.UserHeight));
         CurrentModel.FileName = GenerateName();
-        CurrentModel.AddHistory(false);
-        CurrentModel.UnsavedChanges = false;
     }
 
     public string GenerateName(string prefix = "Untitled")
