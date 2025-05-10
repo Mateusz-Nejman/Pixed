@@ -56,7 +56,7 @@ internal class FileMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
 
         if (result.HasValue)
         {
-            PixedModel model = new(_applicationData, result.Value.Width, result.Value.Height)
+            PixedModel model = new(result.Value.Width, result.Value.Height)
             {
                 FileName = _applicationData.GenerateName()
             };

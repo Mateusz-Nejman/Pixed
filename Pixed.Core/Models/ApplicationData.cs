@@ -22,7 +22,7 @@ public class ApplicationData
 
     public void Initialize()
     {
-        Models.Add(new PixedModel(this, UserSettings.UserWidth, UserSettings.UserHeight));
+        Models.Add(new PixedModel(UserSettings.UserWidth, UserSettings.UserHeight));
         CurrentModel.FileName = GenerateName();
     }
 

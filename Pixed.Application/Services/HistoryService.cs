@@ -32,7 +32,11 @@ internal class HistoryService(IPlatformFolder platformFolder) : IHistoryService
         var file = await _platformFolder.GetFile(historyId, FolderType.History);
         var stream = await file.OpenWrite();
 
-        model.Serialize(stream);
+        MemoryStream memory = new();
+        model.Serialize(memory);
+        memory.Position = 0;
+
+        PixedProjectSerializer.Compress(memory, stream);
         stream.Dispose();
 
         List<string> newHistory = [];
@@ -106,8 +110,12 @@ internal class HistoryService(IPlatformFolder platformFolder) : IHistoryService
 
     public async Task<Stream> GetHistoryItem(PixedModel model, string id)
     {
+        MemoryStream memory = new();
         var file = await _platformFolder.GetFile(id, FolderType.History);
-        return await file.OpenRead();
+        var stream = await file.OpenRead();
+        PixedProjectSerializer.Decompress(stream, memory);
+        memory.Position = 0;
+        return memory;
     }
 
     public async Task ClearTempFiles()

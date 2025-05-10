@@ -8,7 +8,6 @@ namespace Pixed.Core.Models;
 
 public class PixedModel : PixelImage, IPixedSerializer
 {
-    private readonly ApplicationData _applicationData;
     private readonly ObservableCollection<Frame> _frames;
     private int _currentFrameIndex = 0;
     private string _fileName = string.Empty;
@@ -48,15 +47,14 @@ public class PixedModel : PixelImage, IPixedSerializer
 
     public string Id { get; }
 
-    public PixedModel(ApplicationData applicationData) : this(applicationData, applicationData.UserSettings.UserWidth, applicationData.UserSettings.UserHeight)
+    public PixedModel(ApplicationData applicationData) : this(applicationData.UserSettings.UserWidth, applicationData.UserSettings.UserHeight)
     {
 
     }
 
-    public PixedModel(ApplicationData applicationData, int width, int height)
+    public PixedModel(int width, int height)
     {
         Id = Guid.NewGuid().ToString();
-        _applicationData = applicationData;
         _frames = [];
 
         CloseCommand = new ActionCommand(() => CloseCommandAction(this));
