@@ -32,16 +32,17 @@ public static class PaintUtils
         return pixels;
     }
 
-    public static void PaintSimiliarConnected(Layer layer, Point point, uint replacementColor, BaseSelection? selection)
+    public unsafe static void PaintSimiliarConnected(Layer layer, Point point, uint replacementColor, BaseSelection? selection)
     {
-        uint targetColor = layer.GetPixel(point);
+        var colors = layer.GetPixels();
+        uint targetColor = colors[point.Y * layer.Width + point.X];
 
         if (targetColor == replacementColor)
         {
             return;
         }
 
-        var points = MathUtils.FloodFill(point, new Point(layer.Width, layer.Height), pos => layer.GetPixel(pos) == targetColor && (selection == null || selection.InSelection(pos)));
+        var points = MathUtils.FloodFill(point, new Point(layer.Width, layer.Height), pos => colors[pos.Y * layer.Width + pos.X] == targetColor && (selection == null || selection.InSelection(pos)));
         var pixels = points.Select(p => new Pixel(p, replacementColor)).ToList();
         var canvas = layer.GetCanvas();
         canvas.DrawPixels(pixels);

@@ -94,6 +94,7 @@ public class Layer : PixelImage, IPixedSerializer, IDisposable
         _bitmap = bitmap;
     }
 
+    [Obsolete]
     public uint GetPixel(Point point)
     {
         if (!ContainsPixel(point))
@@ -108,6 +109,12 @@ public class Layer : PixelImage, IPixedSerializer, IDisposable
             var unsafePtr = (uint*)pixelsPtr;
             return (UniColor)unsafePtr[point.Y * Width + point.X];
         }
+    }
+
+    public unsafe uint* GetPixels()
+    {
+        IntPtr pixelsPtr = _bitmap.GetPixels();
+        return (uint*)pixelsPtr;
     }
 
     public override SKBitmap Render()

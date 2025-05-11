@@ -1,5 +1,7 @@
-﻿using Pixed.Common.Models;
+﻿using Avalonia.Controls;
+using Pixed.Common.Models;
 using Pixed.Common.Services.Keyboard;
+using Pixed.Core;
 using Pixed.Core.Models;
 using Pixed.Core.Selection;
 using Pixed.Core.Utils;
@@ -48,21 +50,23 @@ public class ToolBucket(ApplicationData applicationData) : BaseTool(applicationD
                 maxX = selection.Pixels.MaxBy(p => p.Position.X).Position.X + 1;
                 maxY = selection.Pixels.MaxBy(p => p.Position.Y).Position.Y + 1;
             }
-            List<Pixel> pixels = [];
-            for (int x = minX; x < maxX; x++)
-            {
-                for (int y = minY; y < maxY; y++)
-                {
-                    var replacePoint = new Point(x, y);
+            List<SKPoint> pixels = [];
 
-                    if (frame.GetPixel(replacePoint) == targetColor)
+            unsafe
+            {
+                var colors = frame.CurrentLayer.GetPixels();
+                for (int a = 0; a < frame.Width * frame.Height; a++)
+                {
+                    if (colors[a] == targetColor)
                     {
-                        pixels.Add(new Pixel(replacePoint, color));
+                        int y = a / frame.Width;
+                        int x = a - (y * frame.Width);
+                        pixels.Add(new SKPoint(x, y));
                     }
                 }
             }
 
-            _canvas.DrawPixels(pixels);
+            _canvas.DrawPoints([.. pixels], color);
         }
         else
         {
