@@ -101,7 +101,13 @@ public class Layer : PixelImage, IPixedSerializer, IDisposable
             return 0;
         }
 
-        return (UniColor)_bitmap.GetPixel(point.X, point.Y);
+        IntPtr pixelsPtr = _bitmap.GetPixels();
+
+        unsafe
+        {
+            var unsafePtr = (uint*)pixelsPtr;
+            return (UniColor)unsafePtr[point.Y * Width + point.X];
+        }
     }
 
     public override SKBitmap Render()
