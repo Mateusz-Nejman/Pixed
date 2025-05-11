@@ -198,13 +198,8 @@ public static class TransformUtils
 
     private static void SetPixelsOpaque(Layer layer, List<Pixel> pixels)
     {
-        SKBitmap opaqued = new(layer.Width, layer.Height, true);
-        SKCanvas opaquedCanvas = new(opaqued);
-        opaquedCanvas.DrawPixels(pixels);
-        opaquedCanvas.Dispose();
-
         var layerCanvas = layer.GetCanvas();
-        layerCanvas.DrawBitmap(opaqued, SKPoint.Empty);
+        layerCanvas.DrawPixelsOpaque(pixels, new Point(layer.Width, layer.Height));
         layerCanvas.Dispose();
     }
 }

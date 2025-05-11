@@ -67,11 +67,6 @@ public class Frame : PixelImage, IPixedSerializer
         return CurrentLayer.GetCanvas();
     }
 
-    public void SetPixels(List<Pixel> pixels)
-    {
-        CurrentLayer.SetPixels(pixels);
-    }
-
     public uint GetPixel(Point point)
     {
         return CurrentLayer.GetPixel(point);

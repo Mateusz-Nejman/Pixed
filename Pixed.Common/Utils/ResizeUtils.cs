@@ -1,5 +1,6 @@
 ﻿using Pixed.Common.Services;
 using Pixed.Core.Models;
+using Pixed.Core.Utils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -73,7 +74,9 @@ public static class ResizeUtils
             }
         }
 
-        resizedLayer.SetPixels(pixels);
+        var canvas = resizedLayer.GetCanvas();
+        canvas.DrawPixels(pixels);
+        canvas.Dispose();
 
         return resizedLayer;
     }

@@ -5,6 +5,7 @@ using Pixed.Common.Tools.Selection;
 using Pixed.Core;
 using Pixed.Core.Models;
 using Pixed.Core.Selection;
+using Pixed.Core.Utils;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -121,7 +122,9 @@ public class SelectionManager
             }
         }
 
-        frame.SetPixels(pixels);
+        var canvas = frame.GetCanvas();
+        canvas.DrawPixels(pixels);
+        canvas.Dispose();
         Subjects.FrameModified.OnNext(frame);
         await _historyService.AddToHistory(_applicationData.CurrentModel);
     }
@@ -149,7 +152,9 @@ public class SelectionManager
         var pixels = _currentSelection.Pixels.Select(p => new Pixel(p.Position)).ToList();
         var frame = _applicationData.CurrentFrame;
 
-        frame.SetPixels(pixels);
+        var canvas = frame.GetCanvas();
+        canvas.DrawPixelsOpaque(pixels, new Point(frame.Width, frame.Height));
+        canvas.Dispose();
 
         Subjects.FrameModified.OnNext(frame);
         await _historyService.AddToHistory(_applicationData.CurrentModel);

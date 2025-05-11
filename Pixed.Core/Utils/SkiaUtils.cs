@@ -10,6 +10,15 @@ public static class SkiaUtils
 {
     private static readonly object _lock = new();
 
+    public static void DrawPixelsOpaque(this SKCanvas canvas, List<Pixel> pixels, Point size)
+    {
+        SKBitmap opaqued = new(size.X, size.Y, true);
+        SKCanvas opaquedCanvas = new(opaqued);
+        opaquedCanvas.DrawPixels(pixels);
+        opaquedCanvas.Dispose();
+
+        canvas.DrawBitmap(opaqued, SKPoint.Empty);
+    }
     public static void DrawPixels(this SKCanvas canvas, List<Pixel> pixels)
     {
         var colors = pixels.Select(p => p.Color).Distinct();

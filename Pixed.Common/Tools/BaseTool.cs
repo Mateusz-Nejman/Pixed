@@ -114,13 +114,6 @@ public abstract class BaseTool(ApplicationData applicationData)
         _properties[index].Checked = value;
     }
 
-    [Obsolete]
-    protected static void SetPixels(Layer layer, List<Pixel> pixels)
-    {
-        layer.SetPixels(pixels);
-        Subjects.LayerModified.OnNext(layer);
-    }
-
     protected static void ResetCurrentID(PixedModel model)
     {
         model.ResetID();

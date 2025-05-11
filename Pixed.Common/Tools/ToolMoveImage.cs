@@ -3,6 +3,7 @@ using Pixed.Common.Services.Keyboard;
 using Pixed.Core;
 using Pixed.Core.Models;
 using Pixed.Core.Selection;
+using Pixed.Core.Utils;
 using SkiaSharp;
 using System.Collections.Generic;
 
@@ -92,6 +93,8 @@ public class ToolMoveImage(ApplicationData applicationData) : BaseTool(applicati
             }
         }
 
-        SetPixels(layer, pixels);
+        var canvas = layer.GetCanvas();
+        canvas.DrawPixelsOpaque(pixels, new Point(layer.Width, layer.Height));
+        canvas.Dispose();
     }
 }

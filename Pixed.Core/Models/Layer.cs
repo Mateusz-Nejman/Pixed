@@ -83,15 +83,6 @@ public class Layer : PixelImage, IPixedSerializer, IDisposable
         return new SKCanvas(_bitmap);
     }
 
-    [Obsolete]
-    public void SetPixels(List<Pixel> pixels)
-    {
-        foreach (Pixel pixel in pixels)
-        {
-            SetPixelPrivate(pixel.Position, pixel.Color);
-        }
-    }
-
     public void MergeLayers(Layer layer2)
     {
         var bitmap = Render();
@@ -206,16 +197,5 @@ public class Layer : PixelImage, IPixedSerializer, IDisposable
     {
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
-    }
-
-    [Obsolete]
-    private void SetPixelPrivate(Point point, uint color)
-    {
-        if (!ContainsPixel(point))
-        {
-            return;
-        }
-
-        _bitmap.SetPixel(point.X, point.Y, color);
     }
 }
