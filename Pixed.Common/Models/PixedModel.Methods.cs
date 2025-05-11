@@ -23,6 +23,9 @@ public static class PixedModelMethods
 
         var stream = await historyService.GetHistoryItem(model, id);
         model.Deserialize(stream);
+        model.ResetID();
+        model.CurrentFrame.ResetID();
+        model.CurrentFrame.CurrentLayer.ResetID();
         Subjects.ProjectModified.OnNext(model);
         Subjects.FrameChanged.OnNext(model.CurrentFrame);
         Subjects.LayerChanged.OnNext(model.CurrentFrame.CurrentLayer);
@@ -50,6 +53,9 @@ public static class PixedModelMethods
         var stream = await historyService.GetHistoryItem(model, id);
 
         model.Deserialize(stream);
+        model.ResetID();
+        model.CurrentFrame.ResetID();
+        model.CurrentFrame.CurrentLayer.ResetID();
         Subjects.ProjectModified.OnNext(model);
         Subjects.FrameChanged.OnNext(model.CurrentFrame);
         Subjects.LayerChanged.OnNext(model.CurrentFrame.CurrentLayer);
