@@ -198,8 +198,7 @@ public static class TransformUtils
 
     private static void SetPixelsOpaque(Layer layer, List<Pixel> pixels)
     {
-        var layerCanvas = layer.GetCanvas();
-        layerCanvas.DrawPixelsOpaque(pixels, new Point(layer.Width, layer.Height));
-        layerCanvas.Dispose();
+        var handle = layer.GetHandle();
+        handle.SetPixels(pixels);
     }
 }

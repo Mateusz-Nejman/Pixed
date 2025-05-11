@@ -93,8 +93,7 @@ public class ToolMoveImage(ApplicationData applicationData) : BaseTool(applicati
             }
         }
 
-        var canvas = layer.GetCanvas();
-        canvas.DrawPixelsOpaque(pixels, new Point(layer.Width, layer.Height));
-        canvas.Dispose();
+        var handle = layer.GetHandle();
+        handle.SetPixels(pixels);
     }
 }

@@ -74,9 +74,8 @@ public static class ResizeUtils
             }
         }
 
-        var canvas = resizedLayer.GetCanvas();
-        canvas.DrawPixels(pixels);
-        canvas.Dispose();
+        var handle = resizedLayer.GetHandle();
+        handle.SetPixels(pixels);
 
         return resizedLayer;
     }

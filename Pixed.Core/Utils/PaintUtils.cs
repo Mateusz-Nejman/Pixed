@@ -23,18 +23,21 @@ public static class PaintUtils
         return GetSimiliarConnectedPixels(frame.CurrentLayer, point);
     }
 
-    public static List<Pixel> GetSimiliarConnectedPixels(Layer layer, Point point)
+    public unsafe static List<Pixel> GetSimiliarConnectedPixels(Layer layer, Point point)
     {
+        var handle = layer.GetHandle();
+        var colors = handle.GetPixels();
         uint targetColor = layer.GetPixel(point);
 
-        var points = MathUtils.FloodFill(point, new Point(layer.Width, layer.Height), pos => layer.GetPixel(pos) == targetColor);
+        var points = MathUtils.FloodFill(point, new Point(layer.Width, layer.Height), pos => colors[pos.Y * layer.Width + pos.X] == targetColor);
         var pixels = points.Select(point => new Pixel(point, targetColor)).ToList();
         return pixels;
     }
 
     public unsafe static void PaintSimiliarConnected(Layer layer, Point point, uint replacementColor, BaseSelection? selection)
     {
-        var colors = layer.GetPixels();
+        var handle = layer.GetHandle();
+        var colors = handle.GetPixels();
         uint targetColor = colors[point.Y * layer.Width + point.X];
 
         if (targetColor == replacementColor)
@@ -44,9 +47,7 @@ public static class PaintUtils
 
         var points = MathUtils.FloodFill(point, new Point(layer.Width, layer.Height), pos => colors[pos.Y * layer.Width + pos.X] == targetColor && (selection == null || selection.InSelection(pos)));
         var pixels = points.Select(p => new Pixel(p, replacementColor)).ToList();
-        var canvas = layer.GetCanvas();
-        canvas.DrawPixels(pixels);
-        canvas.Dispose();
+        handle.SetPixels(pixels);
     }
 
     public static void OutlineSimiliarConnectedPixels(Layer layer, Point point, uint replacementColor, bool fillCorners)
@@ -88,8 +89,7 @@ public static class PaintUtils
         var pixels = GetSimiliarConnectedPixels(layer, point);
         pixels = pixels.Where(neighbourCheck).Select(p => new Pixel(p.Position, replacementColor)).ToList();
 
-        var canvas = layer.GetCanvas();
-        canvas.DrawPixels(pixels);
-        canvas.Dispose();
+        var handle = layer.GetHandle();
+        handle.SetPixels(pixels);
     }
 }

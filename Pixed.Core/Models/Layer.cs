@@ -83,6 +83,11 @@ public class Layer : PixelImage, IPixedSerializer, IDisposable
         return new SKCanvas(_bitmap);
     }
 
+    public BitmapHandle GetHandle()
+    {
+        return new BitmapHandle(_bitmap);
+    }
+
     public void MergeLayers(Layer layer2)
     {
         var bitmap = Render();
@@ -121,7 +126,7 @@ public class Layer : PixelImage, IPixedSerializer, IDisposable
     {
         if(Opacity == 100)
         {
-            return _bitmap.Copy();
+            return _bitmap.FastCopy();
         }
 
         byte newAlpha = (byte)((Opacity / 100d) * 255d);

@@ -11,6 +11,17 @@ public static class SkiaUtils
 {
     private static readonly object _lock = new();
 
+    public unsafe static SKBitmap FastCopy(this SKBitmap bitmap)
+    {
+        int size = bitmap.Width * bitmap.Height;
+        IntPtr oldPixelsPtr = bitmap.GetPixels();
+        uint* oldPtr = (uint*)oldPixelsPtr.ToPointer();
+        SKBitmap copy = new(bitmap.Width, bitmap.Height);
+        IntPtr newPixelsPtr = copy.GetPixels();
+        uint* newPtr = (uint*)newPixelsPtr.ToPointer();
+        Buffer.MemoryCopy(oldPtr, newPtr, sizeof(uint) * size, sizeof(uint) * size);
+        return copy;
+    }
     public static void DrawPixelsOpaque(this SKCanvas canvas, List<Pixel> pixels, Point size)
     {
         SKBitmap opaqued = new(size.X, size.Y, true);
