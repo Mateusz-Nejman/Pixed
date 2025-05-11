@@ -27,7 +27,7 @@ public abstract class ToolSelectBase(ApplicationData applicationData) : BaseTool
 
     public override void ToolBegin(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        ToolBeginBase(point, model, keyState, selection);
+        ToolBeginBase();
         _start = point;
         _prev = point;
 
@@ -51,7 +51,7 @@ public abstract class ToolSelectBase(ApplicationData applicationData) : BaseTool
             OnSelectionEnd(_start, point, _prev, model.CurrentFrame);
         }
 
-        ToolEndBase(point, model, keyState, selection);
+        ToolEndBase();
     }
 
     public virtual void OnSelectionBegin(Point startPoint, Point currentPoint, Point previousPoint, Frame frame) { }

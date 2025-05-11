@@ -192,6 +192,7 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
     public ZoomControl ZoomContainer { get; set; }
     public GridOverlay GridCanvas { get; set; }
     public SelectionOverlay SelectionOverlay { get; set; }
+    public CursorOverlay CursorOverlay { get; set; }
     public TransparentBackground TransparentBackground { get; set; }
     public ImageBrush TransparentBrush
     {
@@ -300,6 +301,11 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
             if (SelectionOverlay != null)
             {
                 SelectionOverlay.Zoom = entry.Zoom;
+            }
+
+            if(CursorOverlay != null)
+            {
+                CursorOverlay.Zoom = entry.Zoom;
             }
 
             if (TransparentBackground != null)

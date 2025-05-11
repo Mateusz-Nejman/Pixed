@@ -23,7 +23,7 @@ public abstract class ToolPenBase(ApplicationData applicationData) : BaseTool(ap
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Pen tool");
     public override void ToolBegin(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        ToolBeginBase(point, model, keyState, selection);
+        ToolBeginBase();
 
         _canvas ??= model.CurrentFrame.GetCanvas();
         _prev = point;
@@ -34,7 +34,6 @@ public abstract class ToolPenBase(ApplicationData applicationData) : BaseTool(ap
 
     public override void ToolMove(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        ToolMoveBase(point, model, keyState, selection);
         if (_prev != point)
         {
             var interpolatedPixels = BresenhamLine.Get(point, _prev);
@@ -52,7 +51,7 @@ public abstract class ToolPenBase(ApplicationData applicationData) : BaseTool(ap
         _prev = point;
     }
 
-    public override async void ToolEnd(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
+    public override void ToolEnd(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
         _canvas?.Dispose();
         _canvas = null;
@@ -63,7 +62,7 @@ public abstract class ToolPenBase(ApplicationData applicationData) : BaseTool(ap
         Subjects.FrameModified.OnNext(frame);
         _prev = new Point(-1);
 
-        ToolEndBase(point, model, keyState, selection);
+        ToolEndBase();
     }
 
     public override void OnOverlay(SKCanvas canvas)

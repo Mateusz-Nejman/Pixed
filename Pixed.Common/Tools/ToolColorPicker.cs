@@ -15,7 +15,7 @@ public class ToolColorPicker(ApplicationData applicationData) : BaseTool(applica
     public override bool AddToHistory { get; protected set; } = false;
     public override void ToolBegin(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        ToolBeginBase(point, model, keyState, selection);
+        ToolBeginBase();
         var frame = model.CurrentFrame;
         if (frame.ContainsPixel(point))
         {

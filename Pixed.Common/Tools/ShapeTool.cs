@@ -18,14 +18,12 @@ public abstract class ShapeTool(ApplicationData applicationData) : BaseTool(appl
 
     public override void ToolBegin(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        ToolBeginBase(point, model, keyState, selection);
+        ToolBeginBase();
         _start = point;
     }
 
     public override void ToolMove(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        ToolMoveBase(point, model, keyState, selection);
-
         _shapePoints = GetShapePoints(point, keyState.IsShift || GetProperty(PROP_SHIFT));
     }
 
@@ -39,7 +37,7 @@ public abstract class ShapeTool(ApplicationData applicationData) : BaseTool(appl
         ResetCurrentID(model);
         Subjects.FrameModified.OnNext(model.CurrentFrame);
 
-        ToolEndBase(point, model, keyState, selection);
+        ToolEndBase();
     }
 
     public override void OnOverlay(SKCanvas canvas)

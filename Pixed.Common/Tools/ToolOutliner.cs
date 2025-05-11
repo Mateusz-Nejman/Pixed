@@ -18,7 +18,7 @@ public class ToolOutliner(ApplicationData applicationData) : BaseTool(applicatio
     public override bool SingleHighlightedPixel { get; protected set; } = true;
     public override void ToolBegin(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        ToolBeginBase(point, model, keyState, selection);
+        ToolBeginBase();
         var frame = model.CurrentFrame;
         var controlPressed = keyState.IsCtrl || GetProperty(PROP_FILL_CORNERS);
         var color = ToolColor;

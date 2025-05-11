@@ -16,7 +16,6 @@ public abstract class BaseTool(ApplicationData applicationData)
 {
     private readonly List<ToolProperty> _properties = [];
     protected readonly ApplicationData _applicationData = applicationData;
-    protected Point _highlightedPoint = new();
     private UniColor? _toolColor;
 
     public abstract string ImagePath { get; }
@@ -38,34 +37,28 @@ public abstract class BaseTool(ApplicationData applicationData)
         return _applicationData.PrimaryColor;
     }
 
-    protected void ToolBeginBase(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
+    protected void ToolBeginBase()
     {
         _toolColor ??= GetToolColor();
     }
 
     public virtual void ToolBegin(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        ToolBeginBase(point, model, keyState, selection);
-    }
-
-    protected void ToolMoveBase(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
-    {
-        //TODO highlight cursor
+        ToolBeginBase();
     }
 
     public virtual void ToolMove(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        ToolMoveBase(point, model, keyState, selection);
     }
 
-    protected void ToolEndBase(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
+    protected void ToolEndBase()
     {
         _toolColor = null;
     }
 
     public virtual void ToolEnd(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        ToolEndBase(point, model, keyState, selection);
+        ToolEndBase();
     }
 
     public virtual void OnOverlay(SKCanvas canvas)

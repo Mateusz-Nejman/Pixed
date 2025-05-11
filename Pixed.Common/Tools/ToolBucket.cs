@@ -20,7 +20,7 @@ public class ToolBucket(ApplicationData applicationData) : BaseTool(applicationD
     public override bool SingleHighlightedPixel { get; protected set; } = true;
     public override void ToolBegin(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        ToolBeginBase(point, model, keyState, selection);
+        ToolBeginBase();
         var frame = model.CurrentFrame;
 
         _canvas = frame.GetCanvas();

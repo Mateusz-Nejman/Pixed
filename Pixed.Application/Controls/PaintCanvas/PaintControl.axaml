@@ -28,6 +28,7 @@
               <paintCanvas:PaintContainer Name="image" RenderOptions.BitmapInterpolationMode="None" Source="{Binding CurrentFrame}"/>
               <paintCanvas:GridOverlay Width="{Binding ScaledGridWidth}" Height="{Binding ScaledGridHeight}" Name="gridCanvas" IsHitTestVisible="False"/>
               <paintCanvas:SelectionOverlay Width="{Binding ScaledGridWidth}" Height="{Binding ScaledGridHeight}" Name="selectionOverlay" IsHitTestVisible="False"/>
+			  <paintCanvas:CursorOverlay Width="{Binding ScaledGridWidth}" Height="{Binding ScaledGridHeight}" Name="cursorOverlay"/>
             </zoom:ZoomControl.ZoomContent>
           </zoom:ZoomControl>
         </Border>

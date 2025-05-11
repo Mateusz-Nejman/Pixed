@@ -24,7 +24,7 @@ public class ToolLighten(ApplicationData applicationData) : ToolPenBase(applicat
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Lighten", "Shift", "Darken");
     public override void ToolBegin(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        ToolBeginBase(point, model, keyState, selection);
+        ToolBeginBase();
         var frame = model.CurrentFrame;
         var shiftPressed = keyState.IsShift || GetProperty(PROP_DARKEN);
 

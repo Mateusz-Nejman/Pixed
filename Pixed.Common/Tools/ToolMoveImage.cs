@@ -22,7 +22,7 @@ public class ToolMoveImage(ApplicationData applicationData) : BaseTool(applicati
 
     public override void ToolBegin(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        ToolBeginBase(point, model, keyState, selection);
+        ToolBeginBase();
         _start = point;
         _currentLayer = model.CurrentFrame.CurrentLayer;
         _currentLayerClone = _currentLayer.Clone();
@@ -30,7 +30,6 @@ public class ToolMoveImage(ApplicationData applicationData) : BaseTool(applicati
 
     public override void ToolMove(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        ToolMoveBase(point, model, keyState, selection);
         var layer = model.CurrentFrame.CurrentLayer;
         var diff = point - _start;
 
@@ -51,7 +50,7 @@ public class ToolMoveImage(ApplicationData applicationData) : BaseTool(applicati
             ShiftLayer(layer, reference, diff, altPressed);
         }, _applicationData, true);
 
-        ToolEndBase(point, model, keyState, selection);
+        ToolEndBase();
     }
 
     public override List<ToolProperty> GetToolProperties()
