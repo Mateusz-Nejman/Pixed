@@ -6,7 +6,13 @@ using SkiaSharp;
 namespace Pixed.Application.Controls.PaintCanvas;
 internal class TransparentBackground : OverlayControl
 {
+    private const int MIN_ZOOM = 8;
+
+    private readonly UniColor _color1 = new(76, 76, 76);
+    private readonly UniColor _color2 = new(85, 85, 85);
+
     private readonly SKPaint _paint;
+    private readonly SKPaint _solidPaint;
     public TransparentBackground()
     {
         ClipToBounds = false;
@@ -15,6 +21,11 @@ internal class TransparentBackground : OverlayControl
         _paint = new SKPaint()
         {
             Shader = shader,
+        };
+
+        _solidPaint = new SKPaint()
+        {
+            Color = _color2
         };
         background.Dispose();
         shader.Dispose();
@@ -28,18 +39,16 @@ internal class TransparentBackground : OverlayControl
 
     public override void Render(SKCanvas canvas)
     {
-        canvas.DrawRect(SKRect.Create(Bounds.Width.ToFloat() / Zoom.ToFloat(), Bounds.Height.ToFloat() / Zoom.ToFloat()), _paint);
+        canvas.DrawRect(SKRect.Create(Bounds.Width.ToFloat() / Zoom.ToFloat(), Bounds.Height.ToFloat() / Zoom.ToFloat()), Zoom >= MIN_ZOOM ? _paint : _solidPaint);
     }
 
-    private static SKBitmap CreateTransparentBackground()
+    private SKBitmap CreateTransparentBackground()
     {
-        UniColor color1 = new(76, 76, 76);
-        UniColor color2 = new(85, 85, 85);
         SKBitmap bitmap = new(2, 2);
-        bitmap.SetPixel(0, 0, color1);
-        bitmap.SetPixel(1, 0, color2);
-        bitmap.SetPixel(1, 1, color1);
-        bitmap.SetPixel(0, 1, color2);
+        bitmap.SetPixel(0, 0, _color1);
+        bitmap.SetPixel(1, 0, _color2);
+        bitmap.SetPixel(1, 1, _color1);
+        bitmap.SetPixel(0, 1, _color2);
         return bitmap;
     }
 }
