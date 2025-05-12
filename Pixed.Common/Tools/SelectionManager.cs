@@ -125,6 +125,8 @@ public class SelectionManager
         var canvas = frame.GetCanvas();
         canvas.DrawPixels(pixels);
         canvas.Dispose();
+
+        _applicationData.CurrentModel.ResetRecursive();
         Subjects.FrameModified.OnNext(frame);
         await _historyService.AddToHistory(_applicationData.CurrentModel);
     }

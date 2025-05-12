@@ -66,9 +66,7 @@ public class Crop(ApplicationData applicationData, SelectionManager selectionMan
 
         var newModel = ResizeUtils.ResizeModel(applicationData, model, new Point(1 + boundaries.Item2.X - boundaries.Item1.X, 1 + boundaries.Item2.Y - boundaries.Item1.Y), false, ResizeUtils.Origin.TopLeft);
 
-        _applicationData.CurrentModel.ResetID();
-        _applicationData.CurrentFrame.ResetID();
-        _applicationData.CurrentLayer.ResetID();
+        _applicationData.CurrentModel.ResetRecursive();
         historyService.Register(newModel);
         historyService.CopyHistoryFrom(model, newModel);
         await historyService.AddToHistory(newModel);

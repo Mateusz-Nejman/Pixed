@@ -13,9 +13,7 @@ public abstract class AbstractTransformTool(ApplicationData applicationData, IHi
     public virtual async Task ApplyTransformation(bool shiftPressed, bool controlPressed, bool altPressed)
     {
         await ApplyTool(altPressed, shiftPressed, controlPressed);
-        _applicationData.CurrentModel.ResetID();
-        _applicationData.CurrentFrame.ResetID();
-        _applicationData.CurrentLayer.ResetID();
+        _applicationData.CurrentModel.ResetRecursive();
         await _historyService.AddToHistory(_applicationData.CurrentModel);
     }
     public virtual async Task ApplyTool(bool altKey, bool allFrames, bool allLayers)

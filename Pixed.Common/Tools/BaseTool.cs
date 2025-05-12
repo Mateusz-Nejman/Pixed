@@ -113,11 +113,4 @@ public abstract class BaseTool(ApplicationData applicationData)
         int index = _properties.FindIndex(p => p.Name == name);
         _properties[index].Checked = value;
     }
-
-    protected static void ResetCurrentID(PixedModel model)
-    {
-        model.ResetID();
-        model.CurrentFrame.ResetID();
-        model.CurrentFrame.CurrentLayer.ResetID();
-    }
 }

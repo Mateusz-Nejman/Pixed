@@ -80,7 +80,7 @@ public class ToolBucket(ApplicationData applicationData) : BaseTool(applicationD
         base.ToolEnd(point, model, keyState, selection);
         _canvas?.Dispose();
         _canvas = null;
-        ResetCurrentID(model);
+        model.ResetRecursive();
     }
 
     public override List<ToolProperty> GetToolProperties()

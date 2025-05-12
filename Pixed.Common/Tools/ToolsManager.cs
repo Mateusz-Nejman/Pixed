@@ -25,7 +25,7 @@ public class ToolsManager
 
     public ToolsManager(
         ToolPen toolPen, ToolBucket toolBucket, ToolEraser toolEraser,
-        ToolStroke toolStroke, ToolRectangle toolRectangle, ToolCircle toolCircle, ToolMoveImage toolMove, ToolLighten toolLighten,
+        ToolStroke toolStroke, ToolRectangle toolRectangle, ToolCircle toolCircle, ToolLighten toolLighten,
         ToolDithering toolDithering, ToolColorPicker toolColorPicker,
         ToolOutliner toolOutliner, ToolMoveCanvas toolMoveCanvas, ToolSelectShape shapeSelect, ToolSelectRectangle rectangleSelect, ToolSelectLasso lassoSelect)
     {
@@ -37,7 +37,7 @@ public class ToolsManager
             { "tool_eraser", toolEraser},
             { "tool_stroke", toolStroke},
             { "tool_rectangle", toolRectangle},
-            { "tool_circle", toolCircle},{ "tool_move", toolMove},
+            { "tool_circle", toolCircle},
             { "tool_shape_select", shapeSelect},
             { "tool_rectangle_select", rectangleSelect},
             { "tool_lasso_select", lassoSelect},

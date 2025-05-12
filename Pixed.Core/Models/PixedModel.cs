@@ -103,6 +103,30 @@ public class PixedModel : PixelImage, IPixedSerializer
         }
     }
 
+    public void ResetRecursive(bool onlyCurrent = true)
+    {
+        if(onlyCurrent)
+        {
+            CurrentFrame.CurrentLayer.ResetID();
+            CurrentFrame.ResetID();
+            ResetID();
+        }
+        else
+        {
+            foreach(var frame in _frames)
+            {
+                foreach(var layer in frame.Layers)
+                {
+                    layer.ResetID();
+                }
+
+                frame.ResetID();
+            }
+
+            ResetID();
+        }
+    }
+
     public static PixedModel FromFrames(ObservableCollection<Frame> frames, string name, ApplicationData applicationData)
     {
         PixedModel model = new(applicationData);
