@@ -1,6 +1,7 @@
 ﻿using Avalonia.Interactivity;
 using Pixed.Application.Utils;
 using Pixed.Core;
+using Pixed.Core.Utils;
 using SkiaSharp;
 
 namespace Pixed.Application.Controls.PaintCanvas;
@@ -44,7 +45,7 @@ internal class TransparentBackground : OverlayControl
 
     private SKBitmap CreateTransparentBackground()
     {
-        SKBitmap bitmap = new(2, 2);
+        SKBitmap bitmap = SkiaUtils.GetBitmap(2, 2);
         bitmap.SetPixel(0, 0, _color1);
         bitmap.SetPixel(1, 0, _color2);
         bitmap.SetPixel(1, 1, _color1);

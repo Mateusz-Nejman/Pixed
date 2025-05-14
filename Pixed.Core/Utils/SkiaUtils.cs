@@ -10,12 +10,21 @@ public static class SkiaUtils
 {
     private static readonly object _lock = new();
 
+    public static SKBitmap GetBitmap(int width, int height, bool isOpaque = false)
+    {
+        return new SKBitmap(width, height,SKColorType.Bgra8888, isOpaque ? SKAlphaType.Opaque : SKAlphaType.Unpremul);
+    }
+
+    public static SKBitmap GetBitmap(Point size, bool isOpaque = false)
+    {
+        return GetBitmap(size.X, size.Y, isOpaque);
+    }
     public unsafe static SKBitmap FastCopy(this SKBitmap bitmap)
     {
         int size = bitmap.Width * bitmap.Height;
         IntPtr oldPixelsPtr = bitmap.GetPixels();
         uint* oldPtr = (uint*)oldPixelsPtr.ToPointer();
-        SKBitmap copy = new(bitmap.Width, bitmap.Height);
+        SKBitmap copy = SkiaUtils.GetBitmap(bitmap.Width, bitmap.Height);
         IntPtr newPixelsPtr = copy.GetPixels();
         uint* newPtr = (uint*)newPixelsPtr.ToPointer();
         Buffer.MemoryCopy(oldPtr, newPtr, sizeof(uint) * size, sizeof(uint) * size);
@@ -23,7 +32,7 @@ public static class SkiaUtils
     }
     public static void DrawPixelsOpaque(this SKCanvas canvas, List<Pixel> pixels, Point size)
     {
-        SKBitmap opaqued = new(size.X, size.Y, true);
+        SKBitmap opaqued = SkiaUtils.GetBitmap(size.X, size.Y, true);
         SKCanvas opaquedCanvas = new(opaqued);
         opaquedCanvas.DrawPixels(pixels);
         opaquedCanvas.Dispose();
@@ -64,7 +73,7 @@ public static class SkiaUtils
 
     public static SKBitmap FromArray(IList<uint> array, Point size)
     {
-        var bitmap = new SKBitmap(size.X, size.Y);
+        var bitmap = GetBitmap(size);
         var gcHandle = GCHandle.Alloc(array.ToArray(), GCHandleType.Pinned);
         var info = new SKImageInfo(size.X, size.Y, SKColorType.Bgra8888, SKAlphaType.Unpremul);
         bitmap.InstallPixels(info, gcHandle.AddrOfPinnedObject(), info.RowBytes, delegate { gcHandle.Free(); }, null);

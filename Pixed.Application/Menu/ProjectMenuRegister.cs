@@ -64,7 +64,7 @@ internal class ProjectMenuRegister(IMenuItemRegistry menuItemRegistry, DialogUti
             }
 
             var bitmapSize = new Point(bitmap.Width, bitmap.Height);
-            SKBitmap? layerBitmap = new(currentSize.X, currentSize.Y);
+            SKBitmap? layerBitmap = SkiaUtils.GetBitmap(currentSize);
             SKCanvas canvas = new(layerBitmap);
 
             if (isSingle)

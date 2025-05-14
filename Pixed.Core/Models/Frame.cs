@@ -90,7 +90,7 @@ public class Frame : PixelImage, IPixedSerializer
     {
         lock (_lock)
         {
-            SKBitmap render = new(Width, Height);
+            SKBitmap render = SkiaUtils.GetBitmap(Width, Height);
             SKCanvas canvas = new(render);
             canvas.Clear(SKColors.Transparent);
 

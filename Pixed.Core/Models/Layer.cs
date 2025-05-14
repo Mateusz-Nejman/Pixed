@@ -49,7 +49,7 @@ public class Layer : PixelImage, IPixedSerializer, IDisposable
         _id = Guid.NewGuid().ToString();
         _width = width;
         _height = height;
-        _bitmap = new SKBitmap(width, height);
+        _bitmap = SkiaUtils.GetBitmap(width, height);
     }
 
     private Layer(int width, int height, SKBitmap bitmap)
@@ -131,7 +131,7 @@ public class Layer : PixelImage, IPixedSerializer, IDisposable
 
         byte newAlpha = (byte)((Opacity / 100d) * 255d);
         SKPaint paint = new() { Color = new SKColor(255, 255, 255, newAlpha) };
-        SKBitmap opacityBitmap = new(Width, Height);
+        SKBitmap opacityBitmap = SkiaUtils.GetBitmap(Width, Height);
         SKCanvas canvas = new(opacityBitmap);
         
         if(!SkiaUtils.IsNull(_bitmap))
