@@ -1,5 +1,4 @@
 ﻿using Avalonia;
-using Avalonia.Controls;
 using Pixed.Core.Models;
 using Pixed.Core.Utils;
 using SkiaSharp;
@@ -88,57 +87,9 @@ public static class SkiaUtils
         }
     }
 
-    public static void Clear(this SKBitmap src)
-    {
-        uint[] pixels = new uint[src.Width * src.Height];
-        Array.Fill(pixels, UniColor.Transparent);
-        src.Fill(pixels);
-    }
-
-    public static void Fill(this SKBitmap src, IList<uint> array)
-    {
-        var gcHandle = GCHandle.Alloc(array.ToArray(), GCHandleType.Pinned);
-        var info = new SKImageInfo(src.Width, src.Height, SKColorType.Bgra8888, SKAlphaType.Unpremul);
-        src.InstallPixels(info, gcHandle.AddrOfPinnedObject(), info.RowBytes, delegate { gcHandle.Free(); }, null);
-    }
-
     public static bool ContainsPixel(this SKBitmap src, Point point)
     {
         return point.X >= 0 && point.Y >= 0 && point.X < src.Width && point.Y < src.Height;
-    }
-
-    public static void SetPixel(this SKBitmap bitmap, Point point, uint color, int toolSize)
-    {
-        if (toolSize <= 1 && bitmap.ContainsPixel(point))
-        {
-            bitmap.SetPixel(point.X, point.Y, (UniColor)color);
-            return;
-        }
-
-        SKCanvas canvas = new(bitmap);
-
-        if(toolSize == 1)
-        {
-            canvas.DrawPoint(point.X, point.Y, (UniColor)color);
-        }
-        else
-        {
-            var points = PaintUtils.GetToolPoints(point, toolSize);
-            var minX = points.Min(p => p.X);
-            var minY = points.Min(p => p.Y);
-            var maxX = points.Max(p => p.X);
-            var maxY = points.Max(p => p.Y);
-
-            SKRect rect = new(minX, minY, maxX + 1, maxY + 1);
-            SKPaint paint = new()
-            {
-                Color = color,
-                Style = SKPaintStyle.Fill
-            };
-            canvas.DrawRect(rect, paint);
-        }
-
-        canvas.Dispose();
     }
 
     public static void DrawLine(this SKCanvas canvas, SKPoint p0, SKPoint p1, UniColor color)
