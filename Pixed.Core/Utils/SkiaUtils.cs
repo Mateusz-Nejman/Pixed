@@ -10,6 +10,26 @@ public static class SkiaUtils
 {
     private static readonly object _lock = new();
 
+    public static SKBitmap MergeBitmaps(SKBitmap[] bitmaps, int width, int height)
+    {
+        var context = GRContext.CreateGl();
+        var gpuSurface = SKSurface.Create(context, true, new SKImageInfo(width, height));
+        gpuSurface.Canvas.Clear(UniColor.Transparent);
+        
+        foreach(var bitmap in bitmaps)
+        {
+            if(!IsNull(bitmap))
+            {
+                gpuSurface.Canvas.DrawBitmap(bitmap, SKPoint.Empty);
+            }
+        }
+
+        var image = gpuSurface.Snapshot();
+        var merged = SKBitmap.FromImage(image);
+        image.Dispose();
+        gpuSurface.Dispose();
+        return merged;
+    }
     public static SKBitmap GetBitmap(int width, int height, bool isOpaque = false)
     {
         return new SKBitmap(width, height,SKColorType.Bgra8888, isOpaque ? SKAlphaType.Opaque : SKAlphaType.Unpremul);
