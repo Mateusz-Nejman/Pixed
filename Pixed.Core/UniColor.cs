@@ -289,4 +289,9 @@ public struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatable
         }
         return new UniColor();
     }
+
+    public override readonly int GetHashCode()
+    {
+        return HashCode.Combine(A, R, G, B);
+    }
 }

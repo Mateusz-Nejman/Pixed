@@ -10,10 +10,6 @@ internal class ProjectsSectionViewModel : ExtendedViewModel, IDisposable
     private readonly ApplicationData _applicationData;
     private int _selectedProject = 0;
     private bool _disposedValue;
-    private readonly IDisposable _frameModified;
-    private readonly IDisposable _frameRemoved;
-    private readonly IDisposable _layerModified;
-    private readonly IDisposable _layerRemoved;
     private readonly IDisposable _projectAdded;
     private readonly IDisposable _projectRemoved;
     private readonly IDisposable _projectModified;
@@ -77,10 +73,6 @@ internal class ProjectsSectionViewModel : ExtendedViewModel, IDisposable
         {
             if (disposing)
             {
-                _frameRemoved?.Dispose();
-                _frameModified?.Dispose();
-                _layerModified?.Dispose();
-                _layerRemoved?.Dispose();
                 _projectAdded?.Dispose();
                 _projectRemoved?.Dispose();
                 _projectModified?.Dispose();

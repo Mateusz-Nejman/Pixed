@@ -17,8 +17,8 @@ internal abstract class OverlayControl : Control
         private readonly OverlayControl _instance = instance;
 
         public Rect Bounds { get; } = bounds;
-        public bool HitTest(Point p) => _instance.HitTestEnabled ? Bounds.Contains(p) : false;
-        public bool Equals(ICustomDrawOperation other) => false;
+        public bool HitTest(Point p) => _instance.HitTestEnabled && Bounds.Contains(p);
+        public bool Equals(ICustomDrawOperation? other) => false;
 
         public void Dispose()
         {
