@@ -90,12 +90,23 @@ public class Frame : PixelImage, IPixedSerializer
     {
         lock (_lock)
         {
-            var bitmaps = _layers.Select(l => l.Render()).ToArray();
+            SKBitmap render = SkiaUtils.GetBitmap(Width, Height);
+            SKCanvas canvas = new(render);
+            canvas.Clear(SKColors.Transparent);
 
-            var merged = SkiaUtils.MergeBitmaps(bitmaps, Width, Height);
+            for (int a = 0; a < _layers.Count; a++)
+            {
+                var bitmap = _layers[a].Render();
 
-            Array.ForEach(bitmaps, b => b?.Dispose());
-            return merged;
+                if(!SkiaUtils.IsNull(bitmap))
+                {
+                    canvas.DrawBitmap(bitmap, new SKPoint(0, 0));
+                }
+
+                bitmap.Dispose();
+            }
+            canvas.Dispose();
+            return render;
         }
     }
 
