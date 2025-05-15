@@ -51,14 +51,14 @@ Your imagination and **Pixed**. These two things are needed for pixel-arted imag
 ## Stack
 - .NET 8
 - Avalonia [AvaloniaUI/avalonia](https://github.com/avaloniaui/avalonia)
+- SkiaSharp [mono/SkiaSharp](https://github.com/mono/SkiaSharp)
+- BigGustave (Modified in Pixed.BigGustave) [EliotJones/BigGustave](https://github.com/EliotJones/BigGustave)
 - Microsoft.Extensions.DependencyInjection [NuGet](https://www.nuget.org/packages/Microsoft.Extensions.DependencyInjection)
 - Newtonsoft.JSON [JamesNK/Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json)
 - PixiEditor.ColorPicker [PixiEditor/ColorPicker](https://github.com/PixiEditor/ColorPicker)
 - System.Reactive (RX) [dotnet/reactive](https://github.com/dotnet/reactive)
 - LZMA SDK [Mateusz-Nejman/LZMA_SDK](https://github.com/Mateusz-Nejman/LZMA_SDK)
-- AvaloniaProgressRing [Deadpikle/AvaloniaProgressRing](https://github.com/Deadpikle/AvaloniaProgressRing)
-- SkiaSharp [mono/SkiaSharp](https://github.com/mono/SkiaSharp)
-- BigGustave (Modified in Pixed.BigGustave) [EliotJones/BigGustave](https://github.com/EliotJones/BigGustave)
+- AvaloniaProgressRing [moviegear/LoadingIndicators.Avalonia](https://github.com/moviegear/LoadingIndicators.Avalonia/)
 - WiX Toolset [wixtoolset/wix](https://github.com/wixtoolset/wix)
 - Svg.Skia [wieslawsoltes/Svg.Skia](https://github.com/wieslawsoltes/Svg.Skia)
 

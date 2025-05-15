@@ -2,33 +2,33 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		xmlns:progRing="clr-namespace:AvaloniaProgressRing;assembly=AvaloniaProgressRing"
+				xmlns:li="using:LoadingIndicators.Avalonia"
+        xmlns:viewModels="clr-namespace:Pixed.Application.ViewModels;assembly=Pixed.Application"
         mc:Ignorable="d"
         x:Class="Pixed.Application.Windows.SplashWindow"
+        x:DataType="viewModels:AboutViewModel"
         Title="SplashWindow"
-		ShowInTaskbar="False" 
-		SystemDecorations="None"
+				ShowInTaskbar="False" 
+				SystemDecorations="None"
         CanResize="False" 
 		WindowStartupLocation="CenterScreen"
-		Width="200"
-		Height="300"
+		Width="600"
+		Height="320"
 		CornerRadius="16"
 		Background="Transparent">
+  <Window.DataContext>
+    <viewModels:AboutViewModel/>
+  </Window.DataContext>
 	<Border CornerRadius="16" Background="{StaticResource Accent}">
 		<Grid>
 			<Grid.RowDefinitions>
 				<RowDefinition Height="200"/>
+        <RowDefinition Height="20"/>
 				<RowDefinition Height="100"/>
 			</Grid.RowDefinitions>
 			<Image Source="/Resources/icon256.png" Width="200" Height="200"/>
-			<progRing:ProgressRing Width="70"
-							   Height="70"
-							   IsActive="True"
-							   HorizontalAlignment="Center"
-							   VerticalAlignment="Center"
-							   Foreground="White"
-							   Margin="10,20,0,0"
-								   Grid.Row="1"/>
+      <TextBlock Text="{Binding AppVersion}" Foreground="White" Grid.Row="1" TextAlignment="Center"/>
+      <li:LoadingIndicator IsActive="true" Mode="ThreeDots" SpeedRatio="1.2" Grid.Row="2" Foreground="White" Width="100" Height="100"/>
 		</Grid>
 	</Border>
 </Window>
