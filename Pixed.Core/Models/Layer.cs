@@ -151,13 +151,13 @@ public class Layer : PixelImage, IPixedSerializer, IDisposable
 
     public void Serialize(Stream stream)
     {
-        var colors = _bitmap.ToArray();
         stream.WriteDouble(Opacity);
         stream.WriteInt(Width);
         stream.WriteInt(Height);
         stream.WriteString(Name);
-        stream.WriteInt(colors.Length);
-        stream.WriteUIntArray(colors);
+        stream.WriteInt(Width * Height);
+        var array = _bitmap.ToByteArray();
+        stream.Write(array);
     }
 
     public void Deserialize(Stream stream)
@@ -167,12 +167,9 @@ public class Layer : PixelImage, IPixedSerializer, IDisposable
         _height = stream.ReadInt();
         _name = stream.ReadString();
         int pixelsSize = stream.ReadInt();
-        var colors = new uint[pixelsSize];
-
-        for (int i = 0; i < pixelsSize; i++)
-        {
-            colors[i] = stream.ReadUInt();
-        }
+        byte[] bytes = new byte[pixelsSize * sizeof(uint)];
+        stream.Read(bytes, 0, bytes.Length);
+        var colors = bytes.ToUInt();
 
         _bitmap?.Dispose();
         _bitmap = SkiaUtils.FromArray(colors, new Point(_width, _height));
