@@ -44,17 +44,17 @@ public class ToolPen(ApplicationData applicationData) : ToolPenBase(applicationD
 
             if (controlPressed)
             {
-                DrawOnCanvas(color, new Point(symX, point.Y), _canvas, selection);
+                DrawOnBitmapHandle(color, new Point(symX, point.Y), _handle, selection);
             }
 
             if (altPressed)
             {
-                DrawOnCanvas(color, new Point(point.X, symY), _canvas, selection);
+                DrawOnBitmapHandle(color, new Point(point.X, symY), _handle, selection);
             }
 
             if (shiftPressed)
             {
-                DrawOnCanvas(color, new Point(symX, symY), _canvas, selection);
+                DrawOnBitmapHandle(color, new Point(symX, symY), _handle, selection);
             }
 
             _prev = point;

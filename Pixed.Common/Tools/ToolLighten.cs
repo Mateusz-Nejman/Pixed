@@ -37,10 +37,10 @@ public class ToolLighten(ApplicationData applicationData) : ToolPenBase(applicat
 
         if(!_modified.Contains(p => p.Position == point))
         {
-            if(_canvas == null)
+            if(_handle == null)
             {
                 _render = frame.CurrentLayer.Render();
-                _canvas = frame.GetCanvas();
+                _handle = frame.GetHandle();
             }
             _modified.AddRange(GetModifiedPixels(point, frame, shiftPressed, selection));
         }
@@ -48,7 +48,7 @@ public class ToolLighten(ApplicationData applicationData) : ToolPenBase(applicat
 
     public override void ToolEnd(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        _canvas.DrawPixels([.. _modified]);
+        _handle?.SetPixels([.. _modified]);
         base.ToolEnd(point, model, keyState, selection);
         _modified.Clear();
         _render?.Dispose();

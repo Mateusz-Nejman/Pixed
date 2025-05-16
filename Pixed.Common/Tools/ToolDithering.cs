@@ -34,8 +34,8 @@ public class ToolDithering(ApplicationData applicationData) : ToolPenBase(applic
             }
 
             var color = usePrimary ? _applicationData.PrimaryColor : _applicationData.SecondaryColor;
-            _canvas ??= frame.GetCanvas();
-            DrawOnCanvas(color, toolPoint, _canvas, selection);
+            _handle ??= frame.GetHandle();
+            DrawOnBitmapHandle(color, toolPoint, _handle, selection);
         }
     }
 }

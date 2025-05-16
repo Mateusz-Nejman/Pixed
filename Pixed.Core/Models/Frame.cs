@@ -62,6 +62,10 @@ public class Frame : PixelImage, IPixedSerializer
         return frame;
     }
 
+    public BitmapHandle GetHandle()
+    {
+        return CurrentLayer.GetHandle();
+    }
     public SKCanvas GetCanvas()
     {
         return CurrentLayer.GetCanvas();

@@ -39,4 +39,12 @@ public class BitmapHandle
             SetPixel(pixel.Position, pixel.Color);
         }
     }
+
+    public void SetPixels(List<Point> points, UniColor color)
+    {
+        foreach(var point in points)
+        {
+            SetPixel(point, color);
+        }
+    }
 }

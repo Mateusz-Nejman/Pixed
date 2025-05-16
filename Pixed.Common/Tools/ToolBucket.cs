@@ -1,18 +1,16 @@
 ﻿using Avalonia.Controls;
 using Pixed.Common.Models;
 using Pixed.Common.Services.Keyboard;
-using Pixed.Core;
 using Pixed.Core.Models;
 using Pixed.Core.Selection;
 using Pixed.Core.Utils;
-using SkiaSharp;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Pixed.Common.Tools;
 public class ToolBucket(ApplicationData applicationData) : BaseTool(applicationData)
 {
-    private SKCanvas? _canvas = null;
+    private BitmapHandle? _handle = null;
 
     private const string PROP_REPLACE = "Replace color in current layer";
     public override string ImagePath => "avares://Pixed.Application/Resources/fluent-icons/ic_fluent_paint_bucket_24_regular.svg";
@@ -25,7 +23,7 @@ public class ToolBucket(ApplicationData applicationData) : BaseTool(applicationD
         ToolBeginBase();
         var frame = model.CurrentFrame;
 
-        _canvas = frame.GetCanvas();
+        _handle = frame.GetHandle();
         uint color = ToolColor;
         uint targetColor = frame.GetPixel(point);
 
@@ -50,7 +48,7 @@ public class ToolBucket(ApplicationData applicationData) : BaseTool(applicationD
                 maxX = selection.Pixels.MaxBy(p => p.Position.X).Position.X + 1;
                 maxY = selection.Pixels.MaxBy(p => p.Position.Y).Position.Y + 1;
             }
-            List<SKPoint> pixels = [];
+            List<Point> points = [];
 
             unsafe
             {
@@ -61,12 +59,12 @@ public class ToolBucket(ApplicationData applicationData) : BaseTool(applicationD
                     {
                         int y = a / frame.Width;
                         int x = a - (y * frame.Width);
-                        pixels.Add(new SKPoint(x, y));
+                        points.Add(new Point(x, y));
                     }
                 }
             }
 
-            _canvas.DrawPoints([.. pixels], color);
+            _handle.SetPixels(points, color);
         }
         else
         {
@@ -78,8 +76,7 @@ public class ToolBucket(ApplicationData applicationData) : BaseTool(applicationD
     public override void ToolEnd(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
         base.ToolEnd(point, model, keyState, selection);
-        _canvas?.Dispose();
-        _canvas = null;
+        _handle = null;
         model.ResetRecursive();
     }
 
