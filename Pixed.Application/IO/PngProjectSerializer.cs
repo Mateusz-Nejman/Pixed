@@ -1,6 +1,5 @@
 ﻿using Pixed.Application.Utils;
 using Pixed.BigGustave;
-using Pixed.Common.Utils;
 using Pixed.Core.Models;
 using Pixed.Core.Utils;
 using SkiaSharp;
@@ -46,7 +45,7 @@ public class PngProjectSerializer : IPixedProjectSerializer
                 for (int y = 0; y < layer.Height; y += TileHeight)
                 {
                     SKBitmap tileBitmap = SkiaUtils.GetBitmap(TileWidth, TileHeight);
-                    if(render.ExtractSubset(tileBitmap, SKRectI.Create(x, y, TileWidth, TileHeight)))
+                    if (render.ExtractSubset(tileBitmap, SKRectI.Create(x, y, TileWidth, TileHeight)))
                     {
                         Layer subLayer = Layer.FromBitmap(tileBitmap, "Layer 0");
                         Frame subFrame = Frame.FromLayers([subLayer]);

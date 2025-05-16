@@ -5,7 +5,6 @@ using Pixed.Core;
 using Pixed.Core.Models;
 using Pixed.Core.Selection;
 using Pixed.Core.Utils;
-using SkiaSharp;
 
 namespace Pixed.SimpleExtension;
 public class SimpleTool(ApplicationData applicationData, IHistoryService historyService) : BaseTool(applicationData)

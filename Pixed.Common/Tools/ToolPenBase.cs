@@ -77,7 +77,7 @@ public abstract class ToolPenBase(ApplicationData applicationData) : BaseTool(ap
 
         if (_applicationData.ToolSize == 1)
         {
-            handle.SetPixel(point, color);;
+            handle.SetPixel(point, color); ;
             return;
         }
 

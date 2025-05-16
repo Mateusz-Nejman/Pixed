@@ -2,7 +2,6 @@
 using Pixed.Common.Services.Keyboard;
 using Pixed.Core.Models;
 using Pixed.Core.Selection;
-using SkiaSharp;
 
 namespace Pixed.Common.Tools;
 public class ToolColorPicker(ApplicationData applicationData) : BaseTool(applicationData)

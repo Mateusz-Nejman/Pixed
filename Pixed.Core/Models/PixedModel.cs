@@ -110,7 +110,7 @@ public class PixedModel : PixelImage, IPixedSerializer
 
     public void ResetRecursive(bool onlyCurrent = true)
     {
-        if(onlyCurrent)
+        if (onlyCurrent)
         {
             CurrentFrame.CurrentLayer.ResetID();
             CurrentFrame.ResetID();
@@ -118,9 +118,9 @@ public class PixedModel : PixelImage, IPixedSerializer
         }
         else
         {
-            foreach(var frame in _frames)
+            foreach (var frame in _frames)
             {
-                foreach(var layer in frame.Layers)
+                foreach (var layer in frame.Layers)
                 {
                     layer.ResetID();
                 }

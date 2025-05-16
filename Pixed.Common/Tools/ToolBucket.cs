@@ -1,5 +1,4 @@
-﻿using Avalonia.Controls;
-using Pixed.Common.Models;
+﻿using Pixed.Common.Models;
 using Pixed.Common.Services.Keyboard;
 using Pixed.Core.Models;
 using Pixed.Core.Selection;
@@ -41,7 +40,7 @@ public class ToolBucket(ApplicationData applicationData) : BaseTool(applicationD
             int maxX = frame.Width;
             int maxY = frame.Height;
 
-            if(selection != null)
+            if (selection != null)
             {
                 minX = selection.Pixels.MinBy(p => p.Position.X).Position.X;
                 minY = selection.Pixels.MinBy(p => p.Position.Y).Position.Y;

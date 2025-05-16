@@ -35,12 +35,12 @@ public class ShortcutService
             }
         });
 
-        Add(KeyState.Control(Key.Z), async() =>
+        Add(KeyState.Control(Key.Z), async () =>
         {
             await _applicationData.CurrentModel.Undo(_historyService);
             Subjects.ProjectModified.OnNext(_applicationData.CurrentModel);
         });
-        Add(KeyState.Control(Key.Y), async() =>
+        Add(KeyState.Control(Key.Y), async () =>
         {
             await _applicationData.CurrentModel.Redo(_historyService);
             Subjects.ProjectModified.OnNext(_applicationData.CurrentModel);

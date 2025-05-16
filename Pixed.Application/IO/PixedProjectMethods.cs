@@ -1,5 +1,4 @@
 ﻿using Avalonia.Platform.Storage;
-using AvaloniaInside.Shell.Data;
 using Pixed.Application.Models;
 using Pixed.Application.Platform;
 using Pixed.Application.Routing;
@@ -9,7 +8,6 @@ using Pixed.BigGustave;
 using Pixed.Common;
 using Pixed.Common.Services;
 using Pixed.Core.Models;
-using SkiaSharp;
 using Svg.Skia;
 using System;
 using System.Collections.Generic;
@@ -35,7 +33,7 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
         {
             saveAs = true;
         }
-        else if(!saveAs)
+        else if (!saveAs)
         {
             try
             {

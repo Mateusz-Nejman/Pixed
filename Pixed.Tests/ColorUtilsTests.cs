@@ -5,7 +5,7 @@ namespace Pixed.Tests;
 public class ColorUtilsTests
 {
     [Test]
-    public void MultiplyAlphaTest ()
+    public void MultiplyAlphaTest()
     {
         double multiply = 0.25d;
         UniColor color1 = UniColor.CornflowerBlue;

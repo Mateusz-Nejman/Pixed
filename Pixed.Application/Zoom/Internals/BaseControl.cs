@@ -5,7 +5,6 @@ using Avalonia.Controls.Metadata;
 using Avalonia.Input;
 using Avalonia.Media.Transformation;
 using Avalonia.VisualTree;
-using Pixed.Application.Controls;
 using Pixed.Application.Controls.PaintCanvas;
 using System;
 using System.Linq;
@@ -186,7 +185,7 @@ internal partial class BaseControl : Decorator, IDisposable
         }
         var point = e.GetPosition(_element);
 
-        if(e.Delta.Y < 0 && Zoom >= MaxZoom)
+        if (e.Delta.Y < 0 && Zoom >= MaxZoom)
         {
             e.Delta.Y.ToString();
         }

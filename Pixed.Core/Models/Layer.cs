@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-using Pixed.Core.IO;
+﻿using Pixed.Core.IO;
 using Pixed.Core.Utils;
 using SkiaSharp;
 using System.Text;
@@ -126,7 +125,7 @@ public class Layer : PixelImage, IPixedSerializer, IDisposable
 
     public override SKBitmap Render()
     {
-        if(Opacity == 100)
+        if (Opacity == 100)
         {
             return _bitmap.FastCopy();
         }
@@ -135,8 +134,8 @@ public class Layer : PixelImage, IPixedSerializer, IDisposable
         SKPaint paint = new() { Color = new SKColor(255, 255, 255, newAlpha) };
         SKBitmap opacityBitmap = SkiaUtils.GetBitmap(Width, Height);
         SKCanvas canvas = new(opacityBitmap);
-        
-        if(!SkiaUtils.IsNull(_bitmap))
+
+        if (!SkiaUtils.IsNull(_bitmap))
         {
             canvas.DrawBitmap(_bitmap, SKPoint.Empty, paint);
         }

@@ -12,7 +12,7 @@ public static class SkiaUtils
 
     public static SKBitmap GetBitmap(int width, int height, bool isOpaque = false)
     {
-        return new SKBitmap(width, height,SKColorType.Bgra8888, isOpaque ? SKAlphaType.Opaque : SKAlphaType.Unpremul);
+        return new SKBitmap(width, height, SKColorType.Bgra8888, isOpaque ? SKAlphaType.Opaque : SKAlphaType.Unpremul);
     }
 
     public static SKBitmap GetBitmap(Point size, bool isOpaque = false)
@@ -43,7 +43,7 @@ public static class SkiaUtils
     {
         var colors = pixels.Select(p => p.Color).Distinct();
 
-        foreach(var color in colors)
+        foreach (var color in colors)
         {
             SKPaint paint = new() { Color = color, Style = SKPaintStyle.Fill, StrokeWidth = 1 };
             var points = pixels.Where(p => p.Color == color).Select(p => new SKPoint(p.Position.X + 0.5f, p.Position.Y + 0.5f)).ToArray();

@@ -3,7 +3,6 @@ using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
-using Pixed.Application.Zoom;
 using Pixed.Common;
 using Pixed.Common.Tools;
 using Pixed.Core.Models;

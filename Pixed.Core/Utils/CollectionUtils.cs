@@ -7,7 +7,7 @@ public static class CollectionUtils
     {
         foreach (var item in collection)
         {
-            if(predicate(item)) return true;
+            if (predicate(item)) return true;
         }
 
         return false;
@@ -19,7 +19,7 @@ public static class CollectionUtils
         return last;
     }
 
-    public static void AddRange<T>(this ConcurrentBag<T> collection , IEnumerable<T> values)
+    public static void AddRange<T>(this ConcurrentBag<T> collection, IEnumerable<T> values)
     {
         foreach (T value in values)
         {

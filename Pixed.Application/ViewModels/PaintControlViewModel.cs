@@ -5,7 +5,6 @@ using Pixed.Application.Controls;
 using Pixed.Application.Controls.PaintCanvas;
 using Pixed.Application.Input;
 using Pixed.Application.Menu;
-using Pixed.Application.Models;
 using Pixed.Application.Zoom;
 using Pixed.Common;
 using Pixed.Common.Services;
@@ -14,11 +13,8 @@ using Pixed.Common.Tools;
 using Pixed.Common.Tools.Selection;
 using Pixed.Core;
 using Pixed.Core.Models;
-using Pixed.Core.Utils;
-using SkiaSharp;
 using System;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
 using Frame = Pixed.Core.Models.Frame;
 
 namespace Pixed.Application.ViewModels;
@@ -229,7 +225,7 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
         }
     }
 
-    public PaintControlViewModel(ApplicationData applicationData, ToolsManager toolSelector, ToolMoveCanvas toolMoveCanvas, SelectionManager selectionManager, 
+    public PaintControlViewModel(ApplicationData applicationData, ToolsManager toolSelector, ToolMoveCanvas toolMoveCanvas, SelectionManager selectionManager,
         FramesSectionViewModel framesSectionViewModel, PropertiesSectionViewModel propertiesSectionViewModel, SelectionMenu selectionMenu, IHistoryService historyService)
     {
         _applicationData = applicationData;
@@ -303,7 +299,7 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
                 SelectionOverlay.Zoom = entry.Zoom;
             }
 
-            if(CursorOverlay != null)
+            if (CursorOverlay != null)
             {
                 CursorOverlay.Zoom = entry.Zoom;
             }

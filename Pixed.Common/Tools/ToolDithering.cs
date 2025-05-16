@@ -3,7 +3,6 @@ using Pixed.Common.Services.Keyboard;
 using Pixed.Core.Models;
 using Pixed.Core.Selection;
 using Pixed.Core.Utils;
-using SkiaSharp;
 
 namespace Pixed.Common.Tools;
 public class ToolDithering(ApplicationData applicationData) : ToolPenBase(applicationData)

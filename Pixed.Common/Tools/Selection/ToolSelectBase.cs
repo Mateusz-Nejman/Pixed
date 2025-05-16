@@ -1,7 +1,6 @@
 ﻿using Pixed.Common.Services.Keyboard;
 using Pixed.Core.Models;
 using Pixed.Core.Selection;
-using SkiaSharp;
 using System.Linq;
 using Frame = Pixed.Core.Models.Frame;
 

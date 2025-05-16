@@ -38,7 +38,7 @@ public class SelectionManager
         shortcutService.Add(KeyState.Control(Key.X), async () => await Cut());
         shortcutService.Add(KeyState.Control(Key.V), async () => await Paste());
         shortcutService.Add(KeyState.Control(Key.A), SelectAll);
-        shortcutService.Add(new KeyState(Key.Delete, true, false, false, false), async() => await Erase());
+        shortcutService.Add(new KeyState(Key.Delete, true, false, false, false), async () => await Erase());
     }
 
     public void Clear()

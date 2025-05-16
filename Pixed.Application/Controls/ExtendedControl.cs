@@ -21,7 +21,7 @@ internal abstract class ExtendedControl<T> : UserControl
 
         var viewModel = serviceProvider.Get<T>();
 
-        if(viewModel is ExtendedViewModel extended)
+        if (viewModel is ExtendedViewModel extended)
         {
             extended.Initialize(this);
         }

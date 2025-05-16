@@ -98,7 +98,7 @@ internal class PixelImageControl : Control
             Rect destRect = viewPort
                 .CenterRect(new Rect(scaledSize))
                 .Intersect(viewPort);
-  
+
             _operation.Bounds = destRect;
             context.Custom(_operation);
         }

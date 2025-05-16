@@ -30,7 +30,7 @@ internal class CursorOverlay : OverlayControl
 
     public override void Render(SKCanvas canvas)
     {
-        if(_visible)
+        if (_visible)
         {
             var rounded = new Point(Math.Ceiling(_point.X) - 1, Math.Ceiling(_point.Y) - 1);
             canvas.DrawRect(SKRect.Create(rounded.X.ToFloat(), rounded.Y.ToFloat(), 1f, 1f), new SKPaint() { Color = UniColor.White, StrokeWidth = 1f / Zoom.ToFloat(), Style = SKPaintStyle.Stroke });

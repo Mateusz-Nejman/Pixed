@@ -35,9 +35,9 @@ public class ToolLighten(ApplicationData applicationData) : ToolPenBase(applicat
 
         _prev = point;
 
-        if(!_modified.Contains(p => p.Position == point))
+        if (!_modified.Contains(p => p.Position == point))
         {
-            if(_handle == null)
+            if (_handle == null)
             {
                 _render = frame.CurrentLayer.Render();
                 _handle = frame.GetHandle();
@@ -76,14 +76,15 @@ public class ToolLighten(ApplicationData applicationData) : ToolPenBase(applicat
 
         var points = PaintUtils.GetToolPoints(point, _applicationData.ToolSize).Where(p => !_modified.Contains(p1 => p1.Position == p));
 
-        if(selection != null)
+        if (selection != null)
         {
             points = [.. points.Where(selection.InSelection)];
         }
 
         List<Pixel> pixels = [];
 
-        foreach (var p in points) {
+        foreach (var p in points)
+        {
             UniColor pixelColor = frame.GetPixel(p);
             pixels.Add(new Pixel(p, isDarken ? pixelColor.Darken(6) : pixelColor.Lighten(6)));
         }

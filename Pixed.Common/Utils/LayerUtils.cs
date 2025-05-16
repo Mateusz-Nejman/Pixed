@@ -1,6 +1,4 @@
-﻿using Pixed.Core;
-using Pixed.Core.Models;
-using Pixed.Core.Utils;
+﻿using Pixed.Core.Models;
 using SkiaSharp;
 using System.Collections.Generic;
 

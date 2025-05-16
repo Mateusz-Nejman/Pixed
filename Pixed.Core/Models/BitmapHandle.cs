@@ -9,7 +9,7 @@ public class BitmapHandle
     public BitmapHandle(SKBitmap bitmap)
     {
         _bitmap = bitmap;
-        
+
         unsafe
         {
             _ptr = (uint*)_bitmap.GetPixels().ToPointer();
@@ -42,7 +42,7 @@ public class BitmapHandle
 
     public void SetPixels(List<Point> points, UniColor color)
     {
-        foreach(var point in points)
+        foreach (var point in points)
         {
             SetPixel(point, color);
         }

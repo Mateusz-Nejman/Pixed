@@ -15,7 +15,7 @@ public unsafe class UnmanagedArray(int length) : IDisposable
     }
 
     public long Length => _disposedValue ? 0 : _length;
-    public IntPtr Ptr => (IntPtr) _ptr;
+    public IntPtr Ptr => (IntPtr)_ptr;
 
     ~UnmanagedArray()
     {

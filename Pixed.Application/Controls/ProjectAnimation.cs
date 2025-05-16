@@ -51,7 +51,7 @@ internal class ProjectAnimation : Control
 
             var bitmap = _frameBitmaps[_frameIndex];
 
-            if(SkiaUtils.IsNull(bitmap))
+            if (SkiaUtils.IsNull(bitmap))
             {
                 return;
             }
@@ -78,8 +78,8 @@ internal class ProjectAnimation : Control
             if (_applicationData.CurrentModel.Frames.Count != _frameIds.Length)
             {
                 _frameIds = new string[_applicationData.CurrentModel.Frames.Count];
-                
-                foreach(var bitmap in _frameBitmaps)
+
+                foreach (var bitmap in _frameBitmaps)
                 {
                     bitmap.Dispose();
                 }

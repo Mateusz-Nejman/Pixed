@@ -2,7 +2,6 @@
 using Pixed.Application.Platform;
 using Pixed.Common.Services;
 using Pixed.Core.Models;
-using Pixed.Core.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -68,18 +67,18 @@ internal class HistoryService(IPlatformFolder platformFolder) : IHistoryService
         UnmanagedMemoryStream memory = new((byte*)unmanagedArray.Ptr, unmanagedArray.Length, unmanagedArray.Length, FileAccess.ReadWrite);
         model.Serialize(memory);
         memory.Position = 0;
-        
+
         _entries.Add(new HistoryEntry(historyId, unmanagedArray, memory));
         newHistory.Add(_entries.Count - 1);
 
         historyIndexes.Clear();
 
-        foreach(var id in newHistory)
+        foreach (var id in newHistory)
         {
             historyIndexes.Add(id);
         }
 
-        if(historyIndexes.Count == MAX_HISTORY_ENTRIES + 1)
+        if (historyIndexes.Count == MAX_HISTORY_ENTRIES + 1)
         {
             historyIndexes.RemoveAt(0);
         }
@@ -147,7 +146,7 @@ internal class HistoryService(IPlatformFolder platformFolder) : IHistoryService
     {
         var files = _platformFolder.GetFiles(FolderType.History);
 
-        await foreach(var file in files)
+        await foreach (var file in files)
         {
             await file.Delete();
         }
@@ -155,7 +154,7 @@ internal class HistoryService(IPlatformFolder platformFolder) : IHistoryService
 
     private void CheckAndProcessCache()
     {
-        if(_cacheTask)
+        if (_cacheTask)
         {
             return;
         }
@@ -208,7 +207,7 @@ internal class HistoryService(IPlatformFolder platformFolder) : IHistoryService
                 }
             }
         }
-        catch(Exception)
+        catch (Exception)
         {
             _cacheTask = false;
         }
