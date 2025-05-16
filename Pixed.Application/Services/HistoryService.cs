@@ -42,11 +42,11 @@ internal class HistoryService(IPlatformFolder platformFolder) : IHistoryService
     private readonly List<HistoryEntry> _entries = [];
     private bool _cacheTask = false;
 
-    public unsafe async Task AddToHistory(PixedModel model, bool setIsEmpty = true)
+    public unsafe Task AddToHistory(PixedModel model, bool setIsEmpty = true)
     {
         if (!_historyItems.TryGetValue(model.Id, out List<int>? historyIndexes))
         {
-            return;
+            return Task.CompletedTask;
         }
 
         var historyIndex = Math.Clamp(_historyIndexes[model.Id], 0, historyIndexes.Count);
@@ -96,6 +96,7 @@ internal class HistoryService(IPlatformFolder platformFolder) : IHistoryService
         model.UnsavedChanges = true;
 
         CheckAndProcessCache();
+        return Task.CompletedTask;
     }
 
     public void CopyHistoryFrom(PixedModel from, PixedModel to)
