@@ -167,6 +167,11 @@ public class Frame : PixelImage, IPixedSerializer
         return layer2;
     }
 
+    public long CalculateStreamSize()
+    {
+        return (sizeof(int) * 2) + _layers.Sum(l => l.CalculateStreamSize());
+    }
+
     public void Serialize(Stream stream)
     {
         stream.WriteInt(_selectedLayer);

@@ -2,71 +2,91 @@
 using Pixed.Application.Platform;
 using Pixed.Common.Services;
 using Pixed.Core.Models;
+using Pixed.Core.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Pixed.Application.Services;
 
 internal class HistoryService(IPlatformFolder platformFolder) : IHistoryService
 {
+    private struct HistoryEntry(string historyId, UnmanagedArray data, UnmanagedMemoryStream stream)
+    {
+        public bool Cached { get; private set; }
+        public string HistoryId { get; private set; } = historyId;
+        public UnmanagedArray? Data { get; private set; } = data;
+        public UnmanagedMemoryStream? Stream { get; private set; } = stream;
+        public readonly long Size => Data == null ? 0 : Data.Length;
+
+        public void SetCached()
+        {
+            Cached = true;
+        }
+
+        public void ClearData()
+        {
+            Data?.Dispose();
+            Data = null;
+            Stream?.Dispose();
+            Stream = null;
+        }
+    }
+
+    private const long MAX_HISTORY_SIZE = 536870912; //512 MB
     private const int MAX_HISTORY_ENTRIES = 500;
     private readonly IPlatformFolder _platformFolder = platformFolder;
-    private readonly Dictionary<string, List<string>> _historyItems = [];
+    private readonly Dictionary<string, List<int>> _historyItems = [];
     private readonly Dictionary<string, int> _historyIndexes = [];
+    private readonly List<HistoryEntry> _entries = [];
+    private bool _cacheTask = false;
 
-    public async Task AddToHistory(PixedModel model, bool setIsEmpty = true)
+    public unsafe async Task AddToHistory(PixedModel model, bool setIsEmpty = true)
     {
-        if (!_historyItems.TryGetValue(model.Id, out List<string>? history))
+        if (!_historyItems.TryGetValue(model.Id, out List<int>? historyIndexes))
         {
             return;
         }
 
-        var historyIndex = Math.Clamp(_historyIndexes[model.Id], 0, history.Count);
+        var historyIndex = Math.Clamp(_historyIndexes[model.Id], 0, historyIndexes.Count);
 
         string historyId = Guid.NewGuid().ToString();
 
-        var file = await _platformFolder.GetFile(historyId, FolderType.History);
-        var stream = await file.OpenWrite();
+        List<int> newHistory = [];
 
-        MemoryStream memory = new();
-        model.Serialize(memory);
-        memory.Position = 0;
-
-        PixedProjectSerializer.Compress(memory, stream);
-        stream.Dispose();
-
-        List<string> newHistory = [];
-
-        if (history.Count > 0)
+        if (historyIndexes.Count > 0)
         {
             for (int a = 0; a <= historyIndex; a++)
             {
-                newHistory.Add(history[a]);
+                newHistory.Add(historyIndexes[a]);
             }
 
         }
 
-        newHistory.Add(historyId);
+        UnmanagedArray unmanagedArray = new((int)model.CalculateStreamSize());
+        UnmanagedMemoryStream memory = new((byte*)unmanagedArray.Ptr, unmanagedArray.Length, unmanagedArray.Length, FileAccess.ReadWrite);
+        model.Serialize(memory);
+        memory.Position = 0;
+        
+        _entries.Add(new HistoryEntry(historyId, unmanagedArray, memory));
+        newHistory.Add(_entries.Count - 1);
 
-        history.Clear();
+        historyIndexes.Clear();
 
         foreach(var id in newHistory)
         {
-            history.Add(id);
+            historyIndexes.Add(id);
         }
 
-        if(history.Count == MAX_HISTORY_ENTRIES + 1)
+        if(historyIndexes.Count == MAX_HISTORY_ENTRIES + 1)
         {
-            history.RemoveAt(0);
+            historyIndexes.RemoveAt(0);
         }
 
-        historyIndex = history.Count - 1;
+        historyIndex = historyIndexes.Count - 1;
 
-        _historyItems[model.Id] = history;
+        _historyItems[model.Id] = historyIndexes;
         _historyIndexes[model.Id] = historyIndex;
 
         if (setIsEmpty)
@@ -74,6 +94,8 @@ internal class HistoryService(IPlatformFolder platformFolder) : IHistoryService
             model.IsEmpty = false;
         }
         model.UnsavedChanges = true;
+
+        CheckAndProcessCache();
     }
 
     public void CopyHistoryFrom(PixedModel from, PixedModel to)
@@ -100,7 +122,9 @@ internal class HistoryService(IPlatformFolder platformFolder) : IHistoryService
 
     public string GetHistoryId(PixedModel model, int index)
     {
-        return _historyItems[model.Id][index];
+        var arrayIndex = _historyItems[model.Id][index];
+
+        return _entries[arrayIndex].HistoryId;
     }
 
     public int GetHistoryCount(PixedModel model)
@@ -126,5 +150,68 @@ internal class HistoryService(IPlatformFolder platformFolder) : IHistoryService
         {
             await file.Delete();
         }
+    }
+
+    private void CheckAndProcessCache()
+    {
+        if(_cacheTask)
+        {
+            return;
+        }
+        _cacheTask = true;
+
+        Task.Run(CheckAndProcessCacheAsync);
+    }
+
+    private async Task CheckAndProcessCacheAsync()
+    {
+        try
+        {
+            int maxEntries = _entries.Count;
+            long size = 0;
+            bool processCache = false;
+
+            for (int a = 0; a < maxEntries; a++)
+            {
+                if (_entries[a].Cached)
+                {
+                    continue;
+                }
+
+                size += _entries[a].Size;
+
+                if (size >= MAX_HISTORY_SIZE)
+                {
+                    processCache = true;
+                    break;
+                }
+            }
+
+            if (processCache)
+            {
+                for (int a = 0; a < maxEntries; a++)
+                {
+                    if (_entries[a].Cached || _entries[a].Data == null)
+                    {
+                        continue;
+                    }
+
+                    var file = await _platformFolder.GetFile(_entries[a].HistoryId, FolderType.History);
+                    var stream = await file.OpenWrite();
+
+                    _entries[a].Stream.Position = 0;
+                    PixedProjectSerializer.Compress(_entries[a].Stream, stream);
+                    stream.Dispose();
+                    _entries[a].ClearData();
+                    _entries[a].SetCached();
+                }
+            }
+        }
+        catch(Exception)
+        {
+            _cacheTask = false;
+        }
+
+        _cacheTask = false;
     }
 }

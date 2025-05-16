@@ -1,6 +1,8 @@
-﻿using Pixed.Core.IO;
+﻿using Newtonsoft.Json.Linq;
+using Pixed.Core.IO;
 using Pixed.Core.Utils;
 using SkiaSharp;
+using System.Text;
 using System.Windows.Input;
 namespace Pixed.Core.Models;
 
@@ -147,6 +149,12 @@ public class Layer : PixelImage, IPixedSerializer, IDisposable
     public bool ContainsPixel(Point point)
     {
         return point.X >= 0 && point.Y >= 0 && point.X < Width && point.Y < Height;
+    }
+
+    public long CalculateStreamSize()
+    {
+        var name = Encoding.UTF8.GetBytes(Name);
+        return sizeof(double) + (sizeof(int) * 4) + name.LongLength + (_bitmap.Width * _bitmap.Height * sizeof(uint));
     }
 
     public void Serialize(Stream stream)

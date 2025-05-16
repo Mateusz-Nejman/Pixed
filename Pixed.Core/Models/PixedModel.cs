@@ -78,6 +78,11 @@ public class PixedModel : PixelImage, IPixedSerializer
         return frame?.Render();
     }
 
+    public long CalculateStreamSize()
+    {
+        return (sizeof(int) * 2) + _frames.Sum(f => f.CalculateStreamSize());
+    }
+
     public void Serialize(Stream stream)
     {
         stream.WriteInt(_currentFrameIndex);
