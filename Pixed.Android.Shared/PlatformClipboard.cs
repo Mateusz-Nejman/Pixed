@@ -14,7 +14,7 @@ internal class PlatformClipboard : IClipboardHandle
 
     public Task<object?> GetDataAsync(string format)
     {
-        if(format != "PNG" || _copiedBuffer == null)
+        if (format != "PNG" || _copiedBuffer == null)
         {
             return Task.FromResult<object?>(null);
         }
@@ -35,7 +35,7 @@ internal class PlatformClipboard : IClipboardHandle
     {
         var png = data.Get("PNG");
 
-        if(png != null && png is byte[] array)
+        if (png != null && png is byte[] array)
         {
             _copiedBuffer = array;
         }

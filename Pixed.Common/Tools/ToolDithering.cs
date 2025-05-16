@@ -3,7 +3,6 @@ using Pixed.Common.Services.Keyboard;
 using Pixed.Core.Models;
 using Pixed.Core.Selection;
 using Pixed.Core.Utils;
-using SkiaSharp;
 
 namespace Pixed.Common.Tools;
 public class ToolDithering(ApplicationData applicationData) : ToolPenBase(applicationData)
@@ -12,9 +11,10 @@ public class ToolDithering(ApplicationData applicationData) : ToolPenBase(applic
     public override string Name => "Dithering tool";
     public override string Id => "tool_dithering";
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Dithering");
-    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
+    public override void ToolBegin(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        ApplyToolBase(point, frame, ref overlay, keyState, selection);
+        ToolBeginBase();
+        var frame = model.CurrentFrame;
         _prev = point;
         var toolPoints = PaintUtils.GetToolPoints(point, _applicationData.ToolSize);
 
@@ -33,8 +33,8 @@ public class ToolDithering(ApplicationData applicationData) : ToolPenBase(applic
             }
 
             var color = usePrimary ? _applicationData.PrimaryColor : _applicationData.SecondaryColor;
-            DrawOnOverlay(color, toolPoint, frame, ref overlay, selection);
-            AddPixel(toolPoint, color, selection);
+            _handle ??= frame.GetHandle();
+            DrawOnBitmapHandle(color, toolPoint, _handle, selection);
         }
     }
 }

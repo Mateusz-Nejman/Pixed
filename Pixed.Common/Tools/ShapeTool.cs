@@ -1,49 +1,46 @@
 ﻿using Pixed.Common.Models;
 using Pixed.Common.Services.Keyboard;
-using Pixed.Core;
 using Pixed.Core.Models;
 using Pixed.Core.Selection;
-using Pixed.Core.Utils;
 using SkiaSharp;
-using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Pixed.Common.Tools;
 public abstract class ShapeTool(ApplicationData applicationData) : BaseTool(applicationData)
 {
     protected string PROP_SHIFT = "Keep 1 to 1 ratio";
     protected Point _start = new(-1);
+    protected List<Point> _shapePoints = [];
 
-    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
+    public override void ToolBegin(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        ApplyToolBase(point, frame, ref overlay, keyState, selection);
+        ToolBeginBase();
         _start = point;
-
-        overlay.SetPixel(point, ToolColor, _applicationData.ToolSize);
-        Subjects.OverlayModified.OnNext(overlay);
     }
 
-    public override void MoveTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
+    public override void ToolMove(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        overlay.Clear();
-        var color = ToolColor;
-
-        if (color == UniColor.Transparent)
-        {
-            color = UniColor.WithAlpha(128, UniColor.GetFromResources("Accent"));
-        }
-
-        Draw(point, color, keyState.IsShift || GetProperty(PROP_SHIFT), _applicationData.ToolSize, ref overlay, selection);
+        _shapePoints = GetShapePoints(point, keyState.IsShift || GetProperty(PROP_SHIFT));
     }
 
-    public override void ReleaseTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
+    public override void ToolEnd(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
         var color = ToolColor;
 
-        Draw(point, color, keyState.IsShift || GetProperty(PROP_SHIFT), _applicationData.ToolSize, frame, selection);
+        var handle = model.CurrentFrame.GetHandle();
+        handle.SetPixels(_shapePoints, color);
+        model.ResetRecursive();
+        _shapePoints.Clear();
+        Subjects.FrameModified.OnNext(model.CurrentFrame);
 
-        overlay.Clear();
-        ReleaseToolBase(point, frame, ref overlay, keyState, selection);
+        ToolEndBase();
+    }
+
+    public override void OnOverlay(SKCanvas canvas)
+    {
+        base.OnOverlay(canvas);
+        canvas.DrawPoints(SKPointMode.Points, [.. _shapePoints.Select(p => p.ToSKPoint())], new SKPaint() { Color = ToolColor, StrokeWidth = 1 });
     }
 
     public override List<ToolProperty> GetToolProperties()
@@ -53,35 +50,5 @@ public abstract class ShapeTool(ApplicationData applicationData) : BaseTool(appl
             ];
     }
 
-    protected void Draw(Point point, uint color, bool shiftPressed, int toolSize, ref SKBitmap overlay, BaseSelection? selection)
-    {
-        SKBitmap bitmap = overlay;
-        Draw(point, color, shiftPressed, (p, color) =>
-        {
-            if(selection != null && !selection.InSelection(p))
-            {
-                return;
-            }
-
-            bitmap.SetPixel(p, color, toolSize);
-        });
-
-        overlay = bitmap;
-        Subjects.OverlayModified.OnNext(overlay);
-    }
-
-    protected void Draw(Point point, uint color, bool shiftPressed, int toolSize, Frame frame, BaseSelection? selection)
-    {
-        Draw(point, color, shiftPressed, (p, _) =>
-        {
-            if (selection != null && !selection.InSelection(p))
-            {
-                return;
-            }
-
-            frame.SetPixel(p, color, toolSize);
-        });
-        Subjects.FrameModified.OnNext(frame);
-    }
-    protected abstract void Draw(Point point, uint color, bool shiftPressed, Action<Point, uint> setPixelAction);
+    protected abstract List<Point> GetShapePoints(Point point, bool shiftPressed);
 }

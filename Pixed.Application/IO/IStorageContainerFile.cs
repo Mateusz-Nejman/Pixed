@@ -12,6 +12,7 @@ public interface IStorageContainerFile
     public bool Exists { get; }
     public Task<StreamBase> OpenRead();
     public Task<StreamBase> OpenWrite();
+    public Task Delete();
 }
 
 public class DefaultStorageContainerFile(IStorageFile file) : IStorageContainerFile
@@ -24,6 +25,11 @@ public class DefaultStorageContainerFile(IStorageFile file) : IStorageContainerF
 
     public string Extension => _file.GetExtension();
     public bool Exists => _file != null && File.Exists(Path);
+
+    public async Task Delete()
+    {
+        await _file.DeleteAsync();
+    }
 
     public async Task<StreamBase> OpenRead()
     {
@@ -45,6 +51,12 @@ public class PathStorageContainerFile(string path) : IStorageContainerFile
 
     public string Extension => _info.Extension;
     public bool Exists => _info.Exists;
+
+    public Task Delete()
+    {
+        _info.Delete();
+        return Task.CompletedTask;
+    }
 
     public Task<StreamBase> OpenRead()
     {

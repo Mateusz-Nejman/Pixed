@@ -5,7 +5,7 @@ using Pixed.Core;
 namespace Pixed.Application.Controls;
 internal abstract class ExtendedViewModel : PropertyChangedBase
 {
-    public Control? View { get; private set;  }
+    public Control? View { get; private set; }
     public IPixedServiceProvider Provider => App.ServiceProvider;
     public virtual void RegisterMenuItems()
     {

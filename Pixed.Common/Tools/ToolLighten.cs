@@ -5,25 +5,28 @@ using Pixed.Core.Models;
 using Pixed.Core.Selection;
 using Pixed.Core.Utils;
 using SkiaSharp;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Pixed.Common.Tools;
 public class ToolLighten(ApplicationData applicationData) : ToolPenBase(applicationData)
 {
     private const string PROP_DARKEN = "Darken";
-    private const string PROP_APPLY_ONCE = "Apply once per pixel";
 
-    private readonly List<Point> _modified = [];
+    private readonly ConcurrentBag<Pixel> _modified = [];
+    private SKBitmap? _render = null;
 
     public override string ImagePath => "avares://Pixed.Application/Resources/fluent-icons/ic_fluent_add_subtract_circle_48_regular.svg";
     public override string Name => "Lighten tool";
     public override string Id => "tool_lighten";
-    public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Lighten", "Ctrl", "Darken", "Shift", "Apply once per pixel");
-    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
+    public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties("Lighten", "Shift", "Darken");
+    public override void ToolBegin(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        ApplyToolBase(point, frame, ref overlay, keyState, selection);
-        var controlPressed = keyState.IsCtrl || GetProperty(PROP_DARKEN);
-        var shiftPressed = keyState.IsShift || GetProperty(PROP_APPLY_ONCE);
+        ToolBeginBase();
+        var frame = model.CurrentFrame;
+        var shiftPressed = keyState.IsShift || GetProperty(PROP_DARKEN);
 
         if (!frame.ContainsPixel(point))
         {
@@ -32,59 +35,60 @@ public class ToolLighten(ApplicationData applicationData) : ToolPenBase(applicat
 
         _prev = point;
 
-        var modifiedColor = GetModifierColor(point, frame, ref overlay, shiftPressed, controlPressed);
-
-        _modified.AddRange(PaintUtils.GetToolPoints(point, _applicationData.ToolSize));
-        DrawOnOverlay(modifiedColor, point, frame, ref overlay, selection);
-        Subjects.OverlayModified.OnNext(overlay);
+        if (!_modified.Contains(p => p.Position == point))
+        {
+            if (_handle == null)
+            {
+                _render = frame.CurrentLayer.Render();
+                _handle = frame.GetHandle();
+            }
+            _modified.AddRange(GetModifiedPixels(point, frame, shiftPressed, selection));
+        }
     }
 
-    public override void ReleaseTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
+    public override void ToolEnd(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        base.ReleaseTool(point, frame, ref overlay, keyState, selection);
+        _handle?.SetPixels([.. _modified]);
+        base.ToolEnd(point, model, keyState, selection);
         _modified.Clear();
+        _render?.Dispose();
+        _render = null;
+    }
+
+    public override void OnOverlay(SKCanvas canvas)
+    {
+        base.OnOverlay(canvas);
+        canvas.DrawPixels([.. _modified]);
     }
 
     public override List<ToolProperty> GetToolProperties()
     {
         return [
             new ToolProperty(PROP_DARKEN),
-            new ToolProperty(PROP_APPLY_ONCE),
         ];
     }
-
-    private int GetModifierColor(Point point, Frame frame, ref SKBitmap overlay, bool oncePerPixel, bool isDarken)
+    private List<Pixel> GetModifiedPixels(Point point, Frame frame, bool isDarken, BaseSelection? selection)
     {
-        UniColor overlayColor = overlay.GetPixel(point.X, point.Y);
-        UniColor frameColor = frame.GetPixel(point);
-
-        bool isPixelModified = _modified.Contains(point);
-        var pixelColor = isPixelModified ? overlayColor : frameColor;
-
-        bool isTransparent = pixelColor == UniColor.Transparent;
-
-        if (isTransparent)
+        if (selection != null && !selection.InSelection(point))
         {
-            return UniColor.Transparent;
+            return [];
         }
 
-        if (oncePerPixel && isPixelModified)
+        var points = PaintUtils.GetToolPoints(point, _applicationData.ToolSize).Where(p => !_modified.Contains(p1 => p1.Position == p));
+
+        if (selection != null)
         {
-            return pixelColor;
+            points = [.. points.Where(selection.InSelection)];
         }
 
-        var step = oncePerPixel ? 6 : 3;
+        List<Pixel> pixels = [];
 
-        UniColor color;
-        if (isDarken)
+        foreach (var p in points)
         {
-            color = pixelColor.Darken(step);
-        }
-        else
-        {
-            color = pixelColor.Lighten(step);
+            UniColor pixelColor = frame.GetPixel(p);
+            pixels.Add(new Pixel(p, isDarken ? pixelColor.Darken(6) : pixelColor.Lighten(6)));
         }
 
-        return color;
+        return pixels;
     }
 }

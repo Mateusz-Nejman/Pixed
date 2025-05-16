@@ -8,7 +8,7 @@ internal static class PngUtils
 {
     public static void Export(this SKBitmap value, Stream stream)
     {
-        SKBitmap convertedBitmap = new(value.Width, value.Height, true);
+        SKBitmap convertedBitmap = SkiaUtils.GetBitmap(value.Width, value.Height);
         byte[] colors;
 
         if (value.CopyTo(convertedBitmap, SKColorType.Bgra8888))

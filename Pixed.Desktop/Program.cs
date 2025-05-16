@@ -1,8 +1,7 @@
 ﻿using Avalonia;
-using Avalonia.ReactiveUI;
-using AvaloniaInside.Shell;
 using Newtonsoft.Json;
 using Pixed.Application;
+using Pixed.Application.Utils;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -45,10 +44,5 @@ class Program
 
     // Avalonia configuration, don't remove; also used by visual designer.
     public static AppBuilder BuildAvaloniaApp()
-        => AppBuilder.Configure<App>()
-            .UsePlatformDetect()
-            .WithInterFont()
-            .LogToTrace()
-            .UseReactiveUI()
-            .UseShell();
+        => AppBuilder.Configure<App>().UsePlatformDetect().GetDefault();
 }

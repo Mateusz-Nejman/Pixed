@@ -11,6 +11,7 @@ using Pixed.Application.Utils;
 using Pixed.Application.ViewModels;
 using Pixed.Common;
 using Pixed.Common.Platform;
+using Pixed.Common.Services;
 using Pixed.Common.Tools;
 using Pixed.Core;
 using Pixed.Core.Models;
@@ -33,6 +34,7 @@ internal partial class Main : EmptyPixedPage, IDisposable
     private readonly ProjectMenuRegister _projectMenuRegister;
     private readonly ViewMenuRegister _viewMenuRegister;
     private readonly ToolsMenuRegister _toolsMenuRegister;
+    private readonly IHistoryService _historyService;
     private readonly RecentFilesService _recentFilesService;
     private readonly ToolsManager _toolSelector;
     private readonly MenuBuilder _menuBuilder;
@@ -56,6 +58,7 @@ internal partial class Main : EmptyPixedPage, IDisposable
         _projectMenuRegister = Get<ProjectMenuRegister>();
         _viewMenuRegister = Get<ViewMenuRegister>();
         _toolsMenuRegister = Get<ToolsMenuRegister>();
+        _historyService = Get<IHistoryService>();
         _recentFilesService = Get<RecentFilesService>();
         _toolSelector = Get<ToolsManager>();
         _menuBuilder = Get<MenuBuilder>();
@@ -167,6 +170,7 @@ internal partial class Main : EmptyPixedPage, IDisposable
 
             if (canQuit)
             {
+                await _historyService.ClearTempFiles();
                 IPlatformSettings.Instance.Close();
             }
         });
@@ -184,6 +188,9 @@ internal partial class Main : EmptyPixedPage, IDisposable
 
         _applicationData.UserSettings = await SettingsUtils.Load(_platformFolder);
         _applicationData.Initialize();
+        _historyService.Register(_applicationData.CurrentModel);
+        await _historyService.AddToHistory(_applicationData.CurrentModel, true);
+        _applicationData.CurrentModel.UnsavedChanges = false;
         Subjects.AnimationPreviewChanged.OnNext(_applicationData.UserSettings.AnimationPreviewVisible);
     }
 

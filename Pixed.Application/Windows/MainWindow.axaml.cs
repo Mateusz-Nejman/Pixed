@@ -8,6 +8,7 @@ using Pixed.Application.Platform;
 using Pixed.Application.ViewModels;
 using Pixed.Common;
 using Pixed.Common.Input;
+using Pixed.Common.Services;
 using Pixed.Common.Services.Keyboard;
 using System.IO;
 using System.Threading.Tasks;
@@ -17,11 +18,13 @@ namespace Pixed.Application.Windows;
 internal partial class MainWindow : ExtendedWindow<MainViewModel>
 {
     private readonly PixedProjectMethods _pixedProjectMethods;
+    private readonly IHistoryService _historyService;
     private bool _closeStarted = false;
-    public MainWindow(PixedProjectMethods pixedProjectMethods) : base()
+    public MainWindow(PixedProjectMethods pixedProjectMethods, IHistoryService historyService) : base()
     {
         InitializeComponent();
         _pixedProjectMethods = pixedProjectMethods;
+        _historyService = historyService;
     }
 
     public async Task OpenFromArgs(string[] args)
@@ -49,6 +52,7 @@ internal partial class MainWindow : ExtendedWindow<MainViewModel>
 
         if (canQuit)
         {
+            await _historyService.ClearTempFiles();
             IPlatformSettings.Instance.Close();
         }
         _closeStarted = false;
@@ -56,6 +60,23 @@ internal partial class MainWindow : ExtendedWindow<MainViewModel>
 
     private void Window_KeyUp(object? sender, KeyEventArgs e)
     {
+#if DEBUG
+        if (e.Key == Key.D)
+        {
+            var skia = AppDomain.CurrentDomain.GetAssemblies().First(a => a.ToString() == "SkiaSharp, Version=3.119.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756");
+            if (skia != null)
+            {
+                Type handleDictionary = skia.GetType("SkiaSharp.HandleDictionary");
+                var fields = handleDictionary.GetFields(BindingFlags.NonPublic | BindingFlags.Static);
+                var instanceField = fields.First(f => f.Name == "instances");
+                Dictionary<IntPtr, WeakReference> instances = (Dictionary<nint, WeakReference>)instanceField.GetValue(null);
+                var values = instances.Values.ToArray();
+                var targetBitmaps = values.Select(v => v.Target).Where(t => t is SKBitmap).ToList();
+                var targetImages = values.Select(v => v.Target).Where(t => t is SKImage).ToList();
+                skia.ToString();
+            }
+        }
+#endif
         Keyboard.Modifiers = e.KeyModifiers;
         Keyboard.ProcessReleased(e.Key);
         Subjects.KeyState.OnNext(new KeyState(

@@ -45,7 +45,7 @@ public static class TransformUtils
             }
         }
 
-        layer.SetPixels(pixels);
+        SetPixelsOpaque(layer, pixels);
     }
 
     public static void Rotate(ref Layer layer, Direction direction)
@@ -96,7 +96,7 @@ public static class TransformUtils
             }
         }
 
-        layer.SetPixels(pixels);
+        SetPixelsOpaque(layer, pixels);
     }
 
     public static void Center(Layer layer)
@@ -136,7 +136,7 @@ public static class TransformUtils
             }
         }
 
-        layer.SetPixels(pixels);
+        SetPixelsOpaque(layer, pixels);
     }
 
     public static Tuple<Point, Point> GetBoundaries(Layer[] layers)
@@ -192,5 +192,11 @@ public static class TransformUtils
         }
 
         return new Tuple<Point, Point>(new Point(minx, miny), new Point(maxx, maxy));
+    }
+
+    private static void SetPixelsOpaque(Layer layer, List<Pixel> pixels)
+    {
+        var handle = layer.GetHandle();
+        handle.SetPixels(pixels);
     }
 }

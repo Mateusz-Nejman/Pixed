@@ -2,6 +2,7 @@
 using Pixed.Application.Routing;
 using Pixed.Common;
 using Pixed.Common.Menu;
+using Pixed.Common.Services;
 using Pixed.Core;
 using Pixed.Core.Models;
 using System;
@@ -15,6 +16,7 @@ internal class LayersSectionViewModel : ExtendedViewModel, IDisposable
 {
     private readonly ApplicationData _applicationData;
     private readonly IMenuItemRegistry _menuItemRegistry;
+    private readonly IHistoryService _historyService;
     private int _selectedLayer = 0;
 
     private bool _canLayerMoveUp = false;
@@ -100,17 +102,18 @@ internal class LayersSectionViewModel : ExtendedViewModel, IDisposable
     public ICommand MergeLayerCommand { get; }
     public ICommand RemoveLayerCommand { get; }
 
-    public LayersSectionViewModel(ApplicationData applicationData, IMenuItemRegistry menuItemRegistry)
+    public LayersSectionViewModel(ApplicationData applicationData, IMenuItemRegistry menuItemRegistry, IHistoryService historyService)
     {
         _applicationData = applicationData;
         _menuItemRegistry = menuItemRegistry;
-        AddLayerCommand = new ActionCommand(AddLayerAction);
-        DuplicateLayerCommand = new ActionCommand(DuplicateLayerAction);
-        MoveLayerUpCommand = new ActionCommand(MoveLayerUpAction);
-        MoveLayerDownCommand = new ActionCommand(MoveLayerDownAction);
+        _historyService = historyService;
+        AddLayerCommand = new AsyncCommand(AddLayerAction);
+        DuplicateLayerCommand = new AsyncCommand(DuplicateLayerAction);
+        MoveLayerUpCommand = new AsyncCommand(MoveLayerUpAction);
+        MoveLayerDownCommand = new AsyncCommand(MoveLayerDownAction);
         EditLayerNameCommand = new AsyncCommand(EditLayerNameAction);
-        MergeLayerCommand = new ActionCommand(MergeLayerAction);
-        RemoveLayerCommand = new ActionCommand(RemoveLayerAction);
+        MergeLayerCommand = new AsyncCommand(MergeLayerAction);
+        RemoveLayerCommand = new AsyncCommand(RemoveLayerAction);
 
         _frameChanged = Subjects.FrameChanged.Subscribe(f =>
         {
@@ -161,24 +164,24 @@ internal class LayersSectionViewModel : ExtendedViewModel, IDisposable
         GC.SuppressFinalize(this);
     }
 
-    private void AddLayerAction()
+    private async Task AddLayerAction()
     {
         Layer layer = Frame.AddLayer(new Layer(Frame.Width, Frame.Height));
         OnPropertyChanged(nameof(Layers));
         Subjects.LayerAdded.OnNext(layer);
         Subjects.FrameModified.OnNext(Frame);
-        _applicationData.CurrentModel.AddHistory();
+        await _historyService.AddToHistory(_applicationData.CurrentModel);
     }
 
-    private void DuplicateLayerAction()
+    private async Task DuplicateLayerAction()
     {
         Layer layer = Frame.AddLayer(Layers[_selectedLayer].Clone());
         OnPropertyChanged(nameof(Layers));
         Subjects.LayerAdded.OnNext(layer);
         Subjects.FrameModified.OnNext(Frame);
-        _applicationData.CurrentModel.AddHistory();
+        await _historyService.AddToHistory(_applicationData.CurrentModel);
     }
-    private void MoveLayerUpAction()
+    private async Task MoveLayerUpAction()
     {
         if (_selectedLayer == 0)
         {
@@ -188,10 +191,10 @@ internal class LayersSectionViewModel : ExtendedViewModel, IDisposable
         Frame.MoveLayerUp();
         OnPropertyChanged(nameof(Layers));
         Subjects.FrameModified.OnNext(Frame);
-        _applicationData.CurrentModel.AddHistory();
+        await _historyService.AddToHistory(_applicationData.CurrentModel);
     }
 
-    private void MoveLayerDownAction()
+    private async Task MoveLayerDownAction()
     {
         if (_selectedLayer == Layers.Count - 1)
         {
@@ -201,7 +204,7 @@ internal class LayersSectionViewModel : ExtendedViewModel, IDisposable
         Frame.MoveLayerDown();
         OnPropertyChanged(nameof(Layers));
         Subjects.FrameModified.OnNext(Frame);
-        _applicationData.CurrentModel.AddHistory();
+        await _historyService.AddToHistory(_applicationData.CurrentModel);
     }
 
     private async Task EditLayerNameAction()
@@ -215,10 +218,10 @@ internal class LayersSectionViewModel : ExtendedViewModel, IDisposable
             Layers[_selectedLayer].Name = result.Value;
         }
 
-        _applicationData.CurrentModel.AddHistory();
+        await _historyService.AddToHistory(_applicationData.CurrentModel);
     }
 
-    private void MergeLayerAction()
+    private async Task MergeLayerAction()
     {
         var currentLayer = Frame.CurrentLayer;
         var removedLayer = Frame.MergeLayerBelow();
@@ -232,10 +235,10 @@ internal class LayersSectionViewModel : ExtendedViewModel, IDisposable
         Subjects.LayerModified.OnNext(currentLayer);
         Subjects.FrameModified.OnNext(Frame);
         OnPropertyChanged(nameof(Layers));
-        _applicationData.CurrentModel.AddHistory();
+        await _historyService.AddToHistory(_applicationData.CurrentModel);
     }
 
-    private void RemoveLayerAction()
+    private async Task RemoveLayerAction()
     {
         if (Layers.Count == 1)
         {
@@ -247,6 +250,6 @@ internal class LayersSectionViewModel : ExtendedViewModel, IDisposable
         Layers.RemoveAt(index);
         SelectedLayer = Math.Clamp(index, 0, Layers.Count - 1);
         Subjects.LayerRemoved.OnNext(layer);
-        _applicationData.CurrentModel.AddHistory();
+        await _historyService.AddToHistory(_applicationData.CurrentModel);
     }
 }

@@ -13,7 +13,7 @@ using Pixed.Core.Models;
 using System.Threading.Tasks;
 
 namespace Pixed.Application.Menu;
-internal class FileMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationData applicationData, PixedProjectMethods pixedProjectMethods, RecentFilesService recentFilesService, ShortcutService shortcutService, ClipboardService clipboardService)
+internal class FileMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationData applicationData, PixedProjectMethods pixedProjectMethods, RecentFilesService recentFilesService, ShortcutService shortcutService, ClipboardService clipboardService, IHistoryService historyService)
 {
     private readonly IMenuItemRegistry _menuItemRegistry = menuItemRegistry;
     private readonly ApplicationData _applicationData = applicationData;
@@ -21,6 +21,7 @@ internal class FileMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
     private readonly RecentFilesService _recentFilesService = recentFilesService;
     private readonly ShortcutService _shortcutService = shortcutService;
     private readonly ClipboardService _clipboardService = clipboardService;
+    private readonly IHistoryService _historyService = historyService;
 
     public async Task Register()
     {
@@ -55,10 +56,11 @@ internal class FileMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
 
         if (result.HasValue)
         {
-            PixedModel model = new(_applicationData, result.Value.Width, result.Value.Height)
+            PixedModel model = new(result.Value.Width, result.Value.Height)
             {
                 FileName = _applicationData.GenerateName()
             };
+            _historyService.Register(model);
             _applicationData.Models.Add(model);
             Subjects.ProjectAdded.OnNext(model);
         }

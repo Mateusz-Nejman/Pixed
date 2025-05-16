@@ -2,7 +2,6 @@
 using Pixed.Common.Services.Keyboard;
 using Pixed.Core.Models;
 using Pixed.Core.Selection;
-using SkiaSharp;
 
 namespace Pixed.Common.Tools;
 public class ToolColorPicker(ApplicationData applicationData) : BaseTool(applicationData)
@@ -13,9 +12,10 @@ public class ToolColorPicker(ApplicationData applicationData) : BaseTool(applica
     public override ToolTooltipProperties? ToolTipProperties => new ToolTooltipProperties(Name);
     public override bool SingleHighlightedPixel { get; protected set; } = true;
     public override bool AddToHistory { get; protected set; } = false;
-    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
+    public override void ToolBegin(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        ApplyToolBase(point, frame, ref overlay, keyState, selection);
+        ToolBeginBase();
+        var frame = model.CurrentFrame;
         if (frame.ContainsPixel(point))
         {
             var color = frame.GetPixel(point);

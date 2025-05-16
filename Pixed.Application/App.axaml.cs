@@ -110,7 +110,7 @@ public partial class App : Avalonia.Application
         if (isOwned)
         {
             var thread = new Thread(
-                async () =>
+                () =>
                 {
                     while (handle.WaitOne())
                     {

@@ -1,7 +1,7 @@
 ﻿using Pixed.Application.Utils;
 using Pixed.BigGustave;
-using Pixed.Common.Utils;
 using Pixed.Core.Models;
+using Pixed.Core.Utils;
 using SkiaSharp;
 using System;
 using System.Collections.ObjectModel;
@@ -32,6 +32,7 @@ public class PngProjectSerializer : IPixedProjectSerializer
         ObservableCollection<Frame> frames = [];
 
         Layer layer = Layer.FromColors(colors, png.Width, png.Height, "Layer 0");
+        var render = layer.Render();
         if (TileWidth == -1 && TileHeight == -1)
         {
             Frame frame = Frame.FromLayers([layer]);
@@ -43,12 +44,18 @@ public class PngProjectSerializer : IPixedProjectSerializer
             {
                 for (int y = 0; y < layer.Height; y += TileHeight)
                 {
-                    Layer subLayer = Layer.FromColors(layer.GetRectangleColors(new Point(x, y), new Point(TileWidth, TileHeight)), TileWidth, TileHeight, "Layer 0");
-                    Frame subFrame = Frame.FromLayers([subLayer]);
-                    frames.Add(subFrame);
+                    SKBitmap tileBitmap = SkiaUtils.GetBitmap(TileWidth, TileHeight);
+                    if (render.ExtractSubset(tileBitmap, SKRectI.Create(x, y, TileWidth, TileHeight)))
+                    {
+                        Layer subLayer = Layer.FromBitmap(tileBitmap, "Layer 0");
+                        Frame subFrame = Frame.FromLayers([subLayer]);
+                        frames.Add(subFrame);
+                    }
                 }
             }
         }
+
+        render.Dispose();
 
         return PixedModel.FromFrames(frames, applicationData.GenerateName(), applicationData);
     }
@@ -58,7 +65,7 @@ public class PngProjectSerializer : IPixedProjectSerializer
         int rows = (int)Math.Ceiling((double)model.Frames.Count / (double)ColumnsCount);
         int width = model.Width * ColumnsCount;
         int height = model.Height * rows;
-        SKBitmap outputBitmap = new(width, height, true);
+        SKBitmap outputBitmap = SkiaUtils.GetBitmap(width, height);
         SKCanvas canvas = new(outputBitmap);
 
         int frameColumn = 0;

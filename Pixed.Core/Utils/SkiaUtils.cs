@@ -1,4 +1,5 @@
 ﻿using Avalonia;
+using Pixed.Core.Models;
 using Pixed.Core.Utils;
 using SkiaSharp;
 using System.Runtime.InteropServices;
@@ -9,6 +10,51 @@ public static class SkiaUtils
 {
     private static readonly object _lock = new();
 
+    public static SKBitmap GetBitmap(int width, int height, bool isOpaque = false)
+    {
+        return new SKBitmap(width, height, SKColorType.Bgra8888, isOpaque ? SKAlphaType.Opaque : SKAlphaType.Unpremul);
+    }
+
+    public static SKBitmap GetBitmap(Point size, bool isOpaque = false)
+    {
+        return GetBitmap(size.X, size.Y, isOpaque);
+    }
+    public unsafe static SKBitmap FastCopy(this SKBitmap bitmap)
+    {
+        int size = bitmap.Width * bitmap.Height;
+        IntPtr oldPixelsPtr = bitmap.GetPixels();
+        uint* oldPtr = (uint*)oldPixelsPtr.ToPointer();
+        SKBitmap copy = SkiaUtils.GetBitmap(bitmap.Width, bitmap.Height);
+        IntPtr newPixelsPtr = copy.GetPixels();
+        uint* newPtr = (uint*)newPixelsPtr.ToPointer();
+        Buffer.MemoryCopy(oldPtr, newPtr, sizeof(uint) * size, sizeof(uint) * size);
+        return copy;
+    }
+    public static void DrawPixelsOpaque(this SKCanvas canvas, List<Pixel> pixels, Point size)
+    {
+        SKBitmap opaqued = SkiaUtils.GetBitmap(size.X, size.Y, true);
+        SKCanvas opaquedCanvas = new(opaqued);
+        opaquedCanvas.DrawPixels(pixels);
+        opaquedCanvas.Dispose();
+
+        canvas.DrawBitmap(opaqued, SKPoint.Empty);
+    }
+    public static void DrawPixels(this SKCanvas canvas, List<Pixel> pixels)
+    {
+        var colors = pixels.Select(p => p.Color).Distinct();
+
+        foreach (var color in colors)
+        {
+            SKPaint paint = new() { Color = color, Style = SKPaintStyle.Fill, StrokeWidth = 1 };
+            var points = pixels.Where(p => p.Color == color).Select(p => new SKPoint(p.Position.X + 0.5f, p.Position.Y + 0.5f)).ToArray();
+            canvas.DrawPoints(SKPointMode.Points, points, paint);
+        }
+    }
+
+    public static void DrawPoints(this SKCanvas canvas, SKPoint[] points, uint color)
+    {
+        canvas.DrawPoints(SKPointMode.Points, points, new SKPaint() { Color = (UniColor)color, Style = SKPaintStyle.Fill, StrokeWidth = 1 });
+    }
     public static void DrawBitmapLock(this SKCanvas canvas, SKBitmap bitmap, Rect rect)
     {
         DrawBitmapLock(canvas, bitmap, SKRect.Create((float)rect.X, (float)rect.Y, (float)rect.Width, (float)rect.Height));
@@ -20,15 +66,14 @@ public static class SkiaUtils
         {
             if (!IsNull(bitmap))
             {
-                SKImage image = SKImage.FromBitmap(bitmap);
-                canvas.DrawImage(image, rect);
+                canvas.DrawBitmap(bitmap, rect);
             }
         }
     }
 
     public static SKBitmap FromArray(IList<uint> array, Point size)
     {
-        var bitmap = new SKBitmap(size.X, size.Y, true);
+        var bitmap = GetBitmap(size);
         var gcHandle = GCHandle.Alloc(array.ToArray(), GCHandleType.Pinned);
         var info = new SKImageInfo(size.X, size.Y, SKColorType.Bgra8888, SKAlphaType.Unpremul);
         bitmap.InstallPixels(info, gcHandle.AddrOfPinnedObject(), info.RowBytes, delegate { gcHandle.Free(); }, null);
@@ -51,57 +96,9 @@ public static class SkiaUtils
         }
     }
 
-    public static void Clear(this SKBitmap src)
-    {
-        uint[] pixels = new uint[src.Width * src.Height];
-        Array.Fill(pixels, UniColor.Transparent);
-        src.Fill(pixels);
-    }
-
-    public static void Fill(this SKBitmap src, IList<uint> array)
-    {
-        var gcHandle = GCHandle.Alloc(array.ToArray(), GCHandleType.Pinned);
-        var info = new SKImageInfo(src.Width, src.Height, SKColorType.Bgra8888, SKAlphaType.Unpremul);
-        src.InstallPixels(info, gcHandle.AddrOfPinnedObject(), info.RowBytes, delegate { gcHandle.Free(); }, null);
-    }
-
     public static bool ContainsPixel(this SKBitmap src, Point point)
     {
         return point.X >= 0 && point.Y >= 0 && point.X < src.Width && point.Y < src.Height;
-    }
-
-    public static void SetPixel(this SKBitmap bitmap, Point point, uint color, int toolSize)
-    {
-        if (toolSize <= 1 && bitmap.ContainsPixel(point))
-        {
-            bitmap.SetPixel(point.X, point.Y, (UniColor)color);
-            return;
-        }
-
-        SKCanvas canvas = new(bitmap);
-
-        if(toolSize == 1)
-        {
-            canvas.DrawPoint(point.X, point.Y, (UniColor)color);
-        }
-        else
-        {
-            var points = PaintUtils.GetToolPoints(point, toolSize);
-            var minX = points.Min(p => p.X);
-            var minY = points.Min(p => p.Y);
-            var maxX = points.Max(p => p.X);
-            var maxY = points.Max(p => p.Y);
-
-            SKRect rect = new(minX, minY, maxX + 1, maxY + 1);
-            SKPaint paint = new()
-            {
-                Color = color,
-                Style = SKPaintStyle.Fill
-            };
-            canvas.DrawRect(rect, paint);
-        }
-
-        canvas.Dispose();
     }
 
     public static void DrawLine(this SKCanvas canvas, SKPoint p0, SKPoint p1, UniColor color)

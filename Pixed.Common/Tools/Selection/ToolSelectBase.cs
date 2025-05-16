@@ -1,7 +1,6 @@
 ﻿using Pixed.Common.Services.Keyboard;
 using Pixed.Core.Models;
 using Pixed.Core.Selection;
-using SkiaSharp;
 using System.Linq;
 using Frame = Pixed.Core.Models.Frame;
 
@@ -25,33 +24,33 @@ public abstract class ToolSelectBase(ApplicationData applicationData) : BaseTool
     public override bool AddToHistory { get; protected set; } = false;
     public override bool SingleHighlightedPixel { get; protected set; }
 
-    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
+    public override void ToolBegin(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        ApplyToolBase(point, frame, ref overlay, keyState, selection);
+        ToolBeginBase();
         _start = point;
         _prev = point;
 
-        OnSelectionBegin(_start, point, _prev, frame);
+        OnSelectionBegin(_start, point, _prev, model.CurrentFrame);
         _stage = SelectionStage.Selecting;
     }
 
-    public override void MoveTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
+    public override void ToolMove(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
         if (_stage == SelectionStage.Selecting)
         {
-            OnSelection(_start, point, _prev, frame);
+            OnSelection(_start, point, _prev, model.CurrentFrame);
             _prev = point;
         }
     }
 
-    public override void ReleaseTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
+    public override void ToolEnd(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
         if (_stage == SelectionStage.Selecting)
         {
-            OnSelectionEnd(_start, point, _prev, frame);
+            OnSelectionEnd(_start, point, _prev, model.CurrentFrame);
         }
 
-        ReleaseToolBase(point, frame, ref overlay, keyState, selection);
+        ToolEndBase();
     }
 
     public virtual void OnSelectionBegin(Point startPoint, Point currentPoint, Point previousPoint, Frame frame) { }

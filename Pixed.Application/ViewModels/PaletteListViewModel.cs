@@ -4,6 +4,7 @@ using Pixed.Application.Routing;
 using Pixed.Common.Models;
 using Pixed.Common.Services.Palette;
 using Pixed.Core;
+using Pixed.Core.Utils;
 using SkiaSharp;
 using System;
 using System.Collections.ObjectModel;
@@ -94,7 +95,7 @@ internal class PaletteListViewModel : ExtendedViewModel
     private static SKBitmap GeneratePaleteBitmap(PaletteModel model)
     {
         int mod = (model.Colors.Count % 10) == 0 ? 0 : 1;
-        SKBitmap bitmap = new(200, ((model.Colors.Count / 10) + mod) * 20);
+        SKBitmap bitmap = SkiaUtils.GetBitmap(200, ((model.Colors.Count / 10) + mod) * 20);
         SKCanvas canvas = new(bitmap);
         int x = 0;
         int y = 0;

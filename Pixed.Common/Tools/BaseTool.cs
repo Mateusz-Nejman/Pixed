@@ -4,7 +4,6 @@ using Pixed.Common.Services.Keyboard;
 using Pixed.Core;
 using Pixed.Core.Models;
 using Pixed.Core.Selection;
-using Pixed.Core.Utils;
 using SkiaSharp;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +14,6 @@ public abstract class BaseTool(ApplicationData applicationData)
 {
     private readonly List<ToolProperty> _properties = [];
     protected readonly ApplicationData _applicationData = applicationData;
-    protected Point _highlightedPoint = new();
     private UniColor? _toolColor;
 
     public abstract string ImagePath { get; }
@@ -37,29 +35,33 @@ public abstract class BaseTool(ApplicationData applicationData)
         return _applicationData.PrimaryColor;
     }
 
-    protected void ApplyToolBase(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
+    protected void ToolBeginBase()
     {
         _toolColor ??= GetToolColor();
     }
 
-    public virtual void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
+    public virtual void ToolBegin(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        ApplyToolBase(point, frame, ref overlay, keyState, selection);
+        ToolBeginBase();
     }
 
-    public virtual void MoveTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
+    public virtual void ToolMove(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-
     }
 
-    protected void ReleaseToolBase(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
+    protected void ToolEndBase()
     {
         _toolColor = null;
     }
 
-    public virtual void ReleaseTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
+    public virtual void ToolEnd(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        ReleaseToolBase(point, frame, ref overlay, keyState, selection);
+        ToolEndBase();
+    }
+
+    public virtual void OnOverlay(SKCanvas canvas)
+    {
+
     }
 
     public virtual void Reset()
@@ -70,27 +72,6 @@ public abstract class BaseTool(ApplicationData applicationData)
     public virtual void Initialize()
     {
 
-    }
-
-    public virtual void UpdateHighlightedPixel(Point point, Frame frame, ref SKBitmap overlay, BaseSelection? selection)
-    {
-        overlay ??= new SKBitmap(frame.Width, frame.Height, true);
-
-        if (_highlightedPoint != point)
-        {
-            overlay?.Clear();
-        }
-
-        _highlightedPoint = point;
-
-        uint pixel = frame.GetPixel(point);
-
-        if (overlay.ContainsPixel(point))
-        {
-            overlay.SetPixel(point, GetHighlightColor(pixel), SingleHighlightedPixel ? 1 : _applicationData.ToolSize);
-        }
-
-        Subjects.OverlayModified.OnNext(overlay);
     }
 
     public virtual List<ToolProperty> GetToolProperties()
@@ -129,28 +110,5 @@ public abstract class BaseTool(ApplicationData applicationData)
 
         int index = _properties.FindIndex(p => p.Name == name);
         _properties[index].Checked = value;
-    }
-
-    protected static void SetPixels(Frame frame, List<Pixel> pixels)
-    {
-        frame.SetPixels(pixels);
-    }
-
-    protected static void SetPixels(Layer layer, List<Pixel> pixels)
-    {
-        layer.SetPixels(pixels);
-        Subjects.LayerModified.OnNext(layer);
-    }
-
-    private static UniColor GetHighlightColor(uint pixel)
-    {
-        UniColor.Hsl hsl = ((UniColor)pixel).ToHsl();
-
-        if (hsl.L > 0.5)
-        {
-            return UniColor.WithAlpha(50, UniColor.Black);
-        }
-
-        return UniColor.WithAlpha(50, UniColor.White);
     }
 }

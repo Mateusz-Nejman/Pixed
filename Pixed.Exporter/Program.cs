@@ -14,7 +14,7 @@ IConfiguration config = new ConfigurationBuilder()
 string inputFolder = config["input"] ?? string.Empty;
 string outputFolder = config["output"] ?? string.Empty;
 
-if (inputFolder == string.Empty ||  outputFolder == string.Empty)
+if (inputFolder == string.Empty || outputFolder == string.Empty)
 {
     Console.Error.WriteLine("Invalid arguments");
     return;
@@ -33,7 +33,7 @@ foreach (string file in files)
 {
     FileInfo info = new(file);
     Console.WriteLine(info.Name);
-    if(info.Extension != ".pixed")
+    if (info.Extension != ".pixed")
     {
         continue;
     }

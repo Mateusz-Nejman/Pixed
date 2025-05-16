@@ -1,45 +1,56 @@
-﻿using Pixed.Core.Models;
+﻿using Pixed.Common.Services;
+using Pixed.Core.Models;
 using System;
-using System.IO;
+using System.Threading.Tasks;
 
 namespace Pixed.Common.Models;
 public static class PixedModelMethods
 {
-    public static void Undo(this PixedModel model)
+    public static async Task Undo(this PixedModel model, IHistoryService historyService)
     {
-        model.HistoryIndex--;
-        if (model.History.Count == 1 || model.HistoryIndex < 0)
+        var historyCount = historyService.GetHistoryCount(model);
+        var index = historyService.GetHistoryIndex(model);
+        index--;
+        if (historyCount == 1 || index < 0)
         {
             return;
         }
 
-        model.HistoryIndex = Math.Clamp(model.HistoryIndex, 0, model.History.Count - 1);
+        index = Math.Clamp(index, 0, historyCount - 1);
+        historyService.SetHistoryIndex(model, index);
+        var id = historyService.GetHistoryId(model, index);
 
-        byte[] data = model.History[model.HistoryIndex];
-        MemoryStream stream = new(data);
+        var stream = await historyService.GetHistoryItem(model, id);
         model.Deserialize(stream);
+        model.ResetRecursive();
         Subjects.ProjectModified.OnNext(model);
         Subjects.FrameChanged.OnNext(model.CurrentFrame);
         Subjects.LayerChanged.OnNext(model.CurrentFrame.CurrentLayer);
         stream.Dispose();
     }
 
-    public static void Redo(this PixedModel model)
+    public static async Task Redo(this PixedModel model, IHistoryService historyService)
     {
-        model.HistoryIndex++;
-        if (model.History.Count == 0 || model.HistoryIndex >= model.History.Count)
+        var historyCount = historyService.GetHistoryCount(model);
+        var index = historyService.GetHistoryIndex(model);
+        index++;
+        if (historyCount == 0 || index >= historyCount)
         {
             return;
         }
 
-        if (model.HistoryIndex < 0)
+        if (index < 0)
         {
-            model.HistoryIndex = 0;
+            index = 0;
         }
 
-        byte[] data = model.History[model.HistoryIndex];
-        MemoryStream stream = new(data);
+        historyService.SetHistoryIndex(model, index);
+        var id = historyService.GetHistoryId(model, index);
+
+        var stream = await historyService.GetHistoryItem(model, id);
+
         model.Deserialize(stream);
+        model.ResetRecursive();
         Subjects.ProjectModified.OnNext(model);
         Subjects.FrameChanged.OnNext(model.CurrentFrame);
         Subjects.LayerChanged.OnNext(model.CurrentFrame.CurrentLayer);

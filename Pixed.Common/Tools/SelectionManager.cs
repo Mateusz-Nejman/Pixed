@@ -5,6 +5,7 @@ using Pixed.Common.Tools.Selection;
 using Pixed.Core;
 using Pixed.Core.Models;
 using Pixed.Core.Selection;
+using Pixed.Core.Utils;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -18,24 +19,26 @@ public class SelectionManager
     private readonly ApplicationData _applicationData;
     private readonly ToolsManager _toolSelector;
     private readonly ClipboardService _clipboardService;
+    private readonly IHistoryService _historyService;
     private BaseSelection? _currentSelection;
 
     public bool HasSelection => _currentSelection != null;
     public BaseSelection? Selection => _currentSelection;
 
-    public SelectionManager(ApplicationData applicationData, ShortcutService shortcutService, ToolsManager toolSelector, ClipboardService clipboardService)
+    public SelectionManager(ApplicationData applicationData, ShortcutService shortcutService, ToolsManager toolSelector, ClipboardService clipboardService, IHistoryService historyService)
     {
         _applicationData = applicationData;
         _toolSelector = toolSelector;
         _currentSelection = null;
         _clipboardService = clipboardService;
+        _historyService = historyService;
         Subjects.SelectionCreating.Subscribe(OnSelectionCreated);
         Subjects.SelectionDismissed.Subscribe(OnSelectionDismissed);
         shortcutService.Add(KeyState.Control(Key.C), async () => await Copy());
         shortcutService.Add(KeyState.Control(Key.X), async () => await Cut());
         shortcutService.Add(KeyState.Control(Key.V), async () => await Paste());
         shortcutService.Add(KeyState.Control(Key.A), SelectAll);
-        shortcutService.Add(new KeyState(Key.Delete, true, false, false, false), Erase);
+        shortcutService.Add(new KeyState(Key.Delete, true, false, false, false), async () => await Erase());
     }
 
     public void Clear()
@@ -77,7 +80,7 @@ public class SelectionManager
             return;
         }
         await Copy();
-        Erase();
+        await Erase();
     }
 
     public async Task Paste()
@@ -119,9 +122,13 @@ public class SelectionManager
             }
         }
 
-        frame.SetPixels(pixels);
+        var canvas = frame.GetCanvas();
+        canvas.DrawPixels(pixels);
+        canvas.Dispose();
+
+        _applicationData.CurrentModel.ResetRecursive();
         Subjects.FrameModified.OnNext(frame);
-        _applicationData.CurrentModel.AddHistory();
+        await _historyService.AddToHistory(_applicationData.CurrentModel);
     }
 
     private void OnSelectionCreated(BaseSelection? selection)
@@ -137,7 +144,7 @@ public class SelectionManager
         Clear();
     }
 
-    private void Erase()
+    private async Task Erase()
     {
         if (_currentSelection == null || !IsSelectToolActive())
         {
@@ -147,10 +154,12 @@ public class SelectionManager
         var pixels = _currentSelection.Pixels.Select(p => new Pixel(p.Position)).ToList();
         var frame = _applicationData.CurrentFrame;
 
-        frame.SetPixels(pixels);
+        var canvas = frame.GetCanvas();
+        canvas.DrawPixelsOpaque(pixels, new Point(frame.Width, frame.Height));
+        canvas.Dispose();
 
         Subjects.FrameModified.OnNext(frame);
-        _applicationData.CurrentModel.AddHistory();
+        await _historyService.AddToHistory(_applicationData.CurrentModel);
     }
 
     private bool IsSelectToolActive()

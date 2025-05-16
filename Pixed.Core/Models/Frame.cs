@@ -12,8 +12,8 @@ public class Frame : PixelImage, IPixedSerializer
     private readonly string _id;
     private static readonly object _lock = new();
 
-    public int Width => Layers[0].Width;
-    public int Height => Layers[0].Height;
+    public override int Width => Layers[0].Width;
+    public override int Height => Layers[0].Height;
     public Layer CurrentLayer => Layers[SelectedLayer];
     public int SelectedLayer
     {
@@ -62,27 +62,13 @@ public class Frame : PixelImage, IPixedSerializer
         return frame;
     }
 
-    public void SetPixel(Point point, uint color)
+    public BitmapHandle GetHandle()
     {
-        CurrentLayer.SetPixel(point, color);
+        return CurrentLayer.GetHandle();
     }
-
-    public void SetPixels(List<Pixel> pixels)
+    public SKCanvas GetCanvas()
     {
-        CurrentLayer.SetPixels(pixels);
-    }
-
-    public void SetPixel(Point point, uint color, int toolSize)
-    {
-        if (toolSize <= 1)
-        {
-            SetPixel(point, color);
-            return;
-        }
-
-        var toolPoints = PaintUtils.GetToolPoints(point, toolSize);
-        var pixels = toolPoints.Select(p => new Pixel(p, color)).ToList();
-        SetPixels(pixels);
+        return CurrentLayer.GetCanvas();
     }
 
     public uint GetPixel(Point point)
@@ -108,14 +94,20 @@ public class Frame : PixelImage, IPixedSerializer
     {
         lock (_lock)
         {
-            SKBitmap render = new(Width, Height, true);
+            SKBitmap render = SkiaUtils.GetBitmap(Width, Height);
             SKCanvas canvas = new(render);
             canvas.Clear(SKColors.Transparent);
 
             for (int a = 0; a < _layers.Count; a++)
             {
                 var bitmap = _layers[a].Render();
-                canvas.DrawBitmap(bitmap, new SKPoint(0, 0));
+
+                if (!SkiaUtils.IsNull(bitmap))
+                {
+                    canvas.DrawBitmap(bitmap, new SKPoint(0, 0));
+                }
+
+                bitmap.Dispose();
             }
             canvas.Dispose();
             return render;
@@ -173,6 +165,11 @@ public class Frame : PixelImage, IPixedSerializer
         Layers.RemoveAt(index + 1);
         SelectedLayer = index;
         return layer2;
+    }
+
+    public long CalculateStreamSize()
+    {
+        return (sizeof(int) * 2) + _layers.Sum(l => l.CalculateStreamSize());
     }
 
     public void Serialize(Stream stream)

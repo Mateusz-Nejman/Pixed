@@ -34,6 +34,7 @@ internal class PlatformFolder : IPlatformFolder
         {
             FolderType.Root => GetPixedFolder(),
             FolderType.Palettes => GetPalettesFolder(),
+            FolderType.History => GetHistoryFolder(),
             _ => string.Empty,
         };
     }
@@ -45,6 +46,11 @@ internal class PlatformFolder : IPlatformFolder
     private static string GetPixedFolder()
     {
         return GetFolderAbsolute("Pixed");
+    }
+
+    private static string GetHistoryFolder()
+    {
+        return GetFolderAbsolute("History");
     }
 
     private static string GetFolderAbsolute(string folderName)

@@ -22,6 +22,7 @@ internal partial class PaintControl : ExtendedControl<PaintControlViewModel>
         zoomControl.GesturesEnabled = false;
         ViewModel.GridCanvas = gridCanvas;
         ViewModel.SelectionOverlay = selectionOverlay;
+        ViewModel.CursorOverlay = cursorOverlay;
         ViewModel.TransparentBackground = transparentBackground;
         ViewModel.ZoomValue = zoomControl.Zoom;
         ViewModel.ZoomOffsetX = zoomControl.Offset.X;

@@ -4,12 +4,11 @@ using Android.OS;
 using AndroidX.Activity;
 using Avalonia;
 using Avalonia.Android;
-using Avalonia.ReactiveUI;
-using AvaloniaInside.Shell;
 using Pixed.Application;
 using Pixed.Application.DependencyInjection;
 using Pixed.Application.IO;
 using Pixed.Application.Platform;
+using Pixed.Application.Utils;
 
 namespace Pixed.Android.Dev;
 
@@ -35,11 +34,7 @@ public class MainActivity : AvaloniaMainActivity<App>
     }
     protected override AppBuilder CustomizeAppBuilder(AppBuilder builder)
     {
-        return base.CustomizeAppBuilder(builder)
-            .WithInterFont()
-            .LogToTrace()
-            .UseReactiveUI()
-            .UseShell();
+        return base.CustomizeAppBuilder(builder).GetDefault();
     }
 }
 

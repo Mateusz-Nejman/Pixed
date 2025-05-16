@@ -1,7 +1,6 @@
 ﻿using Pixed.Core.Algorithms;
 using Pixed.Core.Models;
 using Pixed.Core.Utils;
-using System;
 using System.Collections.Generic;
 
 namespace Pixed.Common.Tools;
@@ -15,25 +14,14 @@ public class ToolStroke : ShapeTool
     {
         PROP_SHIFT = "Draw straight lines";
     }
-    protected override void Draw(Point point, uint color, bool isShift, Action<Point, uint> setPixelAction)
+
+    protected override List<Point> GetShapePoints(Point point, bool shiftPressed)
     {
-        List<Point> linePixels;
-
-        if (isShift)
+        if (shiftPressed)
         {
-            linePixels = MathUtils.GetUniformLinePixels(_start, point);
-        }
-        else
-        {
-            linePixels = BresenhamLine.Get(point, _start);
+            return MathUtils.GetUniformLinePixels(_start, point);
         }
 
-        setPixelAction.Invoke(linePixels[0], color);
-        setPixelAction.Invoke(linePixels[^1], color);
-
-        foreach (var p in linePixels)
-        {
-            setPixelAction.Invoke(p, color);
-        }
+        return BresenhamLine.Get(point, _start);
     }
 }

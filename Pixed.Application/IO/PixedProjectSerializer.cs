@@ -120,7 +120,7 @@ public sealed class PixedProjectSerializer : IPixedProjectSerializer
     /// </summary>
     /// <param name="inStream">Input stream</param>
     /// <param name="outStream">Output stream</param>
-    private static void Decompress(Stream inStream, Stream outStream)
+    public static void Decompress(Stream inStream, Stream outStream)
     {
         byte[] properties = new byte[5];
         if (inStream.Read(properties, 0, 5) != 5)

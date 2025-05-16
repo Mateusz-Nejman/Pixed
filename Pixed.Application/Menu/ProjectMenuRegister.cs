@@ -3,6 +3,7 @@ using Pixed.Application.Utils;
 using Pixed.BigGustave;
 using Pixed.Common;
 using Pixed.Common.Menu;
+using Pixed.Common.Services;
 using Pixed.Common.Utils;
 using Pixed.Core;
 using Pixed.Core.Models;
@@ -14,11 +15,12 @@ using System.Threading.Tasks;
 
 namespace Pixed.Application.Menu;
 
-internal class ProjectMenuRegister(IMenuItemRegistry menuItemRegistry, DialogUtils dialogUtils, ApplicationData applicationData)
+internal class ProjectMenuRegister(IMenuItemRegistry menuItemRegistry, DialogUtils dialogUtils, ApplicationData applicationData, IHistoryService historyService)
 {
     private readonly IMenuItemRegistry _menuItemRegistry = menuItemRegistry;
     private readonly DialogUtils _dialogUtils = dialogUtils;
     private readonly ApplicationData _applicationData = applicationData;
+    private readonly IHistoryService _historyService = historyService;
 
     public void Register()
     {
@@ -62,7 +64,7 @@ internal class ProjectMenuRegister(IMenuItemRegistry menuItemRegistry, DialogUti
             }
 
             var bitmapSize = new Point(bitmap.Width, bitmap.Height);
-            SKBitmap? layerBitmap = new(currentSize.X, currentSize.Y, true);
+            SKBitmap? layerBitmap = SkiaUtils.GetBitmap(currentSize);
             SKCanvas canvas = new(layerBitmap);
 
             if (isSingle)
@@ -88,7 +90,7 @@ internal class ProjectMenuRegister(IMenuItemRegistry menuItemRegistry, DialogUti
             _applicationData.CurrentFrame.AddLayer(layer);
             Subjects.LayerAdded.OnNext(layer);
             Subjects.FrameModified.OnNext(_applicationData.CurrentFrame);
-            _applicationData.CurrentModel.AddHistory();
+            await _historyService.AddToHistory(_applicationData.CurrentModel);
         }
     }
 }

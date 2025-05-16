@@ -8,13 +8,8 @@ namespace Pixed.Core.Models;
 
 public class PixedModel : PixelImage, IPixedSerializer
 {
-    private readonly ApplicationData _applicationData;
-    private const int MAX_HISTORY_ENTRIES = 500;
     private readonly ObservableCollection<Frame> _frames;
-    private readonly ObservableCollection<byte[]> _history; //TODO write to file instead of storing in memory
-    private int _historyIndex = 0;
     private int _currentFrameIndex = 0;
-    private bool _isEmpty = true;
     private string _fileName = string.Empty;
 
     public string? FilePath { get; set; }
@@ -29,8 +24,8 @@ public class PixedModel : PixelImage, IPixedSerializer
     }
 
     public ObservableCollection<Frame> Frames => _frames;
-    public int Width => Frames[0].Width;
-    public int Height => Frames[0].Height;
+    public override int Width => Frames[0].Width;
+    public override int Height => Frames[0].Height;
 
     public Frame CurrentFrame => Frames[_currentFrameIndex];
 
@@ -44,106 +39,33 @@ public class PixedModel : PixelImage, IPixedSerializer
         }
     }
 
-    public bool IsEmpty => _isEmpty;
+    public bool IsEmpty { get; set; }
     public bool UnsavedChanges { get; set; } = false;
 
     public ICommand CloseCommand { get; }
     public static Action<PixedModel> CloseCommandAction { get; set; }
 
-    public int HistoryIndex
-    {
-        get => _historyIndex;
-        set
-        {
-            _historyIndex = Math.Clamp(value, 0, _history.Count - 1);
-        }
-    }
+    public string Id { get; }
 
-    public IReadOnlyList<byte[]> History => _history;
-
-    public PixedModel(ApplicationData applicationData) : this(applicationData, applicationData.UserSettings.UserWidth, applicationData.UserSettings.UserHeight)
+    public PixedModel(ApplicationData applicationData) : this(applicationData.UserSettings.UserWidth, applicationData.UserSettings.UserHeight)
     {
 
     }
 
-    public PixedModel(ApplicationData applicationData, int width, int height)
+    public PixedModel(int width, int height)
     {
-        _applicationData = applicationData;
+        Id = Guid.NewGuid().ToString();
         _frames = [];
-        _history = [];
 
         CloseCommand = new ActionCommand(() => CloseCommandAction(this));
 
         Frames.Add(new Frame(width, height));
     }
 
-    public void CopyHistoryFrom(PixedModel model)
-    {
-        _history.AddRange(model._history);
-    }
-
-    public PixedModel Clone()
-    {
-        PixedModel model = new(_applicationData)
-        {
-            _isEmpty = _isEmpty,
-            _currentFrameIndex = _currentFrameIndex,
-            FileName = FileName,
-        };
-
-        foreach (Frame frame in Frames)
-        {
-            model._frames.Add(frame.Clone());
-        }
-
-        return model;
-    }
-
     public List<uint> GetAllColors()
     {
         uint transparentColor = UniColor.Transparent;
         return [.. _frames.SelectMany(f => f.Layers).Select(l => l.GetDistinctPixels()).SelectMany(p => p).Distinct().Where(p => p != transparentColor).Order()];
-    }
-
-    public void AddHistory(bool setIsEmpty = true)
-    {
-        _historyIndex = Math.Clamp(_historyIndex, 0, _history.Count);
-        MemoryStream stream = new();
-        Serialize(stream);
-        byte[] data = stream.ToArray();
-        stream.Dispose();
-
-        ObservableCollection<byte[]> newHistory = [];
-
-        if (_history.Count > 0)
-        {
-            for (int a = 0; a <= _historyIndex; a++)
-            {
-                newHistory.Add(_history[a]);
-            }
-        }
-
-        newHistory.Add(data);
-
-        _history.Clear();
-
-        foreach (var historyData in newHistory)
-        {
-            _history.Add(historyData);
-        }
-
-        if (_history.Count == MAX_HISTORY_ENTRIES + 1)
-        {
-            _history.RemoveAt(0);
-        }
-        _historyIndex = _history.Count - 1;
-
-        if (setIsEmpty)
-        {
-            _isEmpty = false;
-        }
-
-        UnsavedChanges = true;
     }
 
     public override void SetModifiedPixels(List<Pixel> modifiedPixels)
@@ -154,6 +76,11 @@ public class PixedModel : PixelImage, IPixedSerializer
     {
         Frame? frame = Frames.FirstOrDefault((Frame?)null);
         return frame?.Render();
+    }
+
+    public long CalculateStreamSize()
+    {
+        return (sizeof(int) * 2) + _frames.Sum(f => f.CalculateStreamSize());
     }
 
     public void Serialize(Stream stream)
@@ -168,7 +95,7 @@ public class PixedModel : PixelImage, IPixedSerializer
 
     public void Deserialize(Stream stream)
     {
-        _isEmpty = false;
+        IsEmpty = false;
         _currentFrameIndex = stream.ReadInt();
         _frames.Clear();
         int framesCount = stream.ReadInt();
@@ -181,11 +108,35 @@ public class PixedModel : PixelImage, IPixedSerializer
         }
     }
 
+    public void ResetRecursive(bool onlyCurrent = true)
+    {
+        if (onlyCurrent)
+        {
+            CurrentFrame.CurrentLayer.ResetID();
+            CurrentFrame.ResetID();
+            ResetID();
+        }
+        else
+        {
+            foreach (var frame in _frames)
+            {
+                foreach (var layer in frame.Layers)
+                {
+                    layer.ResetID();
+                }
+
+                frame.ResetID();
+            }
+
+            ResetID();
+        }
+    }
+
     public static PixedModel FromFrames(ObservableCollection<Frame> frames, string name, ApplicationData applicationData)
     {
         PixedModel model = new(applicationData);
         model.Frames.Clear();
-        model._isEmpty = false;
+        model.IsEmpty = false;
         model.FileName = name;
 
         foreach (var frame in frames)

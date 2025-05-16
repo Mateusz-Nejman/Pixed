@@ -96,7 +96,6 @@ internal class ToolsSectionViewModel(ToolsManager toolSelector, PaintControlView
             string name = radio.Name;
 
             _toolSelector.SelectedTool = _toolSelector.GetTool(name);
-            _paintCanvas.ClearOverlay();
         }
     }
 

@@ -37,7 +37,7 @@ internal class PixelImageControl : Control
         AutomationProperties.ControlTypeOverrideProperty.OverrideDefaultValue<PixelImageControl>(AutomationControlType.Image);
     }
 
-    private readonly PixelDrawOperation _image = new();
+    private readonly ICustomPixedImageOperation _operation;
 
     /// <summary>
     /// Gets or sets the image that will be displayed.
@@ -70,6 +70,11 @@ internal class PixelImageControl : Control
     /// <inheritdoc />
     protected override bool BypassFlowDirectionPolicies => true;
 
+    public PixelImageControl() : base()
+    {
+        _operation = GetOperation();
+    }
+
     /// <summary>
     /// Renders the control.
     /// </summary>
@@ -81,29 +86,21 @@ internal class PixelImageControl : Control
             return;
         }
 
-        var source = Source.Render();
+        _operation.UpdateBitmap(Source);
 
-        if (source == null)
-        {
-            return;
-        }
-        _image.UpdateBitmap(Source);
-
-        if (source != null && Bounds.Width > 0 && Bounds.Height > 0)
+        if (Bounds.Width > 0 && Bounds.Height > 0)
         {
             Rect viewPort = new(Bounds.Size);
-            Size sourceSize = new(source.Width, source.Height);
+            Size sourceSize = new(Source.Width, Source.Height);
 
             Vector scale = Stretch.CalculateScaling(Bounds.Size, sourceSize, StretchDirection);
             Size scaledSize = sourceSize * scale;
             Rect destRect = viewPort
                 .CenterRect(new Rect(scaledSize))
                 .Intersect(viewPort);
-            Rect sourceRect = new Rect(sourceSize)
-                .CenterRect(new Rect(destRect.Size / scale));
 
-            _image.Bounds = destRect;
-            context.DrawImage(_image, sourceRect, destRect);
+            _operation.Bounds = destRect;
+            context.Custom(_operation);
         }
 
         Dispatcher.UIThread.Post(InvalidateVisual, DispatcherPriority.Background);
@@ -116,12 +113,11 @@ internal class PixelImageControl : Control
     /// <returns>The desired size of the control.</returns>
     protected override Size MeasureOverride(Size availableSize)
     {
-        var source = Source?.Render();
         var result = new Size();
 
-        if (source != null)
+        if (Source != null)
         {
-            result = Stretch.CalculateSize(availableSize, new Size(source.Width, source.Height), StretchDirection);
+            result = Stretch.CalculateSize(availableSize, new Size(Source.Width, Source.Height), StretchDirection);
         }
 
         return result;
@@ -130,11 +126,9 @@ internal class PixelImageControl : Control
     /// <inheritdoc/>
     protected override Size ArrangeOverride(Size finalSize)
     {
-        var source = Source?.Render();
-
-        if (source != null)
+        if (Source != null)
         {
-            var sourceSize = new Size(source.Width, source.Height);
+            var sourceSize = new Size(Source.Width, Source.Height);
             var result = Stretch.CalculateSize(finalSize, sourceSize);
             return result;
         }
@@ -142,5 +136,10 @@ internal class PixelImageControl : Control
         {
             return new Size();
         }
+    }
+
+    protected virtual ICustomPixedImageOperation GetOperation()
+    {
+        return new PixelImageOperation();
     }
 }

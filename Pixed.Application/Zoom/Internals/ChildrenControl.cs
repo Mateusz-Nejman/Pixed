@@ -1,7 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
-using Pixed.Application.Controls;
 using Pixed.Application.Controls.PaintCanvas;
 using Pixed.Core;
 using System.Collections.Specialized;

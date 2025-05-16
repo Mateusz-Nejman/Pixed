@@ -1,8 +1,9 @@
-﻿using Pixed.Core.Models;
+﻿using Pixed.Common.Services;
+using Pixed.Core.Models;
 
 namespace Pixed.Common.Tools.Transform;
 
-public class Rotate(ApplicationData applicationData) : AbstractTransformTool(applicationData)
+public class Rotate(ApplicationData applicationData, IHistoryService historyService) : AbstractTransformTool(applicationData, historyService)
 {
     public override void ApplyToolOnLayer(Layer layer, bool altKey)
     {

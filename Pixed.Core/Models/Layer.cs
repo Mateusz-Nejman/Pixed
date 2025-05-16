@@ -1,18 +1,19 @@
 ﻿using Pixed.Core.IO;
 using Pixed.Core.Utils;
 using SkiaSharp;
+using System.Text;
 using System.Windows.Input;
 namespace Pixed.Core.Models;
 
-public class Layer : PixelImage, IPixedSerializer
+public class Layer : PixelImage, IPixedSerializer, IDisposable
 {
-    private uint[] _pixels;
     private int _width;
     private int _height;
+    private SKBitmap _bitmap;
     private double _opacity = 100.0d;
     private string _name = string.Empty;
+    private bool disposedValue;
     private readonly string _id;
-    private static readonly object _lock = new();
 
     public double Opacity
     {
@@ -34,8 +35,8 @@ public class Layer : PixelImage, IPixedSerializer
     }
 
     public string Id => _id;
-    public int Width => _width;
-    public int Height => _height;
+    public override int Width => _width;
+    public override int Height => _height;
     public ICommand? ChangeOpacityCommand { get; }
 
     public static Func<Layer, Task> ChangeOpacityAction { get; set; }
@@ -49,12 +50,10 @@ public class Layer : PixelImage, IPixedSerializer
         _id = Guid.NewGuid().ToString();
         _width = width;
         _height = height;
-        _pixels = new uint[width * height];
-
-        Array.Fill(_pixels, UniColor.Transparent.ToUInt());
+        _bitmap = SkiaUtils.GetBitmap(width, height);
     }
 
-    private Layer(int width, int height, uint[] pixels)
+    private Layer(int width, int height, SKBitmap bitmap)
     {
         ChangeOpacityCommand = new AsyncCommand(async () =>
         {
@@ -63,41 +62,31 @@ public class Layer : PixelImage, IPixedSerializer
         _id = Guid.NewGuid().ToString();
         _width = width;
         _height = height;
-        _pixels = pixels;
+        _bitmap = bitmap.Copy();
     }
 
     public Layer Clone()
     {
-        uint[] pixels = new uint[_pixels.Length];
-        _pixels.CopyTo(pixels, 0);
-        Layer layer = new(_width, _height, pixels)
+        Layer layer = new(_width, _height, _bitmap)
         {
             Name = Name,
         };
         return layer;
     }
 
-    public uint[] GetPixels()
-    {
-        return _pixels;
-    }
-
     public uint[] GetDistinctPixels()
     {
-        return _pixels.Distinct().ToArray();
+        return [.. _bitmap.ToArray().Distinct()];
     }
 
-    public void SetPixel(Point point, uint color)
+    public SKCanvas GetCanvas()
     {
-        SetPixelPrivate(point, color);
+        return new SKCanvas(_bitmap);
     }
 
-    public void SetPixels(List<Pixel> pixels)
+    public BitmapHandle GetHandle()
     {
-        foreach (Pixel pixel in pixels)
-        {
-            SetPixelPrivate(pixel.Position, pixel.Color);
-        }
+        return new BitmapHandle(_bitmap);
     }
 
     public void MergeLayers(Layer layer2)
@@ -107,10 +96,11 @@ public class Layer : PixelImage, IPixedSerializer
         SKCanvas canvas = new(bitmap);
         canvas.DrawBitmap(layer2Bitmap, new SKPoint(0, 0));
         canvas.Dispose();
-
-        _pixels = bitmap.ToArray();
+        _bitmap.Dispose();
+        _bitmap = bitmap;
     }
 
+    [Obsolete]
     public uint GetPixel(Point point)
     {
         if (!ContainsPixel(point))
@@ -118,39 +108,52 @@ public class Layer : PixelImage, IPixedSerializer
             return 0;
         }
 
-        return _pixels[point.Y * _width + point.X];
+        IntPtr pixelsPtr = _bitmap.GetPixels();
+
+        unsafe
+        {
+            var unsafePtr = (uint*)pixelsPtr;
+            return (UniColor)unsafePtr[point.Y * Width + point.X];
+        }
+    }
+
+    public unsafe uint* GetPixels()
+    {
+        IntPtr pixelsPtr = _bitmap.GetPixels();
+        return (uint*)pixelsPtr;
     }
 
     public override SKBitmap Render()
     {
-        SKBitmap bitmap;
-        lock (_lock)
+        if (Opacity == 100)
         {
-            List<uint> pixels = new(_pixels);
-
-            if (ModifiedPixels.Count > 0)
-            {
-                List<Pixel> modified = new(ModifiedPixels.ToArray()); //TODO concurrency fix
-                foreach (var pixel in modified)
-                {
-                    pixels[pixel.Position.Y * _width + pixel.Position.X] = pixel.Color;
-                }
-            }
-
-            if (Opacity != 100)
-            {
-                pixels = pixels.Select(c => ColorUtils.MultiplyAlpha(c, Opacity / 100d)).ToList();
-            }
-
-            bitmap = SkiaUtils.FromArray(pixels, new Point(_width, _height));
-            pixels.Clear();
+            return _bitmap.FastCopy();
         }
-        return bitmap;
+
+        byte newAlpha = (byte)((Opacity / 100d) * 255d);
+        SKPaint paint = new() { Color = new SKColor(255, 255, 255, newAlpha) };
+        SKBitmap opacityBitmap = SkiaUtils.GetBitmap(Width, Height);
+        SKCanvas canvas = new(opacityBitmap);
+
+        if (!SkiaUtils.IsNull(_bitmap))
+        {
+            canvas.DrawBitmap(_bitmap, SKPoint.Empty, paint);
+        }
+        canvas.Dispose();
+        paint.Dispose();
+
+        return opacityBitmap;
     }
 
     public bool ContainsPixel(Point point)
     {
         return point.X >= 0 && point.Y >= 0 && point.X < Width && point.Y < Height;
+    }
+
+    public long CalculateStreamSize()
+    {
+        var name = Encoding.UTF8.GetBytes(Name);
+        return sizeof(double) + (sizeof(int) * 4) + name.LongLength + (_bitmap.Width * _bitmap.Height * sizeof(uint));
     }
 
     public void Serialize(Stream stream)
@@ -159,8 +162,9 @@ public class Layer : PixelImage, IPixedSerializer
         stream.WriteInt(Width);
         stream.WriteInt(Height);
         stream.WriteString(Name);
-        stream.WriteInt(_pixels.Length);
-        stream.WriteUIntArray(_pixels);
+        stream.WriteInt(Width * Height);
+        var array = _bitmap.ToByteArray();
+        stream.Write(array);
     }
 
     public void Deserialize(Stream stream)
@@ -170,31 +174,50 @@ public class Layer : PixelImage, IPixedSerializer
         _height = stream.ReadInt();
         _name = stream.ReadString();
         int pixelsSize = stream.ReadInt();
-        _pixels = new uint[pixelsSize];
+        byte[] bytes = new byte[pixelsSize * sizeof(uint)];
+        stream.Read(bytes, 0, bytes.Length);
+        var colors = bytes.ToUInt();
 
-        for (int i = 0; i < pixelsSize; i++)
+        _bitmap?.Dispose();
+        _bitmap = SkiaUtils.FromArray(colors, new Point(_width, _height));
+    }
+
+    public static Layer FromBitmap(SKBitmap bitmap, string name)
+    {
+        Layer layer = new(bitmap.Width, bitmap.Height)
         {
-            _pixels[i] = stream.ReadUInt();
-        }
+            _bitmap = bitmap,
+            _name = name
+        };
+        return layer;
     }
 
     public static Layer FromColors(uint[] colors, int width, int height, string name)
     {
         Layer layer = new(width, height)
         {
-            _pixels = colors,
+            _bitmap = SkiaUtils.FromArray(colors, new Point(width, height)),
             _name = name
         };
         return layer;
     }
 
-    private void SetPixelPrivate(Point point, uint color)
+    protected virtual void Dispose(bool disposing)
     {
-        if (!ContainsPixel(point))
+        if (!disposedValue)
         {
-            return;
-        }
+            if (disposing)
+            {
+                _bitmap.Dispose();
+            }
 
-        _pixels[point.Y * _width + point.X] = color;
+            disposedValue = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
     }
 }

@@ -6,7 +6,6 @@ using Pixed.Application.Platform;
 using Pixed.Application.Routing;
 using Pixed.Application.Utils;
 using Pixed.Common;
-using Pixed.Common.Menu;
 using Pixed.Common.Models;
 using Pixed.Common.Services.Palette;
 using Pixed.Common.Tools;
@@ -98,7 +97,7 @@ internal class PaletteSectionViewModel : ExtendedViewModel, IDisposable
         {
             _applicationData.PrimaryColor = c;
 
-            if(_toolsManager.SelectedTool is ToolEraser)
+            if (_toolsManager.SelectedTool is ToolEraser)
             {
                 _toolsManager.SelectTool("tool_pen");
             }

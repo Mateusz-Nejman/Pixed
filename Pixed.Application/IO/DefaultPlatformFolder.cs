@@ -48,6 +48,7 @@ internal class DefaultPlatformFolder(IStorageProviderHandle handle) : IPlatformF
             FolderType.Root => await GetPixedFolder(_storageProviderHandle.StorageProvider),
             FolderType.Palettes => await GetPalettesFolder(_storageProviderHandle.StorageProvider),
             FolderType.Extensions => await GetExtensionsFolder(_storageProviderHandle.StorageProvider),
+            FolderType.History => await GetHistoryFolder(_storageProviderHandle.StorageProvider),
             _ => throw new System.NotImplementedException()
         };
     }
@@ -68,5 +69,11 @@ internal class DefaultPlatformFolder(IStorageProviderHandle handle) : IPlatformF
     {
         var documentsFolder = await provider.TryGetWellKnownFolderAsync(WellKnownFolder.Documents);
         return await documentsFolder.CreateFolderAsync("Pixed");
+    }
+
+    private static async Task<IStorageFolder> GetHistoryFolder(IStorageProvider provider)
+    {
+        var pixedFolder = await GetPixedFolder(provider);
+        return await pixedFolder.CreateFolderAsync("History");
     }
 }

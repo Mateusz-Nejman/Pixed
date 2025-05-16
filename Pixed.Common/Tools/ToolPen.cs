@@ -2,7 +2,6 @@
 using Pixed.Common.Services.Keyboard;
 using Pixed.Core.Models;
 using Pixed.Core.Selection;
-using SkiaSharp;
 using System.Collections.Generic;
 
 namespace Pixed.Common.Tools;
@@ -25,9 +24,10 @@ public class ToolPen(ApplicationData applicationData) : ToolPenBase(applicationD
         ];
     }
 
-    public override void ApplyTool(Point point, Frame frame, ref SKBitmap overlay, KeyState keyState, BaseSelection? selection)
+    public override void ToolBegin(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
-        base.ApplyTool(point, frame, ref overlay, keyState, selection);
+        base.ToolBegin(point, model, keyState, selection);
+        var frame = model.CurrentFrame;
         bool shiftPressed = keyState.IsShift || GetProperty(PROP_BOTH);
         bool controlPressed = keyState.IsCtrl || GetProperty(PROP_VERTICAL) || shiftPressed;
         bool altPressed = keyState.IsAlt || GetProperty(PROP_HORIZONTAL) || shiftPressed;
@@ -43,20 +43,18 @@ public class ToolPen(ApplicationData applicationData) : ToolPenBase(applicationD
 
             if (controlPressed)
             {
-                DrawOnOverlay(color, new Point(symX, point.Y), frame, ref overlay, selection);
+                DrawOnBitmapHandle(color, new Point(symX, point.Y), _handle, selection);
             }
 
             if (altPressed)
             {
-                DrawOnOverlay(color, new Point(point.X, symY), frame, ref overlay, selection);
+                DrawOnBitmapHandle(color, new Point(point.X, symY), _handle, selection);
             }
 
             if (shiftPressed)
             {
-                DrawOnOverlay(color, new Point(symX, symY), frame, ref overlay, selection);
+                DrawOnBitmapHandle(color, new Point(symX, symY), _handle, selection);
             }
-
-            Subjects.OverlayModified.OnNext(overlay);
 
             _prev = point;
         }

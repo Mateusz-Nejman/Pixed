@@ -9,6 +9,7 @@ namespace Pixed.Common.Services.Keyboard;
 public class ShortcutService
 {
     private readonly ApplicationData _applicationData;
+    private readonly IHistoryService _historyService;
     private readonly struct ShortcutEntry(KeyState state, Action action)
     {
         public KeyState State { get; } = state;
@@ -18,9 +19,10 @@ public class ShortcutService
     private readonly List<ShortcutEntry> _shortcuts;
     private readonly IDisposable _shortcutSubject;
 
-    public ShortcutService(ApplicationData applicationData)
+    public ShortcutService(ApplicationData applicationData, IHistoryService historyService)
     {
         _applicationData = applicationData;
+        _historyService = historyService;
         _shortcuts = [];
         _shortcutSubject = Subjects.KeyState.Subscribe(state =>
         {
@@ -33,14 +35,14 @@ public class ShortcutService
             }
         });
 
-        Add(KeyState.Control(Key.Z), () =>
+        Add(KeyState.Control(Key.Z), async () =>
         {
-            _applicationData.CurrentModel.Undo();
+            await _applicationData.CurrentModel.Undo(_historyService);
             Subjects.ProjectModified.OnNext(_applicationData.CurrentModel);
         });
-        Add(KeyState.Control(Key.Y), () =>
+        Add(KeyState.Control(Key.Y), async () =>
         {
-            _applicationData.CurrentModel.Redo();
+            await _applicationData.CurrentModel.Redo(_historyService);
             Subjects.ProjectModified.OnNext(_applicationData.CurrentModel);
         });
     }

@@ -18,7 +18,7 @@ public class ClipboardService(IClipboardHandle clipboardHandle)
 
     public async Task Copy(BaseSelection? selection)
     {
-        if(selection == null)
+        if (selection == null)
         {
             return;
         }
@@ -49,7 +49,7 @@ public class ClipboardService(IClipboardHandle clipboardHandle)
     {
         Png? png = await GetPng();
 
-        if(png != null)
+        if (png != null)
         {
             return SkiaUtils.FromArray(png.GetPixelsUInt(), new Point(png.Width, png.Height));
         }

@@ -5,16 +5,14 @@ using Pixed.Application.Controls;
 using Pixed.Application.Controls.PaintCanvas;
 using Pixed.Application.Input;
 using Pixed.Application.Menu;
-using Pixed.Application.Models;
 using Pixed.Application.Zoom;
 using Pixed.Common;
+using Pixed.Common.Services;
 using Pixed.Common.Services.Keyboard;
 using Pixed.Common.Tools;
 using Pixed.Common.Tools.Selection;
 using Pixed.Core;
 using Pixed.Core.Models;
-using Pixed.Core.Utils;
-using SkiaSharp;
 using System;
 using System.Reactive.Linq;
 using Frame = Pixed.Core.Models.Frame;
@@ -27,15 +25,13 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
     private readonly ToolsManager _toolSelector;
     private readonly SelectionMenu _selectionMenu;
     private readonly SelectionManager _selectionManager;
-    private RenderModel _renderModel;
-    private SKBitmap? _overlay;
+    private readonly IHistoryService _historyService;
     private ImageBrush _transparentBrush;
     private readonly Avalonia.Media.Imaging.Bitmap _transparentBitmap;
     private double _gridWidth;
     private double _gridHeight;
     private bool _leftPressed;
     private bool _rightPressed;
-    private Frame _frame;
     private Point _lastWindowSize;
     private bool _disposedValue;
     private KeyState _currentKeyState = new();
@@ -64,8 +60,6 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
     private readonly IDisposable _gridChanged;
     private readonly IDisposable _toolChanged;
     private readonly IDisposable _keyState;
-    private readonly IDisposable _overlayChanged;
-    private readonly IDisposable _currentLayerRenderModified;
     private readonly IDisposable _zoomChanged;
     private readonly IDisposable _selectionCreating;
     private readonly IDisposable _selectionDismissed;
@@ -194,6 +188,7 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
     public ZoomControl ZoomContainer { get; set; }
     public GridOverlay GridCanvas { get; set; }
     public SelectionOverlay SelectionOverlay { get; set; }
+    public CursorOverlay CursorOverlay { get; set; }
     public TransparentBackground TransparentBackground { get; set; }
     public ImageBrush TransparentBrush
     {
@@ -205,14 +200,9 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
         }
     }
 
-    public RenderModel RenderModel
+    public Frame CurrentFrame
     {
-        get => _renderModel;
-        set
-        {
-            _renderModel = value;
-            OnPropertyChanged();
-        }
+        get => _applicationData.CurrentFrame;
     }
 
     public bool IsFramesViewButtonVisible
@@ -235,18 +225,14 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
         }
     }
 
-    public PaintControlViewModel(ApplicationData applicationData, ToolsManager toolSelector, ToolMoveCanvas toolMoveCanvas, SelectionManager selectionManager, 
-        FramesSectionViewModel framesSectionViewModel, PropertiesSectionViewModel propertiesSectionViewModel, SelectionMenu selectionMenu)
+    public PaintControlViewModel(ApplicationData applicationData, ToolsManager toolSelector, ToolMoveCanvas toolMoveCanvas, SelectionManager selectionManager,
+        FramesSectionViewModel framesSectionViewModel, PropertiesSectionViewModel propertiesSectionViewModel, SelectionMenu selectionMenu, IHistoryService historyService)
     {
         _applicationData = applicationData;
         _toolSelector = toolSelector;
         _selectionMenu = selectionMenu;
         _selectionManager = selectionManager;
-        _frame = new Frame(32, 32);
-        _renderModel = new RenderModel
-        {
-            Frame = _frame
-        };
+        _historyService = historyService;
         LeftMouseDown = new ActionCommand<MouseEvent>(LeftMouseDownAction);
         LeftMouseUp = new ActionCommand<MouseEvent>(LeftMouseUpAction);
         RightMouseDown = new ActionCommand<MouseEvent>(RightMouseDownAction);
@@ -261,14 +247,12 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
 
         _projectModified = Subjects.ProjectModified.Subscribe(p =>
         {
-            _frame = p.CurrentFrame;
             UpdateRenderModel();
             RecalculateFactor(_lastWindowSize);
         });
 
         _projectChanged = Subjects.ProjectChanged.Subscribe(p =>
         {
-            _frame = p.CurrentFrame;
             RecalculateFactor(_lastWindowSize);
             RefreshGridCanvas();
             ProjectSizeText = "[" + p.Width + "x" + p.Height + "]";
@@ -276,11 +260,9 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
 
         _frameChanged = Subjects.FrameChanged.Subscribe(f =>
         {
-            _frame = f;
             UpdateRenderModel();
-            ClearOverlay();
-            GridWidth = _frame.Width;
-            GridHeight = _frame.Height;
+            GridWidth = f.Width;
+            GridHeight = f.Height;
         });
 
         _gridChanged = Subjects.GridChanged.Subscribe(enabled =>
@@ -294,24 +276,12 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
             {
                 tool.Previous.Reset();
                 tool.Previous.ResetProperties();
-                ClearOverlay();
             }
         });
 
         _keyState = Subjects.KeyState.Subscribe(state =>
         {
             _currentKeyState = state;
-        });
-
-        _overlayChanged = Subjects.OverlayModified.Subscribe(overlay =>
-        {
-            _overlay = overlay;
-            UpdateRenderModel();
-        });
-
-        _currentLayerRenderModified = Subjects.CurrentLayerRenderModified.Subscribe(pixels =>
-        {
-            _frame.SetModifiedPixels(pixels);
         });
 
         _zoomChanged = ZoomControl.ZoomChanged.Subscribe(entry =>
@@ -327,6 +297,11 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
             if (SelectionOverlay != null)
             {
                 SelectionOverlay.Zoom = entry.Zoom;
+            }
+
+            if (CursorOverlay != null)
+            {
+                CursorOverlay.Zoom = entry.Zoom;
             }
 
             if (TransparentBackground != null)
@@ -360,7 +335,6 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
             {
                 SelectionOverlay.DrawLines = true;
                 SelectionOverlay.UpdateSelection(selection);
-                Subjects.OverlayModified.OnNext(null);
                 IsSelectionButtonVisible = true;
             }
         });
@@ -400,7 +374,6 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
     {
         RefreshGridCanvas();
         _lastWindowSize = windowSize;
-        ClearOverlay();
     }
     public void RefreshZoomText()
     {
@@ -408,20 +381,6 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
         bool needRound = zoom % 1 != 0;
         ZoomText = "Zoom: " + zoom.ToString(needRound ? "#.0" : "#");
         OnPropertyChanged(nameof(ZoomText));
-    }
-    public void ClearOverlay()
-    {
-        if (_overlay == null || _overlay.Width != _frame.Width || _overlay.Height != _frame.Height)
-        {
-            _overlay?.Dispose();
-            _overlay = new SKBitmap(_frame.Width, _frame.Height, true);
-        }
-        else
-        {
-            _overlay.Clear();
-        }
-
-        UpdateRenderModel();
     }
 
     public void RefreshGridCanvas()
@@ -451,9 +410,7 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
                 _gridChanged?.Dispose();
                 _toolChanged?.Dispose();
                 _keyState?.Dispose();
-                _overlayChanged?.Dispose();
                 _zoomChanged?.Dispose();
-                _currentLayerRenderModified?.Dispose();
                 _selectionCreated?.Dispose();
                 _selectionCreating?.Dispose();
                 _selectionDismissed?.Dispose();
@@ -475,41 +432,41 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
 
     private void LeftMouseDownAction(MouseEvent mouseEvent)
     {
-        if (!_frame.ContainsPixel(mouseEvent.Point) || _toolSelector.SelectedTool == null)
+        if (!_applicationData.CurrentFrame.ContainsPixel(mouseEvent.Point) || _toolSelector.SelectedTool == null)
         {
             return;
         }
 
         _leftPressed = true;
-        _toolSelector.SelectedTool?.ApplyTool(mouseEvent.Point, _frame, ref _overlay, _currentKeyState, _selectionManager.Selection);
+        _toolSelector.SelectedTool?.ToolBegin(mouseEvent.Point, _applicationData.CurrentModel, _currentKeyState, _selectionManager.Selection);
         UpdateRenderModel();
-        Subjects.FrameModified.OnNext(_frame);
+        Subjects.FrameModified.OnNext(_applicationData.CurrentFrame);
     }
 
-    private void LeftMouseUpAction(MouseEvent mouseEvent)
+    private async void LeftMouseUpAction(MouseEvent mouseEvent)
     {
-        if (!_frame.ContainsPixel(mouseEvent.Point) || _toolSelector.SelectedTool == null)
+        if (!_applicationData.CurrentFrame.ContainsPixel(mouseEvent.Point) || _toolSelector.SelectedTool == null)
         {
             return;
         }
 
         _leftPressed = false;
-        _toolSelector.SelectedTool?.ReleaseTool(mouseEvent.Point, _frame, ref _overlay, _currentKeyState, _selectionManager.Selection);
+        _toolSelector.SelectedTool?.ToolEnd(mouseEvent.Point, _applicationData.CurrentModel, _currentKeyState, _selectionManager.Selection);
         UpdateRenderModel();
 
         if (_toolSelector.SelectedTool != null && _toolSelector.SelectedTool.AddToHistory)
         {
-            _applicationData.CurrentModel.AddHistory();
+            await _historyService.AddToHistory(_applicationData.CurrentModel);
         }
 
         _applicationData.CurrentModel.SetModifiedPixels([]);
 
-        Subjects.FrameModified.OnNext(_frame);
+        Subjects.FrameModified.OnNext(_applicationData.CurrentFrame);
     }
 
     private void RightMouseDownAction(MouseEvent mouseEvent)
     {
-        if (!_frame.ContainsPixel(mouseEvent.Point) || _toolSelector.SelectedTool == null)
+        if (!_applicationData.CurrentFrame.ContainsPixel(mouseEvent.Point) || _toolSelector.SelectedTool == null)
         {
             return;
         }
@@ -523,37 +480,37 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
         }
         else if (_toolSelector.SelectedTool is BaseTool tool)
         {
-            tool.ApplyTool(mouseEvent.Point, _frame, ref _overlay, _currentKeyState, _selectionManager.Selection);
+            tool.ToolBegin(mouseEvent.Point, _applicationData.CurrentModel, _currentKeyState, _selectionManager.Selection);
         }
         UpdateRenderModel();
     }
 
-    private void RightMouseUpAction(MouseEvent mouseEvent)
+    private async void RightMouseUpAction(MouseEvent mouseEvent)
     {
-        if (!_frame.ContainsPixel(mouseEvent.Point) || _toolSelector.SelectedTool == null)
+        if (!_applicationData.CurrentFrame.ContainsPixel(mouseEvent.Point) || _toolSelector.SelectedTool == null)
         {
             return;
         }
 
         _rightPressed = false;
-        _toolSelector.SelectedTool?.ReleaseTool(mouseEvent.Point, _frame, ref _overlay, _currentKeyState, _selectionManager.Selection);
+        _toolSelector.SelectedTool?.ToolEnd(mouseEvent.Point, _applicationData.CurrentModel, _currentKeyState, _selectionManager.Selection);
         UpdateRenderModel();
 
         if (_toolSelector.SelectedTool != null && _toolSelector.SelectedTool.AddToHistory)
         {
-            _applicationData.CurrentModel.AddHistory();
+            await _historyService.AddToHistory(_applicationData.CurrentModel);
         }
 
         _applicationData.CurrentModel.SetModifiedPixels([]);
 
-        Subjects.FrameModified.OnNext(_frame);
+        Subjects.FrameModified.OnNext(_applicationData.CurrentFrame);
     }
 
     private void MouseMoveAction(MouseEvent mouseEvent)
     {
         MouseCoordinatesText = "[" + mouseEvent.Point.X + "x" + mouseEvent.Point.Y + "]";
 
-        if (!_frame.ContainsPixel(mouseEvent.Point) || _toolSelector.SelectedTool == null)
+        if (!_applicationData.CurrentFrame.ContainsPixel(mouseEvent.Point) || _toolSelector.SelectedTool == null)
         {
             return;
         }
@@ -565,12 +522,11 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
 
         if (_leftPressed || _rightPressed)
         {
-            _toolSelector.SelectedTool.MoveTool(mouseEvent.Point, _frame, ref _overlay, _currentKeyState, _selectionManager.Selection);
+            _toolSelector.SelectedTool.ToolMove(mouseEvent.Point, _applicationData.CurrentModel, _currentKeyState, _selectionManager.Selection);
             UpdateRenderModel();
         }
         else
         {
-            _toolSelector.SelectedTool.UpdateHighlightedPixel(mouseEvent.Point, _frame, ref _overlay, _selectionManager.Selection);
             UpdateRenderModel();
         }
 
@@ -581,7 +537,7 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
     {
         if (_rightPressed || _leftPressed)
         {
-            _toolSelector.SelectedTool?.ReleaseTool(new Point(), _frame, ref _overlay, _currentKeyState, _selectionManager.Selection);
+            _toolSelector.SelectedTool?.ToolEnd(new Point(), _applicationData.CurrentModel, _currentKeyState, _selectionManager.Selection);
             UpdateRenderModel();
         }
         _rightPressed = false;
@@ -610,6 +566,7 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
 
     private void UpdateRenderModel()
     {
-        RenderModel = new RenderModel() { Frame = _frame, Overlay = _overlay };
+        _applicationData.CurrentFrame.ResetID();
+        OnPropertyChanged(nameof(CurrentFrame));
     }
 }

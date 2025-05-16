@@ -17,8 +17,8 @@ internal abstract class OverlayControl : Control
         private readonly OverlayControl _instance = instance;
 
         public Rect Bounds { get; } = bounds;
-        public bool HitTest(Point p) => false;
-        public bool Equals(ICustomDrawOperation other) => false;
+        public bool HitTest(Point p) => _instance.HitTestEnabled && Bounds.Contains(p);
+        public bool Equals(ICustomDrawOperation? other) => false;
 
         public void Dispose()
         {
@@ -40,6 +40,7 @@ internal abstract class OverlayControl : Control
     public virtual double Zoom { get; set; } = 1;
     protected ZoomControl? ZoomControl { get; private set; }
     protected Matrix? VisualToZoomMatrix { get; private set; }
+    protected bool HitTestEnabled { get; set; } = false;
 
     public void AttachToZoomControl(ZoomControl zoomBorder)
     {
