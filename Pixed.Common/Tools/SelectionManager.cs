@@ -154,10 +154,10 @@ public class SelectionManager
         var pixels = _currentSelection.Pixels.Select(p => new Pixel(p.Position)).ToList();
         var frame = _applicationData.CurrentFrame;
 
-        var canvas = frame.GetCanvas();
-        canvas.DrawPixelsOpaque(pixels, new Point(frame.Width, frame.Height));
-        canvas.Dispose();
+        var handle = frame.GetHandle();
+        handle.SetPixels(pixels);
 
+        _applicationData.CurrentModel.ResetRecursive();
         Subjects.FrameModified.OnNext(frame);
         await _historyService.AddToHistory(_applicationData.CurrentModel);
     }
