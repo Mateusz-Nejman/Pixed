@@ -10,7 +10,12 @@ using Pixed.Common;
 using Pixed.Common.Input;
 using Pixed.Common.Services;
 using Pixed.Common.Services.Keyboard;
+using SkiaSharp;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Pixed.Application.Windows;
