@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	<BaseOutputPath>$(SolutionDir)build\Pixed.Exporter</BaseOutputPath>
-	<AssemblyVersion>1.12</AssemblyVersion>
+	<AssemblyVersion>1.13</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
