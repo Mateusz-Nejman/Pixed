@@ -5,6 +5,7 @@ using Pixed.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Pixed.Application.Services;
@@ -134,12 +135,22 @@ internal class HistoryService(IPlatformFolder platformFolder) : IHistoryService
 
     public async Task<Stream> GetHistoryItem(PixedModel model, string id)
     {
-        MemoryStream memory = new();
-        var file = await _platformFolder.GetFile(id, FolderType.History);
-        var stream = await file.OpenRead();
-        PixedProjectSerializer.Decompress(stream, memory);
-        memory.Position = 0;
-        return memory;
+        var entry = _entries.First(e => e.HistoryId == id);
+
+        if(entry.Cached)
+        {
+            MemoryStream memory = new();
+            var file = await _platformFolder.GetFile(id, FolderType.History);
+            var stream = await file.OpenRead();
+            PixedProjectSerializer.Decompress(stream, memory);
+            memory.Position = 0;
+            return memory;
+        }
+
+        unsafe
+        {
+            return new UnmanagedMemoryStream((byte*)entry.Data.Ptr, entry.Data.Length, entry.Data.Length, FileAccess.ReadWrite);
+        }
     }
 
     public async Task ClearTempFiles()
