@@ -49,7 +49,7 @@ Your imagination and **Pixed**. These two things are needed for pixel-arted imag
 - Extensions support
 
 ## Stack
-- .NET 8
+- .NET 9
 - Avalonia [AvaloniaUI/avalonia](https://github.com/avaloniaui/avalonia)
 - SkiaSharp [mono/SkiaSharp](https://github.com/mono/SkiaSharp)
 - BigGustave (Modified in Pixed.BigGustave) [EliotJones/BigGustave](https://github.com/EliotJones/BigGustave)

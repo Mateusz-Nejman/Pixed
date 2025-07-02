@@ -3,7 +3,7 @@
 @title Build distribution script for Pixed
 @cls
 echo Build distribution script for Pixed
-set VERSION=1.13
+set VERSION=1.14
 set SOLUTION_PATH=%~dp0
 
 set ZIP_PATH=%SOLUTION_PATH%build\Dist\Pixed.%VERSION%.win_x64.zip
@@ -47,13 +47,13 @@ if exist "%ZIP_EXPORTER_PATH%" (
 )
 
 echo Deploying for Windows...
-dotnet publish Pixed.Desktop/Pixed.Desktop.csproj --framework net8.0 --runtime win-x64 --output build/Deploy-win
+dotnet publish Pixed.Desktop/Pixed.Desktop.csproj --framework net9.0 --runtime win-x64 --output build/Deploy-win
 
 echo Deploying for Linux...
-dotnet publish Pixed.Desktop/Pixed.Desktop.csproj --framework net8.0 --runtime linux-x64 --output build/Deploy-linux
+dotnet publish Pixed.Desktop/Pixed.Desktop.csproj --framework net9.0 --runtime linux-x64 --output build/Deploy-linux
 
 echo Deploying exporter for Windows...
-dotnet publish Pixed.Exporter/Pixed.Exporter.csproj --framework net8.0 --runtime win-x64 --output build/Deploy-exporter-win
+dotnet publish Pixed.Exporter/Pixed.Exporter.csproj --framework net9.0 --runtime win-x64 --output build/Deploy-exporter-win
 
 echo Compressing files for Windows...
 cd "%SOLUTION_PATH%\build\Deploy-win"
