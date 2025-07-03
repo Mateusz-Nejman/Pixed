@@ -1,4 +1,5 @@
 ﻿using Android.Content.PM;
+using Android.Content.Res;
 using Android.OS;
 using Avalonia.Controls.ApplicationLifetimes;
 using Pixed.Application.Platform;
@@ -24,11 +25,24 @@ internal class PlatformSettings : IPlatformSettings
 
     public void ProcessMinimumScreenSize(int minScreenSize)
     {
-        var metrics = MainActivity.WindowManager.CurrentWindowMetrics;
-        var width = metrics.Bounds.Width() / metrics.Density;
+        var system = Resources.System;
+
+        if(system == null)
+        {
+            return;
+        }
+        var metrics = system.DisplayMetrics;
+
+        if(metrics == null)
+        {
+            return;
+        }
+
+        var width = metrics.WidthPixels / metrics.Density;
+
         if (width <= minScreenSize)
         {
             MainActivity.RequestedOrientation = ScreenOrientation.Landscape;
         }
-    }
+    } 
 }

@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	<BaseOutputPath>$(SolutionDir)build\Pixed.Exporter</BaseOutputPath>
-	<AssemblyVersion>1.14</AssemblyVersion>
+	<AssemblyVersion>1.15</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
