@@ -6,6 +6,8 @@ RegexPair[] pairs = [
     new RegexPair("/msi.wxs", "Version=\"(.+?)\""),
     new RegexPair("/Pixed.Android/Properties/AndroidManifest.xml", "android:versionName=\"(.+?)\""),
     new RegexPair("/Pixed.Android/Properties/AndroidManifest.xml", "android:versionCode=\"(.+?)\""),
+    new RegexPair("/Pixed.AndroidDev/Properties/AndroidManifest.xml", "android:versionName=\"(.+?)\""),
+    new RegexPair("/Pixed.AndroidDev/Properties/AndroidManifest.xml", "android:versionCode=\"(.+?)\""),
     new RegexPair("/Pixed.Desktop/Pixed.Desktop.csproj", "<AssemblyVersion>(.+?)<\\/AssemblyVersion>"),
     new RegexPair("/Pixed.Exporter/Pixed.Exporter.csproj", "<AssemblyVersion>(.+?)<\\/AssemblyVersion>"),
     new RegexPair("/Pixed.MSStore/Package.appxmanifest", "Version=\"(.+?)\"")
