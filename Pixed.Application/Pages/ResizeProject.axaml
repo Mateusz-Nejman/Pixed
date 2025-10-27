@@ -3,6 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pixed.Application.Pages;assembly=Pixed.Application"
+		xmlns:controls="clr-namespace:Pixed.Application.Controls;assembly=Pixed.Application"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Pixed.Application.Pages.ResizeProject"
         Title="Resize Project"
@@ -14,9 +15,9 @@
   <local:Modal.Dialog>
     <StackPanel>
       <TextBlock Text="Width:" Margin="10"/>
-      <NumericUpDown Margin="10" Value="{Binding Width, Mode=TwoWay}" Minimum="1"/>
+      <controls:ExtendedNumeric Margin="10" Value="{Binding Width, Mode=TwoWay}" Minimum="1"/>
       <TextBlock Text="Height:" Margin="10"/>
-      <NumericUpDown Margin="10" Value="{Binding Height, Mode=TwoWay}" Minimum="1"/>
+	  <controls:ExtendedNumeric Margin="10" Value="{Binding Height, Mode=TwoWay}" Minimum="1"/>
       <CheckBox Margin="10" Content="Maintain aspect ratio" IsChecked="{Binding MaintainAspectRatio, Mode=TwoWay}"/>
       <CheckBox Margin="10" Content="Resize canvas content" IsChecked="{Binding ResizeCanvasContent, Mode=TwoWay}"/>
       <TextBlock Text="Anchor:" Margin="10"/>

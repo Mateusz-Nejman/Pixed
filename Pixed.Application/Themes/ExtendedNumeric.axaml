@@ -1,0 +1,103 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+					xmlns:controls="clr-namespace:Pixed.Application.Controls"
+					x:ClassModifier="internal">
+	<Design.PreviewWith>
+		<Border Padding="20">
+			<StackPanel Spacing="20">
+				<controls:ExtendedNumeric Minimum="0"
+							   Maximum="10"
+							   Increment="0.5"
+							   Watermark="Enter text" />
+				<controls:ExtendedNumeric Minimum="0"
+							   Maximum="10"
+							   Increment="0.5"
+							   VerticalContentAlignment="Center"
+							   HorizontalContentAlignment="Center"
+							   ButtonSpinnerLocation="Left"
+							   Watermark="Enter text" />
+				<controls:ExtendedNumeric ButtonSpinnerLocation="Left">
+					<controls:ExtendedNumeric.InnerLeftContent>
+						<TextBlock Text="m"
+								   TextAlignment="Center"
+								   VerticalAlignment="Center"/>
+					</controls:ExtendedNumeric.InnerLeftContent>
+					<controls:ExtendedNumeric.InnerRightContent>
+						<Button Content="X"/>
+					</controls:ExtendedNumeric.InnerRightContent>
+				</controls:ExtendedNumeric>
+				<controls:ExtendedNumeric ButtonSpinnerLocation="Right">
+					<controls:ExtendedNumeric.InnerLeftContent>
+						<Button Content="X"/>
+					</controls:ExtendedNumeric.InnerLeftContent>
+					<controls:ExtendedNumeric.InnerRightContent>
+						<TextBlock Text="m"
+								   TextAlignment="Center"
+								   VerticalAlignment="Center"/>
+					</controls:ExtendedNumeric.InnerRightContent>
+				
+			
+			</controls:ExtendedNumeric>
+				<controls:ExtendedNumeric>
+					<DataValidationErrors.Error>
+						<sys:Exception>
+							<x:Arguments>
+								<x:String>Error</x:String>
+							</x:Arguments>
+						</sys:Exception>
+					</DataValidationErrors.Error>
+				</controls:ExtendedNumeric>
+			</StackPanel>
+		</Border>
+	</Design.PreviewWith>
+
+	<ControlTheme x:Key="{x:Type controls:ExtendedNumeric}" TargetType="controls:ExtendedNumeric">
+		<Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
+		<Setter Property="Background" Value="{DynamicResource TextControlBackground}" />
+		<Setter Property="BorderThickness" Value="{DynamicResource TextControlBorderThemeThickness}" />
+		<Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrush}" />
+		<Setter Property="MinHeight" Value="{DynamicResource TextControlThemeMinHeight}" />
+		<Setter Property="MinWidth" Value="{DynamicResource TextControlThemeMinWidth}" />
+		<Setter Property="Padding" Value="{DynamicResource TextControlThemePadding}" />
+		<Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+		<Setter Property="Template">
+			<ControlTemplate>
+				<DataValidationErrors>
+					<ButtonSpinner Name="PART_Spinner"
+								   Background="{TemplateBinding Background}"
+								   BorderThickness="{TemplateBinding BorderThickness}"
+								   BorderBrush="{TemplateBinding BorderBrush}"
+								   CornerRadius="{TemplateBinding CornerRadius}"
+								   IsTabStop="False"
+								   Padding="0"
+								   MinWidth="0"
+								   HorizontalContentAlignment="Stretch"
+								   VerticalContentAlignment="Stretch"
+								   AllowSpin="{TemplateBinding AllowSpin}"
+								   ShowButtonSpinner="{TemplateBinding ShowButtonSpinner}"
+								   ButtonSpinnerLocation="{TemplateBinding ButtonSpinnerLocation}">
+						<TextBox Name="PART_TextBox"
+								 Background="Transparent"
+								 BorderBrush="Transparent"
+								 Margin="-1"
+								 Padding="{TemplateBinding Padding}"
+								 MinWidth="0"
+								 Foreground="{TemplateBinding Foreground}"
+								 Watermark="{TemplateBinding Watermark}"
+								 IsReadOnly="{TemplateBinding IsReadOnly}"
+								 VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+								 HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+								 Text="{TemplateBinding Text}"
+								 TextAlignment="{TemplateBinding TextAlignment}"
+								 AcceptsReturn="False"
+								 TextWrapping="NoWrap"
+								 InnerLeftContent="{Binding InnerLeftContent, RelativeSource={RelativeSource TemplatedParent}}"
+								 InnerRightContent="{Binding InnerRightContent, RelativeSource={RelativeSource TemplatedParent}}"
+								 TextInputOptions.ContentType="Number"/>
+					</ButtonSpinner>
+				</DataValidationErrors>
+			</ControlTemplate>
+		</Setter>
+	</ControlTheme>
+</ResourceDictionary>
