@@ -4,14 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pixed.Application.Pages"
+		xmlns:controls="clr-namespace:Pixed.Application.Controls;assembly=Pixed.Application"
         mc:Ignorable="d"
         Title="New Project">
   <local:Modal.Dialog>
     <StackPanel>
     <TextBlock Text="Width:" Margin="10"/>
-    <NumericUpDown Margin="10" Value="{Binding WidthValue, RelativeSource={RelativeSource FindAncestor, AncestorType=local:NewProject}, Mode=TwoWay}" Minimum="1"/>
+	<controls:ExtendedNumeric Margin="10" Value="{Binding WidthValue, RelativeSource={RelativeSource FindAncestor, AncestorType=local:NewProject}, Mode=TwoWay}" Minimum="1"/>
     <TextBlock Text="Height:" Margin="10"/>
-    <NumericUpDown Margin="10" Value="{Binding HeightValue, RelativeSource={RelativeSource FindAncestor, AncestorType=local:NewProject}, Mode=TwoWay}" Minimum="1"/>
+	<controls:ExtendedNumeric Margin="10" Value="{Binding HeightValue, RelativeSource={RelativeSource FindAncestor, AncestorType=local:NewProject}, Mode=TwoWay}" Minimum="1"/>
     <Button Content="OK" Click="Button_Click"
         Height="24" MinWidth="80" Padding="10,0" Margin="10"/>
   </StackPanel>
