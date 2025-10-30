@@ -18,11 +18,19 @@ using Xamarin.Google.Android.Play.Core.AppUpdate.Testing;
 
 namespace Pixed.Android;
 
+#if DEBUG
+[Activity(
+    Label = "Pixed - Dev",
+    Icon = "@mipmap/pixed_icon_dev",
+    MainLauncher = true,
+    ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.ScreenSize | ConfigChanges.UiMode)]
+#else
 [Activity(
     Label = "Pixed - Pixelart Editor",
     Icon = "@mipmap/pixed_icon",
     MainLauncher = true,
     ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.ScreenSize | ConfigChanges.UiMode)]
+#endif
 public class MainActivity : AvaloniaMainActivity<App>
 {
     private const int REQUEST_CODE = 4711;
@@ -46,7 +54,7 @@ public class MainActivity : AvaloniaMainActivity<App>
 #if DEBUG
         _updateManager = new FakeAppUpdateManager(this);
 #else
-        AppUpdateManager = AppUpdateManagerFactory.Create(this);
+        _updateManager = AppUpdateManagerFactory.Create(this);
 #endif
         _updateSuccessListener ??= new AppUpdateSuccessListener(
             updateManager: _updateManager,

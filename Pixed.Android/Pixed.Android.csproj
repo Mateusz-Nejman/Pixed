@@ -9,6 +9,7 @@
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
     <AndroidPackageFormat>apk</AndroidPackageFormat>
     <AndroidEnableProfiledAot>False</AndroidEnableProfiledAot>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AndroidUseAapt2>True</AndroidUseAapt2>
@@ -21,6 +22,12 @@
     <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
     <AndroidPackageFormat>aab</AndroidPackageFormat>
     <AndroidLinkTool>r8</AndroidLinkTool>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+	<AndroidManifest>Properties/AndroidManifest.debug.xml</AndroidManifest>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+	<AndroidManifest>Properties/AndroidManifest.xml</AndroidManifest>
   </PropertyGroup>
 
   <ItemGroup>
@@ -37,7 +44,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Pixed.Android.Shared\Pixed.Android.Shared.csproj" />
     <ProjectReference Include="..\Pixed.Application\Pixed.Application.csproj" />
   </ItemGroup>
 </Project>
