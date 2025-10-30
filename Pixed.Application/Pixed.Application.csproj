@@ -21,26 +21,26 @@
   </ItemGroup>
 
   <ItemGroup>
-	<PackageReference Include="Avalonia" Version="11.3.8" />
-	<PackageReference Include="Avalonia.ReactiveUI" Version="11.3.8" />
-	<PackageReference Include="Avalonia.Skia" Version="11.3.8" />
-	<PackageReference Include="Avalonia.Svg.Skia" Version="11.3.0" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.8" />
-    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.8" />
+    <PackageReference Include="Avalonia" Version="11.3.2" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="11.3.2" />
+    <PackageReference Include="Avalonia.Skia" Version="11.3.2" />
+    <PackageReference Include="Avalonia.Svg.Skia" Version="11.3.0" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.2" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.2" />
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.3.8" />
-    <PackageReference Include="Avalonia.Themes.Simple" Version="11.3.8" />
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.3.0" />
+    <PackageReference Include="Avalonia.Themes.Simple" Version="11.3.2" />
     <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.3.0.6" />
-    <PackageReference Include="AvaloniaInside.Shell" Version="1.3.2.2" />
+    <PackageReference Include="AvaloniaInside.Shell" Version="1.3.2" />
     <PackageReference Include="LoadingIndicators.Avalonia" Version="11.0.11.1" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.10" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.6" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="PixiEditor.ColorPicker.AvaloniaUI" Version="1.0.7" />
     <PackageReference Include="PixiEditor.Parser" Version="3.3.0" />
     <PackageReference Include="PixiEditor.Parser.Skia" Version="3.0.0" />
-    <PackageReference Include="SkiaSharp" Version="3.119.1" />
-    <PackageReference Include="Svg.Skia" Version="3.2.1" />
-    <PackageReference Include="System.Reactive" Version="6.1.0" />
+    <PackageReference Include="SkiaSharp" Version="3.119.0" />
+    <PackageReference Include="Svg.Skia" Version="3.0.3" />
+    <PackageReference Include="System.Reactive" Version="6.0.1" />
   </ItemGroup>
 
   <ItemGroup>
