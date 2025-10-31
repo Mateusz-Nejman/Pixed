@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto" package="com.nejman.pixed" android:versionCode="115000" android:versionName="1.15">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto" package="com.nejman.pixed" android:versionCode="116000" android:versionName="1.16">
 	<application android:label="Pixed" android:icon="@mipmap/pixed_icon" android:theme="@style/Theme.Splash" />
 </manifest>

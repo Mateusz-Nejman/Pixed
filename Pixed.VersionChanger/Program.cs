@@ -2,7 +2,7 @@
 using System.Text.RegularExpressions;
 
 RegexPair[] pairs = [
-    new RegexPair("/buildDistribution.bat", "set VERSION=(.+?)\r\n"),
+    new RegexPair("/buildDistribution.bat", "set VERSION=(.+?)\n"),
     new RegexPair("/msi.wxs", "Version=\"(.+?)\""),
     new RegexPair("/Pixed.Android/Properties/AndroidManifest.xml", "android:versionName=\"(.+?)\""),
     new RegexPair("/Pixed.Android/Properties/AndroidManifest.xml", "android:versionCode=\"(.+?)\""),
