@@ -3,6 +3,7 @@ using Pixed.Core.Utils;
 using SkiaSharp;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using Avalonia;
 
 namespace Pixed.Core.Models;
 
@@ -13,6 +14,7 @@ public class PixedModel : PixelImage, IPixedSerializer
     private string _fileName = string.Empty;
 
     public string? FilePath { get; set; }
+    public Matrix? ViewMatrix { get; set; }
     public string FileName
     {
         get => _fileName;

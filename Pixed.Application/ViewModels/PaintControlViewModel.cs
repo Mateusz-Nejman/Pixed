@@ -49,14 +49,7 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
 
     private readonly IDisposable _projectModified;
     private readonly IDisposable _projectChanged;
-    private readonly IDisposable _projectAdded;
     private readonly IDisposable _frameChanged;
-    private readonly IDisposable _frameModified;
-    private readonly IDisposable _layerRemoved;
-    private readonly IDisposable _layerAdded;
-    private readonly IDisposable _layerChanged;
-    private readonly IDisposable _layerModified;
-    private readonly IDisposable _mouseWheel;
     private readonly IDisposable _gridChanged;
     private readonly IDisposable _toolChanged;
     private readonly IDisposable _keyState;
@@ -65,7 +58,6 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
     private readonly IDisposable _selectionDismissed;
     private readonly IDisposable _selectionCreated;
     private readonly IDisposable _selectionStarted;
-    private readonly IDisposable _renderInterval;
     private readonly IDisposable _framesViewVisibleChanged;
     private readonly IDisposable _propertiesViewVisibleChanged;
 
@@ -253,6 +245,10 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
 
         _projectChanged = Subjects.ProjectChanged.Subscribe(p =>
         {
+            if (p.ViewMatrix.HasValue)
+            {
+                ZoomContainer?.SetMatrix(p.ViewMatrix.Value);
+            }
             RecalculateFactor(_lastWindowSize);
             RefreshGridCanvas();
             ProjectSizeText = "[" + p.Width + "x" + p.Height + "]";
@@ -308,6 +304,8 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
             {
                 TransparentBackground.Zoom = entry.Zoom;
             }
+
+            _applicationData.CurrentModel.ViewMatrix = entry.Matrix;
 
             RefreshZoomText();
             TransparentBrush = GetTransparentBackgroundBrush();
@@ -397,16 +395,9 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
         {
             if (disposing)
             {
-                _projectAdded?.Dispose();
                 _projectModified?.Dispose();
                 _projectChanged?.Dispose();
                 _frameChanged?.Dispose();
-                _frameModified?.Dispose();
-                _layerAdded?.Dispose();
-                _layerChanged?.Dispose();
-                _layerRemoved?.Dispose();
-                _layerModified?.Dispose();
-                _mouseWheel?.Dispose();
                 _gridChanged?.Dispose();
                 _toolChanged?.Dispose();
                 _keyState?.Dispose();
@@ -415,7 +406,6 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
                 _selectionCreating?.Dispose();
                 _selectionDismissed?.Dispose();
                 _selectionStarted?.Dispose();
-                _renderInterval?.Dispose();
                 _framesViewVisibleChanged?.Dispose();
                 _propertiesViewVisibleChanged?.Dispose();
             }

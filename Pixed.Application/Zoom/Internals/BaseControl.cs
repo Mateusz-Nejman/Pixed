@@ -239,7 +239,7 @@ internal partial class BaseControl : Decorator, IDisposable
     }
     private void RaiseZoomChanged()
     {
-        ZoomControl.ZoomChanged.OnNext(new ZoomEntry(_zoom, _offsetX, _offsetY));
+        ZoomControl.ZoomChanged.OnNext(new ZoomEntry(_zoom, _offsetX, _offsetY, _matrix));
     }
 
     private void Constrain()
