@@ -104,9 +104,9 @@ internal class MenuBuilder(ApplicationData applicationData, IPlatformFolder plat
                 {
                     var result = navigatorResult.Value;
                     var model = ResizeUtils.ResizeModel(_applicationData, _applicationData.CurrentModel, new Point(result.Width, result.Height), result.ResizeCanvasContent, result.Anchor);
-                    historyService.Register(model);
-                    historyService.CopyHistoryFrom(_applicationData.CurrentModel, model);
-                    await historyService.AddToHistory(model);
+                    _historyService.Register(model);
+                    _historyService.CopyHistoryFrom(_applicationData.CurrentModel, model);
+                    await _historyService.AddToHistory(model);
                     _applicationData.UserSettings.UserWidth = result.Width;
                     _applicationData.UserSettings.UserHeight = result.Height;
                     _applicationData.UserSettings.MaintainAspectRatio = result.MaintainAspectRatio;

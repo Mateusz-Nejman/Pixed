@@ -26,7 +26,7 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
 
     public async Task Save(PixedModel model, bool saveAs, RecentFilesService recentFilesService)
     {
-        Stream fileStream = null;
+        Stream? fileStream = null;
         PixedProjectSerializer serializer = GetSerializer<PixedProjectSerializer>();
 
         if (model.FilePath == null)
@@ -153,7 +153,7 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
             {
                 model = serializer.Deserialize(stream, _applicationData);
             }
-            catch (Exception _)
+            catch (Exception)
             {
                 await Router.Message("Opening error", "Invalid format");
                 continue;
@@ -215,7 +215,7 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
         {
             model = serializer.Deserialize(stream, _applicationData);
         }
-        catch (Exception _)
+        catch (Exception)
         {
             await Router.Message("Opening error", "Invalid format");
             return;
@@ -267,7 +267,7 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
         {
             model = serializer.Deserialize(png, _applicationData);
         }
-        catch (Exception _)
+        catch (Exception)
         {
             await Router.Message("Opening error", "Invalid format");
             return;

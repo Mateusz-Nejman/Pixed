@@ -29,7 +29,7 @@ internal class ProjectAnimation : Control
         public Rect Bounds { get; private set; } = bounds;
 
         public bool HitTest(Avalonia.Point p) => false;
-        public bool Equals(ICustomDrawOperation other) => false;
+        public bool Equals(ICustomDrawOperation? other) => false;
 
         public void Update(Rect bounds, int frameIndex)
         {

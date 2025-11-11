@@ -191,7 +191,7 @@ public struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatable
 
     public readonly bool Equals(UniColor other)
     {
-        return other == null && this == null || other.R == R && other.G == G && other.B == B && other.A == A;
+        return other.R == R && other.G == G && other.B == B && other.A == A;
     }
 
     public readonly override bool Equals(object? obj)

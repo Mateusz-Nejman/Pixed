@@ -259,7 +259,7 @@ public class PngBuilder
     /// <summary>
     /// Get the bytes of the PNG file for this builder.
     /// </summary>
-    public byte[] Save(SaveOptions options = null)
+    public byte[] Save(SaveOptions? options = null)
     {
         using (var memoryStream = new MemoryStream())
         {
@@ -271,7 +271,7 @@ public class PngBuilder
     /// <summary>
     /// Write the PNG file bytes to the provided stream.
     /// </summary>
-    public void Save(Stream outputStream, SaveOptions options = null)
+    public void Save(Stream outputStream, SaveOptions? options = null)
     {
         options = options ?? new SaveOptions();
 
@@ -487,16 +487,6 @@ public class PngBuilder
             {
                 noneFilterSum += scanData[i];
             }
-
-            var leftFilterSum = 0;
-            for (int i = 0; i < scanData.Length; i++)
-            {
-
-            }
-            /* 
-             * A heuristic approach is to use adaptive filtering as follows: 
-             *    independently for each row, apply all five filters and select the filter that produces the smallest sum of absolute values per row. 
-             */
         }
     }
 
