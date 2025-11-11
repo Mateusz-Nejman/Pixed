@@ -157,7 +157,7 @@ public class AsyncCommand<T> : ICommand
             return;
         }
 
-        Execute((T)parameter);
+        _ = Execute((T)parameter);
     }
 
     public async Task Execute(T parameter)
@@ -191,7 +191,7 @@ public class AsyncCommand : ICommand
 
     public void Execute(object? parameter)
     {
-        Execute();
+        _ = Execute();
     }
 
     public async Task Execute()

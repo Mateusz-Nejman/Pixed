@@ -15,7 +15,9 @@ public class Crop(ApplicationData applicationData, SelectionManager selectionMan
         Tuple<Point, Point> boundaries;
         if (_selectionManager.HasSelection)
         {
+#pragma warning disable CS8604 // Possible null reference argument.
             boundaries = TransformUtils.GetBoundariesFromSelection(_selectionManager.Selection);
+#pragma warning restore CS8604 // Possible null reference argument.
         }
         else
         {
@@ -64,12 +66,12 @@ public class Crop(ApplicationData applicationData, SelectionManager selectionMan
             Subjects.FrameModified.OnNext(frame);
         }
 
-        var newModel = ResizeUtils.ResizeModel(applicationData, model, new Point(1 + boundaries.Item2.X - boundaries.Item1.X, 1 + boundaries.Item2.Y - boundaries.Item1.Y), false, ResizeUtils.Origin.TopLeft);
+        var newModel = ResizeUtils.ResizeModel(_applicationData, model, new Point(1 + boundaries.Item2.X - boundaries.Item1.X, 1 + boundaries.Item2.Y - boundaries.Item1.Y), false, ResizeUtils.Origin.TopLeft);
 
         _applicationData.CurrentModel.ResetRecursive();
-        historyService.Register(newModel);
-        historyService.CopyHistoryFrom(model, newModel);
-        await historyService.AddToHistory(newModel);
+        _historyService.Register(newModel);
+        _historyService.CopyHistoryFrom(model, newModel);
+        await _historyService.AddToHistory(newModel);
 
         Subjects.SelectionDismissed.OnNext(null);
         _applicationData.Models[_applicationData.CurrentModelIndex] = newModel;

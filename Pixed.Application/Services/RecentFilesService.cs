@@ -35,8 +35,13 @@ namespace Pixed.Application.Services
             RecentFiles = JsonConvert.DeserializeObject<List<string>>(json) ?? [];
         }
 
-        public async Task AddRecent(string file)
+        public async Task AddRecent(string? file)
         {
+            if(file == null)
+            {
+                return;
+            }
+
             if (!RecentFiles.Contains(file))
             {
                 RecentFiles.Insert(0, file);

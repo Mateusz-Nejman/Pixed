@@ -16,7 +16,7 @@ internal class MenuItem(string? header) : IMenuItem
     public ICommand? Command { get; set; }
     public object? CommandParameter { get; set; }
     public Uri? Icon { get; set; }
-    public List<IMenuItem>? Items { get; set; }
+    public List<IMenuItem> Items { get; set; } = [];
 
     public MenuItem() : this(null) { }
 

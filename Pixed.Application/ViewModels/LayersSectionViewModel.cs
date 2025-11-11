@@ -26,7 +26,6 @@ internal class LayersSectionViewModel : ExtendedViewModel, IDisposable
     private bool _disposedValue;
 
     private readonly IDisposable _frameChanged;
-    private readonly IDisposable _layerModified;
     private readonly IDisposable _layerAdded;
     private readonly IDisposable _layerRemoved;
 
@@ -149,7 +148,6 @@ internal class LayersSectionViewModel : ExtendedViewModel, IDisposable
             if (disposing)
             {
                 _frameChanged?.Dispose();
-                _layerModified?.Dispose();
                 _layerAdded?.Dispose();
                 _layerRemoved?.Dispose();
             }
