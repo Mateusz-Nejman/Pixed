@@ -1,6 +1,6 @@
 ﻿using Avalonia;
-using Avalonia.ReactiveUI;
 using AvaloniaInside.Shell;
+using ReactiveUI.Avalonia;
 
 namespace Pixed.Application.Utils;
 
