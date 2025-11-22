@@ -60,6 +60,7 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
     private readonly IDisposable _selectionStarted;
     private readonly IDisposable _framesViewVisibleChanged;
     private readonly IDisposable _propertiesViewVisibleChanged;
+    private readonly IDisposable _layerRemoved;
 
     public ActionCommand<MouseEvent> LeftMouseDown { get; }
     public ActionCommand<MouseEvent> LeftMouseUp { get; }
@@ -261,6 +262,11 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
             GridHeight = f.Height;
         });
 
+        _layerRemoved = Subjects.LayerRemoved.Subscribe(l =>
+        {
+            UpdateRenderModel();
+        });
+
         _gridChanged = Subjects.GridChanged.Subscribe(enabled =>
         {
             RefreshGridCanvas();
@@ -408,6 +414,7 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
                 _selectionStarted?.Dispose();
                 _framesViewVisibleChanged?.Dispose();
                 _propertiesViewVisibleChanged?.Dispose();
+                _layerRemoved?.Dispose();
             }
 
             _disposedValue = true;
