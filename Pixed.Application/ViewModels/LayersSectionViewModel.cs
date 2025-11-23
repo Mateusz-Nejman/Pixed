@@ -168,6 +168,7 @@ internal class LayersSectionViewModel : ExtendedViewModel, IDisposable
         OnPropertyChanged(nameof(Layers));
         Subjects.LayerAdded.OnNext(layer);
         Subjects.FrameModified.OnNext(Frame);
+        Subjects.FrameChanged.OnNext(Frame);
         await _historyService.AddToHistory(_applicationData.CurrentModel);
     }
 
@@ -177,6 +178,7 @@ internal class LayersSectionViewModel : ExtendedViewModel, IDisposable
         OnPropertyChanged(nameof(Layers));
         Subjects.LayerAdded.OnNext(layer);
         Subjects.FrameModified.OnNext(Frame);
+        Subjects.FrameChanged.OnNext(Frame);
         await _historyService.AddToHistory(_applicationData.CurrentModel);
     }
     private async Task MoveLayerUpAction()
@@ -189,6 +191,7 @@ internal class LayersSectionViewModel : ExtendedViewModel, IDisposable
         Frame.MoveLayerUp();
         OnPropertyChanged(nameof(Layers));
         Subjects.FrameModified.OnNext(Frame);
+        Subjects.FrameChanged.OnNext(Frame);
         await _historyService.AddToHistory(_applicationData.CurrentModel);
     }
 
@@ -202,6 +205,7 @@ internal class LayersSectionViewModel : ExtendedViewModel, IDisposable
         Frame.MoveLayerDown();
         OnPropertyChanged(nameof(Layers));
         Subjects.FrameModified.OnNext(Frame);
+        Subjects.FrameChanged.OnNext(Frame);
         await _historyService.AddToHistory(_applicationData.CurrentModel);
     }
 
@@ -232,6 +236,7 @@ internal class LayersSectionViewModel : ExtendedViewModel, IDisposable
         Subjects.LayerRemoved.OnNext(removedLayer);
         Subjects.LayerModified.OnNext(currentLayer);
         Subjects.FrameModified.OnNext(Frame);
+        Subjects.FrameChanged.OnNext(Frame);
         OnPropertyChanged(nameof(Layers));
         await _historyService.AddToHistory(_applicationData.CurrentModel);
     }
@@ -248,6 +253,7 @@ internal class LayersSectionViewModel : ExtendedViewModel, IDisposable
         Layers.RemoveAt(index);
         SelectedLayer = Math.Clamp(index, 0, Layers.Count - 1);
         Subjects.LayerRemoved.OnNext(layer);
+        Subjects.FrameChanged.OnNext(Frame);
         await _historyService.AddToHistory(_applicationData.CurrentModel);
     }
 }
