@@ -11,4 +11,5 @@ public interface IPlatformSettings
     public void Close();
     public string GetVersion();
     public void ProcessMinimumScreenSize(int minScreenSize);
+    public void OpenUrl(string url);
 }

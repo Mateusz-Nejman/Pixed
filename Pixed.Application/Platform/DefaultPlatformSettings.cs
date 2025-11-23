@@ -25,6 +25,16 @@ internal class DefaultPlatformSettings : IPlatformSettings
         return versionInfo.FileVersion;
     }
 
+    public void OpenUrl(string url)
+    {
+        var psi = new ProcessStartInfo
+        {
+            FileName = url,
+            UseShellExecute = true
+        };
+        Process.Start(psi);
+    }
+
     public void ProcessMinimumScreenSize(int minScreenSize)
     {
         //Not used

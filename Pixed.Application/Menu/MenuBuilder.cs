@@ -59,7 +59,7 @@ internal class MenuBuilder(ApplicationData applicationData, IPlatformFolder plat
 
         MenuItem onlineHelpMenu = new("Online help")
         {
-            Command = new ActionCommand<string>(PlatformUtils.OpenUrl),
+            Command = new ActionCommand<string>(IPlatformSettings.Instance.OpenUrl),
             CommandParameter = "https://github.com/Mateusz-Nejman/Pixed/wiki",
             Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_globe_48_regular.svg")
         };

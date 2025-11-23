@@ -1,6 +1,5 @@
 ﻿using Pixed.Application.Controls;
 using Pixed.Application.Platform;
-using Pixed.Application.Utils;
 using Pixed.Core;
 using System.Windows.Input;
 
@@ -11,7 +10,7 @@ internal class AboutViewModel : ExtendedViewModel
     public string AppVersion { get; }
     public AboutViewModel()
     {
-        OpenUrlCommand = new ActionCommand<string>(PlatformUtils.OpenUrl);
+        OpenUrlCommand = new ActionCommand<string>(IPlatformSettings.Instance.OpenUrl);
         AppVersion = "Version: " + GetVersion();
     }
 
