@@ -229,6 +229,7 @@ internal partial class Main : EmptyPixedPage, IDisposable
         if (result.HasValue)
         {
             layer.Opacity = result.Value;
+            Subjects.FrameChanged.OnNext(_applicationData.CurrentFrame);
         }
     }
 
