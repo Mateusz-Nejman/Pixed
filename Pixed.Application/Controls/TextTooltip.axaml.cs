@@ -1,8 +1,9 @@
 ﻿using Avalonia;
+using Avalonia.Controls;
 
 namespace Pixed.Application.Controls;
 
-internal partial class TextTooltip : EmptyExtendedControl
+internal partial class TextTooltip : UserControl
 {
     public string Text
     {
