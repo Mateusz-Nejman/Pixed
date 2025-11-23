@@ -6,6 +6,6 @@ internal class BackPressedCallback() : OnBackPressedCallback(true)
 {
     public override void HandleOnBackPressed()
     {
-        App.CloseCommand.Execute(this);
+        App.CloseCommand?.Execute(this);
     }
 }

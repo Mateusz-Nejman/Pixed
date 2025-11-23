@@ -9,8 +9,8 @@ using Uri = Android.Net.Uri;
 namespace Pixed.Android;
 internal class PlatformSettings : IPlatformSettings
 {
-    public static Activity MainActivity { get; internal set; }
-    public IApplicationLifetime ApplicationLifetime { get; set; }
+    public static Activity? MainActivity { get; internal set; }
+    public IApplicationLifetime? ApplicationLifetime { get; set; }
     public bool ExtensionsEnabled => false;
     public bool RecentFilesEnabled => false;
     public bool ExtensionsOnSave => true;
@@ -22,12 +22,17 @@ internal class PlatformSettings : IPlatformSettings
 
     public string GetVersion()
     {
-        PackageInfo info = MainActivity.PackageManager.GetPackageInfo(MainActivity.PackageName, 0);
-        return info.VersionName;
+        PackageInfo? info = MainActivity?.PackageManager?.GetPackageInfo(MainActivity.PackageName ?? "", 0);
+        return info?.VersionName ?? "";
     }
 
     public void OpenUrl(string url)
     {
+        if(MainActivity == null)
+        {
+            return;
+        }
+
         Intent intent = new(Intent.ActionView, Uri.Parse(url));
 
         MainActivity.StartActivity(intent);
@@ -35,6 +40,11 @@ internal class PlatformSettings : IPlatformSettings
 
     public void ProcessMinimumScreenSize(int minScreenSize)
     {
+        if(MainActivity == null)
+        {
+            return;
+        }
+
         var system = Resources.System;
 
         if(system == null)

@@ -4,7 +4,7 @@ using System.Diagnostics;
 namespace Pixed.Application.Platform;
 internal class DefaultPlatformSettings : IPlatformSettings
 {
-    public IApplicationLifetime ApplicationLifetime { get; set; }
+    public IApplicationLifetime? ApplicationLifetime { get; set; }
 
     public bool ExtensionsEnabled => true;
     public bool RecentFilesEnabled => true;
@@ -20,9 +20,9 @@ internal class DefaultPlatformSettings : IPlatformSettings
 
     public string GetVersion()
     {
-        var assemblyName = Process.GetCurrentProcess().MainModule.FileName;
+        var assemblyName = Process.GetCurrentProcess().MainModule?.FileName ?? "";
         var versionInfo = FileVersionInfo.GetVersionInfo(assemblyName);
-        return versionInfo.FileVersion;
+        return versionInfo?.FileVersion ?? "";
     }
 
     public void OpenUrl(string url)

@@ -26,7 +26,7 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
     private readonly SelectionMenu _selectionMenu;
     private readonly SelectionManager _selectionManager;
     private readonly IHistoryService _historyService;
-    private ImageBrush _transparentBrush;
+    private ImageBrush? _transparentBrush;
     private readonly Avalonia.Media.Imaging.Bitmap _transparentBitmap;
     private double _gridWidth;
     private double _gridHeight;
@@ -35,8 +35,8 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
     private Point _lastWindowSize;
     private bool _disposedValue;
     private KeyState _currentKeyState = new();
-    private string _projectSizeText;
-    private string _mouseCoordinatesText;
+    private string _projectSizeText = string.Empty;
+    private string _mouseCoordinatesText = string.Empty;
     private int _toolSize = 1;
     private bool _isPinchEnabled = false;
     private int _prevX = -1;
@@ -67,9 +67,6 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
     public ActionCommand<MouseEvent> MouseMove { get; }
     public ActionCommand<MouseEvent> RightMouseDown { get; }
     public ActionCommand<MouseEvent> RightMouseUp { get; }
-    public ActionCommand<MouseEvent> MiddleMouseDown { get; }
-    public ActionCommand<MouseEvent> MiddleMouseUp { get; }
-    public ActionCommand<double> MouseWheel { get; }
     public ActionCommand MouseLeave { get; }
     public ActionCommand OpenFramesView { get; }
     public ActionCommand CloseFramesView { get; }
@@ -177,13 +174,13 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
     public double ZoomOffsetX { get; set; }
     public double ZoomOffsetY { get; set; }
 
-    public string ZoomText { get; set; }
-    public ZoomControl ZoomContainer { get; set; }
-    public GridOverlay GridCanvas { get; set; }
-    public SelectionOverlay SelectionOverlay { get; set; }
-    public CursorOverlay CursorOverlay { get; set; }
-    public TransparentBackground TransparentBackground { get; set; }
-    public ImageBrush TransparentBrush
+    public string ZoomText { get; set; } = string.Empty;
+    public ZoomControl? ZoomContainer { get; set; }
+    public GridOverlay? GridCanvas { get; set; }
+    public SelectionOverlay? SelectionOverlay { get; set; }
+    public CursorOverlay? CursorOverlay { get; set; }
+    public TransparentBackground? TransparentBackground { get; set; }
+    public ImageBrush? TransparentBrush
     {
         get => _transparentBrush;
         set
@@ -389,6 +386,11 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
 
     public void RefreshGridCanvas()
     {
+        if(GridCanvas == null)
+        {
+            return;
+        }
+
         GridCanvas.GridWidth = _applicationData.UserSettings.GridWidth;
         GridCanvas.GridHeight = _applicationData.UserSettings.GridHeight;
         GridCanvas.GridEnabled = _applicationData.UserSettings.GridEnabled;
@@ -463,7 +465,7 @@ internal class PaintControlViewModel : ExtendedViewModel, IDisposable
 
     private void RightMouseDownAction(MouseEvent mouseEvent)
     {
-        if (!_applicationData.CurrentFrame.ContainsPixel(mouseEvent.Point) || _toolSelector.SelectedTool == null)
+        if (!_applicationData.CurrentFrame.ContainsPixel(mouseEvent.Point) || _toolSelector.SelectedTool == null || View == null)
         {
             return;
         }

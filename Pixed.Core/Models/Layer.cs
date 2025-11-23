@@ -39,13 +39,16 @@ public class Layer : PixelImage, IPixedSerializer, IDisposable
     public override int Height => _height;
     public ICommand? ChangeOpacityCommand { get; }
 
-    public static Func<Layer, Task> ChangeOpacityAction { get; set; }
+    public static Func<Layer, Task>? ChangeOpacityAction { get; set; }
 
     public Layer(int width, int height)
     {
         ChangeOpacityCommand = new AsyncCommand(async () =>
         {
-            await ChangeOpacityAction(this);
+            if(ChangeOpacityAction != null)
+            {
+                await ChangeOpacityAction(this);
+            }
         });
         _id = Guid.NewGuid().ToString();
         _width = width;
@@ -57,7 +60,10 @@ public class Layer : PixelImage, IPixedSerializer, IDisposable
     {
         ChangeOpacityCommand = new AsyncCommand(async () =>
         {
-            await ChangeOpacityAction(this);
+            if(ChangeOpacityAction != null)
+            {
+                await ChangeOpacityAction(this);
+            }
         });
         _id = Guid.NewGuid().ToString();
         _width = width;

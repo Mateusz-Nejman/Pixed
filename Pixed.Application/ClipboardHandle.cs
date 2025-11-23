@@ -4,25 +4,32 @@ using Pixed.Common.Platform;
 using System.Threading.Tasks;
 
 namespace Pixed.Application;
-internal class ClipboardHandle : IClipboardHandle
+internal class ClipboardHandle : IClipboardHandle //TODO implement new clipboard features
 {
-    private IClipboard _clipboard;
-    public void Initialize(IClipboard clipboard)
+    private IClipboard? _clipboard;
+    public void Initialize(IClipboard? clipboard)
     {
         _clipboard = clipboard;
     }
     public async Task ClearAsync()
     {
+        if(_clipboard == null)
+        {
+            return;
+        }
+
         await _clipboard.ClearAsync();
     }
 
     public async Task<object?> GetDataAsync(string format)
     {
+
         return await _clipboard.GetDataAsync(format);
     }
 
     public async Task<string[]> GetFormatsAsync()
     {
+
         return await _clipboard.GetFormatsAsync();
     }
 

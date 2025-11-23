@@ -4,7 +4,6 @@ using Pixed.Application.Menu;
 using Pixed.Application.Platform;
 using Pixed.Common.Menu;
 using Pixed.Core;
-using Pixed.Core.Models;
 using Pixed.Core.Utils;
 using System;
 using System.Collections.Generic;
@@ -13,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Pixed.Application.Services
 {
-    internal class RecentFilesService(ApplicationData applicationData, PixedProjectMethods pixedProjectMethods, IStorageProviderHandle storageProvider, IPlatformFolder platformFolder)
+    internal class RecentFilesService(PixedProjectMethods pixedProjectMethods, IStorageProviderHandle storageProvider, IPlatformFolder platformFolder)
     {
         private readonly PixedProjectMethods _projectMethods = pixedProjectMethods;
         private readonly IStorageProviderHandle _storageProvider = storageProvider;
@@ -57,7 +56,7 @@ namespace Pixed.Application.Services
 
         public async Task<List<IMenuItem>> BuildMenu()
         {
-            if (RecentFiles.Count == 0)
+            if (RecentFiles.Count == 0 || _storageProvider.StorageProvider == null)
             {
                 return [];
             }
@@ -90,6 +89,11 @@ namespace Pixed.Application.Services
 
         private async Task OpenProject(string path)
         {
+            if(_storageProvider.StorageProvider == null)
+            {
+                return;
+            }
+
             RecentFiles.Remove(path);
 
             var file = await _storageProvider.StorageProvider.TryGetFileFromPathAsync(new Uri(path));
