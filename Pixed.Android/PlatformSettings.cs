@@ -1,8 +1,11 @@
-﻿using Android.Content.PM;
+﻿using Android.Content;
+using Android.Content.PM;
 using Android.Content.Res;
+using Android.Net;
 using Android.OS;
 using Avalonia.Controls.ApplicationLifetimes;
 using Pixed.Application.Platform;
+using Uri = Android.Net.Uri;
 namespace Pixed.Android;
 internal class PlatformSettings : IPlatformSettings
 {
@@ -21,6 +24,13 @@ internal class PlatformSettings : IPlatformSettings
     {
         PackageInfo info = MainActivity.PackageManager.GetPackageInfo(MainActivity.PackageName, 0);
         return info.VersionName;
+    }
+
+    public void OpenUrl(string url)
+    {
+        Intent intent = new(Intent.ActionView, Uri.Parse(url));
+
+        MainActivity.StartActivity(intent);
     }
 
     public void ProcessMinimumScreenSize(int minScreenSize)
