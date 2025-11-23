@@ -6,7 +6,7 @@ using Pixed.Application.Platform;
 namespace Pixed.Android;
 internal class PlatformFolder : IPlatformFolder
 {
-    public static Context Context { get; set; }
+    public static Context? Context { get; set; }
 
     public IStorageContainerFile Convert(IStorageFile value)
     {
@@ -55,6 +55,6 @@ internal class PlatformFolder : IPlatformFolder
 
     private static string GetFolderAbsolute(string folderName)
     {
-        return Context.GetDir(folderName, FileCreationMode.Private).AbsolutePath;
+        return Context?.GetDir(folderName, FileCreationMode.Private)?.AbsolutePath ?? "";
     }
 }

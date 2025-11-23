@@ -39,7 +39,6 @@ internal partial class PaintControl : ExtendedControl<PaintControlViewModel>
 
         zoomControl.PointerPressedCommand = new Core.ActionCommand<Control, PointerPressedEventArgs>(OnPointerPressed);
         zoomControl.PointerReleasedCommand = new Core.ActionCommand<Control, PointerReleasedEventArgs>(OnPointerReleased);
-        zoomControl.PointerWheelCommand = new Core.ActionCommand<Control, PointerWheelEventArgs>(OnPointerWheelChanged);
         zoomControl.PointerExitedCommand = new Core.ActionCommand<Control, PointerEventArgs>(OnPointerExited);
         zoomControl.PointerMovedCommand = new Core.ActionCommand<Control, PointerEventArgs>(OnPointerMoved);
     }
@@ -74,10 +73,6 @@ internal partial class PaintControl : ExtendedControl<PaintControlViewModel>
         {
             ViewModel.RightMouseDown?.Execute(new MouseEvent(pos.ToPixedPoint(), e.Pointer.Type == PointerType.Touch));
         }
-        else if (mapper.ChangedButton == MouseButton.Middle && mapper.ButtonState == MouseButtonState.Pressed)
-        {
-            ViewModel.MiddleMouseDown?.Execute(new MouseEvent(pos.ToPixedPoint(), e.Pointer.Type == PointerType.Touch));
-        }
     }
 
     private void OnPointerReleased(Control sender, PointerReleasedEventArgs e)
@@ -93,16 +88,6 @@ internal partial class PaintControl : ExtendedControl<PaintControlViewModel>
         {
             ViewModel.RightMouseUp?.Execute(new MouseEvent(pos.ToPixedPoint(), e.Pointer.Type == PointerType.Touch));
         }
-        else if (mapper.ChangedButton == MouseButton.Middle && mapper.ButtonState == MouseButtonState.Released)
-        {
-            ViewModel.MiddleMouseUp?.Execute(new MouseEvent(pos.ToPixedPoint(), e.Pointer.Type == PointerType.Touch));
-        }
-    }
-
-    private void OnPointerWheelChanged(Control sender, PointerWheelEventArgs e)
-    {
-        ViewModel?.MouseWheel?.Execute(e.Delta.Y);
-        //e.Handled = true;
     }
 
     private void OnPointerExited(Control sender, PointerEventArgs e)

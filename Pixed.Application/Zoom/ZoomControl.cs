@@ -93,14 +93,7 @@ internal class ZoomControl : Decorator
             _childrenControl.PointerReleasedCommand = value;
         }
     }
-    public ActionCommand<Control, PointerWheelEventArgs>? PointerWheelCommand
-    {
-        get => _childrenControl.PointerWheelCommand;
-        set
-        {
-            _childrenControl.PointerWheelCommand = value;
-        }
-    }
+
     public ActionCommand<Control, PointerEventArgs>? PointerExitedCommand
     {
         get => _childrenControl.PointerExitedCommand;

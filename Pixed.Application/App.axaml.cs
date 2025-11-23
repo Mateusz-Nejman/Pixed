@@ -25,9 +25,9 @@ namespace Pixed.Application;
 public partial class App : Avalonia.Application
 {
     private Mutex? _mutex;
-    internal static IPixedServiceProvider ServiceProvider { get; private set; }
+    internal static IPixedServiceProvider? ServiceProvider { get; private set; }
 
-    public static ICommand CloseCommand => Main.QuitCommand;
+    public static ICommand? CloseCommand => Main.QuitCommand;
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -88,12 +88,16 @@ public partial class App : Avalonia.Application
         await Task.Delay(1500);
         InitializeServices();
         var provider = this.Resources[typeof(IPixedServiceProvider)] as IPixedServiceProvider;
-        var mainWindow = provider.Get<MainWindow>();
-        await mainWindow.OpenFromArgs(desktop.Args);
-        desktop.MainWindow = mainWindow;
-        desktop.MainWindow.Show();
-        await Task.Delay(100);
-        splash.Close();
+        var mainWindow = provider?.Get<MainWindow>();
+
+        if (mainWindow != null)
+        {
+            await mainWindow.OpenFromArgs(desktop.Args ?? []);
+            desktop.MainWindow = mainWindow;
+            desktop.MainWindow.Show();
+            await Task.Delay(100);
+            splash.Close();
+        }
     }
 
     private bool HandleNewInstance(Dispatcher? dispatcher, IClassicDesktopStyleApplicationLifetime desktop)

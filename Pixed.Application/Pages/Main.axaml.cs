@@ -77,9 +77,9 @@ internal partial class Main : EmptyPixedPage, IDisposable
     public override async void OnLoaded()
     {
         var topLevel = TopLevel.GetTopLevel(this);
-        _storageProviderHandle.Initialize(topLevel.StorageProvider);
+        _storageProviderHandle.Initialize(topLevel?.StorageProvider);
         var clipboard = Get<IClipboardHandle>();
-        clipboard.Initialize(topLevel.Clipboard);
+        clipboard.Initialize(topLevel?.Clipboard);
         _viewMenuRegister.Register();
         _transformToolsMenuRegister.Register();
         _undoRedoMenuRegister.Register();
@@ -237,7 +237,7 @@ internal partial class Main : EmptyPixedPage, IDisposable
     {
         if (_applicationData.Models.Count == 1)
         {
-            QuitCommand.Execute(null);
+            QuitCommand?.Execute(null);
         }
         else
         {
