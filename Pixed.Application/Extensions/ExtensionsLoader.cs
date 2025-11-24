@@ -30,7 +30,10 @@ internal static class ExtensionsLoader
 
             foreach (var extensionTool in extensionTools)
             {
-                tools.Add(extensionTool.Name, serviceProvider.Get(extensionTool.Type) as BaseTool);
+                if (serviceProvider.Get(extensionTool.Type) is BaseTool tool)
+                {
+                    tools.Add(extensionTool.Name, tool);
+                }
             }
         }
 

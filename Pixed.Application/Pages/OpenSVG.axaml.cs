@@ -32,7 +32,7 @@ internal partial class OpenSVG : Modal
 
     public override Task ArgumentAsync(object args, CancellationToken cancellationToken)
     {
-        if (args is SKSvg svg)
+        if (args is SKSvg svg && svg.Picture != null)
         {
             WidthValue = (int)svg.Picture.CullRect.Width;
             HeightValue = (int)svg.Picture.CullRect.Height;

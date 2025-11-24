@@ -55,6 +55,6 @@ internal partial class NumericPrompt : Modal
 
     private void Button_Click(object sender, RoutedEventArgs e)
     {
-        Close((double)numeric.Value);
+        Close((double)(numeric.Value ?? 0));
     }
 }

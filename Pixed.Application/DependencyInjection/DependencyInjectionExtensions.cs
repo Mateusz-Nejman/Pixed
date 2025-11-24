@@ -5,7 +5,7 @@ using Pixed.Common.DependencyInjection;
 namespace Pixed.Application.DependencyInjection;
 internal static class DependencyInjectionExtensions
 {
-    public static IPixedServiceProvider GetServiceProvider(this IResourceHost control)
+    public static IPixedServiceProvider? GetServiceProvider(this IResourceHost control)
     {
         var resource = control.FindResource(typeof(IPixedServiceProvider));
 
@@ -14,6 +14,6 @@ internal static class DependencyInjectionExtensions
             return App.ServiceProvider;
         }
 
-        return (IPixedServiceProvider)resource;
+        return (IPixedServiceProvider?)resource;
     }
 }

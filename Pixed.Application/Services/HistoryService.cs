@@ -200,9 +200,16 @@ internal class HistoryService(IPlatformFolder platformFolder) : IHistoryService
 
             if (processCache)
             {
-                for (int a = 0; a < maxEntries; a++)
+                for (var a = 0; a < maxEntries; a++)
                 {
                     if (_entries[a].Cached || _entries[a].Data == null)
+                    {
+                        continue;
+                    }
+
+                    var entryStream = _entries[a].Stream;
+
+                    if (entryStream == null)
                     {
                         continue;
                     }
@@ -210,9 +217,9 @@ internal class HistoryService(IPlatformFolder platformFolder) : IHistoryService
                     var file = await _platformFolder.GetFile(_entries[a].HistoryId, FolderType.History);
                     var stream = await file.OpenWrite();
 
-                    _entries[a].Stream.Position = 0;
-                    PixedProjectSerializer.Compress(_entries[a].Stream, stream);
-                    stream.Dispose();
+                    entryStream.Position = 0;
+                    PixedProjectSerializer.Compress(entryStream, stream);
+                    await stream.DisposeAsync();
                     _entries[a].ClearData();
                     _entries[a].SetCached();
                 }

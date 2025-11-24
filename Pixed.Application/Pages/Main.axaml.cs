@@ -24,78 +24,99 @@ namespace Pixed.Application.Pages;
 
 internal partial class Main : EmptyPixedPage, IDisposable
 {
-    private readonly ApplicationData _applicationData;
-    private readonly PixedProjectMethods _pixedProjectMethods;
-    private readonly FileMenuRegister _fileMenuRegister;
-    private readonly TransformMenuRegister _transformToolsMenuRegister;
-    private readonly UndoRedoMenuRegister _undoRedoMenuRegister;
-    private readonly CopyPasteMenuRegister _copyPasteMenuRegister;
-    private readonly PaletteMenuRegister _paletteMenuRegister;
-    private readonly ProjectMenuRegister _projectMenuRegister;
-    private readonly ViewMenuRegister _viewMenuRegister;
-    private readonly ToolsMenuRegister _toolsMenuRegister;
-    private readonly IHistoryService _historyService;
-    private readonly RecentFilesService _recentFilesService;
-    private readonly ToolsManager _toolSelector;
-    private readonly MenuBuilder _menuBuilder;
-    private readonly IStorageProviderHandle _storageProviderHandle;
-    private readonly IPlatformFolder _platformFolder;
+    private readonly ApplicationData? _applicationData;
+    private readonly PixedProjectMethods? _pixedProjectMethods;
+    private readonly FileMenuRegister? _fileMenuRegister;
+    private readonly TransformMenuRegister? _transformToolsMenuRegister;
+    private readonly UndoRedoMenuRegister? _undoRedoMenuRegister;
+    private readonly CopyPasteMenuRegister? _copyPasteMenuRegister;
+    private readonly PaletteMenuRegister? _paletteMenuRegister;
+    private readonly ProjectMenuRegister? _projectMenuRegister;
+    private readonly ViewMenuRegister? _viewMenuRegister;
+    private readonly ToolsMenuRegister? _toolsMenuRegister;
+    private readonly IHistoryService? _historyService;
+    private readonly RecentFilesService? _recentFilesService;
+    private readonly ToolsManager? _toolSelector;
+    private readonly MenuBuilder? _menuBuilder;
+    private readonly IStorageProviderHandle? _storageProviderHandle;
+    private readonly IPlatformFolder? _platformFolder;
     private readonly IDisposable _newInstanceHandled;
-    private readonly PaletteSectionViewModel _paletteSectionViewModel;
+    private readonly PaletteSectionViewModel? _paletteSectionViewModel;
     private bool _disposedValue;
 
     public static ICommand? QuitCommand { get; private set; }
     public Main() : base()
     {
         InjectMethods();
-        _pixedProjectMethods = Get<PixedProjectMethods>();
-        _applicationData = Get<ApplicationData>();
-        _fileMenuRegister = Get<FileMenuRegister>();
-        _transformToolsMenuRegister = Get<TransformMenuRegister>();
-        _undoRedoMenuRegister = Get<UndoRedoMenuRegister>();
-        _copyPasteMenuRegister = Get<CopyPasteMenuRegister>();
-        _paletteMenuRegister = Get<PaletteMenuRegister>();
-        _projectMenuRegister = Get<ProjectMenuRegister>();
-        _viewMenuRegister = Get<ViewMenuRegister>();
-        _toolsMenuRegister = Get<ToolsMenuRegister>();
-        _historyService = Get<IHistoryService>();
-        _recentFilesService = Get<RecentFilesService>();
-        _toolSelector = Get<ToolsManager>();
-        _menuBuilder = Get<MenuBuilder>();
-        _storageProviderHandle = Get<IStorageProviderHandle>();
-        _platformFolder = Get<IPlatformFolder>();
-        _paletteSectionViewModel = Get<PaletteSectionViewModel>();
+
+        if (Provider != null)
+        {
+            _pixedProjectMethods = Provider.Get<PixedProjectMethods>();
+            _applicationData = Provider.Get<ApplicationData>();
+            _fileMenuRegister = Provider.Get<FileMenuRegister>();
+            _transformToolsMenuRegister = Provider.Get<TransformMenuRegister>();
+            _undoRedoMenuRegister = Provider.Get<UndoRedoMenuRegister>();
+            _copyPasteMenuRegister = Provider.Get<CopyPasteMenuRegister>();
+            _paletteMenuRegister = Provider.Get<PaletteMenuRegister>();
+            _projectMenuRegister = Provider.Get<ProjectMenuRegister>();
+            _viewMenuRegister = Provider.Get<ViewMenuRegister>();
+            _toolsMenuRegister = Provider.Get<ToolsMenuRegister>();
+            _historyService = Provider.Get<IHistoryService>();
+            _recentFilesService = Provider.Get<RecentFilesService>();
+            _toolSelector = Provider.Get<ToolsManager>();
+            _menuBuilder = Provider.Get<MenuBuilder>();
+            _storageProviderHandle = Provider.Get<IStorageProviderHandle>();
+            _platformFolder = Provider.Get<IPlatformFolder>();
+            _paletteSectionViewModel = Provider.Get<PaletteSectionViewModel>();
+        }
+        
         _newInstanceHandled = Subjects.NewInstanceHandled.Subscribe(args =>
         {
             foreach (var arg in args)
             {
-                Dispatcher.UIThread.Invoke(async () => await _pixedProjectMethods.Open(arg));
+                Dispatcher.UIThread.Invoke(async () =>
+                {
+                    if (_pixedProjectMethods != null)
+                    {
+                        await _pixedProjectMethods.Open(arg);
+                    }
+                });
             }
         });
     }
 
     public override async void OnLoaded()
     {
+        if (_fileMenuRegister == null || _menuBuilder == null || _paletteSectionViewModel == null ||
+            _applicationData == null)
+        {
+            return;
+        }
+        
         var topLevel = TopLevel.GetTopLevel(this);
-        _storageProviderHandle.Initialize(topLevel?.StorageProvider);
-        var clipboard = Get<IClipboardHandle>();
-        clipboard.Initialize(topLevel?.Clipboard);
-        _viewMenuRegister.Register();
-        _transformToolsMenuRegister.Register();
-        _undoRedoMenuRegister.Register();
-        _copyPasteMenuRegister.Register();
-        _paletteMenuRegister.Register();
-        _toolsMenuRegister.Register();
+        _storageProviderHandle?.Initialize(topLevel?.StorageProvider);
+
+        if (Provider != null)
+        {
+            var clipboard = Provider.Get<IClipboardHandle>();
+            clipboard.Initialize(topLevel?.Clipboard);
+        }
+        _viewMenuRegister?.Register();
+        _transformToolsMenuRegister?.Register();
+        _undoRedoMenuRegister?.Register();
+        _copyPasteMenuRegister?.Register();
+        _paletteMenuRegister?.Register();
+        _toolsMenuRegister?.Register();
 
         await Initialize();
-        if (IPlatformSettings.Instance.RecentFilesEnabled)
+        if (IPlatformSettings.Instance.RecentFilesEnabled && _recentFilesService != null)
         {
             await _recentFilesService.Load();
         }
-        _projectMenuRegister.Register();
+        _projectMenuRegister?.Register();
         await _fileMenuRegister.Register();
         await _menuBuilder.Build();
-        _toolSelector.SelectTool("tool_pen");
+        _toolSelector?.SelectTool("tool_pen");
         await _paletteSectionViewModel.LoadAll();
 
         Subjects.ProjectAdded.OnNext(_applicationData.CurrentModel);
@@ -106,35 +127,38 @@ internal partial class Main : EmptyPixedPage, IDisposable
 
     public async static Task<bool> Close()
     {
-        var applicationData = Provider.Get<ApplicationData>();
-        var pixedProjectMethods = Provider.Get<PixedProjectMethods>();
-        var recentFilesService = Provider.Get<RecentFilesService>();
-
-        int untitledIndex = 0;
-
-        foreach (var model in applicationData.Models)
+        if (Provider != null)
         {
-            if (model.UnsavedChanges)
+            var applicationData = Provider.Get<ApplicationData>();
+            var pixedProjectMethods = Provider.Get<PixedProjectMethods>();
+            var recentFilesService = Provider.Get<RecentFilesService>();
+
+            int untitledIndex = 0;
+
+            foreach (var model in applicationData.Models)
             {
-                var name = model.FileName;
-
-                if (string.IsNullOrEmpty(name))
+                if (model.UnsavedChanges)
                 {
-                    name = "Untitled-" + untitledIndex;
-                    untitledIndex++;
-                }
+                    var name = model.FileName;
 
-                var result = await Router.Confirm("Unsaved changes", "Project " + name + " has unsaved changes. Save it now?");
-
-                if (result.HasValue)
-                {
-                    if (result.Value == ButtonResult.Cancel)
+                    if (string.IsNullOrEmpty(name))
                     {
-                        return false;
+                        name = "Untitled-" + untitledIndex;
+                        untitledIndex++;
                     }
-                    else if (result.Value == ButtonResult.Yes)
+
+                    var result = await Router.Confirm("Unsaved changes", "Project " + name + " has unsaved changes. Save it now?");
+
+                    if (result.HasValue)
                     {
-                        await pixedProjectMethods.Save(model, model.FilePath == null, recentFilesService);
+                        if (result.Value == ButtonResult.Cancel)
+                        {
+                            return false;
+                        }
+                        else if (result.Value == ButtonResult.Yes)
+                        {
+                            await pixedProjectMethods.Save(model, model.FilePath == null, recentFilesService);
+                        }
                     }
                 }
             }
@@ -162,13 +186,13 @@ internal partial class Main : EmptyPixedPage, IDisposable
         GC.SuppressFinalize(this);
     }
 
-    private void InitializeBeforeUI()
+    private void InitializeBeforeUi()
     {
         QuitCommand = new ActionCommand(async () =>
         {
             var canQuit = await Close();
 
-            if (canQuit)
+            if (canQuit && _historyService != null)
             {
                 await _historyService.ClearTempFiles();
                 IPlatformSettings.Instance.Close();
@@ -178,6 +202,11 @@ internal partial class Main : EmptyPixedPage, IDisposable
 
     private async Task InitializeDataFolder()
     {
+        if (_applicationData == null || _historyService == null || _platformFolder == null)
+        {
+            return;
+        }
+        
         _platformFolder.GetFiles(FolderType.Root);
         _platformFolder.GetFiles(FolderType.Palettes);
 
@@ -197,13 +226,18 @@ internal partial class Main : EmptyPixedPage, IDisposable
     private async Task Initialize()
     {
         await InitializeDataFolder();
-        InitializeBeforeUI();
+        InitializeBeforeUi();
         InitializeComponent();
         AddHandler(DragDrop.DropEvent, Drop);
     }
 
     private async void Drop(object? sender, DragEventArgs e)
     {
+        if (_pixedProjectMethods == null)
+        {
+            return;
+        }
+        
         var files = e.Data.GetFiles();
         if (files != null)
         {
@@ -224,6 +258,11 @@ internal partial class Main : EmptyPixedPage, IDisposable
 
     private async Task ChangeOpacityAction(Layer layer)
     {
+        if (_applicationData == null)
+        {
+            return;
+        }
+        
         var result = await Router.NumericPrompt("Change opacity", "Enter new opacity (%):", layer.Opacity);
 
         if (result.HasValue)
@@ -235,6 +274,11 @@ internal partial class Main : EmptyPixedPage, IDisposable
 
     private void CloseCommandAction(PixedModel model)
     {
+        if (_applicationData == null)
+        {
+            return;
+        }
+
         if (_applicationData.Models.Count == 1)
         {
             QuitCommand?.Execute(null);
