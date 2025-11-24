@@ -25,8 +25,12 @@ internal partial class NewProject : Modal
     {
         InitializeComponent();
         var applicationData = Provider.Get<ApplicationData>();
-        WidthValue = applicationData.UserSettings.UserWidth;
-        HeightValue = applicationData.UserSettings.UserHeight;
+
+        if (applicationData != null)
+        {
+            WidthValue = applicationData.UserSettings.UserWidth;
+            HeightValue = applicationData.UserSettings.UserHeight;
+        }
     }
 
     private void Button_Click(object sender, RoutedEventArgs e)

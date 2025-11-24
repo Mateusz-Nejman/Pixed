@@ -22,11 +22,9 @@ namespace Pixed.Application.ViewModels;
 
 internal class PaletteSectionViewModel : ExtendedViewModel, IDisposable
 {
-    private readonly ApplicationData _applicationData;
     private readonly PaletteService _paletteService;
     private readonly DialogUtils _dialogUtils;
     private readonly IPlatformFolder _platformFolder;
-    private readonly ToolsManager _toolsManager;
 
     private UniColor _primaryColor = UniColor.Black;
     private UniColor _secondaryColor = UniColor.White;
@@ -88,44 +86,42 @@ internal class PaletteSectionViewModel : ExtendedViewModel, IDisposable
 
     public PaletteSectionViewModel(ApplicationData applicationData, ToolsManager toolsManager, PaletteService paletteService, DialogUtils dialogUtils, IPlatformFolder platformFolder)
     {
-        _applicationData = applicationData;
-        _toolsManager = toolsManager;
         _paletteService = paletteService;
         _dialogUtils = dialogUtils;
         _platformFolder = platformFolder;
         _primaryProjectChanged = Subjects.PrimaryColorChanged.Subscribe(c =>
         {
-            _applicationData.PrimaryColor = c;
+            applicationData.PrimaryColor = c;
 
-            if (_toolsManager.SelectedTool is ToolEraser)
+            if (toolsManager.SelectedTool is ToolEraser)
             {
-                _toolsManager.SelectTool("tool_pen");
+                toolsManager.SelectTool("tool_pen");
             }
         });
         _secondaryProjectChanged = Subjects.SecondaryColorChanged.Subscribe(c =>
         {
-            _applicationData.SecondaryColor = c;
+            applicationData.SecondaryColor = c;
 
-            if (_toolsManager.SelectedTool is ToolEraser)
+            if (toolsManager.SelectedTool is ToolEraser)
             {
-                _toolsManager.SelectTool("tool_pen");
+                toolsManager.SelectTool("tool_pen");
             }
         });
         _primaryProjectChange = Subjects.PrimaryColorChange.Subscribe(c => PrimaryColor = c);
         _secondaryProjectChange = Subjects.SecondaryColorChange.Subscribe(c => SecondaryColor = c);
 
-        _projectChanged = Subjects.ProjectChanged.Subscribe(p =>
+        _projectChanged = Subjects.ProjectChanged.Subscribe(_ =>
         {
             _paletteService.SetCurrentColors();
             OnPropertyChanged(nameof(CurrentPaletteColors));
         });
 
-        _layerModified = Subjects.LayerModified.Subscribe(l =>
+        _layerModified = Subjects.LayerModified.Subscribe(_ =>
         {
             _paletteService.SetCurrentColors();
             OnPropertyChanged(nameof(CurrentPaletteColors));
         });
-        _frameModified = Subjects.FrameModified.Subscribe(f =>
+        _frameModified = Subjects.FrameModified.Subscribe(_ =>
         {
             _paletteService.SetCurrentColors();
             OnPropertyChanged(nameof(CurrentPaletteColors));
@@ -134,7 +130,7 @@ internal class PaletteSectionViewModel : ExtendedViewModel, IDisposable
         PrimaryColor = UniColor.Black;
         SecondaryColor = UniColor.White;
 
-        _paletteSelected = Subjects.PaletteSelected.Subscribe(p =>
+        _paletteSelected = Subjects.PaletteSelected.Subscribe(_ =>
         {
             OnPropertyChanged(nameof(SelectedPaletteColors));
         });
@@ -153,14 +149,14 @@ internal class PaletteSectionViewModel : ExtendedViewModel, IDisposable
         {
             if (disposing)
             {
-                _frameModified?.Dispose();
-                _layerModified?.Dispose();
-                _projectChanged?.Dispose();
-                _paletteSelected?.Dispose();
-                _primaryProjectChanged?.Dispose();
-                _primaryProjectChange?.Dispose();
-                _secondaryProjectChanged?.Dispose();
-                _secondaryProjectChange?.Dispose();
+                _frameModified.Dispose();
+                _layerModified.Dispose();
+                _projectChanged.Dispose();
+                _paletteSelected.Dispose();
+                _primaryProjectChanged.Dispose();
+                _primaryProjectChange.Dispose();
+                _secondaryProjectChanged.Dispose();
+                _secondaryProjectChange.Dispose();
             }
 
             _disposedValue = true;
@@ -246,17 +242,25 @@ internal class PaletteSectionViewModel : ExtendedViewModel, IDisposable
         var files = _platformFolder.GetFiles(FolderType.Palettes);
         await foreach (var file in files)
         {
+            if (file == null)
+            {
+                continue;
+            }
+            
             Stream? stream = null;
             try
             {
                 stream = await file.OpenRead();
-                AbstractPaletteSerializer serializer = AbstractPaletteSerializer.GetFromExtension(file.Extension);
-                PaletteModel palette = serializer.Deserialize(stream, file.Name);
+                var serializer = AbstractPaletteSerializer.GetFromExtension(file.Extension);
+                var palette = serializer.Deserialize(stream, file.Name);
                 _paletteService.Palettes.Add(palette);
             }
             catch (Exception)
             {
-                stream?.Dispose();
+                if (stream != null)
+                {
+                    await stream.DisposeAsync();
+                }
             }
         }
     }
@@ -272,23 +276,23 @@ internal class PaletteSectionViewModel : ExtendedViewModel, IDisposable
         }
 
         var stream = await file.OpenRead();
-        AbstractPaletteSerializer serializer = AbstractPaletteSerializer.GetFromExtension(file.GetExtension());
+        var serializer = AbstractPaletteSerializer.GetFromExtension(file.GetExtension());
 
         PaletteModel model;
         try
         {
             model = serializer.Deserialize(stream, file.Name);
-            stream.Dispose();
+            await stream.DisposeAsync();
         }
         catch (Exception)
         {
             await Router.Message("Opening error", "Invalid format");
-            stream.Dispose();
+            await stream.DisposeAsync();
             return;
         }
         _paletteService.Palettes[1] = model.ToCurrentPalette();
 
-        if (_paletteService.Palettes.FirstOrDefault(p => p.Id == model.Id, null) == null)
+        if (_paletteService.Palettes.FirstOrDefault(p => p != null && p.Id == model.Id, null) == null)
         {
             _paletteService.Palettes.Add(model);
         }

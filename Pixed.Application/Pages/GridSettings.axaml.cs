@@ -33,6 +33,8 @@ internal partial class GridSettings : Modal
     {
         InitializeComponent();
         var applicationData = Provider.Get<ApplicationData>();
+
+        if (applicationData == null) return;
         GridColor = applicationData.UserSettings.GridColor;
         WidthValue = applicationData.UserSettings.GridWidth;
         HeightValue = applicationData.UserSettings.GridHeight;

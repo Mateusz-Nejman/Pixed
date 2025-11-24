@@ -17,7 +17,7 @@ internal partial class PiskelProjectSerializer : IPixedProjectSerializer
 
     public string FormatName => "Piskel project";
 
-    private const string BASE64_REGEX = @"base64?\s*,[^\\""]+(?=,|$)?";
+    private const string Base64Regex = @"base64?\s*,[^\\""]+(?=,|$)?";
     public PixedModel Deserialize(Stream stream, ApplicationData applicationData)
     {
         StreamReader reader = new(stream);
@@ -26,42 +26,52 @@ internal partial class PiskelProjectSerializer : IPixedProjectSerializer
 
         JObject baseJson = JObject.Parse(streamString);
         var json = baseJson["piskel"];
-        string name = json["name"].Value<string>();
-        int width = json["width"].Value<int>();
-        int height = json["height"].Value<int>();
 
-        var layers = json["layers"].ToArray();
+        if (json == null)
+        {
+            return new PixedModel(1, 1);
+        }
+        string name = json["name"]?.Value<string>() ?? string.Empty;
+        int width = json["width"]?.Value<int>() ?? 1;
+        int height = json["height"]?.Value<int>() ?? 1;
+
+        var layers = json["layers"]?.ToArray();
+
+        if (layers == null)
+        {
+            return new PixedModel(1, 1);
+        }
 
         ObservableCollection<Frame> frames = [];
 
         foreach (var layer in layers)
         {
-            string layerString = layer.Value<string>();
+            string layerString = layer.Value<string>() ?? string.Empty;
             var layerObject = JObject.Parse(layerString);
-            var layerName = layerObject["name"].Value<string>();
-            FillIfNeeded(ref frames, layerObject["frameCount"].Value<int>(), width, height);
+            var layerName = layerObject["name"]?.Value<string>() ?? string.Empty;
+            FillIfNeeded(ref frames, layerObject["frameCount"]?.Value<int>() ?? 0, width, height);
 
             var match = LayerRegex().Match(layerString);
 
             if (match.Success)
             {
-                string str = match.Value[7..];
-                byte[] data = Convert.FromBase64String(str);
-                Png png = Png.Open(data);
+                var str = match.Value[7..];
+                var data = Convert.FromBase64String(str);
+                var png = Png.Open(data);
 
-                for (int f = 0; f < frames.Count; f++)
+                for (var f = 0; f < frames.Count; f++)
                 {
-                    uint[] frameLayerData = new uint[width * height];
+                    var frameLayerData = new uint[width * height];
 
-                    for (int x = 0; x < width; x++)
+                    for (var x = 0; x < width; x++)
                     {
-                        for (int y = 0; y < height; y++)
+                        for (var y = 0; y < height; y++)
                         {
                             frameLayerData[y * width + x] = png.GetPixel(x + (f * width), y);
                         }
                     }
 
-                    Layer newLayer = Layer.FromColors(frameLayerData, width, height, layerName);
+                    var newLayer = Layer.FromColors(frameLayerData, width, height, layerName);
                     frames[f].Layers.Add(newLayer);
                 }
             }
@@ -92,6 +102,6 @@ internal partial class PiskelProjectSerializer : IPixedProjectSerializer
         }
     }
 
-    [GeneratedRegex(BASE64_REGEX)]
+    [GeneratedRegex(Base64Regex)]
     private static partial Regex LayerRegex();
 }

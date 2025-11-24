@@ -26,6 +26,11 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
 
     public async Task Save(PixedModel model, bool saveAs, RecentFilesService recentFilesService)
     {
+        if (_storageProvider.StorageProvider == null)
+        {
+            return;
+        }
+        
         Stream? fileStream = null;
         PixedProjectSerializer serializer = GetSerializer<PixedProjectSerializer>();
 
@@ -133,7 +138,7 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
             if (serializer is SvgProjectSerializer svgSerializer)
             {
                 SKSvg svg = SKSvg.CreateFromStream(stream);
-                stream.Dispose();
+                await stream.DisposeAsync();
                 stream = await item.OpenRead();
                 var result = await Router.Navigate<OpenSvgResult>("/openSvg", svg);
 
@@ -158,7 +163,8 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
                 await Router.Message("Opening error", "Invalid format");
                 continue;
             }
-            stream?.Dispose();
+
+            await stream.DisposeAsync();
             model.FileName = item.Name.Replace(item.GetExtension(), ".pixed");
             _historyService.Register(model);
             await _historyService.AddToHistory(model);
@@ -184,6 +190,11 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
 
     public async Task Open(string path)
     {
+        if (_storageProvider.StorageProvider == null)
+        {
+            return;
+        }
+        
         var file = await _storageProvider.StorageProvider.TryGetFileFromPathAsync(new Uri(path));
 
         if (file == null)

@@ -127,7 +127,11 @@ internal class ProjectAnimation : Control
         }
         
         _applicationData = App.ServiceProvider.Get<ApplicationData>();
-        _drawOperation = new DrawOperation(new Rect(), _applicationData, _current);
+
+        if (_applicationData != null)
+        {
+            _drawOperation = new DrawOperation(new Rect(), _applicationData, _current);
+        }
     }
 
     public override void Render(DrawingContext context)

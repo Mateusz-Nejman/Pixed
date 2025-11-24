@@ -17,7 +17,11 @@ internal partial class ExportPNG : Modal
     {
         InitializeComponent();
         var applicationData = Provider.Get<ApplicationData>();
-        ColumnsCount = applicationData.CurrentModel.Frames.Count;
+
+        if (applicationData != null)
+        {
+            ColumnsCount = applicationData.CurrentModel.Frames.Count;
+        }
     }
 
     private void Button_Click(object sender, RoutedEventArgs e)

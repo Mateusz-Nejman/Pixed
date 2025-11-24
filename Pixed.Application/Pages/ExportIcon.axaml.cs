@@ -7,7 +7,7 @@ namespace Pixed.Application.Pages;
 
 internal partial class ExportIcon : Modal
 {
-    private readonly ExportIconViewModel _viewModel;
+    private readonly ExportIconViewModel? _viewModel;
     public ExportIcon()
     {
         InitializeComponent();
@@ -16,8 +16,13 @@ internal partial class ExportIcon : Modal
 
     private List<Point> GetIconFormats()
     {
+        if (_viewModel == null)
+        {
+            return [];
+        }
+        
         List<Point> formats = [];
-        void addIfTrue(bool isChecked, int resolution)
+        void AddIfTrue(bool isChecked, int resolution)
         {
             if (isChecked)
             {
@@ -25,12 +30,12 @@ internal partial class ExportIcon : Modal
             }
         }
 
-        addIfTrue(_viewModel.Check512, 512);
-        addIfTrue(_viewModel.Check256, 256);
-        addIfTrue(_viewModel.Check128, 128);
-        addIfTrue(_viewModel.Check64, 64);
-        addIfTrue(_viewModel.Check32, 32);
-        addIfTrue(_viewModel.Check16, 16);
+        AddIfTrue(_viewModel.Check512, 512);
+        AddIfTrue(_viewModel.Check256, 256);
+        AddIfTrue(_viewModel.Check128, 128);
+        AddIfTrue(_viewModel.Check64, 64);
+        AddIfTrue(_viewModel.Check32, 32);
+        AddIfTrue(_viewModel.Check16, 16);
 
         return formats;
     }

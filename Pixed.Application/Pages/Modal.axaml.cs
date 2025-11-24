@@ -8,7 +8,7 @@ namespace Pixed.Application.Pages;
 
 public partial class Modal : Page
 {
-    public IPixedServiceProvider Provider => App.ServiceProvider;
+    public IPixedServiceProvider? Provider => App.ServiceProvider;
     public object? Dialog
     {
         get { return GetValue(DialogProperty); }
@@ -21,7 +21,7 @@ public partial class Modal : Page
         set { SetValue(TitleProperty, value); }
     }
 
-    public static readonly StyledProperty<object?> DialogProperty = AvaloniaProperty.Register<Modal, object?>(nameof(Dialog), null);
+    public static readonly StyledProperty<object?> DialogProperty = AvaloniaProperty.Register<Modal, object?>(nameof(Dialog));
     public static readonly StyledProperty<string> TitleProperty = AvaloniaProperty.Register<Modal, string>(nameof(Title), "Title");
     public Modal()
     {
@@ -30,12 +30,22 @@ public partial class Modal : Page
 
     public Task Close()
     {
-        return Navigator?.BackAsync();
+        if (Navigator == null)
+        {
+            return Task.CompletedTask;
+        }
+        
+        return Navigator.BackAsync();
     }
 
     public Task Close(object result)
     {
-        return Navigator?.BackAsync(result);
+        if (Navigator == null)
+        {
+            return Task.CompletedTask;
+        }
+
+        return Navigator.BackAsync(result);
     }
 
     private void InitializeComponent()

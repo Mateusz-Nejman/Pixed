@@ -11,7 +11,8 @@ internal partial class OpenPNG : Modal
     {
         InitializeComponent();
         var radio = this.FindControl<RadioButton>("single");
-        radio.IsChecked = true;
+
+        radio?.IsChecked = true;
     }
 
     private void RadioButton_IsCheckedChanged(object? sender, RoutedEventArgs e)
@@ -27,6 +28,6 @@ internal partial class OpenPNG : Modal
 
     private void Button_Click(object sender, RoutedEventArgs e)
     {
-        Close(new OpenPngResult((int)tileWidth.Value, (int)tileHeight.Value, IsTileset));
+        Close(new OpenPngResult((int)(tileWidth.Value ?? 0), (int)(tileHeight.Value ?? 0), IsTileset));
     }
 }

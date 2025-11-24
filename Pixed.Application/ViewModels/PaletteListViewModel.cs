@@ -41,7 +41,7 @@ internal class PaletteListViewModel : ExtendedViewModel
         }
     }
 
-    public Action CloseAction { get; set; }
+    public Action? CloseAction { get; set; }
 
     public PaletteListViewModel(PaletteService paletteService, PaletteSectionViewModel paletteSectionViewModel)
     {
