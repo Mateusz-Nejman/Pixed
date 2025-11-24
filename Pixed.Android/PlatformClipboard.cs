@@ -1,5 +1,4 @@
-﻿using Avalonia.Input;
-using Avalonia.Input.Platform;
+﻿using Avalonia.Input.Platform;
 using Pixed.Common.Platform;
 
 namespace Pixed.Android;
@@ -12,33 +11,18 @@ internal class PlatformClipboard : IClipboardHandle
         return Task.CompletedTask;
     }
 
-    public Task<object?> GetDataAsync(string format)
+    public Task<byte[]?> GetDataAsync()
     {
-        if (format != "PNG" || _copiedBuffer == null)
-        {
-            return Task.FromResult<object?>(null);
-        }
-
-        return Task.FromResult<object?>(_copiedBuffer);
-    }
-
-    public Task<string[]> GetFormatsAsync()
-    {
-        return Task.FromResult<string[]>(_copiedBuffer == null ? [] : ["PNG"]);
+        return Task.FromResult<byte[]?>(_copiedBuffer);
     }
 
     public void Initialize(IClipboard clipboard)
     {
     }
 
-    public Task SetDataObjectAsync(IDataObject data)
+    public Task SetDataAsync(byte[] data)
     {
-        var png = data.Get("PNG");
-
-        if (png != null && png is byte[] array)
-        {
-            _copiedBuffer = array;
-        }
+        _copiedBuffer = data;
 
         return Task.CompletedTask;
     }

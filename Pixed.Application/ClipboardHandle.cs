@@ -4,7 +4,7 @@ using Pixed.Common.Platform;
 using System.Threading.Tasks;
 
 namespace Pixed.Application;
-internal class ClipboardHandle : IClipboardHandle //TODO implement new clipboard features
+internal class ClipboardHandle : IClipboardHandle
 {
     private IClipboard? _clipboard;
     public void Initialize(IClipboard? clipboard)
