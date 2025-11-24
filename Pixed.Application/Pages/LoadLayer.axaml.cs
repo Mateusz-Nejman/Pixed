@@ -10,7 +10,8 @@ internal partial class LoadLayer : Modal
     {
         InitializeComponent();
         var radio = this.FindControl<RadioButton>("single");
-        radio.IsChecked = true;
+
+        radio?.IsChecked = true;
     }
 
     private void RadioButton_IsCheckedChanged(object? sender, RoutedEventArgs e)

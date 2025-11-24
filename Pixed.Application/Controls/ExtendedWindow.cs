@@ -20,6 +20,12 @@ internal abstract class ExtendedWindow<T> : Window
         {
             _menuItemRegistry = Provider.Get<IMenuItemRegistry>();
             var serviceProvider = this.GetServiceProvider();
+
+            if (serviceProvider == null)
+            {
+                return;
+            }
+            
             var viewModel = serviceProvider.Get<T>();
 
             if (viewModel is ExtendedViewModel extended)

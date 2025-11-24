@@ -275,7 +275,7 @@ public class PngBuilder
     {
         options = options ?? new SaveOptions();
 
-        byte[] palette = null;
+        byte[] palette = [];
         var dataLength = rawData.Length;
         var bitDepth = 8;
 

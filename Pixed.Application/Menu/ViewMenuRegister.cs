@@ -24,15 +24,15 @@ internal class ViewMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
             _menuItemRegistry.Register(BaseMenuItem.View, "Toggle fullscreen", () =>
             {
                 var serviceProvider = App.ServiceProvider;
+
+                if (serviceProvider == null)
+                {
+                    return;
+                }
+                
                 var mainWindow = serviceProvider.Get<MainWindow>();
-                if (mainWindow.WindowState == WindowState.FullScreen)
-                {
-                    mainWindow.WindowState = WindowState.Maximized;
-                }
-                else
-                {
-                    mainWindow.WindowState = WindowState.FullScreen;
-                }
+
+                mainWindow?.WindowState = mainWindow.WindowState == WindowState.FullScreen ? WindowState.Maximized : WindowState.FullScreen;
             }, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_full_screen_maximize_32_regular.svg"));
         }
 

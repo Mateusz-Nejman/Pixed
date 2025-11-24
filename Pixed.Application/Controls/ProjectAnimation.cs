@@ -24,7 +24,7 @@ internal class ProjectAnimation : Control
         private int _frameIndex = frameIndex;
 
         private string[] _frameIds = [];
-        private SKBitmap[] _frameBitmaps = [];
+        private SKBitmap?[] _frameBitmaps = [];
 
         public Rect Bounds { get; private set; } = bounds;
 
@@ -56,7 +56,7 @@ internal class ProjectAnimation : Control
                 return;
             }
 
-            if (context.PlatformImpl.GetFeature<ISkiaSharpApiLeaseFeature>() is ISkiaSharpApiLeaseFeature leaseFeature)
+            if (context.PlatformImpl.GetFeature<ISkiaSharpApiLeaseFeature>() is { } leaseFeature)
             {
                 ISkiaSharpApiLease lease = leaseFeature.Lease();
                 using (lease)
@@ -65,7 +65,7 @@ internal class ProjectAnimation : Control
                     double ratio = Bounds.Width / _width;
                     double height = _height * ratio;
 
-                    if (!SkiaUtils.IsNull(bitmap))
+                    if (!SkiaUtils.IsNull(bitmap) && bitmap != null)
                     {
                         canvas.DrawBitmapLock(bitmap, new Rect(Bounds.X, Bounds.Y, Bounds.Width, height));
                     }
@@ -81,7 +81,7 @@ internal class ProjectAnimation : Control
 
                 foreach (var bitmap in _frameBitmaps)
                 {
-                    bitmap.Dispose();
+                    bitmap?.Dispose();
                 }
 
                 _frameBitmaps = new SKBitmap[_applicationData.CurrentModel.Frames.Count];
@@ -93,7 +93,7 @@ internal class ProjectAnimation : Control
                 {
                     if (!SkiaUtils.IsNull(_frameBitmaps[a]))
                     {
-                        _frameBitmaps[a].Dispose();
+                        _frameBitmaps[a]?.Dispose();
                         _frameBitmaps[a] = null;
                     }
 
@@ -104,10 +104,10 @@ internal class ProjectAnimation : Control
         }
     }
 
-    private readonly ApplicationData _applicationData;
-    private IDisposable _timer;
-    private int _current = 0;
-    private readonly DrawOperation _drawOperation;
+    private readonly ApplicationData? _applicationData;
+    private IDisposable? _timer;
+    private int _current;
+    private readonly DrawOperation? _drawOperation;
 
     public new bool IsVisible
     {
@@ -119,14 +119,24 @@ internal class ProjectAnimation : Control
         }
     }
 
-    public ProjectAnimation() : base()
+    public ProjectAnimation()
     {
+        if (App.ServiceProvider == null)
+        {
+            return;
+        }
+        
         _applicationData = App.ServiceProvider.Get<ApplicationData>();
         _drawOperation = new DrawOperation(new Rect(), _applicationData, _current);
     }
 
     public override void Render(DrawingContext context)
     {
+        if (_drawOperation == null)
+        {
+            return;
+        }
+        
         _drawOperation.Update(Bounds, _current);
         context.Custom(_drawOperation);
         Dispatcher.UIThread.InvokeAsync(InvalidateVisual, DispatcherPriority.Background);
@@ -134,11 +144,16 @@ internal class ProjectAnimation : Control
 
     private void SetTimer(bool enabled)
     {
+        if (_applicationData == null)
+        {
+            return;
+        }
+        
         _timer?.Dispose();
 
         if (enabled)
         {
-            _timer = Observable.Interval(TimeSpan.FromSeconds(0.1d)).Subscribe(l =>
+            _timer = Observable.Interval(TimeSpan.FromSeconds(0.1d)).Subscribe(_ =>
             {
                 _current++;
 

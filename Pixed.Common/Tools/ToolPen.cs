@@ -26,6 +26,10 @@ public class ToolPen(ApplicationData applicationData) : ToolPenBase(applicationD
 
     public override void ToolBegin(Point point, PixedModel model, KeyState keyState, BaseSelection? selection)
     {
+        if (_handle == null)
+        {
+            return;
+        }
         base.ToolBegin(point, model, keyState, selection);
         var frame = model.CurrentFrame;
         bool shiftPressed = keyState.IsShift || GetProperty(PROP_BOTH);

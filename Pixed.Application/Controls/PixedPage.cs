@@ -80,11 +80,6 @@ internal abstract class EmptyPixedPage : Page
         Loaded += EmptyPixedUserControl_Loaded;
     }
 
-    public TResult Get<TResult>()
-    {
-        return Provider.Get<TResult>();
-    }
-
     public virtual void RegisterMenuItems()
     {
         if (DataContext is ExtendedViewModel model)

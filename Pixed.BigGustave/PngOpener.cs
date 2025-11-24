@@ -5,7 +5,7 @@ namespace Pixed.BigGustave;
 
 internal static class PngOpener
 {
-    public static Png Open(Stream stream, IChunkVisitor chunkVisitor = null) => Open(stream, new PngOpenerSettings
+    public static Png Open(Stream stream, IChunkVisitor? chunkVisitor = null) => Open(stream, new PngOpenerSettings
     {
         ChunkVisitor = chunkVisitor
     });
@@ -31,7 +31,7 @@ internal static class PngOpener
 
         var hasEncounteredImageEnd = false;
 
-        Palette palette = null;
+        Palette? palette = null;
 
         using var output = new MemoryStream();
         using (var memoryStream = new MemoryStream())
@@ -124,6 +124,10 @@ internal static class PngOpener
 
         bytesOut = Decoder.Decode(bytesOut, imageHeader, bytesPerPixel, samplesPerPixel);
 
+        if (palette == null)
+        {
+            throw new InvalidOperationException("Palette is null");
+        }
         return new Png(imageHeader, new RawPngData(bytesOut, bytesPerPixel, palette, imageHeader), palette?.HasAlphaValues ?? false);
     }
 

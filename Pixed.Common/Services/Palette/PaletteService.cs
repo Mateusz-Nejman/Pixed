@@ -74,7 +74,7 @@ public class PaletteService
 
     public void Add(PaletteModel palette)
     {
-        if (Palettes.FirstOrDefault(p => p.Id == palette.Id, null) == null)
+        if (Palettes.FirstOrDefault(p => p != null && p.Id == palette.Id, null) == null)
         {
             Palettes.Add(palette);
             Subjects.PaletteAdded.OnNext(palette);

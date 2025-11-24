@@ -17,7 +17,7 @@ internal class SkiaBitmap : IImage, IDisposable, ICustomDrawOperation
     public SkiaBitmap(SKBitmap? source)
     {
         _source = source;
-        if (source?.Info.Size is SKSizeI size)
+        if (source?.Info.Size is { } size)
         {
             Size = new(size.Width, size.Height);
         }
@@ -39,9 +39,9 @@ internal class SkiaBitmap : IImage, IDisposable, ICustomDrawOperation
 
     public void Render(ImmediateDrawingContext context)
     {
-        if (!SkiaUtils.IsNull(_source) && context.PlatformImpl.GetFeature<ISkiaSharpApiLeaseFeature>() is ISkiaSharpApiLeaseFeature leaseFeature)
+        if (!SkiaUtils.IsNull(_source) && _source != null && context.PlatformImpl.GetFeature<ISkiaSharpApiLeaseFeature>() is { } leaseFeature)
         {
-            ISkiaSharpApiLease lease = leaseFeature.Lease();
+            var lease = leaseFeature.Lease();
             using (lease)
             {
                 lease.SkCanvas.DrawBitmapLock(_source, Bounds);

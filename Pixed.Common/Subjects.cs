@@ -11,7 +11,7 @@ public static class Subjects
 {
     public static Subject<KeyState> KeyState { get; } = new Subject<KeyState>();
     public static Subject<BaseSelection> SelectionCreating { get; } = new Subject<BaseSelection>();
-    public static Subject<BaseSelection> SelectionDismissed { get; } = new Subject<BaseSelection>();
+    public static Subject<BaseSelection?> SelectionDismissed { get; } = new Subject<BaseSelection?>();
     public static Subject<BaseSelection> SelectionCreated { get; } = new Subject<BaseSelection>();
     public static Subject<BaseSelection> SelectionStarted { get; } = new Subject<BaseSelection>();
     public static Subject<bool> GridChanged { get; } = new Subject<bool>();

@@ -14,12 +14,18 @@ namespace Pixed.Application.Controls.PaintCanvas;
 internal partial class PaintControl : ExtendedControl<PaintControlViewModel>
 {
     private readonly int _scrollBarSize = 18;
-    private readonly IDisposable _zoomChanged;
+    private readonly IDisposable? _zoomChanged;
     public PaintControl() : base()
     {
         InitializeComponent();
         SizeChanged += PaintCanvas_SizeChanged;
         zoomControl.GesturesEnabled = false;
+
+        if (ViewModel == null)
+        {
+            return;
+        }
+        
         ViewModel.GridCanvas = gridCanvas;
         ViewModel.SelectionOverlay = selectionOverlay;
         ViewModel.CursorOverlay = cursorOverlay;
@@ -32,9 +38,13 @@ internal partial class PaintControl : ExtendedControl<PaintControlViewModel>
 
         _zoomChanged = ZoomControl.ZoomChanged.Subscribe(_ =>
         {
-            var applicationData = this.GetServiceProvider().Get<ApplicationData>();
-            zoomControl.ConfigureOffsetBounds(applicationData.CurrentFrame.Width, applicationData.CurrentFrame.Height);
-            ViewModel.RefreshGridCanvas();
+            var applicationData = this.GetServiceProvider()?.Get<ApplicationData>();
+
+            if (applicationData != null)
+            {
+                zoomControl.ConfigureOffsetBounds(applicationData.CurrentFrame.Width, applicationData.CurrentFrame.Height);
+                ViewModel.RefreshGridCanvas();
+            }
         });
 
         zoomControl.PointerPressedCommand = new Core.ActionCommand<Control, PointerPressedEventArgs>(OnPointerPressed);
@@ -50,14 +60,18 @@ internal partial class PaintControl : ExtendedControl<PaintControlViewModel>
 
     private void PaintCanvas_SizeChanged(object? sender, SizeChangedEventArgs e)
     {
-        ViewModel.RecalculateFactor(new Point((int)(e.NewSize.Width - _scrollBarSize), (int)(e.NewSize.Height - _scrollBarSize)));
+        ViewModel?.RecalculateFactor(new Point((int)(e.NewSize.Width - _scrollBarSize), (int)(e.NewSize.Height - _scrollBarSize)));
 
-        var applicationData = this.GetServiceProvider().Get<ApplicationData>();
-        int projectWidth = applicationData.CurrentModel.Width;
-        int projectHeight = applicationData.CurrentModel.Height;
-        double deltaX = e.NewSize.Width / projectWidth;
-        double deltaY = e.NewSize.Height / projectHeight;
-        zoomControl.ZoomTo(Math.Min(deltaX, deltaY), new Avalonia.Point(projectWidth / 2, projectHeight / 2), Avalonia.Matrix.Identity);
+        var applicationData = this.GetServiceProvider()?.Get<ApplicationData>();
+
+        if (applicationData != null)
+        {
+            int projectWidth = applicationData.CurrentModel.Width;
+            int projectHeight = applicationData.CurrentModel.Height;
+            double deltaX = e.NewSize.Width / projectWidth;
+            double deltaY = e.NewSize.Height / projectHeight;
+            zoomControl.ZoomTo(Math.Min(deltaX, deltaY), new Avalonia.Point(projectWidth / 2, projectHeight / 2), Avalonia.Matrix.Identity);
+        }
     }
 
     private void OnPointerPressed(Control sender, PointerPressedEventArgs e)
@@ -67,11 +81,11 @@ internal partial class PaintControl : ExtendedControl<PaintControlViewModel>
 
         if (mapper.ChangedButton == MouseButton.Left && mapper.ButtonState == MouseButtonState.Pressed)
         {
-            ViewModel.LeftMouseDown?.Execute(new MouseEvent(pos.ToPixedPoint(), e.Pointer.Type == PointerType.Touch));
+            ViewModel?.LeftMouseDown?.Execute(new MouseEvent(pos.ToPixedPoint(), e.Pointer.Type == PointerType.Touch));
         }
         else if (mapper.ChangedButton == MouseButton.Right && mapper.ButtonState == MouseButtonState.Pressed)
         {
-            ViewModel.RightMouseDown?.Execute(new MouseEvent(pos.ToPixedPoint(), e.Pointer.Type == PointerType.Touch));
+            ViewModel?.RightMouseDown?.Execute(new MouseEvent(pos.ToPixedPoint(), e.Pointer.Type == PointerType.Touch));
         }
     }
 
@@ -82,11 +96,11 @@ internal partial class PaintControl : ExtendedControl<PaintControlViewModel>
 
         if (mapper.ChangedButton == MouseButton.Left && mapper.ButtonState == MouseButtonState.Released)
         {
-            ViewModel.LeftMouseUp?.Execute(new MouseEvent(pos.ToPixedPoint(), e.Pointer.Type == PointerType.Touch));
+            ViewModel?.LeftMouseUp?.Execute(new MouseEvent(pos.ToPixedPoint(), e.Pointer.Type == PointerType.Touch));
         }
         else if (mapper.ChangedButton == MouseButton.Right && mapper.ButtonState == MouseButtonState.Released)
         {
-            ViewModel.RightMouseUp?.Execute(new MouseEvent(pos.ToPixedPoint(), e.Pointer.Type == PointerType.Touch));
+            ViewModel?.RightMouseUp?.Execute(new MouseEvent(pos.ToPixedPoint(), e.Pointer.Type == PointerType.Touch));
         }
     }
 
