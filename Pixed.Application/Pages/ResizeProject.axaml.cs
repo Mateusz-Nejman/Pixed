@@ -11,13 +11,16 @@ internal partial class ResizeProject : Modal
     public ResizeProject()
     {
         InitializeComponent();
-        var applicationData = Provider.Get<ApplicationData>();
-        _viewModel = DataContext as ResizeProjectViewModel;
-        if (_viewModel != null && applicationData != null)
+        if (Provider != null)
         {
-            _viewModel.Width = applicationData.CurrentModel.Width;
-            _viewModel.Height = applicationData.CurrentModel.Height;
-            _viewModel.MaintainAspectRatio = applicationData.UserSettings.MaintainAspectRatio;
+            var applicationData = Provider.Get<ApplicationData>();
+            _viewModel = DataContext as ResizeProjectViewModel;
+            if (_viewModel != null && applicationData != null)
+            {
+                _viewModel.Width = applicationData.CurrentModel.Width;
+                _viewModel.Height = applicationData.CurrentModel.Height;
+                _viewModel.MaintainAspectRatio = applicationData.UserSettings.MaintainAspectRatio;
+            }
         }
     }
 

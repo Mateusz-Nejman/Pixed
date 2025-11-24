@@ -159,6 +159,10 @@ internal class HistoryService(IPlatformFolder platformFolder) : IHistoryService
 
         await foreach (var file in files)
         {
+            if (file == null)
+            {
+                continue;
+            }
             await file.Delete();
         }
     }
@@ -215,6 +219,12 @@ internal class HistoryService(IPlatformFolder platformFolder) : IHistoryService
                     }
 
                     var file = await _platformFolder.GetFile(_entries[a].HistoryId, FolderType.History);
+
+                    if (file == null)
+                    {
+                        continue;
+                    }
+                    
                     var stream = await file.OpenWrite();
 
                     entryStream.Position = 0;

@@ -11,9 +11,12 @@ internal partial class TransformRotate : Modal
     public TransformRotate()
     {
         InitializeComponent();
-        
-        _applicationData = Provider.Get<ApplicationData>();
-        _historyService = Provider.Get<IHistoryService>();
+
+        if (Provider != null)
+        {
+            _applicationData = Provider.Get<ApplicationData>();
+            _historyService = Provider.Get<IHistoryService>();
+        }
     }
 
     private async void Button_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)

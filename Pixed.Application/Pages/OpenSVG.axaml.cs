@@ -27,7 +27,6 @@ internal partial class OpenSVG : Modal
     public OpenSVG()
     {
         InitializeComponent();
-        var applicationData = Provider.Get<ApplicationData>();
     }
 
     public override Task ArgumentAsync(object args, CancellationToken cancellationToken)

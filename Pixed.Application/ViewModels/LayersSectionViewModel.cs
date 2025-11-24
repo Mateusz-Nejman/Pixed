@@ -217,7 +217,7 @@ internal class LayersSectionViewModel : ExtendedViewModel, IDisposable
 
         if (result.HasValue)
         {
-            Layers[_selectedLayer].Name = result.Value;
+            Layers[_selectedLayer].Name = result.Value ?? string.Empty;
         }
 
         await _historyService.AddToHistory(_applicationData.CurrentModel);

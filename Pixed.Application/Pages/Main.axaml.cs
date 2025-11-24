@@ -16,7 +16,6 @@ using Pixed.Common.Tools;
 using Pixed.Core;
 using Pixed.Core.Models;
 using System;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -45,7 +44,7 @@ internal partial class Main : EmptyPixedPage, IDisposable
     private bool _disposedValue;
 
     public static ICommand? QuitCommand { get; private set; }
-    public Main() : base()
+    public Main()
     {
         InjectMethods();
 
@@ -99,7 +98,7 @@ internal partial class Main : EmptyPixedPage, IDisposable
         if (Provider != null)
         {
             var clipboard = Provider.Get<IClipboardHandle>();
-            clipboard.Initialize(topLevel?.Clipboard);
+            clipboard?.Initialize(topLevel?.Clipboard);
         }
         _viewMenuRegister?.Register();
         _transformToolsMenuRegister?.Register();
@@ -133,6 +132,11 @@ internal partial class Main : EmptyPixedPage, IDisposable
             var pixedProjectMethods = Provider.Get<PixedProjectMethods>();
             var recentFilesService = Provider.Get<RecentFilesService>();
 
+            if (applicationData == null)
+            {
+                return true;
+            }
+
             int untitledIndex = 0;
 
             foreach (var model in applicationData.Models)
@@ -155,7 +159,7 @@ internal partial class Main : EmptyPixedPage, IDisposable
                         {
                             return false;
                         }
-                        else if (result.Value == ButtonResult.Yes)
+                        if (result.Value == ButtonResult.Yes && pixedProjectMethods != null && recentFilesService != null)
                         {
                             await pixedProjectMethods.Save(model, model.FilePath == null, recentFilesService);
                         }
@@ -173,7 +177,7 @@ internal partial class Main : EmptyPixedPage, IDisposable
         {
             if (disposing)
             {
-                _newInstanceHandled?.Dispose();
+                _newInstanceHandled.Dispose();
             }
 
             _disposedValue = true;
@@ -218,7 +222,7 @@ internal partial class Main : EmptyPixedPage, IDisposable
         _applicationData.UserSettings = await SettingsUtils.Load(_platformFolder);
         _applicationData.Initialize();
         _historyService.Register(_applicationData.CurrentModel);
-        await _historyService.AddToHistory(_applicationData.CurrentModel, true);
+        await _historyService.AddToHistory(_applicationData.CurrentModel);
         _applicationData.CurrentModel.UnsavedChanges = false;
         Subjects.AnimationPreviewChanged.OnNext(_applicationData.UserSettings.AnimationPreviewVisible);
     }

@@ -368,7 +368,7 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
 
             if (result.HasValue)
             {
-                serializer.IconFormats = result.Value;
+                serializer.IconFormats = result.Value ?? [];
             }
         }
         var stream = await file.OpenWriteAsync();

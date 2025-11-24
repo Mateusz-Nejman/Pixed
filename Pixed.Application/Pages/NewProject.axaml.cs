@@ -24,12 +24,15 @@ internal partial class NewProject : Modal
     public NewProject()
     {
         InitializeComponent();
-        var applicationData = Provider.Get<ApplicationData>();
-
-        if (applicationData != null)
+        if (Provider != null)
         {
-            WidthValue = applicationData.UserSettings.UserWidth;
-            HeightValue = applicationData.UserSettings.UserHeight;
+            var applicationData = Provider.Get<ApplicationData>();
+
+            if (applicationData != null)
+            {
+                WidthValue = applicationData.UserSettings.UserWidth;
+                HeightValue = applicationData.UserSettings.UserHeight;
+            }
         }
     }
 

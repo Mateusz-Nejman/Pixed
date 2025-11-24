@@ -11,8 +11,12 @@ internal partial class TransformFlip : Modal
     public TransformFlip()
     {
         InitializeComponent();
-        _applicationData = Provider.Get<ApplicationData>();
-        _historyService = Provider.Get<IHistoryService>();
+
+        if (Provider != null)
+        {
+            _applicationData = Provider.Get<ApplicationData>();
+            _historyService = Provider.Get<IHistoryService>();
+        }
     }
 
     private async void Button_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)

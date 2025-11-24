@@ -10,19 +10,23 @@ internal partial class PaletteList : Modal
         InitializeComponent();
         HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch;
         VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch;
-        var paletteService = Provider.Get<PaletteService>();
-        var paletteViewModel = Provider.Get<PaletteSectionViewModel>();
 
-        if (paletteService != null && paletteViewModel != null)
+        if (Provider != null)
         {
-            var viewModel = new PaletteListViewModel(paletteService, paletteViewModel);
-            DataContext = viewModel;
-            
-            if (viewModel.Palettes.Count != 0)
+            var paletteService = Provider.Get<PaletteService>();
+            var paletteViewModel = Provider.Get<PaletteSectionViewModel>();
+
+            if (paletteService != null && paletteViewModel != null)
             {
-                noPalettesInfo.IsVisible = false;
+                var viewModel = new PaletteListViewModel(paletteService, paletteViewModel);
+                DataContext = viewModel;
+            
+                if (viewModel.Palettes.Count != 0)
+                {
+                    noPalettesInfo.IsVisible = false;
+                }
+                viewModel.CloseAction = async () => await Close();
             }
-            viewModel.CloseAction = async () => await Close();
         }
     }
 }

@@ -54,7 +54,7 @@ public class PaintContainerOperation : ICustomPixedImageOperation
 
     public void Render(ImmediateDrawingContext context)
     {
-        if (Source != null && context.PlatformImpl.GetFeature<ISkiaSharpApiLeaseFeature>() is ISkiaSharpApiLeaseFeature leaseFeature)
+        if (Source != null && context.PlatformImpl.GetFeature<ISkiaSharpApiLeaseFeature>() is { } leaseFeature)
         {
             ISkiaSharpApiLease lease = leaseFeature.Lease();
             using (lease)
@@ -63,7 +63,7 @@ public class PaintContainerOperation : ICustomPixedImageOperation
                 {
                     if (!SkiaUtils.IsNull(_currentBitmap))
                     {
-                        _currentBitmap.Dispose();
+                        _currentBitmap?.Dispose();
                         _currentBitmap = null;
                     }
 
@@ -71,7 +71,7 @@ public class PaintContainerOperation : ICustomPixedImageOperation
                     _currentId = Source.RenderId;
                 }
 
-                if (!SkiaUtils.IsNull(_currentBitmap))
+                if (!SkiaUtils.IsNull(_currentBitmap) && _currentBitmap != null)
                 {
                     lease.SkCanvas.DrawBitmapLock(_currentBitmap, Bounds);
                 }

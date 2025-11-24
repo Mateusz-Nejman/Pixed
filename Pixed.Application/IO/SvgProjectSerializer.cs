@@ -6,7 +6,6 @@ using SkiaSharp;
 using Svg.Skia;
 using System;
 using System.IO;
-using System.Linq;
 
 namespace Pixed.Application.IO;
 internal class SvgProjectSerializer : IPixedProjectSerializer
@@ -25,6 +24,11 @@ internal class SvgProjectSerializer : IPixedProjectSerializer
     {
         SKSvg svg = SKSvg.CreateFromStream(stream);
 
+        if (svg.Picture == null)
+        {
+            return new PixedModel(1, 1);
+        }
+
         if (Width == -1 || Height == -1)
         {
             Width = (int)svg.Picture.CullRect.Width;
@@ -33,7 +37,7 @@ internal class SvgProjectSerializer : IPixedProjectSerializer
 
         var info = new SKImageInfo(Width, Height, SKColorType.Bgra8888, SKAlphaType.Unpremul);
         var bitmap = new SKBitmap(info);
-        using var canvas = new SKCanvas(bitmap);
+        var canvas = new SKCanvas(bitmap);
         canvas.DrawColor(UniColor.Transparent);
         float scaleX = Width.ToFloat() / svg.Picture.CullRect.Width;
         float scaleY = Height.ToFloat() / svg.Picture.CullRect.Height;

@@ -32,12 +32,16 @@ internal partial class GridSettings : Modal
     public GridSettings()
     {
         InitializeComponent();
-        var applicationData = Provider.Get<ApplicationData>();
 
-        if (applicationData == null) return;
-        GridColor = applicationData.UserSettings.GridColor;
-        WidthValue = applicationData.UserSettings.GridWidth;
-        HeightValue = applicationData.UserSettings.GridHeight;
+        if (Provider != null)
+        {
+            var applicationData = Provider.Get<ApplicationData>();
+
+            if (applicationData == null) return;
+            GridColor = applicationData.UserSettings.GridColor;
+            WidthValue = applicationData.UserSettings.GridWidth;
+            HeightValue = applicationData.UserSettings.GridHeight;
+        }
     }
 
     private void Button_Click(object sender, RoutedEventArgs e)

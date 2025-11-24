@@ -16,11 +16,14 @@ internal partial class ExportPNG : Modal
     public ExportPNG()
     {
         InitializeComponent();
-        var applicationData = Provider.Get<ApplicationData>();
-
-        if (applicationData != null)
+        if (Provider != null)
         {
-            ColumnsCount = applicationData.CurrentModel.Frames.Count;
+            var applicationData = Provider.Get<ApplicationData>();
+
+            if (applicationData != null)
+            {
+                ColumnsCount = applicationData.CurrentModel.Frames.Count;
+            }
         }
     }
 

@@ -11,12 +11,18 @@ using System.Threading.Tasks;
 namespace Pixed.Application.Utils;
 internal static class SettingsUtils
 {
-    private static readonly object _lock = new();
+    private static readonly object Lock = new();
     public static async Task Save(IPlatformFolder platformFolder, ApplicationData applicationData)
     {
         var file = await platformFolder.GetFile("settings.json", FolderType.Root);
+
+        if (file == null)
+        {
+            return;
+        }
+        
         var stream = await file.OpenWrite();
-        lock (_lock)
+        lock (Lock)
         {
             stream.Write(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(applicationData.UserSettings)));
             stream.Dispose();
@@ -35,14 +41,14 @@ internal static class SettingsUtils
             settings.FramesViewVisible = false;
         }
 
-        if (!file.Exists)
+        if (file == null || !file.Exists)
         {
             return settings;
         }
 
         Stream stream = await file.OpenRead();
         string json = stream.ReadAllText();
-        stream.Dispose();
+        await stream.DisposeAsync();
 
         try
         {
