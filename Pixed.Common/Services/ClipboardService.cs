@@ -1,12 +1,10 @@
-﻿using Avalonia.Input;
-using Pixed.BigGustave;
+﻿using Pixed.BigGustave;
 using Pixed.Common.Platform;
 using Pixed.Core;
 using Pixed.Core.Models;
 using Pixed.Core.Selection;
 using Pixed.Core.Utils;
 using SkiaSharp;
-using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -38,11 +36,9 @@ public class ClipboardService(IClipboardHandle clipboardHandle)
 
         MemoryStream memoryStream = new();
         builder.Save(memoryStream);
-        DataObject clipboardObject = new();
-        clipboardObject.Set("PNG", memoryStream.ToArray());
         await _clipboardHandle.ClearAsync();
-        await _clipboardHandle.SetDataObjectAsync(clipboardObject);
-        memoryStream.Dispose();
+        await _clipboardHandle.SetDataAsync(memoryStream.ToArray());
+        await memoryStream.DisposeAsync();
     }
 
     public async Task<SKBitmap?> GetBitmap()
@@ -59,16 +55,11 @@ public class ClipboardService(IClipboardHandle clipboardHandle)
 
     public async Task<Png?> GetPng()
     {
-        var formats = await _clipboardHandle.GetFormatsAsync();
+        var data = await _clipboardHandle.GetDataAsync();
 
-        if (formats.Contains("PNG"))
+        if (data != null)
         {
-            var data = await _clipboardHandle.GetDataAsync("PNG");
-
-            if (data is byte[] array)
-            {
-                return Png.Open(array);
-            }
+            return Png.Open(data);
         }
 
         return null;
