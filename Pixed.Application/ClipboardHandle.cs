@@ -21,20 +21,33 @@ internal class ClipboardHandle : IClipboardHandle //TODO implement new clipboard
         await _clipboard.ClearAsync();
     }
 
-    public async Task<object?> GetDataAsync(string format)
+    public async Task<byte[]?> GetDataAsync()
     {
+        if (_clipboard == null)
+        {
+            return null;
+        }
+        
+        var data = await _clipboard.TryGetDataAsync();
 
-        return await _clipboard.GetDataAsync(format);
+        if (data == null)
+        {
+            return null;
+        }
+        return await data.TryGetValueAsync(DataFormat.CreateBytesPlatformFormat("PNG"));
     }
 
-    public async Task<string[]> GetFormatsAsync()
+    public async Task SetDataAsync(byte[] data)
     {
-
-        return await _clipboard.GetFormatsAsync();
-    }
-
-    public async Task SetDataObjectAsync(IDataObject data)
-    {
-        await _clipboard.SetDataObjectAsync(data);
+        if (_clipboard == null)
+        {
+            return;
+        }
+        
+        DataTransfer dataTransfer = new();
+        DataTransferItem dataTransferItem = new();
+        dataTransferItem.Set(DataFormat.CreateBytesPlatformFormat("PNG"), data);
+        dataTransfer.Add(dataTransferItem);
+        await _clipboard.SetDataAsync(dataTransfer);
     }
 }
