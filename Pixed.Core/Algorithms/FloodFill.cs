@@ -32,8 +32,6 @@ public class FloodFill(Point startPosition, Point size) : IDisposable
             ProcessNeighbourIfValid(new Point(current.X - 1, current.Y), value, ref points, validator, action);
             ProcessNeighbourIfValid(new Point(current.X + 1, current.Y), value, ref points, validator, action);
         }
-
-        points = null;
     }
 
     protected virtual void Dispose(bool disposing)

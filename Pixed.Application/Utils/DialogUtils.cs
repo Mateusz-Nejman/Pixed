@@ -12,6 +12,11 @@ internal class DialogUtils(IStorageProviderHandle storageProviderHandle)
     public async Task<IReadOnlyList<IStorageFile>> OpenFileDialog(string filter, string filename, bool allowMultiple = false)
     {
         var storage = _storageProviderHandle.StorageProvider;
+
+        if (storage == null)
+        {
+            return [];
+        }
         return await storage.OpenFilePickerAsync(new FilePickerOpenOptions()
         {
             AllowMultiple = allowMultiple,
@@ -23,6 +28,11 @@ internal class DialogUtils(IStorageProviderHandle storageProviderHandle)
 
     public async Task<IStorageFile?> SaveFileDialog(string filter, string filename)
     {
+        if (_storageProviderHandle.StorageProvider == null)
+        {
+            return null;
+        }
+
         return await _storageProviderHandle.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions()
         {
             FileTypeChoices = GetFileFilter(filter),

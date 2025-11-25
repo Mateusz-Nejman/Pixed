@@ -42,6 +42,12 @@ internal class FileMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
 
             _menuItemRegistry.Register(BaseMenuItem.File, fileRecent);
         }
+
+        if (Main.QuitCommand == null)
+        {
+            return;
+        }
+        
         _menuItemRegistry.Register(BaseMenuItem.File, "Quit", Main.QuitCommand, null, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_arrow_exit_20_regular.svg"));
 
         _shortcutService.Add(KeyState.Control(Avalonia.Input.Key.N), async () => await NewAction());

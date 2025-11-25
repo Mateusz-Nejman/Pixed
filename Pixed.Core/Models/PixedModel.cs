@@ -45,7 +45,7 @@ public class PixedModel : PixelImage, IPixedSerializer
     public bool UnsavedChanges { get; set; } = false;
 
     public ICommand CloseCommand { get; }
-    public static Action<PixedModel> CloseCommandAction { get; set; }
+    public static Action<PixedModel>? CloseCommandAction { get; set; }
 
     public string Id { get; }
 
@@ -59,7 +59,7 @@ public class PixedModel : PixelImage, IPixedSerializer
         Id = Guid.NewGuid().ToString();
         _frames = [];
 
-        CloseCommand = new ActionCommand(() => CloseCommandAction(this));
+        CloseCommand = new ActionCommand(() => CloseCommandAction?.Invoke(this));
 
         Frames.Add(new Frame(width, height));
     }

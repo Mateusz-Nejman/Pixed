@@ -38,7 +38,7 @@ internal class PixelImageOperation : ICustomPixedImageOperation
 
     public void Render(ImmediateDrawingContext context)
     {
-        if (Source != null && context.PlatformImpl.GetFeature<ISkiaSharpApiLeaseFeature>() is ISkiaSharpApiLeaseFeature leaseFeature)
+        if (Source != null && context.PlatformImpl.GetFeature<ISkiaSharpApiLeaseFeature>() is { } leaseFeature)
         {
             ISkiaSharpApiLease lease = leaseFeature.Lease();
             using (lease)
@@ -47,7 +47,7 @@ internal class PixelImageOperation : ICustomPixedImageOperation
                 {
                     if (!SkiaUtils.IsNull(_currentBitmap))
                     {
-                        _currentBitmap.Dispose();
+                        _currentBitmap?.Dispose();
                         _currentBitmap = null;
                     }
 
@@ -55,7 +55,7 @@ internal class PixelImageOperation : ICustomPixedImageOperation
                     _currentId = Source.RenderId;
                 }
 
-                if (!SkiaUtils.IsNull(_currentBitmap))
+                if (!SkiaUtils.IsNull(_currentBitmap) && _currentBitmap != null)
                 {
                     lease.SkCanvas.DrawBitmapLock(_currentBitmap, Bounds);
                 }

@@ -7,6 +7,6 @@ internal partial class ToolsSection : ExtendedControl<ToolsSectionViewModel>
     public ToolsSection() : base()
     {
         InitializeComponent();
-        ViewModel.InitializeTools(toolStack);
+        ViewModel?.InitializeTools(toolStack);
     }
 }

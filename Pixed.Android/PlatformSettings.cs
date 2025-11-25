@@ -1,7 +1,6 @@
 ﻿using Android.Content;
 using Android.Content.PM;
 using Android.Content.Res;
-using Android.Net;
 using Android.OS;
 using Avalonia.Controls.ApplicationLifetimes;
 using Pixed.Application.Platform;

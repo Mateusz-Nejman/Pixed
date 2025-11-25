@@ -27,8 +27,17 @@ public partial class AnimationSection : UserControl, IDisposable
             IsVisible = enabled;
         });
 
+        if (App.ServiceProvider == null)
+        {
+            return;
+        }
+        
         var applicationData = App.ServiceProvider.Get<ApplicationData>();
-        IsVisible = applicationData.UserSettings.AnimationPreviewVisible;
+
+        if (applicationData != null)
+        {
+            IsVisible = applicationData.UserSettings.AnimationPreviewVisible;
+        }
     }
 
     protected virtual void Dispose(bool disposing)

@@ -45,10 +45,15 @@ internal class ProjectMenuRegister(IMenuItemRegistry menuItemRegistry, DialogUti
 
             var stream = await file.OpenRead();
 
+            if (stream == null)
+            {
+                return;
+            }
+
             Png png = Png.Open(stream);
             var colors = png.GetPixelsUInt();
 
-            stream.Dispose();
+            await stream.DisposeAsync();
 
             var currentSize = new Point(_applicationData.CurrentFrame.Width, _applicationData.CurrentFrame.Height);
             SKBitmap? bitmap;
@@ -64,7 +69,7 @@ internal class ProjectMenuRegister(IMenuItemRegistry menuItemRegistry, DialogUti
             }
 
             var bitmapSize = new Point(bitmap.Width, bitmap.Height);
-            SKBitmap? layerBitmap = SkiaUtils.GetBitmap(currentSize);
+            SKBitmap layerBitmap = SkiaUtils.GetBitmap(currentSize);
             SKCanvas canvas = new(layerBitmap);
 
             if (isSingle)

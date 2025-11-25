@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Pixed.Application.Platform;
 public interface IPlatformFolder
 {
-    public IStorageContainerFile Convert(IStorageFile value);
-    public Task<IStorageContainerFile> GetFile(string filename, FolderType folderType);
-    public IAsyncEnumerable<IStorageContainerFile> GetFiles(FolderType folder);
+    public IStorageContainerFile? Convert(IStorageFile value);
+    public Task<IStorageContainerFile?> GetFile(string filename, FolderType folderType);
+    public IAsyncEnumerable<IStorageContainerFile?> GetFiles(FolderType folder);
 }

@@ -14,7 +14,7 @@ internal class MainViewModel : ExtendedViewModel, IDisposable
     private readonly IDisposable _projectChanged;
     private readonly IDisposable _menuBuilt;
     private bool _disposedValue;
-    private string _title;
+    private string _title = string.Empty;
     private List<Avalonia.Controls.MenuItem>? _menu;
 
     public string Title
@@ -37,7 +37,7 @@ internal class MainViewModel : ExtendedViewModel, IDisposable
         }
     }
 
-    public ICommand QuitCommand => Main.QuitCommand; //For binding
+    public ICommand? QuitCommand => Main.QuitCommand; //For binding
     public MainViewModel(MenuBuilder menuBuilder)
     {
         _projectChanged = Subjects.ProjectChanged.Subscribe(model =>
@@ -57,7 +57,8 @@ internal class MainViewModel : ExtendedViewModel, IDisposable
         {
             if (disposing)
             {
-                _projectChanged?.Dispose();
+                _projectChanged.Dispose();
+                _menuBuilt.Dispose();
             }
 
             _disposedValue = true;

@@ -23,14 +23,19 @@ namespace Pixed.Application.Services
         {
             var file = await _platformFolder.GetFile("recent.json", FolderType.Root);
 
-            if (!file.Exists)
+            if (file == null || !file.Exists)
             {
                 return;
             }
 
-            Stream stream = await file.OpenRead();
+            Stream? stream = await file.OpenRead();
+
+            if (stream == null)
+            {
+                return;
+            }
             string json = stream.ReadAllText();
-            stream.Dispose();
+            await stream.DisposeAsync();
             RecentFiles = JsonConvert.DeserializeObject<List<string>>(json) ?? [];
         }
 
@@ -82,9 +87,21 @@ namespace Pixed.Application.Services
         private async Task Save()
         {
             var file = await _platformFolder.GetFile("recent.json", FolderType.Root);
+
+            if (file == null)
+            {
+                return;
+            }
+            
             var stream = await file.OpenWrite();
+
+            if (stream == null)
+            {
+                return;
+            }
+            
             stream.Write(JsonConvert.SerializeObject(RecentFiles));
-            stream.Dispose();
+            await stream.DisposeAsync();
         }
 
         private async Task OpenProject(string path)

@@ -34,13 +34,13 @@ internal class HistoryService(IPlatformFolder platformFolder) : IHistoryService
         }
     }
 
-    private const long MAX_HISTORY_SIZE = 536870912; //512 MB
-    private const int MAX_HISTORY_ENTRIES = 500;
+    private const long MaxHistorySize = 536870912; //512 MB
+    private const int MaxHistoryEntries = 500;
     private readonly IPlatformFolder _platformFolder = platformFolder;
     private readonly Dictionary<string, List<int>> _historyItems = [];
     private readonly Dictionary<string, int> _historyIndexes = [];
     private readonly List<HistoryEntry> _entries = [];
-    private bool _cacheTask = false;
+    private bool _cacheTask;
 
     public unsafe Task AddToHistory(PixedModel model, bool setIsEmpty = true)
     {
@@ -79,7 +79,7 @@ internal class HistoryService(IPlatformFolder platformFolder) : IHistoryService
             historyIndexes.Add(id);
         }
 
-        if (historyIndexes.Count == MAX_HISTORY_ENTRIES + 1)
+        if (historyIndexes.Count == MaxHistoryEntries + 1)
         {
             historyIndexes.RemoveAt(0);
         }
@@ -133,7 +133,7 @@ internal class HistoryService(IPlatformFolder platformFolder) : IHistoryService
         return _historyItems[model.Id].Count;
     }
 
-    public async Task<Stream> GetHistoryItem(PixedModel model, string id)
+    public async Task<Stream?> GetHistoryItem(PixedModel model, string id)
     {
         var entry = _entries.First(e => e.HistoryId == id);
 
@@ -141,10 +141,26 @@ internal class HistoryService(IPlatformFolder platformFolder) : IHistoryService
         {
             MemoryStream memory = new();
             var file = await _platformFolder.GetFile(id, FolderType.History);
+
+            if (file == null)
+            {
+                return null;
+            }
             var stream = await file.OpenRead();
+
+            if (stream == null)
+            {
+                return null;
+            }
+            
             PixedProjectSerializer.Decompress(stream, memory);
             memory.Position = 0;
             return memory;
+        }
+        
+        if (entry.Data == null)
+        {
+            return null;
         }
 
         unsafe
@@ -159,6 +175,10 @@ internal class HistoryService(IPlatformFolder platformFolder) : IHistoryService
 
         await foreach (var file in files)
         {
+            if (file == null)
+            {
+                continue;
+            }
             await file.Delete();
         }
     }
@@ -191,7 +211,7 @@ internal class HistoryService(IPlatformFolder platformFolder) : IHistoryService
 
                 size += _entries[a].Size;
 
-                if (size >= MAX_HISTORY_SIZE)
+                if (size >= MaxHistorySize)
                 {
                     processCache = true;
                     break;
@@ -200,19 +220,37 @@ internal class HistoryService(IPlatformFolder platformFolder) : IHistoryService
 
             if (processCache)
             {
-                for (int a = 0; a < maxEntries; a++)
+                for (var a = 0; a < maxEntries; a++)
                 {
                     if (_entries[a].Cached || _entries[a].Data == null)
                     {
                         continue;
                     }
 
+                    var entryStream = _entries[a].Stream;
+
+                    if (entryStream == null)
+                    {
+                        continue;
+                    }
+
                     var file = await _platformFolder.GetFile(_entries[a].HistoryId, FolderType.History);
+
+                    if (file == null)
+                    {
+                        continue;
+                    }
+                    
                     var stream = await file.OpenWrite();
 
-                    _entries[a].Stream.Position = 0;
-                    PixedProjectSerializer.Compress(_entries[a].Stream, stream);
-                    stream.Dispose();
+                    if (stream == null)
+                    {
+                        continue;
+                    }
+
+                    entryStream.Position = 0;
+                    PixedProjectSerializer.Compress(entryStream, stream);
+                    await stream.DisposeAsync();
                     _entries[a].ClearData();
                     _entries[a].SetCached();
                 }

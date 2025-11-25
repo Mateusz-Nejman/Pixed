@@ -41,7 +41,7 @@ internal class PaletteListViewModel : ExtendedViewModel
         }
     }
 
-    public Action CloseAction { get; set; }
+    public Action? CloseAction { get; set; }
 
     public PaletteListViewModel(PaletteService paletteService, PaletteSectionViewModel paletteSectionViewModel)
     {
@@ -82,7 +82,7 @@ internal class PaletteListViewModel : ExtendedViewModel
 
                     if (result.HasValue)
                     {
-                        await _sectionViewModel.Rename(m, result.Value);
+                        await _sectionViewModel.Rename(m, result.Value ?? string.Empty);
                         Initialize();
                     }
                 })

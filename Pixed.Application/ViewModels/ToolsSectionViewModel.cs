@@ -27,7 +27,7 @@ internal class ToolsSectionViewModel(ToolsManager toolSelector, PaintControlView
         _radios.Clear();
         var tools = _toolSelector.GetTools();
 
-        if (IPlatformSettings.Instance.ExtensionsEnabled)
+        if (IPlatformSettings.Instance.ExtensionsEnabled && App.ServiceProvider != null)
         {
             var extensionTools = ExtensionsLoader.GetTools(App.ServiceProvider);
 
@@ -49,7 +49,7 @@ internal class ToolsSectionViewModel(ToolsManager toolSelector, PaintControlView
             toolRadio.PointerPressed += Radio_PointerPressed;
             toolRadio.Holding += Radio_Holding;
 
-            if (Avalonia.Application.Current.TryFindResource(hasCustomProperties ? "ToolRadioCustom" : "ToolRadio", out var res) && res is ControlTheme theme)
+            if (Avalonia.Application.Current != null && Avalonia.Application.Current.TryFindResource(hasCustomProperties ? "ToolRadioCustom" : "ToolRadio", out var res) && res is ControlTheme theme)
             {
                 toolRadio.Theme = theme;
             }
@@ -57,7 +57,7 @@ internal class ToolsSectionViewModel(ToolsManager toolSelector, PaintControlView
             if (AssetLoader.Exists(new Uri(tool.Value.ImagePath)))
             {
                 var stream = AssetLoader.Open(new Uri(tool.Value.ImagePath));
-                IImage? image = null;
+                IImage? image;
 
                 if (tool.Value.ImagePath.EndsWith(".svg"))
                 {
@@ -85,7 +85,7 @@ internal class ToolsSectionViewModel(ToolsManager toolSelector, PaintControlView
         }
     }
 
-    private void ToolRadioButton_IsCheckedChanged(object sender, RoutedEventArgs e)
+    private void ToolRadioButton_IsCheckedChanged(object? sender, RoutedEventArgs e)
     {
         if (sender is RadioButton radio && radio.Name != null)
         {
@@ -103,7 +103,12 @@ internal class ToolsSectionViewModel(ToolsManager toolSelector, PaintControlView
     {
         if (sender is ToolRadioButton radio)
         {
-            OpenFlyoutFor(_toolSelector.GetTool(radio.Name), radio);
+            var tool = _toolSelector.GetTool(radio.Name ?? string.Empty);
+
+            if (tool != null)
+            {
+                OpenFlyoutFor(tool, radio);
+            }
         }
     }
 
@@ -118,7 +123,12 @@ internal class ToolsSectionViewModel(ToolsManager toolSelector, PaintControlView
                 return;
             }
 
-            OpenFlyoutFor(_toolSelector.GetTool(radio.Name), radio);
+            var tool = _toolSelector.GetTool(radio.Name ?? string.Empty);
+
+            if (tool != null)
+            {
+                OpenFlyoutFor(tool, radio);
+            }
         }
     }
 

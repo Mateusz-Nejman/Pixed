@@ -280,7 +280,7 @@ public struct UniColor(byte alpha, byte red, byte green, byte blue) : IEquatable
 
     public static UniColor GetFromResources(string name)
     {
-        if (Application.Current.Resources.TryGetResource(name, Application.Current.ActualThemeVariant, out object? obj))
+        if (Application.Current != null && Application.Current.Resources.TryGetResource(name, Application.Current.ActualThemeVariant, out object? obj))
         {
             if (obj is Avalonia.Media.Color color)
             {

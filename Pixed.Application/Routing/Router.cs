@@ -12,25 +12,34 @@ namespace Pixed.Application.Routing
     }
     internal static class Router
     {
-        private static INavigator _navigator;
+        private static INavigator? _navigator;
         public static void Initialize(INavigator navigator)
         {
             _navigator = navigator;
         }
-        public static async Task<NavigatorResult<T>> Navigate<T>(string path, object? arg = null)
+        public static async Task<NavigatorResult<T?>> Navigate<T>(string path, object? arg = null)
         {
+            if (_navigator == null)
+            {
+                return new NavigatorResult<T?>(false, default);
+            }
             var navigateResult = await _navigator.NavigateAndWaitAsync(path, arg);
 
             if (navigateResult.Argument is T t)
             {
-                return new NavigatorResult<T>(true, t);
+                return new NavigatorResult<T?>(true, t);
             }
 
-            return new NavigatorResult<T>(false, default);
+            return new NavigatorResult<T?>(false, default);
         }
 
-        public static Task Navigate(string path, object? arg = null)
+        public static Task Navigate(string path, object? arg)
         {
+            if (_navigator == null)
+            {
+                return Task.CompletedTask;
+            }
+            
             return _navigator.NavigateAsync(path, arg);
         }
 
@@ -39,9 +48,9 @@ namespace Pixed.Application.Routing
             return await Navigate<ButtonResult>("/confirm", new MessageModel(title, text));
         }
 
-        public static async Task<NavigatorResult<string>> Prompt(string title, string text, string defaultValue)
+        public static async Task<NavigatorResult<string?>> Prompt(string title, string text, string defaultValue)
         {
-            return await Navigate<string>("/prompt", new PromptModel(title, text, defaultValue));
+            return await Navigate<string?>("/prompt", new PromptModel(title, text, defaultValue));
         }
 
         public static Task Message(string title, string text)
@@ -56,6 +65,11 @@ namespace Pixed.Application.Routing
 
         public static Task Navigate(string path)
         {
+            if (_navigator == null)
+            {
+                return Task.CompletedTask;
+            }
+            
             return _navigator.NavigateAsync(path);
         }
     }

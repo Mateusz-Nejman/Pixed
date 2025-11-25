@@ -8,16 +8,26 @@ using System;
 namespace Pixed.Application.Controls;
 internal abstract class ExtendedControl<T> : UserControl
 {
-    protected readonly IMenuItemRegistry _menuItemRegistry;
+    private readonly IMenuItemRegistry? _menuItemRegistry;
 
-    protected static IPixedServiceProvider Provider => App.ServiceProvider;
+    protected static IPixedServiceProvider? Provider => App.ServiceProvider;
 
-    public T ViewModel => (T)DataContext;
+    public T? ViewModel => (T?)DataContext;
 
     public ExtendedControl()
     {
+        if (Provider == null)
+        {
+            return;
+        }
+        
         _menuItemRegistry = Provider.Get<IMenuItemRegistry>();
         var serviceProvider = this.GetServiceProvider();
+
+        if (serviceProvider == null)
+        {
+            return;
+        }
 
         var viewModel = serviceProvider.Get<T>();
 
@@ -27,11 +37,6 @@ internal abstract class ExtendedControl<T> : UserControl
         }
 
         this.DataContext = viewModel;
-    }
-
-    public TResult Get<TResult>()
-    {
-        return Provider.Get<TResult>();
     }
 
     public virtual void RegisterMenuItems()
@@ -71,7 +76,7 @@ internal abstract class ExtendedControl<T> : UserControl
     }
 }
 
-internal abstract class EmptyExtendedControl() : UserControl
+internal abstract class EmptyExtendedControl : UserControl
 {
     protected override void OnInitialized()
     {

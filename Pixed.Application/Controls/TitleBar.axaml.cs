@@ -53,13 +53,18 @@ internal partial class TitleBar : EmptyExtendedControl
 
     private void CloseWindow(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        Window hostWindow = (Window)this.VisualRoot;
-        hostWindow.Close();
+        var hostWindow = (Window?)this.VisualRoot;
+        hostWindow?.Close();
     }
 
     private void MaximizeWindow(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        Window hostWindow = (Window)this.VisualRoot;
+        var hostWindow = (Window?)this.VisualRoot;
+
+        if (hostWindow == null)
+        {
+            return;
+        }
 
         if (hostWindow.WindowState == WindowState.Normal)
         {
@@ -73,17 +78,18 @@ internal partial class TitleBar : EmptyExtendedControl
 
     private void MinimizeWindow(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        Window hostWindow = (Window)this.VisualRoot;
-        hostWindow.WindowState = WindowState.Minimized;
+        var hostWindow = (Window?)this.VisualRoot;
+
+        hostWindow?.WindowState = WindowState.Minimized;
     }
 
     private async void SubscribeToWindowState()
     {
-        Window hostWindow = (Window)this.VisualRoot;
+        var hostWindow = (Window?)this.VisualRoot;
 
         while (hostWindow == null)
         {
-            hostWindow = (Window)this.VisualRoot;
+            hostWindow = (Window?)this.VisualRoot;
             await Task.Delay(50);
         }
 

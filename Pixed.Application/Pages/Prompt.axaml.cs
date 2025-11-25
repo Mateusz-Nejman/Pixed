@@ -42,6 +42,6 @@ internal partial class Prompt : Modal
 
     private void Button_Click(object sender, RoutedEventArgs e)
     {
-        Close(textBox.Text);
+        Close(textBox.Text ?? string.Empty);
     }
 }

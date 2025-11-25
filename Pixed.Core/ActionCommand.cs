@@ -162,7 +162,7 @@ public class AsyncCommand<T> : ICommand
 
     public async Task Execute(T parameter)
     {
-        await _func?.Invoke(parameter);
+        await _func.Invoke(parameter);
     }
     #endregion
 }
@@ -196,7 +196,7 @@ public class AsyncCommand : ICommand
 
     public async Task Execute()
     {
-        await _func?.Invoke();
+        await _func.Invoke();
     }
     #endregion
 }

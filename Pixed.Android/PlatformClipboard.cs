@@ -13,10 +13,10 @@ internal class PlatformClipboard : IClipboardHandle
 
     public Task<byte[]?> GetDataAsync()
     {
-        return Task.FromResult<byte[]?>(_copiedBuffer);
+        return Task.FromResult(_copiedBuffer);
     }
 
-    public void Initialize(IClipboard clipboard)
+    public void Initialize(IClipboard? clipboard)
     {
     }
 

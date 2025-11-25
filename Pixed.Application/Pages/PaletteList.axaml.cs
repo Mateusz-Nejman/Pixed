@@ -5,18 +5,28 @@ namespace Pixed.Application.Pages;
 
 internal partial class PaletteList : Modal
 {
-    private readonly PaletteListViewModel _viewModel;
     public PaletteList()
     {
         InitializeComponent();
         HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch;
         VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch;
-        DataContext = _viewModel = new PaletteListViewModel(Provider.Get<PaletteService>(), Provider.Get<PaletteSectionViewModel>());
 
-        if (_viewModel.Palettes.Count != 0)
+        if (Provider != null)
         {
-            noPalettesInfo.IsVisible = false;
+            var paletteService = Provider.Get<PaletteService>();
+            var paletteViewModel = Provider.Get<PaletteSectionViewModel>();
+
+            if (paletteService != null && paletteViewModel != null)
+            {
+                var viewModel = new PaletteListViewModel(paletteService, paletteViewModel);
+                DataContext = viewModel;
+            
+                if (viewModel.Palettes.Count != 0)
+                {
+                    noPalettesInfo.IsVisible = false;
+                }
+                viewModel.CloseAction = async () => await Close();
+            }
         }
-        _viewModel.CloseAction = async () => await Close();
     }
 }

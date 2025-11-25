@@ -7,9 +7,9 @@ public class ServiceProvider(IServiceProvider serviceProvider) : IPixedServicePr
 {
     private readonly IServiceProvider _serviceProvider = serviceProvider;
 
-    public T Get<T>()
+    public T? Get<T>()
     {
-        return _serviceProvider.GetService<T>();
+        return _serviceProvider.GetService<T?>();
     }
 
     public object? Get(Type serviceType)

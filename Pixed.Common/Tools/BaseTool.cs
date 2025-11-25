@@ -98,7 +98,7 @@ public abstract class BaseTool(ApplicationData applicationData)
 
     public bool GetProperty(string name)
     {
-        return _properties.FirstOrDefault(p => p.Name == name, null)?.Checked == true;
+        return _properties.FirstOrDefault(p => p != null && p.Name == name, null)?.Checked == true;
     }
 
     public void SetProperty(string name, bool value)
