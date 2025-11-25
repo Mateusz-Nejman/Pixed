@@ -1,9 +1,6 @@
-﻿using Android.App;
-using Android.Content;
+﻿using Android.Content;
 using Android.Content.PM;
-using Android.OS;
 using Android.Runtime;
-using Android.Widget;
 using Avalonia;
 using Avalonia.Android;
 using Pixed.Android.InAppUpdates;
@@ -12,7 +9,6 @@ using Pixed.Application.DependencyInjection;
 using Pixed.Application.IO;
 using Pixed.Application.Platform;
 using Pixed.Application.Utils;
-using System.Diagnostics;
 using Xamarin.Google.Android.Play.Core.AppUpdate;
 using Xamarin.Google.Android.Play.Core.AppUpdate.Testing;
 
@@ -33,7 +29,7 @@ namespace Pixed.Android;
 #endif
 public class MainActivity : AvaloniaMainActivity<App>
 {
-    private const int REQUEST_CODE = 4711;
+    private const int RequestCode = 4711;
     private IAppUpdateManager? _updateManager;
     private AppUpdateSuccessListener? _updateSuccessListener;
     private ResumeSuccessListener? _resumeSuccessListener;
@@ -59,7 +55,7 @@ public class MainActivity : AvaloniaMainActivity<App>
         _updateSuccessListener ??= new AppUpdateSuccessListener(
             updateManager: _updateManager,
             activity: this,
-            updateRequest: REQUEST_CODE);
+            updateRequest: RequestCode);
         _updateManager.GetAppUpdateInfo().AddOnSuccessListener(_updateSuccessListener);
     }
 
@@ -75,7 +71,7 @@ public class MainActivity : AvaloniaMainActivity<App>
         _resumeSuccessListener ??= new ResumeSuccessListener(
             updateManager: _updateManager,
             activity: this,
-            updateRequest: REQUEST_CODE);
+            updateRequest: RequestCode);
         _updateManager.GetAppUpdateInfo().AddOnSuccessListener(_resumeSuccessListener);
     }
 
@@ -83,7 +79,7 @@ public class MainActivity : AvaloniaMainActivity<App>
     {
         base.OnActivityResult(requestCode, resultCode, data);
 
-        if (requestCode != REQUEST_CODE)
+        if (requestCode != RequestCode)
         {
             return;
         }

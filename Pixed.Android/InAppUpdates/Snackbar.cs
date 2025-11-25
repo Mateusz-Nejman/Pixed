@@ -1,7 +1,4 @@
-using Android.App;
-using Android.Widget;
 using Google.Android.Material.Snackbar;
-using System;
 
 namespace Pixed.Android.InAppUpdates;
 
@@ -25,11 +22,6 @@ public static class Snackbar
             }
 
             var snackbar = Google.Android.Material.Snackbar.Snackbar.Make(view, text, BaseTransientBottomBar.LengthIndefinite);
-            if (snackbar is null)
-            {
-                FallbackToToastWithAction(activity, message, clickHandler, view);
-                return;
-            }
 
             snackbar.SetAction(text: actionText, clickHandler: clickHandler);
             snackbar.Show();
@@ -54,13 +46,7 @@ public static class Snackbar
 
         if (clickHandler is not null && fallbackView is not null)
         {
-            try
-            {
-                clickHandler(fallbackView);
-            }
-            catch (Exception)
-            {
-            }
+            clickHandler.Invoke(fallbackView);
         }
     }
 
@@ -74,18 +60,12 @@ public static class Snackbar
 
         if (clickHandler is not null && view is not null)
         {
-            try
-            {
-                clickHandler(view);
-            }
-            catch (Exception)
-            {
-            }
+            clickHandler.Invoke(view);
         }
     }
 
     private static bool IsThemeRelated(Exception ex) =>
         ex is global::Android.Views.InflateException ||
         (ex is Java.Lang.UnsupportedOperationException &&
-         ex.Message?.Contains("Failed to resolve attribute", StringComparison.Ordinal) == true);
+         ex.Message.Contains("Failed to resolve attribute", StringComparison.Ordinal));
 }

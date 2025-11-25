@@ -1,8 +1,5 @@
 using Xamarin.Google.Android.Play.Core.AppUpdate.Install.Model;
 using Xamarin.Google.Android.Play.Core.AppUpdate.Install;
-using System;
-using Android.App;
-using Android.Widget;
 using Xamarin.Google.Android.Play.Core.AppUpdate;
 
 namespace Pixed.Android.InAppUpdates;
@@ -34,7 +31,7 @@ public class InstallStateUpdatedListener(Activity activity, IAppUpdateManager up
                     _activity,
                     text: "An update has just been downloaded.",
                     actionText: "RESTART",
-                    clickHandler: _ => _updateManager?.CompleteUpdate());
+                    clickHandler: _ => _updateManager.CompleteUpdate());
                     break;
                 
                 case InstallStatus.Failed:

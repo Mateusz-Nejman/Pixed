@@ -27,7 +27,7 @@ public class ResumeSuccessListener(
             _activity,
             text: "An update has just been downloaded.",
             actionText: "RESTART",
-            clickHandler: _ => _updateManager?.CompleteUpdate());
+            clickHandler: _ => _updateManager.CompleteUpdate());
         }
         else if (info.UpdateAvailability() == UpdateAvailability.DeveloperTriggeredUpdateInProgress) {
             _ = _updateManager.StartUpdateFlowForResult(

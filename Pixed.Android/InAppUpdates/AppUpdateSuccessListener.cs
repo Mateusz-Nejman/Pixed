@@ -1,4 +1,3 @@
-using Android.App;
 using Android.Gms.Tasks;
 using Xamarin.Google.Android.Play.Core.AppUpdate;
 using Xamarin.Google.Android.Play.Core.AppUpdate.Install.Model;

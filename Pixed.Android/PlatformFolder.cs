@@ -23,9 +23,9 @@ internal class PlatformFolder : IPlatformFolder
         }
     }
 
-    public Task<IStorageContainerFile> GetFile(string filename, FolderType folderType)
+    public Task<IStorageContainerFile?> GetFile(string filename, FolderType folderType)
     {
-        return Task.FromResult((IStorageContainerFile)new PathStorageContainerFile(Path.Combine(GetFolderPath(folderType), filename)));
+        return Task.FromResult<IStorageContainerFile?>(new PathStorageContainerFile(Path.Combine(GetFolderPath(folderType), filename)));
     }
 
     private static string GetFolderPath(FolderType type)
