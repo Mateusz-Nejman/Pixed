@@ -28,7 +28,12 @@ namespace Pixed.Application.Services
                 return;
             }
 
-            Stream stream = await file.OpenRead();
+            Stream? stream = await file.OpenRead();
+
+            if (stream == null)
+            {
+                return;
+            }
             string json = stream.ReadAllText();
             await stream.DisposeAsync();
             RecentFiles = JsonConvert.DeserializeObject<List<string>>(json) ?? [];
@@ -89,6 +94,12 @@ namespace Pixed.Application.Services
             }
             
             var stream = await file.OpenWrite();
+
+            if (stream == null)
+            {
+                return;
+            }
+            
             stream.Write(JsonConvert.SerializeObject(RecentFiles));
             await stream.DisposeAsync();
         }

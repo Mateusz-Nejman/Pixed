@@ -13,6 +13,6 @@ public interface IHistoryService
     string GetHistoryId(PixedModel model, int index);
     void SetHistoryIndex(PixedModel model, int index);
     int GetHistoryCount(PixedModel model);
-    Task<Stream> GetHistoryItem(PixedModel model, string id);
+    Task<Stream?> GetHistoryItem(PixedModel model, string id);
     Task ClearTempFiles();
 }

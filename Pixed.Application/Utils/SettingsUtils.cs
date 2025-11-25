@@ -22,6 +22,12 @@ internal static class SettingsUtils
         }
         
         var stream = await file.OpenWrite();
+
+        if (stream == null)
+        {
+            return;
+        }
+        
         lock (Lock)
         {
             stream.Write(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(applicationData.UserSettings)));
@@ -46,7 +52,13 @@ internal static class SettingsUtils
             return settings;
         }
 
-        Stream stream = await file.OpenRead();
+        Stream? stream = await file.OpenRead();
+
+        if (stream == null)
+        {
+            return settings;
+        }
+        
         string json = stream.ReadAllText();
         await stream.DisposeAsync();
 

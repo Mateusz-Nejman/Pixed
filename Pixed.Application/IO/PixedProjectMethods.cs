@@ -103,6 +103,12 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
         foreach (var item in files)
         {
             var stream = await item.OpenRead();
+
+            if (stream == null)
+            {
+                continue;
+            }
+            
             string extension = (new FileInfo(item.Name)).Extension;
 
             IPixedProjectSerializer? serializer = GetSerializer(extension);
@@ -140,6 +146,13 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
                 SKSvg svg = SKSvg.CreateFromStream(stream);
                 await stream.DisposeAsync();
                 stream = await item.OpenRead();
+
+                if (stream == null)
+                {
+                    continue;
+                }
+                
+                svg.Dispose();
                 var result = await Router.Navigate<OpenSvgResult>("/openSvg", svg);
 
                 if (result.HasValue)

@@ -12,23 +12,23 @@ public sealed class PixedProjectSerializer : IPixedProjectSerializer
     /// <summary>
     /// 2 MB of memory will be reserved for dictionary.
     /// </summary>
-    readonly static Int32 dictionary = 1 << 21; // 2 MB
+    private const int LzmaDictionary = 1 << 21; // 2 MB
 
-    readonly static Int32 posStateBits = 2;
-    readonly static Int32 litContextBits = 3;
-    readonly static Int32 litPosBits = 0;
-    readonly static Int32 algorithm = 2;
+    private const int LzmaPosStateBits = 2;
+    private const int LzmaLitContextBits = 3;
+    private const int LzmaLitPosBits = 0;
+    private const int LzmaAlgorithm = 2;
 
     /// <summary>
     /// Incerease numFastBytes to get better compression ratios.
     /// 32 - moderate compression
     /// 128 - extreme compression
     /// </summary>
-    readonly static Int32 numFastBytes = 32;
+    private const int LzmaNumFastBytes = 32;
 
-    readonly static bool eos = false;
+    private const bool LzmaEos = false;
 
-    readonly static CoderPropID[] _propIds =
+    private static readonly CoderPropID[] LzmaPropIds =
     [
         CoderPropID.DictionarySize,
         CoderPropID.PosStateBits,
@@ -40,16 +40,16 @@ public sealed class PixedProjectSerializer : IPixedProjectSerializer
         CoderPropID.EndMarker
     ];
 
-    readonly static object[] _properties =
+    private static readonly object[] LzmaProperties =
     [
-        (Int32)(dictionary),
-        (Int32)(posStateBits),
-        (Int32)(litContextBits),
-        (Int32)(litPosBits),
-        (Int32)(algorithm),
-        (Int32)(numFastBytes),
+        LzmaDictionary,
+        LzmaPosStateBits,
+        LzmaLitContextBits,
+        LzmaLitPosBits,
+        LzmaAlgorithm,
+        LzmaNumFastBytes,
         "bt4",
-        eos
+        LzmaEos
     ];
 
     #endregion
@@ -88,7 +88,7 @@ public sealed class PixedProjectSerializer : IPixedProjectSerializer
     {
         SevenZip.Compression.LZMA.Encoder encoder = new();
 
-        encoder.SetCoderProperties(_propIds, _properties);
+        encoder.SetCoderProperties(LzmaPropIds, LzmaProperties);
         encoder.WriteCoderProperties(outStream);
 
         var writer = new BinaryWriter(outStream, Encoding.UTF8);
@@ -108,7 +108,7 @@ public sealed class PixedProjectSerializer : IPixedProjectSerializer
         outStream.Position = positionForCompressedSize;
 
         // Write size after compression.
-        writer.Write((Int64)(positionAfterCompression - positionForCompressedDataStart));
+        writer.Write(positionAfterCompression - positionForCompressedDataStart);
 
         // Restore position.
         outStream.Position = positionAfterCompression;

@@ -21,12 +21,18 @@ public static class PixedModelMethods
         var id = historyService.GetHistoryId(model, index);
 
         var stream = await historyService.GetHistoryItem(model, id);
+
+        if (stream == null)
+        {
+            return;
+        }
+        
         model.Deserialize(stream);
         model.ResetRecursive();
         Subjects.ProjectModified.OnNext(model);
         Subjects.FrameChanged.OnNext(model.CurrentFrame);
         Subjects.LayerChanged.OnNext(model.CurrentFrame.CurrentLayer);
-        stream.Dispose();
+        await stream.DisposeAsync();
     }
 
     public static async Task Redo(this PixedModel model, IHistoryService historyService)
@@ -49,12 +55,17 @@ public static class PixedModelMethods
 
         var stream = await historyService.GetHistoryItem(model, id);
 
+        if (stream == null)
+        {
+            return;
+        }
+        
         model.Deserialize(stream);
         model.ResetRecursive();
         Subjects.ProjectModified.OnNext(model);
         Subjects.FrameChanged.OnNext(model.CurrentFrame);
         Subjects.LayerChanged.OnNext(model.CurrentFrame.CurrentLayer);
-        stream.Dispose();
+        await stream.DisposeAsync();
     }
 
     public static void Process(this PixedModel model, bool allFrames, bool allLayers, Action<Frame, Layer> action, ApplicationData applicationData, bool executeSubjects = true)

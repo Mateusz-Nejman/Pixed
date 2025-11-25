@@ -251,6 +251,12 @@ internal class PaletteSectionViewModel : ExtendedViewModel, IDisposable
             try
             {
                 stream = await file.OpenRead();
+
+                if (stream == null)
+                {
+                    continue;
+                }
+                
                 var serializer = AbstractPaletteSerializer.GetFromExtension(file.Extension);
                 var palette = serializer.Deserialize(stream, file.Name);
                 _paletteService.Palettes.Add(palette);
@@ -276,6 +282,12 @@ internal class PaletteSectionViewModel : ExtendedViewModel, IDisposable
         }
 
         var stream = await file.OpenRead();
+
+        if (stream == null)
+        {
+            return;
+        }
+        
         var serializer = AbstractPaletteSerializer.GetFromExtension(file.GetExtension());
 
         PaletteModel model;
@@ -325,16 +337,28 @@ internal class PaletteSectionViewModel : ExtendedViewModel, IDisposable
         AbstractPaletteSerializer serializer = AbstractPaletteSerializer.GetFromExtension(fileInfo.Extension);
 
         var stream = await file.OpenWrite();
+
+        if (stream == null)
+        {
+            return;
+        }
+        
         serializer.Serialize(stream, model);
-        stream.Dispose();
+        await stream.DisposeAsync();
     }
 
-    private async static Task Save(PaletteModel model, IStorageContainerFile file)
+    private static async Task Save(PaletteModel model, IStorageContainerFile file)
     {
         AbstractPaletteSerializer serializer = AbstractPaletteSerializer.GetFromExtension(file.Extension);
 
         var stream = await file.OpenWrite();
+
+        if (stream == null)
+        {
+            return;
+        }
+        
         serializer.Serialize(stream, model);
-        stream.Dispose();
+        await stream.DisposeAsync();
     }
 }
