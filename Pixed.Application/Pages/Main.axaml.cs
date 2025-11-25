@@ -241,8 +241,8 @@ internal partial class Main : EmptyPixedPage, IDisposable
         {
             return;
         }
-        
-        var files = e.Data.GetFiles();
+
+        var files = e.DataTransfer.TryGetFiles();
         if (files != null)
         {
             foreach (var file in files)
