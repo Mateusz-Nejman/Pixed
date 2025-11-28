@@ -8,8 +8,8 @@ namespace Pixed.BigGustave;
 /// </summary>
 public class Png
 {
-    private readonly RawPngData data;
-    private readonly bool hasTransparencyChunk;
+    private readonly RawPngData _data;
+    private readonly bool _hasTransparencyChunk;
 
     /// <summary>
     /// The header data from the PNG image.
@@ -29,13 +29,13 @@ public class Png
     /// <summary>
     /// Whether the image has an alpha (transparency) layer.
     /// </summary>
-    public bool HasAlphaChannel => (Header.ColorType & ColorType.AlphaChannelUsed) != 0 || hasTransparencyChunk;
+    public bool HasAlphaChannel => (Header.ColorType & ColorType.AlphaChannelUsed) != 0 || _hasTransparencyChunk;
 
     internal Png(ImageHeader header, RawPngData data, bool hasTransparencyChunk)
     {
         Header = header;
-        this.data = data ?? throw new ArgumentNullException(nameof(data));
-        this.hasTransparencyChunk = hasTransparencyChunk;
+        this._data = data ?? throw new ArgumentNullException(nameof(data));
+        this._hasTransparencyChunk = hasTransparencyChunk;
     }
 
     /// <summary>
@@ -48,7 +48,7 @@ public class Png
     /// <param name="x">The x coordinate (column).</param>
     /// <param name="y">The y coordinate (row).</param>
     /// <returns>The pixel at the coordinate.</returns>
-    public UniColor GetPixel(int x, int y) => data.GetPixel(x, y);
+    public UniColor GetPixel(int x, int y) => _data.GetPixel(x, y);
 
     public UniColor[] GetPixels()
     {
@@ -57,7 +57,7 @@ public class Png
 
     public uint[] GetPixelsUInt()
     {
-        byte[] bytes = data.GetBytes(Height);
+        byte[] bytes = _data.GetBytes(Height);
         for (int a = 0; a < bytes.Length; a += 4)
         {
             (bytes[a + 2], bytes[a]) = (bytes[a], bytes[a + 2]);
@@ -71,7 +71,7 @@ public class Png
     /// <param name="stream">The stream containing PNG data to be read.</param>
     /// <param name="chunkVisitor">Optional: A visitor which is called whenever a chunk is read by the library.</param>
     /// <returns>The <see cref="Png"/> data from the stream.</returns>
-    public static Png Open(Stream stream, IChunkVisitor? chunkVisitor = null)
+    public static Png Open(Stream stream, IChunkVisitor chunkVisitor = null)
         => PngOpener.Open(stream, chunkVisitor);
 
     /// <summary>
@@ -89,7 +89,7 @@ public class Png
     /// <param name="bytes">The bytes of the PNG data to be read.</param>
     /// <param name="chunkVisitor">Optional: A visitor which is called whenever a chunk is read by the library.</param>
     /// <returns>The <see cref="Png"/> data from the bytes.</returns>
-    public static Png Open(byte[] bytes, IChunkVisitor? chunkVisitor = null)
+    public static Png Open(byte[] bytes, IChunkVisitor chunkVisitor = null)
     {
         using var memoryStream = new MemoryStream(bytes);
         return PngOpener.Open(memoryStream, chunkVisitor);
@@ -114,7 +114,7 @@ public class Png
     /// <param name="chunkVisitor">Optional: A visitor which is called whenever a chunk is read by the library.</param>
     /// <remarks>This will open the file to obtain a <see cref="FileStream"/> so will lock the file during reading.</remarks>
     /// <returns>The <see cref="Png"/> data from the file.</returns>
-    public static Png Open(string filePath, IChunkVisitor? chunkVisitor = null)
+    public static Png Open(string filePath, IChunkVisitor chunkVisitor = null)
     {
         using var fileStream = File.OpenRead(filePath);
         return Open(fileStream, chunkVisitor);

@@ -12,18 +12,18 @@ public class PngBuilder
     private const byte Deflate32KbWindow = 120;
     private const byte ChecksumBits = 1;
 
-    private readonly byte[] rawData;
-    private readonly bool hasAlphaChannel;
-    private readonly int width;
-    private readonly int height;
-    private readonly int bytesPerPixel;
+    private readonly byte[] _rawData;
+    private readonly bool _hasAlphaChannel;
+    private readonly int _width;
+    private readonly int _height;
+    private readonly int _bytesPerPixel;
 
-    private bool hasTooManyColorsForPalette;
+    private bool _hasTooManyColorsForPalette;
 
-    private readonly int backgroundColorInt;
-    private readonly Dictionary<int, int> colorCounts;
+    private readonly int _backgroundColorInt;
+    private readonly Dictionary<int, int> _colorCounts;
 
-    private readonly List<(string keyword, byte[] data)> storedStrings = [];
+    private readonly List<(string keyword, byte[] data)> _storedStrings = [];
 
     /// <summary>
     /// Create a builder for a PNG with the given width and size.
@@ -125,17 +125,17 @@ public class PngBuilder
 
     private PngBuilder(byte[] rawData, bool hasAlphaChannel, int width, int height, int bytesPerPixel)
     {
-        this.rawData = rawData;
-        this.hasAlphaChannel = hasAlphaChannel;
-        this.width = width;
-        this.height = height;
-        this.bytesPerPixel = bytesPerPixel;
+        this._rawData = rawData;
+        this._hasAlphaChannel = hasAlphaChannel;
+        this._width = width;
+        this._height = height;
+        this._bytesPerPixel = bytesPerPixel;
 
-        backgroundColorInt = PixelToColorInt(0, 0, 0, hasAlphaChannel ? (byte)0 : byte.MaxValue);
+        _backgroundColorInt = PixelToColorInt(0, 0, 0, hasAlphaChannel ? (byte)0 : byte.MaxValue);
 
-        colorCounts = new Dictionary<int, int>()
+        _colorCounts = new Dictionary<int, int>()
             {
-                { backgroundColorInt, (width * height)}
+                { _backgroundColorInt, (width * height)}
             };
     }
 
@@ -149,42 +149,42 @@ public class PngBuilder
     /// </summary>
     public PngBuilder SetPixel(UniColor pixel, int x, int y)
     {
-        if (!hasTooManyColorsForPalette)
+        if (!_hasTooManyColorsForPalette)
         {
             var val = PixelToColorInt(pixel);
-            if (val != backgroundColorInt)
+            if (val != _backgroundColorInt)
             {
-                if (!colorCounts.TryGetValue(val, out int value))
+                if (!_colorCounts.TryGetValue(val, out int value))
                 {
-                    colorCounts[val] = 1;
+                    _colorCounts[val] = 1;
                 }
                 else
                 {
-                    colorCounts[val] = ++value;
+                    _colorCounts[val] = ++value;
                 }
 
-                colorCounts[backgroundColorInt]--;
-                if (colorCounts[backgroundColorInt] == 0)
+                _colorCounts[_backgroundColorInt]--;
+                if (_colorCounts[_backgroundColorInt] == 0)
                 {
-                    colorCounts.Remove(backgroundColorInt);
+                    _colorCounts.Remove(_backgroundColorInt);
                 }
             }
 
-            if (colorCounts.Count > 256)
+            if (_colorCounts.Count > 256)
             {
-                hasTooManyColorsForPalette = true;
+                _hasTooManyColorsForPalette = true;
             }
         }
 
-        var start = (y * ((width * bytesPerPixel) + 1)) + 1 + (x * bytesPerPixel);
+        var start = (y * ((_width * _bytesPerPixel) + 1)) + 1 + (x * _bytesPerPixel);
 
-        rawData[start++] = pixel.R;
-        rawData[start++] = pixel.G;
-        rawData[start++] = pixel.B;
+        _rawData[start++] = pixel.R;
+        _rawData[start++] = pixel.G;
+        _rawData[start++] = pixel.B;
 
-        if (hasAlphaChannel)
+        if (_hasAlphaChannel)
         {
-            rawData[start] = pixel.A;
+            _rawData[start] = pixel.A;
         }
 
         return this;
@@ -251,7 +251,7 @@ public class PngBuilder
             }
         }
 
-        storedStrings.Add((keyword, bytes));
+        _storedStrings.Add((keyword, bytes));
 
         return this;
     }
@@ -275,13 +275,13 @@ public class PngBuilder
     {
         options = options ?? new SaveOptions();
 
-        byte[] palette = [];
-        var dataLength = rawData.Length;
+        byte[]? palette = null;
+        var dataLength = _rawData.Length;
         var bitDepth = 8;
 
-        if (!hasTooManyColorsForPalette && !hasAlphaChannel)
+        if (!_hasTooManyColorsForPalette && !_hasAlphaChannel)
         {
-            var paletteColors = colorCounts.OrderByDescending(x => x.Value).Select(x => x.Key).ToList();
+            var paletteColors = _colorCounts.OrderByDescending(x => x.Value).Select(x => x.Key).ToList();
             bitDepth = paletteColors.Count > 16 ? 8 : 4;
             var samplesPerByte = bitDepth == 8 ? 1 : 2;
             var applyShift = samplesPerByte == 2;
@@ -299,18 +299,18 @@ public class PngBuilder
 
             var rawDataIndex = 0;
 
-            for (var y = 0; y < height; y++)
+            for (var y = 0; y < _height; y++)
             {
                 // None filter - we don't use filtering for palette images.
-                rawData[rawDataIndex++] = 0;
+                _rawData[rawDataIndex++] = 0;
 
-                for (var x = 0; x < width; x++)
+                for (var x = 0; x < _width; x++)
                 {
-                    var index = ((y * width * bytesPerPixel) + y + 1) + (x * bytesPerPixel);
+                    var index = ((y * _width * _bytesPerPixel) + y + 1) + (x * _bytesPerPixel);
 
-                    var r = rawData[index++];
-                    var g = rawData[index++];
-                    var b = rawData[index];
+                    var r = _rawData[index++];
+                    var g = _rawData[index++];
+                    var b = _rawData[index];
 
                     var colorInt = PixelToColorInt(r, g, b);
 
@@ -323,17 +323,17 @@ public class PngBuilder
 
                         if (withinByteIndex == 1)
                         {
-                            rawData[rawDataIndex] = (byte)(rawData[rawDataIndex] + value);
+                            _rawData[rawDataIndex] = (byte)(_rawData[rawDataIndex] + value);
                             rawDataIndex++;
                         }
                         else
                         {
-                            rawData[rawDataIndex] = (byte)(value << 4);
+                            _rawData[rawDataIndex] = (byte)(value << 4);
                         }
                     }
                     else
                     {
-                        rawData[rawDataIndex++] = value;
+                        _rawData[rawDataIndex++] = value;
                     }
 
                 }
@@ -343,7 +343,7 @@ public class PngBuilder
         }
         else
         {
-            AttemptCompressionOfRawData(rawData, options);
+            AttemptCompressionOfRawData(_rawData, options);
         }
 
         outputStream.Write(HeaderValidationResult.ExpectedHeader, 0, HeaderValidationResult.ExpectedHeader.Length);
@@ -353,12 +353,12 @@ public class PngBuilder
         stream.WriteChunkLength(13);
         stream.WriteChunkHeader(ImageHeader.HeaderBytes);
 
-        StreamHelper.WriteBigEndianInt32(stream, width);
-        StreamHelper.WriteBigEndianInt32(stream, height);
+        StreamHelper.WriteBigEndianInt32(stream, _width);
+        StreamHelper.WriteBigEndianInt32(stream, _height);
         stream.WriteByte((byte)bitDepth);
 
         var colorType = ColorType.ColorUsed;
-        if (hasAlphaChannel)
+        if (_hasAlphaChannel)
         {
             colorType |= ColorType.AlphaChannelUsed;
         }
@@ -383,13 +383,13 @@ public class PngBuilder
             stream.WriteCrc();
         }
 
-        var imageData = Compress(rawData, dataLength, options);
+        var imageData = Compress(_rawData, dataLength, options);
         stream.WriteChunkLength(imageData.Length);
         stream.WriteChunkHeader(Encoding.ASCII.GetBytes("IDAT"));
         stream.Write(imageData, 0, imageData.Length);
         stream.WriteCrc();
 
-        foreach (var storedString in storedStrings)
+        foreach (var storedString in _storedStrings)
         {
             var keyword = Encoding.GetEncoding("iso-8859-1").GetBytes(storedString.keyword);
             var length = keyword.Length
@@ -471,7 +471,7 @@ public class PngBuilder
             return;
         }
 
-        var bytesPerScanline = 1 + (bytesPerPixel * width);
+        var bytesPerScanline = 1 + (_bytesPerPixel * _width);
         var scanlineCount = rawData.Length / bytesPerScanline;
 
         var scanData = new byte[bytesPerScanline - 1];

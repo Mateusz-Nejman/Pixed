@@ -7,13 +7,13 @@ namespace Pixed.BigGustave;
 /// </summary>
 internal class RawPngData
 {
-    private readonly byte[] data;
-    private readonly int bytesPerPixel;
-    private readonly int width;
-    private readonly Palette palette;
-    private readonly ColorType colorType;
-    private readonly int rowOffset;
-    private readonly int bitDepth;
+    private readonly byte[] _data;
+    private readonly int _bytesPerPixel;
+    private readonly int _width;
+    private readonly Palette? _palette;
+    private readonly ColorType _colorType;
+    private readonly int _rowOffset;
+    private readonly int _bitDepth;
 
     /// <summary>
     /// Create a new <see cref="RawPngData"/>.
@@ -22,33 +22,33 @@ internal class RawPngData
     /// <param name="bytesPerPixel">The number of bytes in each pixel.</param>
     /// <param name="palette">The palette for the image.</param>
     /// <param name="imageHeader">The image header.</param>
-    public RawPngData(byte[] data, int bytesPerPixel, Palette palette, ImageHeader imageHeader)
+    public RawPngData(byte[] data, int bytesPerPixel, Palette? palette, ImageHeader imageHeader)
     {
-        if (width < 0)
+        if (_width < 0)
         {
-            throw new ArgumentOutOfRangeException($"Width must be greater than or equal to 0, got {width}.");
+            throw new ArgumentOutOfRangeException($"Width must be greater than or equal to 0, got {_width}.");
         }
 
-        this.data = data ?? throw new ArgumentNullException(nameof(data));
-        this.bytesPerPixel = bytesPerPixel;
-        this.palette = palette;
+        this._data = data ?? throw new ArgumentNullException(nameof(data));
+        this._bytesPerPixel = bytesPerPixel;
+        this._palette = palette;
 
-        width = imageHeader.Width;
-        colorType = imageHeader.ColorType;
-        rowOffset = imageHeader.InterlaceMethod == InterlaceMethod.Adam7 ? 0 : 1;
-        bitDepth = imageHeader.BitDepth;
+        _width = imageHeader.Width;
+        _colorType = imageHeader.ColorType;
+        _rowOffset = imageHeader.InterlaceMethod == InterlaceMethod.Adam7 ? 0 : 1;
+        _bitDepth = imageHeader.BitDepth;
     }
 
     public byte[] GetBytes(int height)
     {
-        byte[] pixels = new byte[width * height * bytesPerPixel];
+        byte[] pixels = new byte[_width * height * _bytesPerPixel];
 
         //TODO palette case
 
         for (int y = 0; y < height; y++)
         {
-            var rowStartPixel = (rowOffset + (rowOffset * y)) + (bytesPerPixel * width * y);
-            Array.Copy(data, rowStartPixel, pixels, width * y * bytesPerPixel, width * bytesPerPixel);
+            var rowStartPixel = (_rowOffset + (_rowOffset * y)) + (_bytesPerPixel * _width * y);
+            Array.Copy(_data, rowStartPixel, pixels, _width * y * _bytesPerPixel, _width * _bytesPerPixel);
         }
 
         return pixels;
@@ -56,76 +56,76 @@ internal class RawPngData
 
     public UniColor GetPixel(int x, int y)
     {
-        if (palette != null)
+        if (_palette != null)
         {
-            var pixelsPerByte = (8 / bitDepth);
+            var pixelsPerByte = (8 / _bitDepth);
 
-            var bytesInRow = (1 + (width / pixelsPerByte));
+            var bytesInRow = (1 + (_width / pixelsPerByte));
 
             var byteIndexInRow = x / pixelsPerByte;
             var paletteIndex = (1 + (y * bytesInRow)) + byteIndexInRow;
 
-            var b = data[paletteIndex];
+            var b = _data[paletteIndex];
 
-            if (bitDepth == 8)
+            if (_bitDepth == 8)
             {
-                return palette.GetPixel(b);
+                return _palette.GetPixel(b);
             }
 
             var withinByteIndex = x % pixelsPerByte;
-            var rightShift = 8 - ((withinByteIndex + 1) * bitDepth);
-            var indexActual = (b >> rightShift) & ((1 << bitDepth) - 1);
+            var rightShift = 8 - ((withinByteIndex + 1) * _bitDepth);
+            var indexActual = (b >> rightShift) & ((1 << _bitDepth) - 1);
 
-            return palette.GetPixel(indexActual);
+            return _palette.GetPixel(indexActual);
         }
 
-        var rowStartPixel = (rowOffset + (rowOffset * y)) + (bytesPerPixel * width * y);
+        var rowStartPixel = (_rowOffset + (_rowOffset * y)) + (_bytesPerPixel * _width * y);
 
-        var pixelStartIndex = rowStartPixel + (bytesPerPixel * x);
+        var pixelStartIndex = rowStartPixel + (_bytesPerPixel * x);
 
-        var first = data[pixelStartIndex];
+        var first = _data[pixelStartIndex];
 
-        switch (bytesPerPixel)
+        switch (_bytesPerPixel)
         {
             case 1:
                 return new UniColor(255, first, first, first);
             case 2:
-                switch (colorType)
+                switch (_colorType)
                 {
                     case ColorType.None:
                         {
-                            byte second = data[pixelStartIndex + 1];
+                            byte second = _data[pixelStartIndex + 1];
                             var value = ToSingleByte(first, second);
                             return new UniColor(255, value, value, value);
 
                         }
                     default:
-                        return new UniColor(data[pixelStartIndex + 1], first, first, first);
+                        return new UniColor(_data[pixelStartIndex + 1], first, first, first);
                 }
 
             case 3:
-                return new UniColor(255, first, data[pixelStartIndex + 1], data[pixelStartIndex + 2]);
+                return new UniColor(255, first, _data[pixelStartIndex + 1], _data[pixelStartIndex + 2]);
             case 4:
-                switch (colorType)
+                switch (_colorType)
                 {
                     case ColorType.None | ColorType.AlphaChannelUsed:
                         {
-                            var second = data[pixelStartIndex + 1];
-                            var firstAlpha = data[pixelStartIndex + 2];
-                            var secondAlpha = data[pixelStartIndex + 3];
+                            var second = _data[pixelStartIndex + 1];
+                            var firstAlpha = _data[pixelStartIndex + 2];
+                            var secondAlpha = _data[pixelStartIndex + 3];
                             var gray = ToSingleByte(first, second);
                             var alpha = ToSingleByte(firstAlpha, secondAlpha);
                             return new UniColor(alpha, gray, gray, gray);
                         }
                     default:
-                        return new UniColor(data[pixelStartIndex + 3], first, data[pixelStartIndex + 1], data[pixelStartIndex + 2]);
+                        return new UniColor(_data[pixelStartIndex + 3], first, _data[pixelStartIndex + 1], _data[pixelStartIndex + 2]);
                 }
             case 6:
-                return new UniColor(255, first, data[pixelStartIndex + 2], data[pixelStartIndex + 4]);
+                return new UniColor(255, first, _data[pixelStartIndex + 2], _data[pixelStartIndex + 4]);
             case 8:
-                return new UniColor(data[pixelStartIndex + 6], first, data[pixelStartIndex + 2], data[pixelStartIndex + 4]);
+                return new UniColor(_data[pixelStartIndex + 6], first, _data[pixelStartIndex + 2], _data[pixelStartIndex + 4]);
             default:
-                throw new InvalidOperationException($"Unreconized number of bytes per pixel: {bytesPerPixel}.");
+                throw new InvalidOperationException($"Unreconized number of bytes per pixel: {_bytesPerPixel}.");
         }
     }
 

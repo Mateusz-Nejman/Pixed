@@ -123,11 +123,7 @@ internal static class PngOpener
         var (bytesPerPixel, samplesPerPixel) = Decoder.GetBytesAndSamplesPerPixel(imageHeader);
 
         bytesOut = Decoder.Decode(bytesOut, imageHeader, bytesPerPixel, samplesPerPixel);
-
-        if (palette == null)
-        {
-            throw new InvalidOperationException("Palette is null");
-        }
+        
         return new Png(imageHeader, new RawPngData(bytesOut, bytesPerPixel, palette, imageHeader), palette?.HasAlphaValues ?? false);
     }
 
