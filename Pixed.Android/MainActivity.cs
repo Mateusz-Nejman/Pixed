@@ -57,6 +57,7 @@ public class MainActivity : AvaloniaMainActivity<App>
             activity: this,
             updateRequest: RequestCode);
         _updateManager.GetAppUpdateInfo().AddOnSuccessListener(_updateSuccessListener);
+        Console.WriteLine("MainActivity: Initialize AppUpdateManager");
     }
 
     protected override void OnResume()
@@ -65,6 +66,7 @@ public class MainActivity : AvaloniaMainActivity<App>
 
         if (_updateManager is null)
         {
+            Console.WriteLine("MainActivity: Update manager is null on resume");
             return;
         }
 
@@ -81,20 +83,24 @@ public class MainActivity : AvaloniaMainActivity<App>
 
         if (requestCode != RequestCode)
         {
+            Console.WriteLine("MainActivity: Unknown activity result request code: " + requestCode);
             return;
         }
 
         switch (resultCode)
         {
             case Result.Ok:
+                Console.WriteLine("MainActivity: App updated");
                 Toast.MakeText(this, "App updated", ToastLength.Short)?.Show();
                 break;
 
             case Result.Canceled:
+                Console.WriteLine("MainActivity: In app update cancelled");
                 Toast.MakeText(this, "In app update cancelled", ToastLength.Short)?.Show();
                 break;
 
             case (Result)Xamarin.Google.Android.Play.Core.AppUpdate.Install.Model.ActivityResult.ResultInAppUpdateFailed:
+                Console.WriteLine("MainActivity: In app update failed");
                 Toast.MakeText(this, "In app update failed", ToastLength.Short)?.Show();
                 break;
         }
