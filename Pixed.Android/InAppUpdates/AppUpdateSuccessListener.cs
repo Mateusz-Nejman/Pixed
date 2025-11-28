@@ -19,6 +19,7 @@ public class AppUpdateSuccessListener(
     {
         if (result is not AppUpdateInfo info)
         {
+            Console.WriteLine("AppUpdateSuccessListener: OnSuccess received invalid result.");
             return;
         }
 
@@ -33,6 +34,7 @@ public class AppUpdateSuccessListener(
                 when updatePriority >= 4 &&
                      isImmediateUpdatesAllowed:
                 {
+                    Console.WriteLine("AppUpdateSuccessListener: Starting immediate upodate.");
                     _ = _updateManager.StartUpdateFlowForResult(
                         info,
                         _activity,
@@ -47,6 +49,7 @@ public class AppUpdateSuccessListener(
                 UpdateAvailability.DeveloperTriggeredUpdateInProgress
                 when isFlexibleUpdatesAllowed:
                 {
+                    Console.WriteLine("AppUpdateSuccessListener: Starting flexible update.");
                     _installStateListener ??= new InstallStateUpdatedListener(_activity, _updateManager);
                     _updateManager.RegisterListener(_installStateListener);
 
@@ -62,6 +65,7 @@ public class AppUpdateSuccessListener(
 
             case UpdateAvailability.UpdateNotAvailable:
             case UpdateAvailability.Unknown:
+                Console.WriteLine("AppUpdateSuccessListener: No update available.");
                 break;
         }
     }
