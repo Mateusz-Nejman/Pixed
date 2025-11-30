@@ -14,20 +14,26 @@ internal class ProjectServer : IDisposable
     public async Task Listen(Func<string, Task<bool>> acceptFileFunc, Func<Stream, Task> projectReceived)
     {
         TcpListener listener = new(System.Net.IPAddress.Any, 13);
+        Console.WriteLine("ProjectServer: Starting listener on port 13");
         listener.Start();
         while (!_breakLoop)
         {
             try
             {
+                Console.WriteLine("ProjectServer: Waiting for incoming connection...");
                 TcpClient client = await listener.AcceptTcpClientAsync();
+                Console.WriteLine("ProjectServer: Client connected");
                 var stream = client.GetStream();
+                Console.WriteLine("ProjectServer: Reading file name...");
                 byte[] buffer = new byte[1024];
                 int bytesRead = await stream.ReadAsync(buffer);
                 var fileName = buffer.ToNetMessage(bytesRead);
+                Console.WriteLine("ProjectServer: Received file name: " + fileName);
                 var accept = await acceptFileFunc(fileName);
 
                 if (accept)
                 {
+                    Console.WriteLine("ProjectServer: File accepted, sending ACCEPT_MODEL");
                     await stream.WriteAsync("ACCEPT_MODEL".ToNetBytes());
 
                     MemoryStream projectStream = new();
@@ -44,7 +50,7 @@ internal class ProjectServer : IDisposable
             }
             catch (Exception ex)
             {
-                //TODO show error
+                Console.WriteLine("ProjectServer: Exception occurred: " + ex.Message);
             }
         }
 

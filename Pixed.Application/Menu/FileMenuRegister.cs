@@ -32,6 +32,8 @@ internal class FileMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
         _menuItemRegistry.Register(BaseMenuItem.File, "Save as", new AsyncCommand<bool>(SaveAction), true, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_save_edit_24_regular.svg"));
         _menuItemRegistry.Register(BaseMenuItem.File, "Export to PNG", new AsyncCommand(ExportPngAction), null, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_image_48_regular.svg"));
         _menuItemRegistry.Register(BaseMenuItem.File, "Export to Ico", new AsyncCommand(ExportIcoAction), null, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_image_circle_48_regular.svg"));
+        _menuItemRegistry.Register(BaseMenuItem.File, "Send to another device", new AsyncCommand(SendProjectAction));
+        _menuItemRegistry.Register(BaseMenuItem.File, "Receive from another device", new AsyncCommand(ReceiveProjectAction));
 
         if (IPlatformSettings.Instance.RecentFilesEnabled)
         {
@@ -103,5 +105,15 @@ internal class FileMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
     private async Task ExportIcoAction()
     {
         await _projectMethods.ExportToIco(_applicationData.CurrentModel);
+    }
+
+    private async Task SendProjectAction()
+    {
+        await Router.Navigate("/sendProject");
+    }
+
+    private async Task ReceiveProjectAction()
+    {
+        await Router.Navigate("/receiveProject");
     }
 }

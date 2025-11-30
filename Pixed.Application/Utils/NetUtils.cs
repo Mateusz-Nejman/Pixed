@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,14 +25,22 @@ internal static class NetUtils
     }
     public static async Task<IPAddress?> GetIpAddress()
     {
-        var hostName = Dns.GetHostName();
-        IPHostEntry localhost = await Dns.GetHostEntryAsync(hostName);
-
-        if (localhost.AddressList.Length > 0)
+        foreach (var networkInterface in NetworkInterface.GetAllNetworkInterfaces())
         {
-            return localhost.AddressList[0];
+            if (networkInterface.OperationalStatus == OperationalStatus.Up &&
+                (networkInterface.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 ||
+                 networkInterface.NetworkInterfaceType == NetworkInterfaceType.Ethernet))
+            {
+                var properties = networkInterface.GetIPProperties();
+                foreach (var address in properties.UnicastAddresses)
+                {
+                    if (address.Address.AddressFamily == AddressFamily.InterNetwork)
+                    {
+                        return address.Address;
+                    }
+                }
+            }
         }
-
         return null;
     }
     public static async Task<string[]> FindLocalServers()
@@ -131,6 +140,7 @@ internal static class NetUtils
             if (reply.Status == IPStatus.Success)
             {
                 localServers.Add(ipAddress);
+                return [.. localServers];
             }
         }
 
