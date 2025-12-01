@@ -47,7 +47,7 @@ public partial class ProjectReceive : Modal, IDisposable
 
     private async Task TryReceiveProject()
     {
-        await Dispatcher.UIThread.Invoke(async() => IpAddress = (await NetUtils.GetIpAddress())?.ToString() ?? "0.0.0.0");
+        Dispatcher.UIThread.Invoke(() => IpAddress = NetUtils.GetIpAddress()?.ToString() ?? "0.0.0.0");
         if (_server == null || _applicationData == null || _pixedProjectMethods == null)
         {
             Dispatcher.UIThread.Invoke(() => Status = "Status: Error");

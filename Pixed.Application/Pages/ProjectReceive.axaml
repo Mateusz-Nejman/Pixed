@@ -5,7 +5,7 @@
         mc:Ignorable="d"
 		xmlns:local="clr-namespace:Pixed.Application.Pages"
         x:Class="Pixed.Application.Pages.ProjectReceive"
-        Title="Receive current project">
+        Title="Receive project">
   <local:Modal.Dialog>
     <StackPanel Margin="5">
       <TextBlock Text="{Binding IpAddress, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ProjectReceive}}"/>

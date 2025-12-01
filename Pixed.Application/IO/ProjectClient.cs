@@ -24,14 +24,6 @@ internal class ProjectClient : IDisposable //Send project
 
     public async Task<ProjectStatus> TrySendProject(string ipAddress, PixedModel model)
     {
-        var servers = await NetUtils.FindLocalServers();
-
-        if(servers.Length == 0)
-        {
-            Console.WriteLine("ProjectClient: No servers found");
-            return ProjectStatus.Error;
-        }
-
         try
         {
             var endpoint = new IPEndPoint(IPAddress.Parse(ipAddress), 13);
