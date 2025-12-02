@@ -7,6 +7,7 @@ using Pixed.Core.Models;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Pixed.Application.IO.Net;
 
 namespace Pixed.Application.Pages;
 
@@ -40,7 +41,7 @@ public partial class ProjectReceive : Modal, IDisposable
 
         if (_applicationData != null && _pixedProjectMethods != null)
         {
-            _server = new ProjectServer();
+            _server = new ProjectServer(new TcpTransferInterfaceServer());
             Task.Run(TryReceiveProject);
         }
     }

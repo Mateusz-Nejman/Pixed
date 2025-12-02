@@ -1,39 +1,44 @@
 ﻿using Pixed.Application.Utils;
 using System;
 using System.IO;
-using System.Net.Sockets;
 using System.Threading.Tasks;
+using Pixed.Application.IO.Net;
 
 namespace Pixed.Application.IO;
 
 internal class ProjectServer : IDisposable
 {
+    private readonly IProjectTransferInterfaceServer _transferInterface;
     private bool _disposedValue;
-    private bool _breakLoop = false;
+    private bool _breakLoop;
+
+    public ProjectServer(IProjectTransferInterfaceServer transferInterface)
+    {
+        _transferInterface = transferInterface;
+    }
 
     public async Task Listen(Func<string, Task<bool>> acceptFileFunc, Func<Stream, Task> projectReceived)
     {
-        TcpListener listener = new(System.Net.IPAddress.Any, 13);
-        Console.WriteLine("ProjectServer: Starting listener on port 13");
-        listener.Start();
+        Console.WriteLine($"ProjectServer {_transferInterface.DebugName}: Starting listener on port 13");
+        _transferInterface.Start();
         while (!_breakLoop)
         {
             try
             {
-                Console.WriteLine("ProjectServer: Waiting for incoming connection...");
-                TcpClient client = await listener.AcceptTcpClientAsync();
-                Console.WriteLine("ProjectServer: Client connected");
+                Console.WriteLine($"ProjectServer {_transferInterface.DebugName}: Waiting for incoming connection...");
+                var client = await _transferInterface.Accept();
+                Console.WriteLine($"ProjectServer {_transferInterface.DebugName}: Client connected");
                 var stream = client.GetStream();
-                Console.WriteLine("ProjectServer: Reading file name...");
+                Console.WriteLine($"ProjectServer {_transferInterface.DebugName}: Reading file name...");
                 byte[] buffer = new byte[1024];
                 int bytesRead = await stream.ReadAsync(buffer);
                 var fileName = buffer.ToNetMessage(bytesRead);
-                Console.WriteLine("ProjectServer: Received file name: " + fileName);
+                Console.WriteLine($"ProjectServer {_transferInterface.DebugName}: Received file name: " + fileName);
                 var accept = await acceptFileFunc(fileName);
 
                 if (accept)
                 {
-                    Console.WriteLine("ProjectServer: File accepted, sending ACCEPT_MODEL");
+                    Console.WriteLine($"ProjectServer {_transferInterface.DebugName}: File accepted, sending ACCEPT_MODEL");
                     await stream.WriteAsync("ACCEPT_MODEL".ToNetBytes());
 
                     MemoryStream projectStream = new();
@@ -50,14 +55,14 @@ internal class ProjectServer : IDisposable
             }
             catch (Exception ex)
             {
-                Console.WriteLine("ProjectServer: Exception occurred: " + ex.Message);
+                Console.WriteLine($"ProjectServer {_transferInterface.DebugName}: Exception occurred: " + ex.Message);
             }
         }
 
-        listener.Stop();
+        _transferInterface.Stop();
     }
 
-    protected virtual void Dispose(bool disposing)
+    private void Dispose(bool disposing)
     {
         if (!_disposedValue)
         {
