@@ -71,7 +71,7 @@ public class Png
     /// <param name="stream">The stream containing PNG data to be read.</param>
     /// <param name="chunkVisitor">Optional: A visitor which is called whenever a chunk is read by the library.</param>
     /// <returns>The <see cref="Png"/> data from the stream.</returns>
-    public static Png Open(Stream stream, IChunkVisitor chunkVisitor = null)
+    public static Png Open(Stream stream, IChunkVisitor? chunkVisitor = null)
         => PngOpener.Open(stream, chunkVisitor);
 
     /// <summary>
@@ -89,7 +89,7 @@ public class Png
     /// <param name="bytes">The bytes of the PNG data to be read.</param>
     /// <param name="chunkVisitor">Optional: A visitor which is called whenever a chunk is read by the library.</param>
     /// <returns>The <see cref="Png"/> data from the bytes.</returns>
-    public static Png Open(byte[] bytes, IChunkVisitor chunkVisitor = null)
+    public static Png Open(byte[] bytes, IChunkVisitor? chunkVisitor = null)
     {
         using var memoryStream = new MemoryStream(bytes);
         return PngOpener.Open(memoryStream, chunkVisitor);
@@ -114,7 +114,7 @@ public class Png
     /// <param name="chunkVisitor">Optional: A visitor which is called whenever a chunk is read by the library.</param>
     /// <remarks>This will open the file to obtain a <see cref="FileStream"/> so will lock the file during reading.</remarks>
     /// <returns>The <see cref="Png"/> data from the file.</returns>
-    public static Png Open(string filePath, IChunkVisitor chunkVisitor = null)
+    public static Png Open(string filePath, IChunkVisitor? chunkVisitor = null)
     {
         using var fileStream = File.OpenRead(filePath);
         return Open(fileStream, chunkVisitor);

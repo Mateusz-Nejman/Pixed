@@ -107,14 +107,24 @@ public static class StreamUtils
     private static byte[] Read(this Stream stream, int size)
     {
         byte[] buffer = new byte[size];
-        stream.Read(buffer, 0, buffer.Length);
+        int bytesRead = stream.Read(buffer, 0, buffer.Length);
+
+        if (bytesRead != buffer.Length)
+        {
+            Console.WriteLine("Invalid buffer size");
+        }
         return buffer;
     }
 
     private static byte[] Read(this Stream stream, long size)
     {
         byte[] buffer = new byte[size];
-        stream.Read(buffer, 0, buffer.Length);
+        int bytesRead = stream.Read(buffer, 0, buffer.Length);
+
+        if (bytesRead != buffer.Length)
+        {
+            Console.WriteLine("Invalid buffer size");
+        }
         return buffer;
     }
 }

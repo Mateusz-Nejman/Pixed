@@ -12,7 +12,7 @@ public class Layer : PixelImage, IPixedSerializer, IDisposable
     private SKBitmap _bitmap;
     private double _opacity = 100.0d;
     private string _name = string.Empty;
-    private bool disposedValue;
+    private bool _disposedValue;
     private readonly string _id;
 
     public double Opacity
@@ -181,7 +181,12 @@ public class Layer : PixelImage, IPixedSerializer, IDisposable
         _name = stream.ReadString();
         int pixelsSize = stream.ReadInt();
         byte[] bytes = new byte[pixelsSize * sizeof(uint)];
-        stream.Read(bytes, 0, bytes.Length);
+        int bytesRead = stream.Read(bytes, 0, bytes.Length);
+
+        if (bytesRead != bytes.Length)
+        {
+            return;
+        }
         var colors = bytes.ToUInt();
 
         _bitmap?.Dispose();
@@ -210,14 +215,14 @@ public class Layer : PixelImage, IPixedSerializer, IDisposable
 
     protected virtual void Dispose(bool disposing)
     {
-        if (!disposedValue)
+        if (!_disposedValue)
         {
             if (disposing)
             {
                 _bitmap.Dispose();
             }
 
-            disposedValue = true;
+            _disposedValue = true;
         }
     }
 
