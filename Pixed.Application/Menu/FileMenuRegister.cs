@@ -108,7 +108,7 @@ internal class FileMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
 
     private async Task SendProjectAction()
     {
-        await Router.Navigate("/sendBluetooth");
+        await Router.Navigate("/sendProject");
     }
 
     private async Task ReceiveProjectAction()
@@ -116,14 +116,45 @@ internal class FileMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
         await Router.Navigate("/receiveProject");
     }
 
-    private IMenuItem BuildShareMenu()
+    private MenuItem BuildShareMenu()
     {
-        MenuItem shareMenu = new("Share") { Command = new AsyncCommand(SendProjectAction) };
-        MenuItem receiveMenu  = new("Receive") { Command = new AsyncCommand(ReceiveProjectAction) };
-        
-        return new MenuItem("Share over local network")
+        return new MenuItem("Share")
         {
             Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_share_48_filled.svg"),
+            Items = [BuildShareTcpMenu(), BuildShareBluetoothMenu()]
+        };
+    }
+
+    private async Task SendBluetoothAction()
+    {
+        await Router.Navigate("/sendBluetooth");
+    }
+
+    private async Task ReceiveBluetoothAction()
+    {
+        await Router.Navigate("/receiveBluetooth");
+    }
+
+    private MenuItem BuildShareTcpMenu()
+    {
+        MenuItem shareMenu = new("Share") { Command = new AsyncCommand(SendProjectAction) };
+        MenuItem receiveMenu = new("Receive") { Command = new AsyncCommand(ReceiveProjectAction) };
+
+        return new MenuItem("Local network")
+        {
+            Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_channel_share_48_filled.svg"),
+            Items = [shareMenu, receiveMenu]
+        };
+    }
+
+    private MenuItem BuildShareBluetoothMenu()
+    {
+        MenuItem shareMenu = new("Share") { Command = new AsyncCommand(SendBluetoothAction) };
+        MenuItem receiveMenu = new("Receive") { Command = new AsyncCommand(ReceiveBluetoothAction) };
+
+        return new MenuItem("Bluetooth")
+        {
+            Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_bluetooth_48_filled.svg"),
             Items = [shareMenu, receiveMenu]
         };
     }

@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Threading;
 using Pixed.Application.IO;
 using Pixed.Application.Routing;
-using Pixed.Application.Utils;
 using Pixed.Core.Models;
 using System;
 using System.IO;
@@ -53,7 +52,7 @@ public partial class ProjectReceiveBluetooth : Modal, IDisposable
 
     private async Task<bool> CheckProjectName(string name)
     {
-        var result = await Router.Confirm("Receive project", $"Do you want to receive the project '{name}'?");
+        var result = await Dispatcher.UIThread.Invoke(async() => await Router.Confirm("Receive project", $"Do you want to receive the project '{name}'?"));
 
         if (result.HasValue)
         {
