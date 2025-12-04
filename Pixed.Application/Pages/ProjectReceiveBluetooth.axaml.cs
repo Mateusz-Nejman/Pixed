@@ -11,28 +11,22 @@ using Pixed.Application.IO.Net;
 
 namespace Pixed.Application.Pages;
 
-public partial class ProjectReceive : Modal, IDisposable
+public partial class ProjectReceiveBluetooth : Modal, IDisposable
 {
     private ProjectServer? _server;
     private ApplicationData? _applicationData;
     private PixedProjectMethods? _pixedProjectMethods;
 
-    public string IpAddress
-    {
-        get { return GetValue(IpAddressProperty); }
-        set { SetValue(IpAddressProperty, value); }
-    }
     public string Status
     {
         get { return GetValue(StatusProperty); }
         set { SetValue(StatusProperty, value); }
     }
 
-    public static readonly StyledProperty<string> StatusProperty = AvaloniaProperty.Register<ProjectReceive, string>("Status", "status");
-    public static readonly StyledProperty<string> IpAddressProperty = AvaloniaProperty.Register<ProjectReceive, string>("IpAddress", "0.0.0.0");
-    private bool disposedValue;
+    public static readonly StyledProperty<string> StatusProperty = AvaloniaProperty.Register<ProjectReceiveBluetooth, string>("Status", "status");
+    private bool _disposedValue;
 
-    public ProjectReceive()
+    public ProjectReceiveBluetooth()
     {
         InitializeComponent();
         Status = "Status: Listening";
@@ -41,14 +35,13 @@ public partial class ProjectReceive : Modal, IDisposable
 
         if (_applicationData != null && _pixedProjectMethods != null)
         {
-            _server = new ProjectServer(new TcpTransferInterfaceServer());
+            _server = new ProjectServer(new BluetoothTransferInterfaceServer());
             Task.Run(TryReceiveProject);
         }
     }
 
     private async Task TryReceiveProject()
     {
-        Dispatcher.UIThread.Invoke(() => IpAddress = NetUtils.GetIpAddress()?.ToString() ?? "0.0.0.0");
         if (_server == null || _applicationData == null || _pixedProjectMethods == null)
         {
             Dispatcher.UIThread.Invoke(() => Status = "Status: Error");
@@ -60,11 +53,11 @@ public partial class ProjectReceive : Modal, IDisposable
 
     private async Task<bool> CheckProjectName(string name)
     {
-        var result = await Dispatcher.UIThread.Invoke(async() => await Router.Confirm("Receive project", $"Do you want to receive the project '{name}'?"));
+        var result = await Router.Confirm("Receive project", $"Do you want to receive the project '{name}'?");
 
-        if(result.HasValue)
+        if (result.HasValue)
         {
-            if(result.Value == ButtonResult.Yes)
+            if (result.Value == ButtonResult.Yes)
             {
                 Dispatcher.UIThread.Invoke(() => Status = $"Status: Receiving project '{name}'");
             }
@@ -77,7 +70,7 @@ public partial class ProjectReceive : Modal, IDisposable
 
     private async Task OnProjectReceived(Stream stream)
     {
-        if(_pixedProjectMethods == null)
+        if (_pixedProjectMethods == null)
         {
             return;
         }
@@ -85,19 +78,18 @@ public partial class ProjectReceive : Modal, IDisposable
         stream.Position = 0;
         await _pixedProjectMethods.Open(stream);
         await Close();
-        Dispatcher.UIThread.Invoke(() => Status = "Project received and opened");
     }
 
     protected virtual void Dispose(bool disposing)
     {
-        if (!disposedValue)
+        if (!_disposedValue)
         {
             if (disposing)
             {
                 _server?.Dispose();
             }
 
-            disposedValue = true;
+            _disposedValue = true;
         }
     }
     public void Dispose()

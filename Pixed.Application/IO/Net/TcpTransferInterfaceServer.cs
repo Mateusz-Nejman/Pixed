@@ -6,7 +6,8 @@ namespace Pixed.Application.IO.Net;
 
 public class TcpTransferInterfaceServer : IProjectTransferInterfaceServer
 {
-    private readonly TcpListener _listener = new(IPAddress.Any, 80);
+    public const int TcpPort = 3333;
+    private readonly TcpListener _listener = new(IPAddress.Any, TcpPort);
 
     public string DebugName => "Tcp";
     

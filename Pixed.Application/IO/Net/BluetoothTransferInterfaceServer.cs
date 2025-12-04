@@ -26,8 +26,8 @@ public class BluetoothTransferInterfaceServer : IProjectTransferInterfaceServer
         _listener.Stop();
     }
 
-    public Task<IProjectTransferClient> Accept()
+    public async Task<IProjectTransferClient> Accept()
     {
-        return Task.FromResult<IProjectTransferClient>(new BluetoothTransferClient(_listener.AcceptBluetoothClient()));
+        return new BluetoothTransferClient(await _listener.AcceptBluetoothClientAsync());
     }
 }

@@ -1,4 +1,5 @@
-﻿using Android.Content;
+﻿using Android;
+using Android.Content;
 using Android.Content.PM;
 using Android.Runtime;
 using Avalonia;
@@ -29,13 +30,19 @@ namespace Pixed.Android;
 #endif
 public class MainActivity : AvaloniaMainActivity<App>
 {
+#pragma warning disable CA1416 // Validate platform compatibility
+    private readonly string[] Permissions = [Manifest.Permission.Bluetooth, Manifest.Permission.BluetoothAdmin, Manifest.Permission.BluetoothAdvertise, Manifest.Permission.BluetoothConnect, Manifest.Permission.BluetoothScan, Manifest.Permission.Internet];
+#pragma warning restore CA1416 // Validate platform compatibility
+
     private const int RequestCode = 4711;
+
     private IAppUpdateManager? _updateManager;
     private AppUpdateSuccessListener? _updateSuccessListener;
     private ResumeSuccessListener? _resumeSuccessListener;
 
-    protected override void OnCreate(Bundle? savedInstanceState)
+    protected override async void OnCreate(Bundle? savedInstanceState)
     {
+        InTheHand.AndroidActivity.CurrentActivity = this;
         AndroidX.Core.SplashScreen.SplashScreen.InstallSplashScreen(this);
         PlatformSettings.MainActivity = this;
         PlatformFolder.Context = this;
@@ -46,6 +53,7 @@ public class MainActivity : AvaloniaMainActivity<App>
         OnBackPressedDispatcher.AddCallback(new BackPressedCallback());
 
         base.OnCreate(savedInstanceState);
+        CheckAndRequestPermissions();
 
 #if DEBUG
         _updateManager = new FakeAppUpdateManager(this);
@@ -109,6 +117,23 @@ public class MainActivity : AvaloniaMainActivity<App>
     protected override AppBuilder CustomizeAppBuilder(AppBuilder builder)
     {
         return base.CustomizeAppBuilder(builder).GetDefault();
+    }
+
+    private void CheckAndRequestPermissions()
+    {
+        var permissionsToRequest = new List<string>();
+        foreach (var permission in Permissions)
+        {
+            if (CheckSelfPermission(permission) != Permission.Granted)
+            {
+                permissionsToRequest.Add(permission);
+            }
+        }
+
+        if (permissionsToRequest.Count > 0)
+        {
+            RequestPermissions([.. permissionsToRequest], 0);
+        }
     }
 }
 

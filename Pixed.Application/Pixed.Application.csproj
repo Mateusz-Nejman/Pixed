@@ -21,8 +21,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="32feet.NET" Version="3.5.0" />
     <PackageReference Include="Avalonia" Version="11.3.9" />
+    <PackageReference Include="InTheHand.Net.Bluetooth" Version="4.2.2" />
     <PackageReference Include="ReactiveUI.Avalonia" Version="11.3.8" />
     <PackageReference Include="Avalonia.Skia" Version="11.3.9" />
     <PackageReference Include="Avalonia.Svg.Skia" Version="11.3.0" />

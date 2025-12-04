@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Threading;
 using Pixed.Application.IO;
+using Pixed.Application.IO.Net;
 using Pixed.Application.Routing;
 using Pixed.Core.Models;
 using System;
@@ -29,7 +30,7 @@ public partial class ProjectSend : Modal, IDisposable
 
         if (_applicationData != null)
         {
-            _client = new ProjectClient();
+            _client = new ProjectClient(new TcpTransferInterfaceClient());
             Task.Run(TrySendProject);
         }
     }
@@ -42,7 +43,7 @@ public partial class ProjectSend : Modal, IDisposable
             return;
         }
 
-        var ipAddress = await Router.Prompt("Ip Address", "Enter the server Ip Address:", "0.0.0.0");
+        var ipAddress = await Dispatcher.UIThread.Invoke(async() => await Router.Prompt("Ip Address", "Enter the server Ip Address:", "0.0.0.0"));
 
         if(!ipAddress.HasValue)
         {

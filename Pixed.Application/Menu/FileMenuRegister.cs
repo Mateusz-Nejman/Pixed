@@ -108,7 +108,7 @@ internal class FileMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
 
     private async Task SendProjectAction()
     {
-        await Router.Navigate("/sendProject");
+        await Router.Navigate("/sendBluetooth");
     }
 
     private async Task ReceiveProjectAction()
