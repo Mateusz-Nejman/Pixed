@@ -1,5 +1,4 @@
-﻿using Pixed.Application.Utils;
-using Pixed.Core.Models;
+﻿using Pixed.Core.Models;
 using System;
 using System.IO;
 using System.Net.Sockets;
@@ -36,7 +35,6 @@ internal class ProjectClient(IProjectTransferInterfaceClient client) : IDisposab
             else
             {
                 Console.WriteLine($"ProjectClient {_client.DebugName}: Cannot connect to " + address);
-                _client.Dispose();
                 return ProjectStatus.Error;
             }
 
@@ -58,7 +56,6 @@ internal class ProjectClient(IProjectTransferInterfaceClient client) : IDisposab
                 await TransferData.Write(_stream, modelBytes);
 
                 await _stream.DisposeAsync();
-                _client.Dispose();
                 return ProjectStatus.Accepted;
             }
 
@@ -66,29 +63,27 @@ internal class ProjectClient(IProjectTransferInterfaceClient client) : IDisposab
             {
                 await _stream.DisposeAsync();
             }
-            _client?.Dispose();
             return ProjectStatus.Rejected;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"ProjectClient {_client?.DebugName ?? "Unknown"}: Exception occurred: " + ex.Message);
+            Console.WriteLine($"ProjectClient {_client.DebugName}: Exception occurred: " + ex.Message);
             if (_stream != null)
             {
                 await _stream.DisposeAsync();
             }
             
-            _client?.Dispose();
             return ProjectStatus.Error;
         }
     }
 
-    protected virtual void Dispose(bool disposing)
+    protected void Dispose(bool disposing)
     {
         if (!_disposedValue)
         {
             if (disposing)
             {
-                _client?.Dispose();
+                _client.Dispose();
                 _stream?.Dispose();
             }
 

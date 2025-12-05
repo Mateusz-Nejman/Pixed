@@ -4,16 +4,11 @@ using System.Threading.Tasks;
 
 namespace Pixed.Application.IO.Net;
 
-internal class ProjectServer : IDisposable
+internal class ProjectServer (IProjectTransferInterfaceServer transferInterface) : IDisposable
 {
-    private readonly IProjectTransferInterfaceServer _transferInterface;
+    private readonly IProjectTransferInterfaceServer _transferInterface = transferInterface;
     private bool _disposedValue;
     private bool _breakLoop;
-
-    public ProjectServer(IProjectTransferInterfaceServer transferInterface)
-    {
-        _transferInterface = transferInterface;
-    }
 
     public async Task Listen(Func<string, Task<bool>> acceptFileFunc, Func<Stream, string, Task> projectReceived)
     {
@@ -35,7 +30,8 @@ internal class ProjectServer : IDisposable
 
                 if (accept)
                 {
-                    Console.WriteLine($"ProjectServer {_transferInterface.DebugName}: File accepted, sending ACCEPT_MODEL");
+                    Console.WriteLine(
+                        $"ProjectServer {_transferInterface.DebugName}: File accepted, sending ACCEPT_MODEL");
                     await TransferData.Write(stream, "ACCEPT_MODEL");
 
                     var fileTransfer = await TransferData.Read(stream);
