@@ -1,12 +1,11 @@
-﻿using Pixed.Application.IO.Net;
-using Pixed.Application.Utils;
+﻿using Pixed.Application.Utils;
 using Pixed.Core.Models;
 using System;
 using System.IO;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 
-namespace Pixed.Application.IO;
+namespace Pixed.Application.IO.Net;
 
 internal class ProjectClient(IProjectTransferInterfaceClient client) : IDisposable //Send project
 {
@@ -43,46 +42,42 @@ internal class ProjectClient(IProjectTransferInterfaceClient client) : IDisposab
 
             _stream = _client.GetStream();
             Console.WriteLine($"ProjectClient {_client.DebugName}: Sending model name " + model.FileName);
-            _stream?.Write(model.FileName.ToNetBytes());
+            await TransferData.Write(_stream, model.FileName);
             Console.WriteLine($"ProjectClient {_client.DebugName}: Model name sent, waiting for response...");
-            byte[] buffer = new byte[1024];
-            int bytesRead;
+            var transferData = await TransferData.Read(_stream);
 
-            if (_stream != null)
-            {
-                bytesRead = await _stream.ReadAsync(buffer);
-            }
-            else
-            {
-                Console.WriteLine($"ProjectClient {_client.DebugName}: Stream is null");
-                _client?.Dispose();
-                return ProjectStatus.Error;
-            }
-
-            string response = buffer.ToNetMessage(bytesRead);
+            var response = transferData.ToString();
 
             Console.WriteLine($"ProjectClient {_client.DebugName}: Received response: " + response);
             if (response == "ACCEPT_MODEL")
             {
                 MemoryStream modelStream = new();
                 model.Serialize(modelStream);
-                byte[] modelBytes = modelStream.ToArray();
+                var modelBytes = modelStream.ToArray();
                 await modelStream.DisposeAsync();
-                _stream.Write(modelBytes);
+                await TransferData.Write(_stream, modelBytes);
+
                 await _stream.DisposeAsync();
                 _client.Dispose();
                 return ProjectStatus.Accepted;
             }
-            else
+
+            if (_stream != null)
             {
                 await _stream.DisposeAsync();
-                _client.Dispose();
-                return ProjectStatus.Rejected;
             }
+            _client?.Dispose();
+            return ProjectStatus.Rejected;
         }
         catch (Exception ex)
         {
             Console.WriteLine($"ProjectClient {_client?.DebugName ?? "Unknown"}: Exception occurred: " + ex.Message);
+            if (_stream != null)
+            {
+                await _stream.DisposeAsync();
+            }
+            
+            _client?.Dispose();
             return ProjectStatus.Error;
         }
     }

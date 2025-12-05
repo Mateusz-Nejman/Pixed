@@ -2,9 +2,8 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Pixed.Application.IO.Net;
 
-namespace Pixed.Application.IO;
+namespace Pixed.Application.IO.Net;
 
 internal class ProjectServer : IDisposable
 {
@@ -30,9 +29,8 @@ internal class ProjectServer : IDisposable
                 Console.WriteLine($"ProjectServer {_transferInterface.DebugName}: Client connected");
                 var stream = client.GetStream();
                 Console.WriteLine($"ProjectServer {_transferInterface.DebugName}: Reading file name...");
-                byte[] buffer = new byte[1024];
-                int bytesRead = await stream.ReadAsync(buffer);
-                var fileName = buffer.ToNetMessage(bytesRead);
+                var fileNameTransfer = await TransferData.Read(stream);
+                var fileName = fileNameTransfer.ToString();
                 Console.WriteLine($"ProjectServer {_transferInterface.DebugName}: Received file name: " + fileName);
                 var accept = await acceptFileFunc(fileName);
 
@@ -41,12 +39,8 @@ internal class ProjectServer : IDisposable
                     Console.WriteLine($"ProjectServer {_transferInterface.DebugName}: File accepted, sending ACCEPT_MODEL");
                     await stream.WriteAsync("ACCEPT_MODEL".ToNetBytes());
 
-                    MemoryStream projectStream = new();
-                    while ((bytesRead = await stream.ReadAsync(buffer)) > 0)
-                    {
-                        projectStream.Write(buffer, 0, bytesRead);
-                    }
-                    projectStream.Position = 0;
+                    var fileTransfer = await TransferData.Read(stream);
+                    MemoryStream projectStream = new(fileTransfer.Data);
                     await projectReceived(projectStream);
                 }
 
