@@ -37,7 +37,7 @@ internal class ProjectServer : IDisposable
                 if (accept)
                 {
                     Console.WriteLine($"ProjectServer {_transferInterface.DebugName}: File accepted, sending ACCEPT_MODEL");
-                    await stream.WriteAsync("ACCEPT_MODEL".ToNetBytes());
+                    await TransferData.Write(stream, "ACCEPT_MODEL");
 
                     var fileTransfer = await TransferData.Read(stream);
                     MemoryStream projectStream = new(fileTransfer.Data);

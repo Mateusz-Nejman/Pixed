@@ -76,7 +76,7 @@ public partial class ProjectReceiveBluetooth : Modal, IDisposable
 
         stream.Position = 0;
         await _pixedProjectMethods.Open(stream);
-        await Close();
+        await Dispatcher.UIThread.InvokeAsync(Close);
     }
 
     protected virtual void Dispose(bool disposing)

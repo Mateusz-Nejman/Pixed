@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Pixed.Application.Utils;
 using Pixed.Core.Utils;
@@ -17,6 +18,7 @@ public readonly struct TransferData(byte[] data)
             return;
         }
 
+        Console.WriteLine("Writing TransferData of length: " + Length);
         await stream.WriteIntAsync(Length);
         await stream.WriteAsync(Data);
     }
@@ -40,15 +42,28 @@ public readonly struct TransferData(byte[] data)
     public static async Task<TransferData> Read(Stream stream)
     {
         var length = await stream.ReadIntAsync();
-        var buffer = new byte[length];
-        
-        var bytesRead = await stream.ReadAsync(buffer);
-
-        if (bytesRead != length)
+        Console.WriteLine("Read TransferData with length: " + length);
+        int bytesRead;
+        int bytesLeft = length;
+        byte[] buffer = new byte[512];
+        MemoryStream memoryStream = new();
+        // Keep reading until the stream ends
+        while ((bytesRead = stream.Read(buffer, 0, Math.Min(buffer.Length, bytesLeft))) > 0)
         {
-            //TODO exception
+            bytesLeft -= bytesRead;
+            await memoryStream.WriteAsync(buffer.AsMemory(0, bytesRead));
+
+            if(bytesRead == length)
+            {
+                break;
+            }
         }
-        
-        return new TransferData(buffer);
+
+        if (memoryStream.Length != length)
+        {
+            throw new Exception("Expect to read " + length + " bytes, but only read " + memoryStream.Length + " bytes.");
+        }
+
+        return new TransferData(memoryStream.ToArray());
     }
 }
