@@ -27,7 +27,7 @@ internal class BluetoothTransferInterfaceClient : IProjectTransferInterfaceClien
         return _client.PairedDevices;
     }
 
-    public Task Connect(object address)
+    public Task Connect<T>(T address)
     {
         if (address is BluetoothAddress btAddress)
         {
@@ -35,7 +35,7 @@ internal class BluetoothTransferInterfaceClient : IProjectTransferInterfaceClien
         }
         else
         {
-            _client.Connect(new BluetoothEndPoint(BluetoothAddress.Parse(address.ToString()), BluetoothService.SerialPort));
+            _client.Connect(new BluetoothEndPoint(BluetoothAddress.Parse(address?.ToString()), BluetoothService.SerialPort));
         }
         return Task.CompletedTask;
     }

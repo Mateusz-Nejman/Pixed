@@ -1,6 +1,5 @@
 ﻿using Avalonia.Threading;
 using InTheHand.Net.Sockets;
-using Pixed.Application.IO;
 using Pixed.Application.IO.Net;
 using Pixed.Core;
 using Pixed.Core.Models;
@@ -84,10 +83,10 @@ internal class ProjectSendBluetoothViewModel : PropertyChangedBase, IDisposable
         _client = new ProjectClient(_interface);
         SendCommand = new AsyncCommand(SendAction);
 
-        Task.Run(Initialize);
+        Initialize();
     }
 
-    private async Task Initialize()
+    private void Initialize()
     {
         Dispatcher.UIThread.Invoke(() =>
         {

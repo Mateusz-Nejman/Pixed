@@ -22,7 +22,7 @@ internal class ProjectClient(IProjectTransferInterfaceClient client) : IDisposab
 
     private bool _disposedValue;
 
-    public async Task<ProjectStatus> TrySendProject(object address, PixedModel model)
+    public async Task<ProjectStatus> TrySendProject<T>(T address, PixedModel model)
     {
         try
         {

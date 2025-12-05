@@ -115,30 +115,26 @@ public static class StreamUtils
         return stream.Read(stream.Length);
     }
 
-    private static byte[] Read(this Stream stream, int size)
+    public static byte[] Read(this Stream stream, int size)
     {
-        byte[] buffer = new byte[size];
-        stream.Read(buffer, 0, buffer.Length);
-        return buffer;
+        var buffer = new byte[size];
+        var bytesRead = stream.Read(buffer, 0, buffer.Length);
+        
+        return bytesRead != buffer.Length ? throw new Exception("Expect to read " + size + " bytes, but only read " + bytesRead + " bytes.") : buffer;
     }
 
     private static async Task<byte[]> ReadAsync(this Stream stream, int size)
     {
-        byte[] buffer = new byte[size];
-        int bytesRead = await stream.ReadAsync(buffer);
+        var buffer = new byte[size];
+        var bytesRead = await stream.ReadAsync(buffer);
 
-        if (bytesRead != buffer.Length)
-        {
-            //TODO exception
-        }
-
-        return buffer;
+        return bytesRead != buffer.Length ? throw new Exception("Expect to read " + size + " bytes, but only read " + bytesRead + " bytes.") : buffer;
     }
 
     private static byte[] Read(this Stream stream, long size)
     {
         byte[] buffer = new byte[size];
-        stream.Read(buffer, 0, buffer.Length);
-        return buffer;
+        var bytesRead = stream.Read(buffer, 0, buffer.Length);
+        return bytesRead != buffer.Length ? throw new Exception("Expect to read " + size + " bytes, but only read " + bytesRead + " bytes.") : buffer;
     }
 }
