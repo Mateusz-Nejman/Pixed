@@ -1,5 +1,4 @@
-﻿using Pixed.Application.Utils;
-using System;
+﻿using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -16,7 +15,7 @@ internal class ProjectServer : IDisposable
         _transferInterface = transferInterface;
     }
 
-    public async Task Listen(Func<string, Task<bool>> acceptFileFunc, Func<Stream, Task> projectReceived)
+    public async Task Listen(Func<string, Task<bool>> acceptFileFunc, Func<Stream, string, Task> projectReceived)
     {
         Console.WriteLine($"ProjectServer {_transferInterface.DebugName}: Starting listener on port 13");
         _transferInterface.Start();
@@ -41,7 +40,7 @@ internal class ProjectServer : IDisposable
 
                     var fileTransfer = await TransferData.Read(stream);
                     MemoryStream projectStream = new(fileTransfer.Data);
-                    await projectReceived(projectStream);
+                    await projectReceived(projectStream, fileName);
                 }
 
                 await stream.DisposeAsync();

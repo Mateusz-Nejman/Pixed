@@ -267,13 +267,14 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
         Subjects.ProjectAdded.OnNext(model);
     }
 
-    public async Task Open(Stream stream)
+    public async Task Open(Stream stream, string filename)
     {
         PixedModel model = new(_applicationData);
         try
         {
             stream.Position = 0;
             model.Deserialize(stream);
+            model.FileName = filename;
         }
         catch (Exception)
         {

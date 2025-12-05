@@ -67,7 +67,7 @@ public partial class ProjectReceiveBluetooth : Modal, IDisposable
         return false;
     }
 
-    private async Task OnProjectReceived(Stream stream)
+    private async Task OnProjectReceived(Stream stream, string filename)
     {
         if (_pixedProjectMethods == null)
         {
@@ -75,7 +75,7 @@ public partial class ProjectReceiveBluetooth : Modal, IDisposable
         }
 
         stream.Position = 0;
-        await _pixedProjectMethods.Open(stream);
+        await _pixedProjectMethods.Open(stream, filename);
         await Dispatcher.UIThread.InvokeAsync(Close);
     }
 
