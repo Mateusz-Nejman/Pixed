@@ -137,7 +137,7 @@ internal class FileMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
 
     private MenuItem BuildShareTcpMenu()
     {
-        MenuItem shareMenu = new("Share") { Command = new AsyncCommand(SendProjectAction) };
+        MenuItem shareMenu = new("Send") { Command = new AsyncCommand(SendProjectAction) };
         MenuItem receiveMenu = new("Receive") { Command = new AsyncCommand(ReceiveProjectAction) };
 
         return new MenuItem("Local network")
@@ -149,7 +149,7 @@ internal class FileMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
 
     private MenuItem BuildShareBluetoothMenu()
     {
-        MenuItem shareMenu = new("Share") { Command = new AsyncCommand(SendBluetoothAction) };
+        MenuItem shareMenu = new("Send") { Command = new AsyncCommand(SendBluetoothAction) };
         MenuItem receiveMenu = new("Receive") { Command = new AsyncCommand(ReceiveBluetoothAction) };
 
         return new MenuItem("Bluetooth")
