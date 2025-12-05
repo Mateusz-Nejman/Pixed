@@ -1,45 +1,69 @@
-using Avalonia;
-using Avalonia.Threading;
-using Pixed.Application.IO;
-using Pixed.Application.Routing;
-using Pixed.Core.Models;
-using System;
+﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using Avalonia.Threading;
+using Pixed.Application.IO;
 using Pixed.Application.IO.Net;
+using Pixed.Application.Pages;
+using Pixed.Application.Routing;
+using Pixed.Core;
+using Pixed.Core.Models;
 
-namespace Pixed.Application.Pages;
+namespace Pixed.Application.ViewModels;
 
-public partial class ProjectReceiveBluetooth : Modal, IDisposable
+public class ProjectReceiveViewModel : PropertyChangedBase, IDisposable
 {
-    private ProjectServer? _server;
-    private ApplicationData? _applicationData;
-    private PixedProjectMethods? _pixedProjectMethods;
+    private readonly ProjectServer? _server;
+    private readonly ApplicationData? _applicationData;
+    private readonly PixedProjectMethods? _pixedProjectMethods;
+    private readonly Modal _modal;
+
+    private string _status = string.Empty;
+    private string _ipAddress = string.Empty;
+    private bool _isIpAddressVisible = true;
+    private bool _disposedValue;
 
     public string Status
     {
-        get { return GetValue(StatusProperty); }
-        set { SetValue(StatusProperty, value); }
-    }
-
-    public static readonly StyledProperty<string> StatusProperty = AvaloniaProperty.Register<ProjectReceiveBluetooth, string>("Status", "status");
-    private bool _disposedValue;
-
-    public ProjectReceiveBluetooth()
-    {
-        InitializeComponent();
-        Status = "Status: Listening";
-        _applicationData = Provider?.Get<ApplicationData>();
-        _pixedProjectMethods = Provider?.Get<PixedProjectMethods>();
-
-        if (_applicationData != null && _pixedProjectMethods != null)
+        get => _status;
+        set
         {
-            _server = new ProjectServer(new BluetoothTransferInterfaceServer());
-            Task.Run(TryReceiveProject);
+            _status = value;
+            OnPropertyChanged();
         }
     }
 
-    private async Task TryReceiveProject()
+    public string IpAddress
+    {
+        get => _ipAddress;
+        set
+        {
+            _ipAddress = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool IsIpAddressVisible
+    {
+        get => _isIpAddressVisible;
+        set
+        {
+            _isIpAddressVisible = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public ProjectReceiveViewModel(Modal modal, IProjectTransferInterfaceServer transferInterface)
+    {
+        _modal = modal;
+        Status = "Status: Listening";
+        _applicationData = App.ServiceProvider?.Get<ApplicationData>();
+        _pixedProjectMethods = App.ServiceProvider?.Get<PixedProjectMethods>();
+
+        _server = new ProjectServer(transferInterface);
+    }
+    
+    public async Task TryReceiveProject()
     {
         if (_server == null || _applicationData == null || _pixedProjectMethods == null)
         {
@@ -76,10 +100,10 @@ public partial class ProjectReceiveBluetooth : Modal, IDisposable
 
         stream.Position = 0;
         await _pixedProjectMethods.Open(stream, filename);
-        await Dispatcher.UIThread.InvokeAsync(Close);
+        await Dispatcher.UIThread.InvokeAsync(_modal.Close);
     }
 
-    protected virtual void Dispose(bool disposing)
+    private void Dispose(bool disposing)
     {
         if (!_disposedValue)
         {

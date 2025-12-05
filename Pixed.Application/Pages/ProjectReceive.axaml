@@ -1,15 +1,19 @@
 <local:Modal xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d"
-		xmlns:local="clr-namespace:Pixed.Application.Pages"
-        x:Class="Pixed.Application.Pages.ProjectReceive"
-        Title="Receive project">
-  <local:Modal.Dialog>
-    <StackPanel Margin="5">
-      <TextBlock Text="{Binding IpAddress, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ProjectReceive}}"/>
-      <TextBlock Text="{Binding Status, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ProjectReceive}}"/>
-    </StackPanel>
-  </local:Modal.Dialog>
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             xmlns:local="clr-namespace:Pixed.Application.Pages"
+             xmlns:viewModels="clr-namespace:Pixed.Application.ViewModels"
+             x:DataType="viewModels:ProjectReceiveViewModel"
+             x:Class="Pixed.Application.Pages.ProjectReceive"
+             Title="Receive project">
+    <local:Modal.Dialog>
+        <StackPanel Margin="5">
+            <TextBlock
+                Text="{Binding IpAddress}" IsVisible="{Binding IsIpAddressVisible}" />
+            <TextBlock
+                Text="{Binding Status}" />
+        </StackPanel>
+    </local:Modal.Dialog>
 </local:Modal>
