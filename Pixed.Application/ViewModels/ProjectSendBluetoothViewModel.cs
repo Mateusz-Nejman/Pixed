@@ -77,7 +77,7 @@ internal class ProjectSendBluetoothViewModel : PropertyChangedBase, IDisposable
 
     public ProjectSendBluetoothViewModel()
     {
-        Status = "Status: Initializing";
+        Status = "Initializing...";
         _applicationData = App.ServiceProvider?.Get<ApplicationData>();
         _interface = new BluetoothTransferInterfaceClient();
         _client = new ProjectClient(_interface);
@@ -104,28 +104,19 @@ internal class ProjectSendBluetoothViewModel : PropertyChangedBase, IDisposable
         StatusVisible = true;
         if(_applicationData == null || SelectedDevice == null)
         {
-            Status = "Status: Error";
+            ChangeAction("Error");
             return;
         }
 
-        Status = "Status: Sending";
-        var projectStatus = await _client.TrySendProject(SelectedDevice.DeviceAddress, _applicationData.CurrentModel);
-
-        if (projectStatus == ProjectClient.ProjectStatus.Accepted)
-        {
-            Status = "Status: Project sent";
-        }
-        else if (projectStatus == ProjectClient.ProjectStatus.Rejected)
-        {
-            Status = "Status: Project rejected";
-        }
-        else
-        {
-            Status = "Status: Error";
-        }
+        await _client.TrySendProject(SelectedDevice.DeviceAddress, _applicationData.CurrentModel, ChangeAction);
     }
 
-    protected virtual void Dispose(bool disposing)
+    private void ChangeAction(string status)
+    {
+        Dispatcher.UIThread.Invoke(() => Status = status);
+    }
+
+    private void Dispose(bool disposing)
     {
         if (!_disposedValue)
         {

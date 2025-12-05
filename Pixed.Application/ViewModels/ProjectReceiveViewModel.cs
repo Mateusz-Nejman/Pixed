@@ -56,7 +56,7 @@ public class ProjectReceiveViewModel : PropertyChangedBase, IDisposable
     public ProjectReceiveViewModel(Modal modal, IProjectTransferInterfaceServer transferInterface)
     {
         _modal = modal;
-        Status = "Status: Listening";
+        Status = "Initializing...";
         _applicationData = App.ServiceProvider?.Get<ApplicationData>();
         _pixedProjectMethods = App.ServiceProvider?.Get<PixedProjectMethods>();
 
@@ -67,28 +67,30 @@ public class ProjectReceiveViewModel : PropertyChangedBase, IDisposable
     {
         if (_server == null || _applicationData == null || _pixedProjectMethods == null)
         {
-            Dispatcher.UIThread.Invoke(() => Status = "Status: Error");
+            ChangeStatus("Error");
             return;
         }
 
-        await _server.Listen(CheckProjectName, OnProjectReceived);
+        await _server.Listen(CheckProjectName, OnProjectReceived, ChangeStatus);
+    }
+
+    private void ChangeStatus(string status)
+    {
+        Dispatcher.UIThread.InvokeAsync(() => Status = status);
     }
 
     private async Task<bool> CheckProjectName(string name)
     {
         var result = await Dispatcher.UIThread.Invoke(async() => await Router.Confirm("Receive project", $"Do you want to receive the project '{name}'?"));
 
-        if (result.HasValue)
+        if (!result.HasValue) return false;
+        if (result.Value == ButtonResult.Yes)
         {
-            if (result.Value == ButtonResult.Yes)
-            {
-                Dispatcher.UIThread.Invoke(() => Status = $"Status: Receiving project '{name}'");
-            }
-
-            return result.Value == ButtonResult.Yes;
+            ChangeStatus($"Status: Receiving project '{name}'");
         }
 
-        return false;
+        return result.Value == ButtonResult.Yes;
+
     }
 
     private async Task OnProjectReceived(Stream stream, string filename)

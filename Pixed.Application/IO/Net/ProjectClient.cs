@@ -21,21 +21,24 @@ internal class ProjectClient(IProjectTransferInterfaceClient client) : IDisposab
 
     private bool _disposedValue;
 
-    public async Task<ProjectStatus> TrySendProject<T>(T address, PixedModel model)
+    public async Task TrySendProject<T>(T address, PixedModel model, Action<string> statusChangeAction)
     {
         try
         {
             Console.WriteLine($"ProjectClient {_client.DebugName}: Connecting to " + address);
+            statusChangeAction("Connecting to " + address);
             await _client.Connect(address);
 
             if (_client.Connected)
             {
                 Console.WriteLine($"ProjectClient {_client.DebugName}: Connected to " + address);
+                statusChangeAction("Connected to " + address);
             }
             else
             {
                 Console.WriteLine($"ProjectClient {_client.DebugName}: Cannot connect to " + address);
-                return ProjectStatus.Error;
+                statusChangeAction("Cannot connect to " + address);
+                return;
             }
 
             _stream = _client.GetStream();
@@ -56,14 +59,16 @@ internal class ProjectClient(IProjectTransferInterfaceClient client) : IDisposab
                 await TransferData.Write(_stream, modelBytes);
 
                 await _stream.DisposeAsync();
-                return ProjectStatus.Accepted;
+                statusChangeAction("Project sent");
+                return;
             }
 
             if (_stream != null)
             {
                 await _stream.DisposeAsync();
             }
-            return ProjectStatus.Rejected;
+            statusChangeAction("Project rejected");
+            return;
         }
         catch (Exception ex)
         {
@@ -72,8 +77,8 @@ internal class ProjectClient(IProjectTransferInterfaceClient client) : IDisposab
             {
                 await _stream.DisposeAsync();
             }
-            
-            return ProjectStatus.Error;
+
+            statusChangeAction("Exception thrown");
         }
     }
 

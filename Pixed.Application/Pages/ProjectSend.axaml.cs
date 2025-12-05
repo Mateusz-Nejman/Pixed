@@ -1,6 +1,5 @@
 using Avalonia;
 using Avalonia.Threading;
-using Pixed.Application.IO;
 using Pixed.Application.IO.Net;
 using Pixed.Application.Routing;
 using Pixed.Core.Models;
@@ -11,13 +10,13 @@ namespace Pixed.Application.Pages;
 
 public partial class ProjectSend : Modal, IDisposable
 {
-    private ProjectClient? _client;
-    private ApplicationData? _applicationData;
+    private readonly ProjectClient? _client;
+    private readonly ApplicationData? _applicationData;
     private bool _disposedValue;
     public string Status
     {
-        get { return GetValue(StatusProperty); }
-        set { SetValue(StatusProperty, value); }
+        get => GetValue(StatusProperty);
+        set => SetValue(StatusProperty, value);
     }
 
     public static readonly StyledProperty<string> StatusProperty = AvaloniaProperty.Register<ProjectSend, string>("Status", "status");
@@ -25,7 +24,7 @@ public partial class ProjectSend : Modal, IDisposable
     public ProjectSend()
     {
         InitializeComponent();
-        Status = "Status: Initializing";
+        Status = "Initializing...";
         _applicationData = Provider?.Get<ApplicationData>();
 
         if (_applicationData != null)
@@ -39,7 +38,7 @@ public partial class ProjectSend : Modal, IDisposable
     {
         if(_client == null || _applicationData == null)
         {
-            Dispatcher.UIThread.Invoke(() => Status = "Status: Error");
+            ChangeStatus("Error");
             return;
         }
 
@@ -50,21 +49,12 @@ public partial class ProjectSend : Modal, IDisposable
             return;
         }
 
-        Dispatcher.UIThread.Invoke(() => Status = "Status: Sending");
-        var projectStatus = await _client.TrySendProject(ipAddress.Value ?? "0.0.0.0", _applicationData.CurrentModel);
+        await _client.TrySendProject(ipAddress.Value ?? "0.0.0.0", _applicationData.CurrentModel, ChangeStatus);
+    }
 
-        if(projectStatus == ProjectClient.ProjectStatus.Accepted)
-        {
-            Dispatcher.UIThread.Invoke(() => Status = "Status: Project sent");
-        }
-        else if(projectStatus == ProjectClient.ProjectStatus.Rejected)
-        {
-            Dispatcher.UIThread.Invoke(() => Status = "Status: Project rejected");
-        }
-        else
-        {
-            Dispatcher.UIThread.Invoke(() => Status = "Status: Error");
-        }
+    private void ChangeStatus(string status)
+    {
+        Dispatcher.UIThread.Invoke(() => Status = status);
     }
 
     protected virtual void Dispose(bool disposing)
