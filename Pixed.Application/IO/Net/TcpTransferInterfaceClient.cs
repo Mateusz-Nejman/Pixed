@@ -20,7 +20,7 @@ internal class TcpTransferInterfaceClient : IProjectTransferInterfaceClient
 
     public async Task Connect(object address)
     {
-        await _client.ConnectAsync(new IPEndPoint(IPAddress.Parse(address.ToString()), TcpTransferInterfaceServer.TcpPort));
+        await _client.ConnectAsync(new IPEndPoint(IPAddress.Parse(address?.ToString() ?? "0.0.0.0"), TcpTransferInterfaceServer.TcpPort));
     }
 
     public NetworkStream GetStream()

@@ -8,6 +8,11 @@ public static class StreamUtils
         return BitConverter.ToInt32(stream.Read(sizeof(int)));
     }
 
+    public static async Task<int> ReadIntAsync(this Stream stream)
+    {
+        return BitConverter.ToInt32(await stream.ReadAsync(sizeof(int)));
+    }
+
     public static uint ReadUInt(this Stream stream)
     {
         return BitConverter.ToUInt32(stream.Read(sizeof(uint)));
@@ -39,6 +44,12 @@ public static class StreamUtils
     {
         IList<byte> buffer = BitConverter.GetBytes(value);
         stream.Write(buffer.ToArray());
+    }
+
+    public static async Task WriteIntAsync(this Stream stream, int value)
+    {
+        IList<byte> buffer = BitConverter.GetBytes(value);
+        await stream.WriteAsync(buffer.ToArray());
     }
 
     public static void WriteUInt(this Stream stream, uint value)
@@ -108,6 +119,19 @@ public static class StreamUtils
     {
         byte[] buffer = new byte[size];
         stream.Read(buffer, 0, buffer.Length);
+        return buffer;
+    }
+
+    private static async Task<byte[]> ReadAsync(this Stream stream, int size)
+    {
+        byte[] buffer = new byte[size];
+        int bytesRead = await stream.ReadAsync(buffer);
+
+        if (bytesRead != buffer.Length)
+        {
+            //TODO exception
+        }
+
         return buffer;
     }
 
