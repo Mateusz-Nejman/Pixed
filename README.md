@@ -61,6 +61,7 @@ Your imagination and **Pixed**. These two things are needed for pixel-arted imag
 - AvaloniaProgressRing [moviegear/LoadingIndicators.Avalonia](https://github.com/moviegear/LoadingIndicators.Avalonia/)
 - WiX Toolset [wixtoolset/wix](https://github.com/wixtoolset/wix)
 - Svg.Skia [wieslawsoltes/Svg.Skia](https://github.com/wieslawsoltes/Svg.Skia)
+- 32feet.NET [InTheHand/32feet](https://github.com/inthehand/32feet)
 
 ## Build prerequisites
 For MSI Build:

@@ -179,14 +179,8 @@ public class Layer : PixelImage, IPixedSerializer, IDisposable
         _width = stream.ReadInt();
         _height = stream.ReadInt();
         _name = stream.ReadString();
-        int pixelsSize = stream.ReadInt();
-        byte[] bytes = new byte[pixelsSize * sizeof(uint)];
-        int bytesRead = stream.Read(bytes, 0, bytes.Length);
-
-        if (bytesRead != bytes.Length)
-        {
-            return;
-        }
+        var pixelsSize = stream.ReadInt();
+        var bytes = stream.Read(pixelsSize * sizeof(uint));
         var colors = bytes.ToUInt();
 
         _bitmap?.Dispose();

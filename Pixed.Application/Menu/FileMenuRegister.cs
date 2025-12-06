@@ -32,6 +32,7 @@ internal class FileMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
         _menuItemRegistry.Register(BaseMenuItem.File, "Save as", new AsyncCommand<bool>(SaveAction), true, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_save_edit_24_regular.svg"));
         _menuItemRegistry.Register(BaseMenuItem.File, "Export to PNG", new AsyncCommand(ExportPngAction), null, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_image_48_regular.svg"));
         _menuItemRegistry.Register(BaseMenuItem.File, "Export to Ico", new AsyncCommand(ExportIcoAction), null, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_image_circle_48_regular.svg"));
+        _menuItemRegistry.Register(BaseMenuItem.File, "Share", new AsyncCommand(ShareAction), null, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_share_48_filled.svg"));
 
         if (IPlatformSettings.Instance.RecentFilesEnabled)
         {
@@ -103,5 +104,10 @@ internal class FileMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
     private async Task ExportIcoAction()
     {
         await _projectMethods.ExportToIco(_applicationData.CurrentModel);
+    }
+
+    private async Task ShareAction()
+    {
+        await Router.Navigate("/shareProject");
     }
 }

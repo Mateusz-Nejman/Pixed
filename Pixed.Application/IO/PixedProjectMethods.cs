@@ -267,6 +267,35 @@ internal class PixedProjectMethods(ApplicationData applicationData, DialogUtils 
         Subjects.ProjectAdded.OnNext(model);
     }
 
+    public async Task Open(Stream stream, string filename)
+    {
+        PixedModel model = new(_applicationData);
+        try
+        {
+            stream.Position = 0;
+            model.Deserialize(stream);
+            model.FileName = filename;
+        }
+        catch (Exception)
+        {
+            await Router.Message("Opening error", "Invalid format");
+            return;
+        }
+
+        model.FilePath = null;
+        
+        if (_applicationData.CurrentModel.IsEmpty)
+        {
+            _applicationData.Models[_applicationData.CurrentModelIndex] = model;
+        }
+        else
+        {
+            _applicationData.Models.Add(model);
+        }
+
+        Subjects.ProjectAdded.OnNext(model);
+    }
+
     public async Task Create(Png png)
     {
         PngProjectSerializer serializer = GetSerializer<PngProjectSerializer>();

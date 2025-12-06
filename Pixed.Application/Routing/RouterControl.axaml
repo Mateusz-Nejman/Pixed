@@ -30,5 +30,6 @@
     <Route Path="openPng" Page="windows:OpenPNG" Type="Modal"/>
 	<Route Path="openSvg" Page="windows:OpenSVG" Type="Modal"/>
 	<Route Path="loadLayer" Page="windows:LoadLayer" Type="Modal"/>
+    <Route Path="shareProject" Page="windows:ProjectShare" Type="Modal"/>
   </ShellView>
 </UserControl>

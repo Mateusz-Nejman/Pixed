@@ -8,6 +8,11 @@ public static class StreamUtils
         return BitConverter.ToInt32(stream.Read(sizeof(int)));
     }
 
+    public static async Task<int> ReadIntAsync(this Stream stream)
+    {
+        return BitConverter.ToInt32(await stream.ReadAsync(sizeof(int)));
+    }
+
     public static uint ReadUInt(this Stream stream)
     {
         return BitConverter.ToUInt32(stream.Read(sizeof(uint)));
@@ -39,6 +44,12 @@ public static class StreamUtils
     {
         IList<byte> buffer = BitConverter.GetBytes(value);
         stream.Write(buffer.ToArray());
+    }
+
+    public static async Task WriteIntAsync(this Stream stream, int value)
+    {
+        IList<byte> buffer = BitConverter.GetBytes(value);
+        await stream.WriteAsync(buffer.ToArray());
     }
 
     public static void WriteUInt(this Stream stream, uint value)
@@ -104,27 +115,26 @@ public static class StreamUtils
         return stream.Read(stream.Length);
     }
 
-    private static byte[] Read(this Stream stream, int size)
+    public static byte[] Read(this Stream stream, int size)
     {
-        byte[] buffer = new byte[size];
-        int bytesRead = stream.Read(buffer, 0, buffer.Length);
+        var buffer = new byte[size];
+        var bytesRead = stream.Read(buffer, 0, buffer.Length);
+        
+        return bytesRead != buffer.Length ? throw new Exception("Expect to read " + size + " bytes, but only read " + bytesRead + " bytes.") : buffer;
+    }
 
-        if (bytesRead != buffer.Length)
-        {
-            Console.WriteLine("Invalid buffer size");
-        }
-        return buffer;
+    private static async Task<byte[]> ReadAsync(this Stream stream, int size)
+    {
+        var buffer = new byte[size];
+        var bytesRead = await stream.ReadAsync(buffer);
+
+        return bytesRead != buffer.Length ? throw new Exception("Expect to read " + size + " bytes, but only read " + bytesRead + " bytes.") : buffer;
     }
 
     private static byte[] Read(this Stream stream, long size)
     {
         byte[] buffer = new byte[size];
-        int bytesRead = stream.Read(buffer, 0, buffer.Length);
-
-        if (bytesRead != buffer.Length)
-        {
-            Console.WriteLine("Invalid buffer size");
-        }
-        return buffer;
+        var bytesRead = stream.Read(buffer, 0, buffer.Length);
+        return bytesRead != buffer.Length ? throw new Exception("Expect to read " + size + " bytes, but only read " + bytesRead + " bytes.") : buffer;
     }
 }
