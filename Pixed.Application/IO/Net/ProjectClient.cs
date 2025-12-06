@@ -8,13 +8,6 @@ namespace Pixed.Application.IO.Net;
 
 internal class ProjectClient(IProjectTransferInterfaceClient client) : IDisposable //Send project
 {
-    public enum ProjectStatus
-    {
-        Error,
-        Accepted,
-        Rejected
-    }
-
     private readonly IProjectTransferInterfaceClient _client = client;
 
     private NetworkStream? _stream;

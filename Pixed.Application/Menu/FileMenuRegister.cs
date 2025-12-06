@@ -32,7 +32,7 @@ internal class FileMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
         _menuItemRegistry.Register(BaseMenuItem.File, "Save as", new AsyncCommand<bool>(SaveAction), true, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_save_edit_24_regular.svg"));
         _menuItemRegistry.Register(BaseMenuItem.File, "Export to PNG", new AsyncCommand(ExportPngAction), null, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_image_48_regular.svg"));
         _menuItemRegistry.Register(BaseMenuItem.File, "Export to Ico", new AsyncCommand(ExportIcoAction), null, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_image_circle_48_regular.svg"));
-        _menuItemRegistry.Register(BaseMenuItem.File, BuildShareMenu());
+        _menuItemRegistry.Register(BaseMenuItem.File, "Share", new AsyncCommand(ShareAction), null, new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_share_48_filled.svg"));
 
         if (IPlatformSettings.Instance.RecentFilesEnabled)
         {
@@ -106,56 +106,8 @@ internal class FileMenuRegister(IMenuItemRegistry menuItemRegistry, ApplicationD
         await _projectMethods.ExportToIco(_applicationData.CurrentModel);
     }
 
-    private async Task SendProjectAction()
+    private async Task ShareAction()
     {
-        await Router.Navigate("/sendProject");
-    }
-
-    private async Task ReceiveProjectAction()
-    {
-        await Router.Navigate("/receiveProject");
-    }
-
-    private MenuItem BuildShareMenu()
-    {
-        return new MenuItem("Share")
-        {
-            Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_share_48_filled.svg"),
-            Items = [BuildShareTcpMenu(), BuildShareBluetoothMenu()]
-        };
-    }
-
-    private async Task SendBluetoothAction()
-    {
-        await Router.Navigate("/sendBluetooth");
-    }
-
-    private async Task ReceiveBluetoothAction()
-    {
-        await Router.Navigate("/receiveBluetooth");
-    }
-
-    private MenuItem BuildShareTcpMenu()
-    {
-        MenuItem shareMenu = new("Send") { Command = new AsyncCommand(SendProjectAction) };
-        MenuItem receiveMenu = new("Receive") { Command = new AsyncCommand(ReceiveProjectAction) };
-
-        return new MenuItem("Local network")
-        {
-            Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_channel_share_48_filled.svg"),
-            Items = [shareMenu, receiveMenu]
-        };
-    }
-
-    private MenuItem BuildShareBluetoothMenu()
-    {
-        MenuItem shareMenu = new("Send") { Command = new AsyncCommand(SendBluetoothAction) };
-        MenuItem receiveMenu = new("Receive") { Command = new AsyncCommand(ReceiveBluetoothAction) };
-
-        return new MenuItem("Bluetooth")
-        {
-            Icon = new("avares://Pixed.Application/Resources/fluent-icons/ic_fluent_bluetooth_48_filled.svg"),
-            Items = [shareMenu, receiveMenu]
-        };
+        await Router.Navigate("/shareProject");
     }
 }

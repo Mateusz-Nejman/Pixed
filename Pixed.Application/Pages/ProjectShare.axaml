@@ -1,0 +1,55 @@
+<local:Modal xmlns="https://github.com/avaloniaui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 mc:Ignorable="d"
+			 xmlns:local="clr-namespace:Pixed.Application.Pages"
+			 xmlns:viewModels="clr-namespace:Pixed.Application.ViewModels"
+			 x:Class="Pixed.Application.Pages.ProjectShare"
+			 x:DataType="viewModels:ProjectShareViewModel"
+			 Title="Share current project" Width="600" MinHeight="300">
+	<local:Modal.DataContext>
+		<viewModels:ProjectShareViewModel/>
+	</local:Modal.DataContext>
+	<local:Modal.Dialog>
+		<Grid Margin="5" ColumnSpacing="10">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="48"/>
+				<RowDefinition Height="48"/>
+			</Grid.RowDefinitions>
+			<StackPanel Margin="5">
+				<RadioButton Name="tcpRadio" GroupName="shareType" Content="via Local Network" IsCheckedChanged="RadioButton_IsCheckedChanged" IsEnabled="{Binding IsRadioEnabled}"/>
+				<StackPanel Margin="5" Name="tcpStackPanel" Spacing="10" IsEnabled="{Binding IsTcpPanelEnabled}">
+					<Label Content="Your IP Address:"/>
+					<Label Content="{Binding IpAddress}"/>
+					<Label Content="Destination IP Address (only for sending)"/>
+					<TextBox Name="destinationIpTextBox" Width="200" HorizontalAlignment="Left" Text="{Binding DestinationIpAddress, Mode=TwoWay}"/>
+				</StackPanel>
+			</StackPanel>
+			<StackPanel Margin="5" Grid.Column="1">
+				<RadioButton Name="bluetoothRadio" GroupName="shareType" Content="via Bluetooth" IsCheckedChanged="RadioButton_IsCheckedChanged" IsEnabled="{Binding IsRadioEnabled}"/>
+				<StackPanel Margin="5" Name="bluetoothStackPanel" Spacing="10" IsEnabled="{Binding IsBluetoothPanelEnabled}">
+					<Label Content="Destination device (only for sending)"/>
+					<ComboBox Margin="0,0,0,5" HorizontalAlignment="Stretch" ItemsSource="{Binding AvailableDevices}" SelectedItem="{Binding SelectedDevice, Mode=TwoWay}">
+						<ComboBox.ItemTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding DeviceName}"/>
+							</DataTemplate>
+						</ComboBox.ItemTemplate>
+					</ComboBox>
+				</StackPanel>
+			</StackPanel>
+			<Button Content="Receive" Grid.Row="1" IsEnabled="{Binding IsRadioEnabled}" HorizontalAlignment="Right" Command="{Binding ReceiveCommand}"/>
+			<Button Content="Send" Grid.Row="1" Grid.Column="1" IsEnabled="{Binding IsRadioEnabled}" Command="{Binding SendCommand}"/>
+			<Label Content="{Binding Status}" VerticalAlignment="Center" Grid.Row="2" IsVisible="{Binding IsStatusVisible}"/>
+			<Button HorizontalAlignment="Right" Grid.Row="2" Grid.Column="1" IsVisible="{Binding IsStatusVisible}" Command="{Binding CancelCommand}" Background="#E53935" Width="32" Height="32" Padding="2">
+				<Image Source="{SvgImage /Resources/fluent-icons/ic_fluent_stop_24_filled.svg}"/>
+			</Button>
+		</Grid>
+	</local:Modal.Dialog>
+</local:Modal>
