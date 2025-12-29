@@ -16,8 +16,10 @@ using Pixed.Common.Tools;
 using Pixed.Core;
 using Pixed.Core.Models;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Pixed.Application.Windows;
 
 namespace Pixed.Application.Pages;
 
@@ -122,6 +124,16 @@ internal partial class Main : EmptyPixedPage, IDisposable
         Subjects.ProjectChanged.OnNext(_applicationData.CurrentModel);
         Subjects.FrameChanged.OnNext(_applicationData.CurrentFrame);
         base.OnLoaded();
+        
+        if (topLevel is not MainWindow mainWindow || !mainWindow.TryGetArgs(out var windowArgs)) return;
+        foreach (var arg in windowArgs)
+        {
+            if (!File.Exists(arg)) continue;
+            if (_pixedProjectMethods != null)
+            {
+                await _pixedProjectMethods.Open(arg);
+            }
+        }
     }
 
     public async static Task<bool> Close()

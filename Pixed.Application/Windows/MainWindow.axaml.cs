@@ -25,6 +25,7 @@ internal partial class MainWindow : ExtendedWindow<MainViewModel>
     private readonly PixedProjectMethods _pixedProjectMethods;
     private readonly IHistoryService _historyService;
     private bool _closeStarted = false;
+    private string[]? _args;
     public MainWindow(PixedProjectMethods pixedProjectMethods, IHistoryService historyService) : base()
     {
         InitializeComponent();
@@ -32,14 +33,23 @@ internal partial class MainWindow : ExtendedWindow<MainViewModel>
         _historyService = historyService;
     }
 
-    public async Task OpenFromArgs(string[] args)
+    public bool TryGetArgs(out string[] args)
     {
-        foreach (var arg in args)
+        if (_args == null)
         {
-            if (File.Exists(arg))
-            {
-                await _pixedProjectMethods.Open(arg);
-            }
+            args = [];
+            return false;
+        }
+
+        args = _args;
+        return true;
+    }
+
+    public void OpenFromArgs(string[] args)
+    {
+        if (args.Length > 0)
+        {
+            _args = args;
         }
     }
 
