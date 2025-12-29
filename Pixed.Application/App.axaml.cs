@@ -92,7 +92,7 @@ public partial class App : Avalonia.Application
 
         if (mainWindow != null)
         {
-            await mainWindow.OpenFromArgs(desktop.Args ?? []);
+            mainWindow.OpenFromArgs(desktop.Args ?? []);
             desktop.MainWindow = mainWindow;
             desktop.MainWindow.Show();
             await Task.Delay(100);

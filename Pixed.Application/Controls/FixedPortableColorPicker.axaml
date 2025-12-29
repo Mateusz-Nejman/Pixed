@@ -20,7 +20,7 @@
 			</Grid>
 		</Border>
 		<Popup Name="popup" IsLightDismissEnabled="True"
-			IsOpen="{Binding Path=IsChecked, RelativeSource={RelativeSource FindAncestor, AncestorType=local:FixedPortableColorPicker}}, Mode=TwoWay">
+			IsOpen="{Binding Path=IsChecked, RelativeSource={RelativeSource FindAncestor, AncestorType=local:FixedPortableColorPicker}, Mode=TwoWay}">
 			<Border BorderThickness="1" BorderBrush="{DynamicResource ThemeBorderLowBrush}"
 					IsHitTestVisible="True"
 					Background="{DynamicResource ThemeBackgroundBrush}">
